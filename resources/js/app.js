@@ -56,7 +56,10 @@ axios.interceptors.response.use(function (response) {
         Vue.helper.swalError(store.getters.ListErrors);
 
     }else if(status == 500){
-        Vue.helper.swalError("Ошибка сервера! Сообщите об этой проблеме администратором сайта", 500);
+        if(res.data.message.indexOf('foreign key') !== -1){
+            Vue.helper.swalError("Вы не можете удалить, есть привязанные элементы!", 500);
+        }else
+            Vue.helper.swalError("Ошибка сервера! Сообщите об этой проблеме администратором сайта", 500);
 
     }else if(status == 200){
         if(res.data === '')

@@ -43068,7 +43068,9 @@ axios.interceptors.response.use(function (response) {
         __WEBPACK_IMPORTED_MODULE_2__store__["a" /* default */].dispatch('SetErrors', res.data.errors);
         Vue.helper.swalError(__WEBPACK_IMPORTED_MODULE_2__store__["a" /* default */].getters.ListErrors);
     } else if (status == 500) {
-        Vue.helper.swalError("Ошибка сервера! Сообщите об этой проблеме администратором сайта", 500);
+        if (res.data.message.indexOf('foreign key') !== -1) {
+            Vue.helper.swalError("Вы не можете удалить, есть привязанные элементы!", 500);
+        } else Vue.helper.swalError("Ошибка сервера! Сообщите об этой проблеме администратором сайта", 500);
     } else if (status == 200) {
         if (res.data === '') Vue.helper.swalError('Пустой результат');else if (!res.data) Vue.helper.swalError('Ошибка!');
     }
@@ -79668,6 +79670,21 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -89875,7 +89892,7 @@ var render = function() {
                                           staticClass: "form-group col-md-12",
                                           class: {
                                             "has-error": _vm.IsError(
-                                              "attributes" + index + ".value"
+                                              "attributes." + index + ".value"
                                             )
                                           }
                                         },
@@ -89922,11 +89939,11 @@ var render = function() {
                                           _vm._v(" "),
                                           _vm._l(
                                             _vm.IsError(
-                                              "attributes" + index + ".value"
+                                              "attributes." + index + ".value"
                                             ),
                                             function(e) {
                                               return _vm.IsError(
-                                                "attributes" + index + ".value"
+                                                "attributes." + index + ".value"
                                               )
                                                 ? _c(
                                                     "span",
@@ -89952,10 +89969,26 @@ var render = function() {
                                   attribute.type == "textarea"
                                     ? _c(
                                         "div",
-                                        { staticClass: "form-group col-md-12" },
+                                        {
+                                          staticClass: "form-group col-md-12",
+                                          class: {
+                                            "has-error": _vm.IsError(
+                                              "attributes." + index + ".value"
+                                            )
+                                          }
+                                        },
                                         [
                                           _c("label", [
-                                            _vm._v(_vm._s(attribute.name))
+                                            _vm._v(
+                                              _vm._s(attribute.name) + " "
+                                            ),
+                                            attribute.required == 1
+                                              ? _c(
+                                                  "span",
+                                                  { staticClass: "red" },
+                                                  [_vm._v("*")]
+                                                )
+                                              : _vm._e()
                                           ]),
                                           _vm._v(" "),
                                           _c("textarea", {
@@ -89991,18 +90024,60 @@ var render = function() {
                                             "p",
                                             { staticClass: "help-block" },
                                             [_vm._v("Текстовая область")]
+                                          ),
+                                          _vm._v(" "),
+                                          _vm._l(
+                                            _vm.IsError(
+                                              "attributes." + index + ".value"
+                                            ),
+                                            function(e) {
+                                              return _vm.IsError(
+                                                "attributes." + index + ".value"
+                                              )
+                                                ? _c(
+                                                    "span",
+                                                    {
+                                                      staticClass: "help-block"
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n                                             " +
+                                                          _vm._s(e) +
+                                                          "\n                                        "
+                                                      )
+                                                    ]
+                                                  )
+                                                : _vm._e()
+                                            }
                                           )
-                                        ]
+                                        ],
+                                        2
                                       )
                                     : _vm._e(),
                                   _vm._v(" "),
                                   attribute.type == "date"
                                     ? _c(
                                         "div",
-                                        { staticClass: "form-group col-md-12" },
+                                        {
+                                          staticClass: "form-group col-md-12",
+                                          class: {
+                                            "has-error": _vm.IsError(
+                                              "attributes." + index + ".value"
+                                            )
+                                          }
+                                        },
                                         [
                                           _c("label", [
-                                            _vm._v(_vm._s(attribute.name))
+                                            _vm._v(
+                                              _vm._s(attribute.name) + " "
+                                            ),
+                                            attribute.required == 1
+                                              ? _c(
+                                                  "span",
+                                                  { staticClass: "red" },
+                                                  [_vm._v("*")]
+                                                )
+                                              : _vm._e()
                                           ]),
                                           _vm._v(" "),
                                           _c("input", {
@@ -90039,18 +90114,60 @@ var render = function() {
                                             "p",
                                             { staticClass: "help-block" },
                                             [_vm._v("Дата")]
+                                          ),
+                                          _vm._v(" "),
+                                          _vm._l(
+                                            _vm.IsError(
+                                              "attributes." + index + ".value"
+                                            ),
+                                            function(e) {
+                                              return _vm.IsError(
+                                                "attributes." + index + ".value"
+                                              )
+                                                ? _c(
+                                                    "span",
+                                                    {
+                                                      staticClass: "help-block"
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n                                             " +
+                                                          _vm._s(e) +
+                                                          "\n                                        "
+                                                      )
+                                                    ]
+                                                  )
+                                                : _vm._e()
+                                            }
                                           )
-                                        ]
+                                        ],
+                                        2
                                       )
                                     : _vm._e(),
                                   _vm._v(" "),
                                   attribute.type == "multiple_select"
                                     ? _c(
                                         "div",
-                                        { staticClass: "form-group col-md-12" },
+                                        {
+                                          staticClass: "form-group col-md-12",
+                                          class: {
+                                            "has-error": _vm.IsError(
+                                              "attributes." + index + ".value"
+                                            )
+                                          }
+                                        },
                                         [
                                           _c("label", [
-                                            _vm._v(_vm._s(attribute.name))
+                                            _vm._v(
+                                              _vm._s(attribute.name) + " "
+                                            ),
+                                            attribute.required == 1
+                                              ? _c(
+                                                  "span",
+                                                  { staticClass: "red" },
+                                                  [_vm._v("*")]
+                                                )
+                                              : _vm._e()
                                           ]),
                                           _vm._v(" "),
                                           _c("Select2", {
@@ -90081,19 +90198,60 @@ var render = function() {
                                             "p",
                                             { staticClass: "help-block" },
                                             [_vm._v("Множественный выбор")]
+                                          ),
+                                          _vm._v(" "),
+                                          _vm._l(
+                                            _vm.IsError(
+                                              "attributes." + index + ".value"
+                                            ),
+                                            function(e) {
+                                              return _vm.IsError(
+                                                "attributes." + index + ".value"
+                                              )
+                                                ? _c(
+                                                    "span",
+                                                    {
+                                                      staticClass: "help-block"
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n                                             " +
+                                                          _vm._s(e) +
+                                                          "\n                                        "
+                                                      )
+                                                    ]
+                                                  )
+                                                : _vm._e()
+                                            }
                                           )
                                         ],
-                                        1
+                                        2
                                       )
                                     : _vm._e(),
                                   _vm._v(" "),
                                   attribute.type == "media"
                                     ? _c(
                                         "div",
-                                        { staticClass: "form-group col-md-12" },
+                                        {
+                                          staticClass: "form-group col-md-12",
+                                          class: {
+                                            "has-error": _vm.IsError(
+                                              "attributes." + index + ".value"
+                                            )
+                                          }
+                                        },
                                         [
                                           _c("label", [
-                                            _vm._v(_vm._s(attribute.name))
+                                            _vm._v(
+                                              _vm._s(attribute.name) + " "
+                                            ),
+                                            attribute.required == 1
+                                              ? _c(
+                                                  "span",
+                                                  { staticClass: "red" },
+                                                  [_vm._v("*")]
+                                                )
+                                              : _vm._e()
                                           ]),
                                           _vm._v(" "),
                                           _c("div", { staticClass: "row" }, [
@@ -90180,18 +90338,60 @@ var render = function() {
                                             "p",
                                             { staticClass: "help-block" },
                                             [_vm._v("Картинка")]
+                                          ),
+                                          _vm._v(" "),
+                                          _vm._l(
+                                            _vm.IsError(
+                                              "attributes." + index + ".value"
+                                            ),
+                                            function(e) {
+                                              return _vm.IsError(
+                                                "attributes." + index + ".value"
+                                              )
+                                                ? _c(
+                                                    "span",
+                                                    {
+                                                      staticClass: "help-block"
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n                                             " +
+                                                          _vm._s(e) +
+                                                          "\n                                        "
+                                                      )
+                                                    ]
+                                                  )
+                                                : _vm._e()
+                                            }
                                           )
-                                        ]
+                                        ],
+                                        2
                                       )
                                     : _vm._e(),
                                   _vm._v(" "),
                                   attribute.type == "dropdown"
                                     ? _c(
                                         "div",
-                                        { staticClass: "form-group col-md-12" },
+                                        {
+                                          staticClass: "form-group col-md-12",
+                                          class: {
+                                            "has-error": _vm.IsError(
+                                              "attributes." + index + ".value"
+                                            )
+                                          }
+                                        },
                                         [
                                           _c("label", [
-                                            _vm._v(_vm._s(attribute.name))
+                                            _vm._v(
+                                              _vm._s(attribute.name) + " "
+                                            ),
+                                            attribute.required == 1
+                                              ? _c(
+                                                  "span",
+                                                  { staticClass: "red" },
+                                                  [_vm._v("*")]
+                                                )
+                                              : _vm._e()
                                           ]),
                                           _vm._v(" "),
                                           _c("Select2", {
@@ -90221,9 +90421,34 @@ var render = function() {
                                             "p",
                                             { staticClass: "help-block" },
                                             [_vm._v("Выбор")]
+                                          ),
+                                          _vm._v(" "),
+                                          _vm._l(
+                                            _vm.IsError(
+                                              "attributes." + index + ".value"
+                                            ),
+                                            function(e) {
+                                              return _vm.IsError(
+                                                "attributes." + index + ".value"
+                                              )
+                                                ? _c(
+                                                    "span",
+                                                    {
+                                                      staticClass: "help-block"
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "\n                                             " +
+                                                          _vm._s(e) +
+                                                          "\n                                        "
+                                                      )
+                                                    ]
+                                                  )
+                                                : _vm._e()
+                                            }
                                           )
                                         ],
-                                        1
+                                        2
                                       )
                                     : _vm._e()
                                 ])

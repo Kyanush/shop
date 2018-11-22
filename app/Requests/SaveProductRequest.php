@@ -1,7 +1,9 @@
 <?php
 namespace App\Requests;
+use App\Models\Attribute;
 use Illuminate\Foundation\Http\FormRequest;
 use Request;
+use Illuminate\Validation\Rule;
 
 class SaveProductRequest extends FormRequest
 {
@@ -26,7 +28,6 @@ class SaveProductRequest extends FormRequest
 
             'attributes'          => 'required',
             'attributes.*'        => 'required',
-            'attributes.*.value' => 'required',
 
             'specific_price.reduction'       => 'nullable|numeric|min:0',
             'specific_price.discount_type'   => 'nullable|max:10',
@@ -40,6 +41,16 @@ class SaveProductRequest extends FormRequest
             $rules['specific_price.expiration_date'] = 'nullable|date_format:"Y-m-d H:i:s"';
         }
 
+        foreach ($this->input('attributes') as $key => $item)
+        {
+            $isRequired = Attribute::IsRequired()->find($item['attribute_id']);
+            if($isRequired and empty($item['value']))
+            {
+                $rules["attributes.$key.value"] = 'required';
+            }
+        }
+
+
         if($this->file("product_photo"))
             $rules['product_photo'] = 'required|image|mimes:jpeg,jpg,png|max:10000';
 
@@ -48,7 +59,7 @@ class SaveProductRequest extends FormRequest
 
     public function attributes()
     {
-        return [
+        $attributes = [
             'product.id'          => "'Название'",
             'product.attribute_set_id' => "'Наборы атрибутов'",
             'product.name'        => "'Название'",
@@ -74,6 +85,14 @@ class SaveProductRequest extends FormRequest
 
             'product_images.*.value'         => "'Фото'",
         ];
+
+        foreach ($this->input('attributes') as $key => $item)
+        {
+            $attribute = Attribute::select('name')->find($item['attribute_id']);
+            $attributes["attributes.$key.value"] = "'" . $attribute->name . "'";
+        }
+
+        return $attributes;
     }
 
 }

@@ -51,13 +51,11 @@ trait UploadableTrait
     }
  */
 
-    public function uploadFile($file, $path)
+    public function uploadFile(File $file, $path)
     {
-
-        if(is_file($file))
+        if(is_file($file) and $file)
         {
-            //$fileName = rand() . '-' .  $file->getClientOriginalName();
-            $fileName       = md5(uniqid('', true)).'.'.$file->extension();
+            $fileName = md5(uniqid('', true)).'.'.$file->extension();
 
             if($file->move($path, $fileName))
                 return $fileName;

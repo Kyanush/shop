@@ -167,35 +167,44 @@
 
                                     <span v-for="(attribute, index) in item.attributes">
 
-                                        <div class="form-group col-md-12" v-if="attribute.type == 'text'" v-bind:class="{'has-error' : IsError('attributes' + index + '.value')}">
+                                        <div class="form-group col-md-12" v-if="attribute.type == 'text'" v-bind:class="{'has-error' : IsError('attributes.' + index + '.value')}">
                                             <label>{{ attribute.name }}</label>
                                             <input type="text" v-model="attributes[index].value" class="form-control">
                                             <p class="help-block">Текст</p>
-                                            <span v-if="IsError('attributes' + index + '.value')" class="help-block" v-for="e in IsError('attributes' + index + '.value')">
+                                            <span v-if="IsError('attributes.' + index + '.value')" class="help-block" v-for="e in IsError('attributes.' + index + '.value')">
                                                  {{ e }}
                                             </span>
                                         </div>
 
-                                        <div class="form-group col-md-12" v-if="attribute.type == 'textarea'">
-                                            <label>{{ attribute.name }}</label>
+                                        <div class="form-group col-md-12" v-if="attribute.type == 'textarea'" v-bind:class="{'has-error' : IsError('attributes.' + index + '.value')}">
+                                            <label>{{ attribute.name }} <span class="red" v-if="attribute.required == 1">*</span></label>
                                             <textarea v-model="attributes[index].value" class="form-control"></textarea>
                                             <p class="help-block">Текстовая область</p>
+                                            <span v-if="IsError('attributes.' + index + '.value')" class="help-block" v-for="e in IsError('attributes.' + index + '.value')">
+                                                 {{ e }}
+                                            </span>
                                         </div>
 
-                                        <div class="form-group col-md-12" v-if="attribute.type == 'date'">
-                                            <label>{{ attribute.name }}</label>
+                                        <div class="form-group col-md-12" v-if="attribute.type == 'date'" v-bind:class="{'has-error' : IsError('attributes.' + index + '.value')}">
+                                            <label>{{ attribute.name }} <span class="red" v-if="attribute.required == 1">*</span></label>
                                             <input type="date" v-model="attributes[index].value" class="form-control"/>
                                             <p class="help-block">Дата</p>
+                                            <span v-if="IsError('attributes.' + index + '.value')" class="help-block" v-for="e in IsError('attributes.' + index + '.value')">
+                                                 {{ e }}
+                                            </span>
                                         </div>
 
-                                        <div class="form-group col-md-12" v-if="attribute.type == 'multiple_select'">
-                                            <label>{{ attribute.name }}</label>
+                                        <div class="form-group col-md-12" v-if="attribute.type == 'multiple_select'" v-bind:class="{'has-error' : IsError('attributes.' + index + '.value')}">
+                                            <label>{{ attribute.name }} <span class="red" v-if="attribute.required == 1">*</span></label>
                                             <Select2 v-model="attributes[index].value" :settings="{ multiple: true }" :options="convertDataSelect2(attribute.values, 'value', 'value')"/>
                                             <p class="help-block">Множественный выбор</p>
+                                            <span v-if="IsError('attributes.' + index + '.value')" class="help-block" v-for="e in IsError('attributes.' + index + '.value')">
+                                                 {{ e }}
+                                            </span>
                                         </div>
 
-                                        <div class="form-group col-md-12" v-if="attribute.type == 'media'">
-                                            <label>{{ attribute.name }}</label>
+                                        <div class="form-group col-md-12" v-if="attribute.type == 'media'" v-bind:class="{'has-error' : IsError('attributes.' + index + '.value')}">
+                                            <label>{{ attribute.name }} <span class="red" v-if="attribute.required == 1">*</span></label>
                                             <div class="row">
                                                 <div class="col-sm-6" style="margin-bottom: 20px;">
                                                     <img id="attribute-view-img" style="width: 100%" v-bind:src="'/uploads/attributes/' + attributes[index].value"/>
@@ -207,12 +216,18 @@
                                                 <input type="file" class="form-control" @change="setAttributeImage($event, index)"/>
                                             </label>
                                             <p class="help-block">Картинка</p>
+                                            <span v-if="IsError('attributes.' + index + '.value')" class="help-block" v-for="e in IsError('attributes.' + index + '.value')">
+                                                 {{ e }}
+                                            </span>
                                         </div>
 
-                                        <div class="form-group col-md-12" v-if="attribute.type == 'dropdown'">
-                                            <label>{{ attribute.name }}</label>
+                                        <div class="form-group col-md-12" v-if="attribute.type == 'dropdown'" v-bind:class="{'has-error' : IsError('attributes.' + index + '.value')}">
+                                            <label>{{ attribute.name }} <span class="red" v-if="attribute.required == 1">*</span></label>
                                             <Select2 v-model="attributes[index].value" :options="convertDataSelect2(attribute.values, 'value', 'value')"/>
                                             <p class="help-block">Выбор</p>
+                                            <span v-if="IsError('attributes.' + index + '.value')" class="help-block" v-for="e in IsError('attributes.' + index + '.value')">
+                                                 {{ e }}
+                                            </span>
                                         </div>
                                     </span>
                                 </div>

@@ -13,7 +13,17 @@ class Attribute extends Model
 	 	'name'
  	];
 
-	protected static function boot()
+    public static function  scopeIsRequired($query)
+    {
+        return $query->where('required', 1);
+    }
+
+    public static function  scopeNoRequired($query)
+    {
+        return $query->where('required', 0);
+    }
+
+    protected static function boot()
     {
         parent::boot();
 

@@ -7,15 +7,18 @@ class SaveAttributeRequest extends FormRequest
 
     public function rules()
     {
-        $data = $this->request->all();
-        $data = $data['attribute'];
+        $attribute_id = $this->input('attribute.id');
 
-        return [
-            'attribute.id' => (!empty($data['id']) ? 'exists:attributes,id' : 'nullable'),
+        $rules = [
+            'attribute.id' => (!empty($attribute_id) ? 'exists:attributes,id' : 'nullable'),
             'attribute.name' => 'required|max:255',
             'attribute.type' => 'required',
-            'attribute.values.*.value' => 'required'
         ];
+
+        if($this->input('attribute.type') == 'multiple_select' or $this->input('attribute.type') == 'dropdown')
+            $rules['attribute.values.*.value'] = 'required';
+
+        return $rules;
     }
 
     public function attributes()

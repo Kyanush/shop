@@ -308,6 +308,7 @@
                     form_data.append('attribute[values]['+i+'][is_delete]', value.is_delete);
                 });
 
+
                 axios.post('/admin/attribute-save', form_data).then((res)=>{
                     if(res.data)
                     {
