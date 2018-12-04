@@ -69,7 +69,6 @@
                     :page-class="'page-item'"></paginate>
         </div>
 
-        {{ categoriesList }}
 
     </div>
 </template>
@@ -91,8 +90,16 @@
                 }
             }
         },
-        mounted() {
-            console.log('Component mounted.')
+        watch: {
+            filter: {
+                handler: function (val, oldVal) {
+                    this.categoriesList();
+                },
+                deep: true
+            }
+        },
+        created(){
+            this.categoriesList();
         },
         methods:{
             SetPage(page){
@@ -119,9 +126,6 @@
                     }
                 });
             },
-
-        },
-        computed:{
             categoriesList(){
                 var params = {};
                 if(this.filter.page > 1 && !this.filter.search)

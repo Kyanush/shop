@@ -45,14 +45,50 @@ Route::group([/*'middleware' => 'auth',*/ 'prefix'     => 'admin', 'namespace'  
         Route::get('attribute-sets-more-info',   'Api\ProductController@AttributeSetsMoreInfo');
         Route::post('product-save',              'Api\ProductController@save');
         Route::get('product-view/{id}',          'Api\ProductController@view')->where(['id' => '[0-9]+']);
+        Route::post('product-delete/{id}',       'Api\ProductController@delete')->where(['id' => '[0-9]+']);
 
         Route::get('group-products/{group_id}',  'Api\ProductController@groupProducts')->where(['group_id' => '[0-9]+']);
 
+        Route::post('clone-product',              'Api\ProductController@cloneProduct');
 
 
+        //Пользователи
+        Route::get('users-list',        'Api\UserController@list');
+        Route::get('user-view/{id}',    'Api\UserController@view')->where(['id' => '[0-9]+']);
+        Route::post('user-save',        'Api\UserController@save');
+        Route::post('user-delete/{id}', 'Api\UserController@delete')->where(['id' => '[0-9]+']);
+
+        //Роли
+        Route::get('roles-list',        'Api\RoleController@list');
+
+        //Курьеры
+        Route::get('carriers-list',              'Api\CarrierController@list');
+        Route::post('carrier-save',              'Api\CarrierController@save');
+        Route::get('carrier-view/{id}',          'Api\CarrierController@view')->where(['id' => '[0-9]+']);
+        Route::post('carrier-delete/{id}',       'Api\CarrierController@delete')->where(['id' => '[0-9]+']);
+
+        //тип оплаты
+        Route::get('payments-list',              'Api\PaymentController@list');
+        Route::post('payment-save',              'Api\PaymentController@save');
+        Route::get('payment-view/{id}',          'Api\PaymentController@view')->where(['id' => '[0-9]+']);
+        Route::post('payment-delete/{id}',       'Api\PaymentController@delete')->where(['id' => '[0-9]+']);
+
+        //Статусы заказов
+        Route::get('order-statuses-list',             'Api\OrderStatusController@list');
+        Route::post('order-status-save',              'Api\OrderStatusController@save');
+        Route::get('order-status-view/{id}',          'Api\OrderStatusController@view')->where(['id' => '[0-9]+']);
+        Route::post('order-status-delete/{id}',       'Api\OrderStatusController@delete')->where(['id' => '[0-9]+']);
 
 
-        Route::get('taxes-list',      'Api\TaxController@list');
+        //Скидки
+        Route::get('specific-prices-list',             'Api\SpecificPriceController@list');
+        Route::post('specific-price-delete/{id}',      'Api\SpecificPriceController@delete')->where(['id' => '[0-9]+']);
+
+
+        //Заказы
+        Route::get('orders-list',         'Api\OrderController@list');
+        Route::get('order/{id}',          'Api\OrderController@view')->where(['id' => '[0-9]+']);
+        Route::get('order/users',         'Api\OrderController@users');
 
     }
 
@@ -64,7 +100,7 @@ Route::group([/*'middleware' => 'auth',*/ 'prefix'     => 'admin', 'namespace'  
     CRUD::resource('attributes', 'AttributeCrudController');
     CRUD::resource('attributes-sets', 'AttributeSetCrudController');
     CRUD::resource('products', 'ProductCrudController');
-    CRUD::resource('taxes', 'TaxCrudController');
+
     CRUD::resource('orders', 'OrderCrudController');
     CRUD::resource('order-statuses', 'OrderStatusCrudController');
     CRUD::resource('clients', 'ClientCrudController');

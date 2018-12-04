@@ -34,7 +34,7 @@
                                         <a>Картинки</a>
                                     </li>
                                     <li v-bind:class="{'active' : tab_active == 'tab_specificprice'}" @click="setTab('tab_specificprice')">
-                                        <a>Конкретная цена</a>
+                                        <a>Скидки</a>
                                     </li>
                                     <li v-bind:class="{'active' : tab_active == 'tab_product_groups'}" @click="setTab('tab_product_groups')">
                                         <a>Группа товаров</a>
@@ -54,12 +54,26 @@
                                     </span>
                                 </div>
 
+                                <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('product.url')}">
+                                    <label>Ссылка</label>
+                                    <input type="text" v-model="product.url" class="form-control">
+                                    <span v-if="IsError('product.url')" class="help-block" v-for="e in IsError('product.url')">
+                                         {{ e }}
+                                    </span>
+                                    <p class="help-block pull-right">
+                                        Если пустая ссылка, генерируются автоматически
+                                    </p>
+                                </div>
+
+
                                 <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('categories')}">
                                     <label>Категории <span class="red">*</span></label>
                                     <Select2 v-model="categories"
                                              :settings="{ multiple: true }"
                                              :options="convertDataSelect2(categories_list)"/>
-                                    <p class="help-block">Вы можете выбрать одну или несколько категорий, где будет отображаться продукт</p>
+                                    <p class="help-block pull-right">
+                                        Вы можете выбрать одну или несколько категорий, где будет отображаться товар
+                                    </p>
                                     <span v-if="IsError('categories')" class="help-block" v-for="e in IsError('categories')">
                                          {{ e }}
                                     </span>
@@ -90,26 +104,13 @@
                                     </span>
                                 </div>
 
-                                <div class="form-group col-md-12">
-                                    <label>Цена без НДС</label>
-                                    <input type="text" readonly="readonly" class="form-control">
-                                </div>
-
-                                <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('product.tax_id')}">
-                                    <label>Налог</label>
-                                    <Select2 v-model="product.tax_id" :options="convertDataSelect2(taxes_list)"/>
-                                    <span v-if="IsError('product.tax_id')" class="help-block" v-for="e in IsError('product.tax_id')">
-                                         {{ e }}
-                                    </span>
-                                </div>
-
-                                <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('product.active')}">
+                                <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('product.deleted_at')}">
                                     <label>Статус</label>
-                                    <select v-model="product.active" class="form-control">
-                                        <option value="1">Активный</option>
-                                        <option value="0">Неактивный</option>
+                                    <select v-model="product.deleted_at" class="form-control">
+                                        <option value="0">Активный</option>
+                                        <option value="1">Неактивный</option>
                                     </select>
-                                    <span v-if="IsError('product.active')" class="help-block" v-for="e in IsError('product.active')">
+                                    <span v-if="IsError('product.deleted_at')" class="help-block" v-for="e in IsError('product.deleted_at')">
                                          {{ e }}
                                     </span>
                                 </div>
@@ -118,22 +119,19 @@
 
 
                             <div v-bind:class="{'active' : tab_active == 'tab_product_description_and_photo'}" role="tabpanel" class="tab-pane" id="tab_product_description_and_photo">
-
-                                <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('product_photo')}">
+                                <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('photo')}">
                                     <label>Фото товара <span class="red" v-if="!product.id">*</span></label>
                                     <p>
-                                        <img v-bind:src="product_photo" id="photo-view"/>
+                                        <img v-bind:src="photo ? photo : ''" id="photo-view"/>
                                     </p>
                                     <label class="btn btn-primary btn-file">
                                         <i class="fa fa-file-image-o" aria-hidden="true"></i>  Фото товара
                                         <input type="file" accept="image/*"  @change="setPhoto($event)"/>
                                     </label>
-
-                                    <span v-if="IsError('product_photo')" class="help-block" v-for="e in IsError('product_photo')">
+                                    <span v-if="IsError('photo')" class="help-block" v-for="e in IsError('photo')">
                                          {{ e }}
                                     </span>
                                 </div>
-
                                 <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('product.description')}">
                                     <label>Описание <span class="red">*</span></label>
                                     <textarea v-model="product.description" class="form-control" rows="10"></textarea>
@@ -207,14 +205,21 @@
                                             <label>{{ attribute.name }} <span class="red" v-if="attribute.required == 1">*</span></label>
                                             <div class="row">
                                                 <div class="col-sm-6" style="margin-bottom: 20px;">
-                                                    <img id="attribute-view-img" style="width: 100%" v-bind:src="'/uploads/attributes/' + attributes[index].value"/>
+                                                    <img id="attribute-view-img" style="width: 100%" v-bind:src="attributes[index].value ? '/uploads/attributes/' + attributes[index].value : ''"/>
                                                 </div>
                                             </div>
                                             <input type="hidden" v-model="attributes[index].value"/>
-                                            <label class="btn btn-primary btn-file">
-                                                Загрузить
-                                                <input type="file" class="form-control" @change="setAttributeImage($event, index)"/>
-                                            </label>
+
+                                            <div class="btn-group">
+                                                <label class="btn btn-primary btn-file">
+                                                    Загрузить
+                                                    <input type="file" accept="image/*" id="uploadImage" class="hide" @change="setAttributeImage($event, index)"/>
+                                                </label>
+                                                <button class="btn btn-danger" id="remove" type="button" @click="clearAttributeImage(index)">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </div>
+
                                             <p class="help-block">Картинка</p>
                                             <span v-if="IsError('attributes.' + index + '.value')" class="help-block" v-for="e in IsError('attributes.' + index + '.value')">
                                                  {{ e }}
@@ -260,7 +265,7 @@
                                 <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('specific_price.start_date')}">
                                     <label>Дата начала <span class="red" v-if="specific_price.reduction > 0">*</span></label>
                                     <div class="input-group date">
-                                        <datetime class="form-control" v-model="specific_price.start_date" type="datetime" zone="Asia/Almaty" format="yyyy-MM-dd HH:mm:ss"></datetime>
+                                        <date-picker :config="datetimepicker" v-model="specific_price.start_date"></date-picker>
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </div>
@@ -272,7 +277,7 @@
                                 <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('specific_price.expiration_date')}">
                                     <label>Дата окончания срока <span class="red" v-if="specific_price.reduction > 0">*</span></label>
                                     <div class="input-group date">
-                                        <datetime class="form-control" v-model="specific_price.expiration_date" type="datetime" zone="Asia/Almaty" format="yyyy-MM-dd HH:mm:ss"></datetime>
+                                        <date-picker :config="datetimepicker" v-model="specific_price.expiration_date"></date-picker>
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </div>
@@ -315,7 +320,7 @@
                                                 <td>
                                                     <i class="fa fa-times-circle"
                                                        aria-hidden="true"
-                                                       v-bind:class="{ 'fa-times-circle red': !item.active, 'fa-check-circle green': item.active }"></i>
+                                                       v-bind:class="{ 'fa-times-circle red': item.deleted_at, 'fa-check-circle green': !item.deleted_at }"></i>
                                                 </td>
                                                 <td>
                                                     <router-link :to="{ path: '/products/edit/' + item.id}" class="btn btn-xs btn-default" v-if="product.id != item.id" target="_blank">
@@ -403,38 +408,46 @@
     //https://select2.org/configuration/options-api
     import Select2 from 'v-select2-component';
 
-    //https://mariomka.github.io/vue-datetime/
-    import { Datetime } from 'vue-datetime';
-    import 'vue-datetime/dist/vue-datetime.css';
+
 
     import UploadImages from '../plugins/UploadImages';
 
     import { mapGetters } from 'vuex';
     import { mapActions } from 'vuex';
 
-    import  moment  from 'moment';
+
+    import datePicker from 'vue-bootstrap-datetimepicker';
+    import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
 
     export default {
         components:{
             Paginate,
             Select2,
             UploadImages,
-            datetime: Datetime
+            datePicker
         },
         data () {
             return {
+                datetimepicker: {
+                    format: 'YYYY-MM-DD HH:mm:ss',
+                    useCurrent: false,
+                    showClear: true,
+                    showClose: true,
+                    locale: 'ru'
+                },
+
                 product:{
                     id: this.$route.params.id ? this.$route.params.id : 0,
                     attribute_set_id: 0,
                     name: '',
+                    url: '',
                     description: '',
-                    tax_id: 1,
                     price: 0,
                     sku: '',
                     stock: 0,
-                    active: 1,
+                    deleted_at: 0,
                 },
-                product_photo: '',
+                photo: '',
                 attributes: [],
                 product_images: [],
                 specific_price:{
@@ -448,7 +461,6 @@
                 method_redirect: 'save_and_back',
                 tab_active: 'tab_general',
                 categories_list: [],
-                taxes_list: [],
                 attributes_sets_more_info: [],
 
 
@@ -474,14 +486,15 @@
                             processResults: function (data) {
                                 var results = [];
                                 data.data.forEach(function (item, index){
-                                    results.push({
-                                        id:     item.id,
-                                        text:   item.name,
-                                        name:   item.name,
-                                        sku:    item.sku,
-                                        price:  item.price,
-                                        active: item.active,
-                                    });
+                                    if(!item.deleted_at)
+                                        results.push({
+                                            id:     item.id,
+                                            text:   item.name,
+                                            name:   item.name,
+                                            sku:    item.sku,
+                                            price:  item.price,
+                                            deleted_at: item.deleted_at,
+                                        });
                                 });
                                 return {
                                     results: results
@@ -496,7 +509,7 @@
 
         },
         methods:{
-            productGroupAdd({id, name, sku, price, active}){
+            productGroupAdd({id, name, sku, price, deleted_at}){
                 var add = true;
                 this.productGroup.list.forEach(function (item, index){
                     if(id == item.id)
@@ -512,7 +525,7 @@
                         name: name,
                         sku: sku,
                         price: price,
-                        active: active
+                        deleted_at: deleted_at
                     });
                 }else{
                     this.$helper.swalError('Товар уже добавлен');
@@ -529,9 +542,12 @@
                 this.$helper.setImgSrc(event.target.files[0], '#attribute-view-img');
                 this.$set(this.attributes[index], 'value' , event.target.files[0]);
             },
+            clearAttributeImage(index){
+                this.$set(this.attributes[index], 'value' , '');
+            },
             setPhoto(){
                 this.$helper.setImgSrc(event.target.files[0], '#photo-view');
-                this.product_photo = event.target.files[0];
+                this.photo = event.target.files[0];
             },
             setImages(files){
                 this.product_images = files;
@@ -576,8 +592,6 @@
 
 
                 $.each(this.specific_price, function(column, value) {
-                    if(column == 'start_date' || column == 'expiration_date')
-                        value = moment(value).format('YYYY-MM-DD HH:mm:ss');
                     data.append('specific_price[' + column + ']', value);
                 });
 
@@ -612,8 +626,7 @@
                     data.append('products_ids_group[' + index + ']', item.id);
                 });
 
-                data.append('product_photo', this.product_photo);
-
+                data.append('photo', this.photo);
 
                 axios.post('/admin/product-save', data).then((res)=>{
                     if(res.data)
@@ -636,45 +649,50 @@
                 });
             },
             getProduct(product_id){
+                setTimeout(function () {
+                        axios.get('/admin/product-view/' + product_id).then((res)=>{
+                            document.querySelector('input[type=file]').value = '';
 
-                axios.get('/admin/product-view/' + product_id).then((res)=>{
-                    document.querySelector('input[type=file]').value = '';
+                            var data = res.data;
+                            this.selectAttributeSetId(data.attribute_set_id);
+                            this.groupProducts(data.group_id);
 
-                    var data = res.data;
-                    this.selectAttributeSetId(data.attribute_set_id);
-                    this.groupProducts(data.group_id);
+                            this.product.id               = data.id;
+                            this.product.attribute_set_id = data.attribute_set_id;
+                            this.product.name             = data.name;
+                            this.product.url              = data.url;
+                            this.product.description      = data.description;
+                            this.product.price            = parseInt(data.price);
+                            this.product.sku              = data.sku;
+                            this.product.stock            = data.stock;
+                            this.product.deleted_at       = data.deleted_at ? 1 : 0;
 
-                    this.product.id               = data.id;
-                    this.product.attribute_set_id = data.attribute_set_id;
+                            this.categories = data.categories;
+                            this.product_images = data.images;
+                            this.photo = data.photo;
 
-                    this.product.name             = data.name;
-                    this.product.description      = data.description;
-                    this.product.tax_id           = data.tax_id;
-                    this.product.price            = parseInt(data.price);
-                    this.product.sku              = data.sku;
-                    this.product.stock            = data.stock;
-                    this.product.active           = data.active;
+                            var self = this;
+                            $.each(data.attributes, function(attribute_id, value) {
 
-                    this.categories = data.categories;
-                    this.product_images = data.images;
-                    this.product_photo = data.product_photo;
+                                    self.attributes.forEach(function (item, index) {
+                                        if(attribute_id == item.attribute_id)
+                                        {
+                                            self.$set(self.attributes[index], 'value' , value);
+                                        }
+                                    });
 
+                            });
 
+                            if(data.specific_price)
+                            {
+                                this.specific_price.reduction       = data.specific_price.reduction;
+                                this.specific_price.discount_type   = data.specific_price.discount_type;
+                                this.specific_price.start_date      = data.specific_price.start_date;
+                                this.specific_price.expiration_date = data.specific_price.expiration_date;
+                            }
 
-                    var self = this;
-                    $.each(data.attribute_product_value, function(attribute_id, value) {
-                        self.attributes.forEach(function (item, index) {
-                            if(attribute_id == item.attribute_id)
-                                self.$set(self.attributes[index], 'value' , value);
                         });
-                    });
-
-                    this.specific_price.reduction       = data.specific_price.reduction;
-                    this.specific_price.discount_type   = data.specific_price.discount_type;
-                    this.specific_price.start_date      = moment(data.specific_price.start_date).format("YYYY-MM-DDTHH:mm:ss.000Z");
-                    this.specific_price.expiration_date = moment(data.specific_price.expiration_date).format("YYYY-MM-DDTHH:mm:ss.000Z");
-
-                });
+                }.bind(this), 250);
             },
             groupProducts(group_id){
                 axios.get('/admin/group-products/' + group_id).then((res)=>{
@@ -693,9 +711,7 @@
                 this.categories_list = res.data.data;
             });
 
-            axios.get('/admin/taxes-list').then((res)=>{
-                this.taxes_list = res.data;
-            });
+
 
             if(this.product.id > 0)
                 this.getProduct(this.product.id);
@@ -717,13 +733,6 @@
     .nav-tabs li{
         cursor: pointer;
     }
-    .vdatetime-input{
-        width: 100%;
-        border: 0;
-    }
-    .vdatetime{
-        z-index: unset!important;
-    }
     .select2{
         width: 100%!important;
     }
@@ -733,5 +742,4 @@
         border: 1px solid #d9cece;
         padding: 2px;
     }
-
 </style>

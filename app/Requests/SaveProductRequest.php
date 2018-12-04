@@ -3,7 +3,6 @@ namespace App\Requests;
 use App\Models\Attribute;
 use Illuminate\Foundation\Http\FormRequest;
 use Request;
-use Illuminate\Validation\Rule;
 
 class SaveProductRequest extends FormRequest
 {
@@ -15,13 +14,13 @@ class SaveProductRequest extends FormRequest
         $rules = [
             'product.id'          => (!empty($product_id) ? 'exists:products,id' : 'nullable'),
             'product.attribute_set_id' => 'integer|exists:attribute_sets,id',
-            'product.name'        => ['max:255', 'required', 'unique:products,name' . ($product_id ? (',' . $product_id . ',id') : '')],
+            'product.name'        => 'max:255|required|unique:products,name' . ($product_id ? (',' . $product_id . ',id') : ''),
+            'product.url'         => 'max:255|nullable|unique:products,url'  . ($product_id ? (',' . $product_id . ',id') : ''),
             'product.description' => 'max:1000|required',
-            'product.tax_id'      => 'integer|exists:taxes,id',
             'product.price'       => 'numeric|required|min:1',
-            'product.sku'         => ['max:100', 'unique:products,sku' . ($product_id ? (',' . $product_id . ',id') : '')],
+            'product.sku'         => 'max:100|unique:products,sku' . ($product_id ? (',' . $product_id . ',id') : ''),
             'product.stock'       => 'integer',
-            'product.active'      => 'required|integer|min:0|max:1',
+            'product.deleted_at'  => 'required|integer|min:0|max:1',
 
             'categories'          => 'required|exists:categories,id',
             'categories.*'        => 'required|exists:categories,id',
@@ -41,36 +40,39 @@ class SaveProductRequest extends FormRequest
             $rules['specific_price.expiration_date'] = 'nullable|date_format:"Y-m-d H:i:s"';
         }
 
-        foreach ($this->input('attributes') as $key => $item)
-        {
-            $isRequired = Attribute::IsRequired()->find($item['attribute_id']);
-            if($isRequired and empty($item['value']))
+        $atts = $this->input('attributes');
+        if(is_array($atts))
+            foreach ($atts as $key => $item)
             {
-                $rules["attributes.$key.value"] = 'required';
+                $isRequired = Attribute::IsRequired()->find($item['attribute_id']);
+                if($isRequired and empty($item['value']))
+                {
+                    $rules["attributes.$key.value"] = 'required';
+                }
             }
-        }
 
 
-        if($this->file("product_photo"))
-            $rules['product_photo'] = 'required|image|mimes:jpeg,jpg,png|max:10000';
+        if($this->file("photo"))
+            $rules['photo'] = 'required|image|mimes:jpeg,jpg,png|max:10000';
 
         return $rules;
     }
 
     public function attributes()
     {
+
         $attributes = [
             'product.id'          => "'Название'",
             'product.attribute_set_id' => "'Наборы атрибутов'",
             'product.name'        => "'Название'",
+            'product.url'         => "'Ссылка'",
             'product.description' => "'Описание'",
-            'product.tax_id'      => "'Налог'",
             'product.price'       => "'Цена'",
             'product.sku'         => "'SKU'",
             'product.stock'       => "'Количество на складе'",
-            'product.active'      => "'Статус'",
+            'product.deleted_at'  => "'Статус'",
 
-            'product_photo'       => "'Фото товара'",
+            'photo'       => "'Фото товара'",
 
             'categories'          => "'Категории'",
             'categories.*'        => "'Категории'",
@@ -83,14 +85,17 @@ class SaveProductRequest extends FormRequest
             'specific_price.start_date'      => "'Дата начала'",
             'specific_price.expiration_date' => "'Дата окончания срока'",
 
-            'product_images.*.value'         => "'Фото'",
+            'product_images.*.value'         => "'Картинки'",
         ];
 
-        foreach ($this->input('attributes') as $key => $item)
-        {
-            $attribute = Attribute::select('name')->find($item['attribute_id']);
-            $attributes["attributes.$key.value"] = "'" . $attribute->name . "'";
-        }
+        $atts = $this->input('attributes');
+        if(is_array($atts))
+            foreach ($atts as $key => $item)
+            {
+                $attribute = Attribute::select('name')->find($item['attribute_id']);
+                if($attribute)
+                    $attributes["attributes.$key.value"] = "'" . $attribute->name . "'";
+            }
 
         return $attributes;
     }

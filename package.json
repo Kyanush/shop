@@ -23,9 +23,8 @@
     },
     "dependencies": {
         "luxon": "^1.6.2",
-        "moment": "^2.22.2",
         "v-select2-component": "^0.3.1",
-        "vue-datetime": "^1.0.0-beta.8",
+        "vue-bootstrap-datetimepicker": "^5.0.1",
         "vue-router": "^3.0.1",
         "vue-sortable-tree": "^1.2.2",
         "vue-sweetalert2": "^1.5.7",

@@ -3,7 +3,7 @@
 
              <router-link :to="{path: '/attributes-sets'}">
                  <i class="fa fa-angle-double-left"></i>
-                 Добавить новый набор <span>атрибутов</span>
+                 Наборы атрибутов
              </router-link>
 
              <br><br>

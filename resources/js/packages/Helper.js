@@ -107,8 +107,13 @@ export default function(Vue){
         },
         datetimeFormat(dateString){
             if(!dateString) return '';
+
+            console.log(dateString);
+
             var reggie = /(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/;
             var dateArray = reggie.exec(dateString);
+
+            if(!dateArray) return 'f';
 
             //текущая дата
             var today = new Date();

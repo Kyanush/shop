@@ -56,9 +56,14 @@ class ProductImage extends Model
      * @return string
      */
 
-    public function imagePath()
+    public function imagePath($firstSlash = false)
     {
-        return '/' . config('shop.products_path_file') . $this->product_id . '/' . $this->name;
+        return $this->productFileFolder($firstSlash) . $this->name;
+    }
+
+    public function productFileFolder($firstSlash = false)
+    {
+        return ($firstSlash ? '/' : '') . config('shop.products_path_file') . $this->product_id . '/';
     }
 
     protected static function boot()
@@ -68,7 +73,7 @@ class ProductImage extends Model
         //Событие до
         static::Deleting(function($modal) {
             if($modal->name)
-                File::delete(substr($modal->imagePath(), 1));
+                File::delete($modal->imagePath());
         });
     }
 

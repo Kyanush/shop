@@ -57,7 +57,6 @@
                     :page-class="'page-item'"></paginate>
         </div>
 
-        {{ attributesSetsList }}
 
     </div>
 </template>
@@ -79,8 +78,16 @@
                 }
             }
         },
-        mounted() {
-            console.log('Component mounted.')
+        watch: {
+            filter: {
+                handler: function (val, oldVal) {
+                    this.attributesSetsList();
+                },
+                deep: true
+            }
+        },
+        created(){
+            this.attributesSetsList();
         },
         methods:{
             SetPage(page){
@@ -107,9 +114,6 @@
                     }
                 });
             },
-
-        },
-        computed:{
             attributesSetsList(){
                 var params = {};
                 if(this.filter.page > 1 && !this.filter.search)

@@ -2,25 +2,16 @@
 
 namespace App\Models;
 
-use App\Mail\NotificationTemplateMail;
-use Backpack\CRUD\CrudTrait;
+//use App\Mail\NotificationTemplateMail;
+use App\Models\OrderStatusHistory;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
 
-    use CrudTrait;
 
-    /*
-    |--------------------------------------------------------------------------
-    | GLOBAL VARIABLES
-    |--------------------------------------------------------------------------
-    */
 
     protected $table = 'orders';
-    //protected $primaryKey = 'id';
-    // public $timestamps = false;
-    // protected $guarded = ['id'];
     protected $fillable = [
         'status_id',
         'comment',
@@ -29,14 +20,10 @@ class Order extends Model
         'shipping_address',
         'billing_address',
         'total_discount',
-        'total_discount_tax',
         'total_shipping',
-        'total_shipping_tax',
         'total',
-        'total_tax'
     ];
-    // protected $hidden = [];
-    // protected $dates = [];
+/*
     public $notificationVars = [
         'userSalutation',
         'userName',
@@ -45,12 +32,13 @@ class Order extends Model
         'total',
         'status'
     ];
-
+*/
     /*
     |--------------------------------------------------------------------------
     | NOTIFICATIONS VARIABLES
     |--------------------------------------------------------------------------
     */
+    /*
     public function notificationVariables()
     {
         return [
@@ -62,7 +50,7 @@ class Order extends Model
             'status'         => $this->status->name
         ];
     }
-
+*/
     /*
     |--------------------------------------------------------------------------
     | EVENTS
@@ -79,26 +67,30 @@ class Order extends Model
                 // example of usage: (be sure that a notification template mail with the slug "example-slug" exists in db)
                 return \Mail::to($order->user->email)->send(new NotificationTemplateMail($order, "order-status-changed"));
             }
+
+            if($order->status_id != self::find($order->id)->status_id)
+            {
+                OrderStatusHistory::create([
+                    'order_id'  => $order->id,
+                    'status_id' => $order->status_id,
+                    'user_id'   => Auth::user()->id
+                ]);
+            }
+
+        });
+
+        //Событие до
+        static::Saving(function($model) {
         });
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | FUNCTIONS
-    |--------------------------------------------------------------------------
-    */
     public function total()
     {
-        return decimalFormat($this->products->sum(function ($product) {
-            return $product->pivot->price_with_tax * $product->pivot->quantity;
-        }, 0) + $this->carrier->price);
+        return $this->products->sum(function ($product) {
+                return $product->pivot->price * $product->pivot->quantity;
+            }, 0) + $this->carrier->price;
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | RELATIONS
-    |--------------------------------------------------------------------------
-    */
     public function user()
     {
         return $this->hasOne('App\User', 'id', 'user_id');
@@ -124,45 +116,25 @@ class Order extends Model
         return $this->hasOne('App\Models\Address', 'id', 'shipping_address_id');
     }
 
-    public function billingAddress()
+    public function payment()
     {
-        return $this->hasOne('App\Models\Address', 'id', 'billing_address_id');
-    }
-
-    public function billingCompanyInfo()
-    {
-        return $this->hasOne('App\Models\Company', 'id', 'billing_company_id');
-    }
-
-    public function currency()
-    {
-        return $this->hasOne('App\Models\Currency', 'id', 'currency_id');
+        return $this->hasOne('App\Models\Payment', 'id', 'payment_id');
     }
 
     public function products()
     {
-        return $this->belongsToMany('App\Models\Product')->withPivot(['name', 'sku', 'price', 'price_with_tax',  'quantity']);
+        return $this->belongsToMany('App\Models\Product')->withPivot(['name', 'sku', 'price', 'quantity'])->withTrashed();
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | SCOPES
-    |--------------------------------------------------------------------------
-    */
-
-    /*
-    |--------------------------------------------------------------------------
-    | ACCESORS
-    |--------------------------------------------------------------------------
-    */
-
-    /*
-    |--------------------------------------------------------------------------
-    | MUTATORS
-    |--------------------------------------------------------------------------
-    */
+/*
     public function getCreatedAtAttribute($value)
     {
         return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $value)->format('d-m-Y H:i:s');
     }
+    public function getUpdatedAtAttribute($value)
+    {
+        return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $value)->format('d-m-Y H:i:s');
+    }*/
+
+
 }

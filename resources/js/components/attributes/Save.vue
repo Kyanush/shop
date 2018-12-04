@@ -5,7 +5,7 @@
 
         <router-link :to="{path: '/attributes'}">
             <i class="fa fa-angle-double-left"></i>
-            Вернуться ко всем <span>атрибутам</span>
+            Атрибуты
         </router-link>
 
 
@@ -41,7 +41,7 @@
 
                     <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('attribute.type')}">
                         <label>Тип <span class="red">*</span></label>
-                        <select name="type" id="attribute_type" class="form-control" v-model="attribute.type" v-on:change="clearDefaultValues" v-bind:disabled="attribute.id > 0">
+                        <select name="type" id="attribute_type" class="form-control" v-model="attribute.type" v-on:change="selectedAttributeType" v-bind:disabled="attribute.id > 0">
                             <option v-for="type in types" v-bind:value="type.value">
                                 {{ type.name }}
                             </option>
@@ -67,7 +67,7 @@
                                 Загрузить
                                 <input type="file" accept="image/*" id="uploadImage" class="hide" @change="setFile($event)"/>
                             </label>
-                            <button class="btn btn-danger" id="remove" type="button" @click="clearDefaultValues">
+                            <button class="btn btn-danger" id="remove" type="button" @click="clearImage">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </div>
@@ -264,7 +264,7 @@
                 this.$set(this.attribute.values[0],'value', event.target.files[0]);
                 this.$helper.setImgSrc(event.target.files[0], '#mainImage');
             },
-            clearDefaultValues(){
+            selectedAttributeType(){
                 if(this.attribute.type != 'multiple_select' && this.attribute.type != 'dropdown')
                     this.attribute.values = [{
                         id: 0,
@@ -272,6 +272,21 @@
                         is_delete: 0
                     }];
 
+                this.viewImageClear();
+            },
+            clearImage(){
+                if(this.attribute.id){
+                    this.attribute.values[0].value = '';
+                }else{
+                    this.attribute.values = [{
+                        id: 0,
+                        value: '',
+                        is_delete: 0
+                    }];
+                }
+                this.viewImageClear();
+            },
+            viewImageClear(){
                 $('#mainImage').attr('src', null);
                 $('#uploadImage').val(null);
             },
@@ -307,7 +322,6 @@
                     form_data.append('attribute[values]['+i+'][value]', value.value);
                     form_data.append('attribute[values]['+i+'][is_delete]', value.is_delete);
                 });
-
 
                 axios.post('/admin/attribute-save', form_data).then((res)=>{
                     if(res.data)

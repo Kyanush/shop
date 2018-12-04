@@ -43,7 +43,8 @@ class AttributeController extends AdminController
     //SaveAttribute
     public function save(SaveAttributeRequest $request)
     {
-         $data = $request->input('attribute');
+         $data = $request->all();
+         $data = $data['attribute'];
 
          $attribute = Attribute::findOrNew($data["id"]);
          $attribute->name     = $data['name'];
@@ -61,13 +62,12 @@ class AttributeController extends AdminController
 
                     if($attribute->type == 'media')
                     {
-                         if(!empty($attrValue->value)
-                                and
-                             ($request->file("values.$key.value") or empty($item['value']))
-                         )
-                             if(File::exists(config('shop.attributes_path_file') . $attrValue->value))
-                                 File::delete(public_path(config('shop.attributes_path_file') . $attrValue->value));
-
+                         if(!empty($attrValue->value) and ($request->file("attribute.values.$key.value") or empty($item['value'])))
+                         {
+                             $path_delete = config('shop.attributes_path_file') . $attrValue->value;
+                             if(File::exists($path_delete))
+                                 File::delete($path_delete);
+                         }
                          $item['value'] = $this->uploadFile($item['value'], config('shop.attributes_path_file'));
                     }
 

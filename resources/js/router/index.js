@@ -16,6 +16,25 @@ import attributes_sets_save    from  '../components/attributes-sets/Save.vue';
 import products_list    from  '../components/products/List.vue';
 import products_save    from  '../components/products/Save.vue';
 
+import users_list from  '../components/users/List.vue';
+import users_save from  '../components/users/Save.vue';
+
+import carriers_list from  '../components/carriers/List.vue';
+import carriers_save from  '../components/carriers/Save.vue';
+
+import payments_list from  '../components/payments/List.vue';
+import payments_save from  '../components/payments/Save.vue';
+
+import order_statuses_list from  '../components/order-statuses/List.vue';
+import order_statuses_save from  '../components/order-statuses/Save.vue';
+
+import specific_prices_list from  '../components/specific-prices/List.vue';
+
+import orders_list from  '../components/orders/List.vue';
+import orders_detail from  '../components/orders/Detail.vue';
+
+
+
 Vue.component('layout', require('../components/Layout.vue'));
 
 
@@ -200,6 +219,203 @@ export default new Router({
                 breadcrumb: [
                     { name: 'Главная страница', link: '/main' },
                     { name: 'Товары', link: '/products' },
+                ]
+            }
+        },
+
+
+
+        /**********************************************************************************************************************/
+        {
+            path: '/users',
+            name: 'Клиенты и пользователи',
+            component: users_list,
+            meta: {
+                roles: ['admin'],
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                ]
+            }
+        },
+        {
+            path: '/users/create',
+            name: 'Создать',
+            component: users_save,
+            meta: {
+                roles: ['admin'],
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Клиенты и пользователи', link: '/users' },
+                ]
+            }
+        },
+        {
+            path: '/users/edit/:id',
+            name: 'Редактировать',
+            component: users_save,
+            meta: {
+                roles: ['admin'],
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Клиенты и пользователи', link: '/users' },
+                ]
+            }
+        },
+
+
+
+
+        //Курьер
+        {
+            path: '/carriers',
+            name: 'Курьеры',
+            component: carriers_list,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                ]
+            }
+        },
+        {
+            path: '/carriers/create',
+            name: 'Создать курьер',
+            component: carriers_save,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Курьеры', link: '/carriers' },
+                ]
+            }
+        },
+        {
+            path: '/carriers/edit/:id',
+            name: 'Редактировать курьер',
+            component: carriers_save,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Курьеры', link: '/carriers' },
+                ]
+            }
+        },
+
+
+        //статус
+        {
+            path: '/order-statuses',
+            name: 'Статусы заказов',
+            component: order_statuses_list,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                ]
+            }
+        },
+        {
+            path: '/order-statuses/create',
+            name: 'Создать статус заказа',
+            component: order_statuses_save,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Статусы заказов', link: '/order-statuses' },
+                ]
+            }
+        },
+        {
+            path: '/order-statuses/edit/:id',
+            name: 'Редактировать статус заказа',
+            component: order_statuses_save,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Статусы заказов', link: '/order-statuses' },
+                ]
+            }
+        },
+
+
+        //Скидки
+        {
+            path: '/specific-prices',
+            name: 'Скидки',
+            component: specific_prices_list,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                ]
+            }
+        },
+
+
+
+        //заказы
+        {
+            path: '/orders',
+            name: 'Заказы',
+            component: orders_list,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                ]
+            }
+        },
+        {
+            path: '/orders/:id',
+            name: 'Заказ',
+            component: orders_detail,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Заказы', link: '/orders' },
+                ]
+            }
+        },
+        {
+            path: '/orders/create',
+            name: 'Создать заказ',
+            component: orders_detail,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Создать заказ', link: '/orders' },
+                ]
+            }
+        },
+
+
+
+
+        //Курьер
+        {
+            path: '/payments',
+            name: 'Тип оплаты',
+            component: payments_list,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                ]
+            }
+        },
+        {
+            path: '/payments/create',
+            name: 'Создать курьер',
+            component: payments_save,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Тип оплаты', link: '/payments' },
+                ]
+            }
+        },
+        {
+            path: '/payments/edit/:id',
+            name: 'Редактировать курьер',
+            component: payments_save,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Тип оплаты', link: '/payments' },
                 ]
             }
         },

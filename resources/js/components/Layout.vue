@@ -6,9 +6,9 @@
             <!-- Logo -->
             <router-link :to="{ path: '/main'}" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
-                <span class="logo-mini">SKUS</span>
+                <span class="logo-mini">SHOP</span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg">SKUS</span>
+                <span class="logo-lg">SHOP</span>
             </router-link>
 
             <!-- Header Navbar: style can be found in header.less -->
@@ -100,53 +100,90 @@
                     <!-- ================================================ -->
                     <!-- ==== Recommended place for admin menu items ==== -->
                     <!-- ================================================ -->
-                    <li><a href="http://estarter-ecommerce-for-laravel/admin/dashboard"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
 
 
-                    <li v-bind:class="{'active' : menu_active('/categories/')}">
-                        <router-link :to="{ path: '/categories'}">
-                            <i class="fa fa-bars"></i>
-                            <span>Категории</span>
-                        </router-link>
-                    </li>
+
+
 
                     <li v-bind:class="{'active' : menu_active('/products/')}">
                         <router-link :to="{ path: '/products'}">
-                            <i class="fa fa-bars"></i>
+                            <i class="fa fa-shopping-basket" aria-hidden="true"></i>
                             <span>Товары</span>
                         </router-link>
                     </li>
-
-
-                    <li><a href="http://estarter-ecommerce-for-laravel/admin/orders"><i class="fa fa-list-ul"></i> <span>Orders</span></a></li>
-
-                    <li><a href="http://estarter-ecommerce-for-laravel/admin/clients"><i class="fa fa-users"></i> <span>Clients</span></a></li>
-
+                    <li v-bind:class="{'active' : menu_active('/specific-prices/')}">
+                        <router-link :to="{ path: '/specific-prices'}">
+                            <i class="fa fa-money"></i>
+                            <span>Скидки</span>
+                        </router-link>
+                    </li>
                     <li v-bind:class="{'active' : menu_active('/attributes/')}">
                         <router-link :to="{ path: '/attributes'}">
-                            <i class="fa fa-bars"></i>
+                            <i class="fa fa-tag"></i>
                             <span>Атрибуты</span>
                         </router-link>
                     </li>
 
                     <li v-bind:class="{'active' : menu_active('/attributes-sets/')}">
                         <router-link :to="{ path: '/attributes-sets'}">
-                            <i class="fa fa-bars"></i>
+                            <i class="fa fa-tags"></i>
                             <span>Наборы атрибутов</span>
                         </router-link>
                     </li>
 
-                    <li><a href="http://estarter-ecommerce-for-laravel/admin/currencies"><i class="fa fa-usd"></i> <span>Currencies</span></a></li>
+                    <li v-bind:class="{'active' : menu_active('/orders/')}">
+                        <router-link :to="{ path: '/orders'}">
+                            <i class="fa fa-cart-arrow-down" aria-hidden="true"></i>
+                            <span>Заказы</span>
+                        </router-link>
+                    </li>
 
-                    <li><a href="http://estarter-ecommerce-for-laravel/admin/carriers"><i class="fa fa-truck"></i> <span>Carriers</span></a></li>
+                    <li v-bind:class="{'active' : menu_active('/users/')}">
+                        <router-link :to="{ path: '/users'}">
+                            <i class="fa fa-users"></i>
+                            <span>Клиенты и пользователи</span>
+                        </router-link>
+                    </li>
 
-                    <li><a href="http://estarter-ecommerce-for-laravel/admin/taxes"><i class="fa fa-balance-scale"></i> <span>Taxes</span></a></li>
 
-                    <li><a href="http://estarter-ecommerce-for-laravel/admin/order-statuses"><i class="fa fa-list-ul"></i> <span>Order Statuses</span></a></li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-book" aria-hidden="true"></i>
+                            <span>Справочники</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
 
-                    <li><a href="http://estarter-ecommerce-for-laravel/admin/cart-rules"><i class="fa fa-shopping-cart"></i> <span>Cart rules</span></a></li>
+                        <ul class="treeview-menu" style="display: none;">
+                            <li v-bind:class="{'active' : menu_active('/categories/')}">
+                                <router-link :to="{ path: '/categories'}">
+                                    <i class="fa fa-bars"></i>
+                                    <span>Категории</span>
+                                </router-link>
+                            </li>
+                            <li v-bind:class="{'active' : menu_active('/carriers/')}">
+                                <router-link :to="{ path: '/carriers'}">
+                                    <i class="fa fa-truck"></i>
+                                    <span>Курьеры</span>
+                                </router-link>
+                            </li>
+                            <li v-bind:class="{'active' : menu_active('/order-statuses/')}">
+                                <router-link :to="{ path: '/order-statuses'}">
+                                    <i class="fa fa-hourglass-start" aria-hidden="true"></i>
+                                    <span>Статусы заказов</span>
+                                </router-link>
+                            </li>
+                            <li v-bind:class="{'active' : menu_active('/payments/')}">
+                                <router-link :to="{ path: '/payments'}">
+                                    <i class="fa fa-paypal" aria-hidden="true"></i>
+                                    <span>Тип оплаты</span>
+                                </router-link>
+                            </li>
+                        </ul>
 
-                    <li><a href="http://estarter-ecommerce-for-laravel/admin/specific-prices"><i class="fa fa-money"></i> <span>Specific prices</span></a></li>
+
+
+                    </li>
+<!--
 
                     <li><a href="http://estarter-ecommerce-for-laravel/admin/notification-templates"><i class="fa fa-list"></i> <span>Notification Templates</span></a></li>
 
@@ -158,7 +195,7 @@
                             <li><a href="http://estarter-ecommerce-for-laravel/admin/permission"><i class="fa fa-key"></i> <span>Permissions</span></a></li>
                         </ul>
                     </li>
-
+-->
 
 
 

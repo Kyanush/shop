@@ -1,0 +1,56 @@
+<?php
+namespace App\Services;
+
+use App\Models\Order;
+use App\Models\Product;
+
+class ServiceOrder
+{
+
+    public function productDelete($product_id, $order_id)
+    {
+        $order = Order::find($order_id);
+        $order->products()->detach($product_id);
+        $this->totalOrder($order_id);
+        return true;
+    }
+
+    public function productAdd($product_id, $quantity, $order_id)
+    {
+        $product = Product::with(['specificPrice' => function($query){
+            $query->DateActive();
+        }])->find($product_id);
+
+        if($product)
+        {
+            if($product->specificPrice)
+                $price = $product->specificPrice->getReducedPrice();
+            else
+                $price = $product->price;
+
+            //findOrNew
+            $order = Order::find($order_id);
+
+            $order->products()->syncWithoutDetaching([$product_id =>
+                [
+                    'name'     => $product->name,
+                    'sku'      => $product->sku,
+                    'price'    => $price,
+                    'quantity' => $quantity
+                ]
+            ]);
+
+            $this->totalOrder($order_id);
+        }else{
+            return false;
+        }
+    }
+
+    public function totalOrder($order_id)
+    {
+        $order = Order::find($order_id);
+        $order->total = $order->total();
+        return $order->save();
+    }
+
+}

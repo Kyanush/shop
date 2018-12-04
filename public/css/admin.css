@@ -25,3 +25,33 @@ a{
 a:hover{
     text-decoration: underline;
 }
+.is-delete {
+    opacity: 0.5!important;
+    background-color: #ffdfdf!important;
+}
+
+
+/* Статусы */
+.status-new{
+    color: #3c8dbc;
+}
+.status-ways{
+    color: #ff00d2;
+}
+.status-waiting-for-payment{
+    color: #18bdc6;
+}
+.status-ready-for-issue{
+    color: #f39c12;
+}
+.status-completed{
+    color: #24b80b;
+}
+.status-canceled{
+    color: red;
+}
+
+
+
+
+

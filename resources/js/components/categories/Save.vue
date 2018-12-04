@@ -3,7 +3,7 @@
 
              <router-link :to="{path: '/categories'}">
                  <i class="fa fa-angle-double-left"></i>
-                 Вернуться ко всем <span>категориям</span>
+                 Категории
              </router-link>
 
              <br><br>
