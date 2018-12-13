@@ -89,7 +89,10 @@ Route::group([/*'middleware' => 'auth',*/ 'prefix'     => 'admin', 'namespace'  
         Route::get('orders-list',         'Api\OrderController@list');
         Route::get('order/{id}',          'Api\OrderController@view')->where(['id' => '[0-9]+']);
         Route::get('order/users',         'Api\OrderController@users');
+        Route::post('order-save',         'Api\OrderController@orderSave');
 
+        //компания
+        Route::get('addresses-list',        'Api\AddressController@list');
     }
 
 

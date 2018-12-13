@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Admin\Api;
 use App\Http\Controllers\Admin\AdminController;
 
 use App\Models\Order;
+use App\Requests\SaveOrderRequest;
 use App\User;
 
 
-//use App\Services\ServiceOrderStatus;
 use App\Services\ServiceOrder;
 use Illuminate\Http\Request;
 use DB;
@@ -17,7 +17,7 @@ class OrderController extends AdminController
 {
     public function list(Request $request)
     {
-        $search = trim(mb_strtolower($request->input('search')));
+
 
 
         $list =  Order::with([
@@ -27,14 +27,7 @@ class OrderController extends AdminController
             },
             'status',
         ])
-        ->where(function ($query) use ($search){
-
-            if(!empty($search))
-            {
-                $query->Where(   DB::raw('LOWER(id)'), 'like', "%"  . $search . "%");
-            }
-
-        })
+        ->Filters($request->all())
         ->OrderBy('id', 'DESC')
         ->paginate($request->input('perPage') ?? 10);
 
@@ -44,15 +37,6 @@ class OrderController extends AdminController
 
     public function view($id)
     {
-
-        //ServiceOrder
-
-        $s = new ServiceOrder;
-
-
-        $s->productAdd(75, 10, 1);
-
-
         $order = Order::with([
             'user' => function($query){
                 $query->withTrashed();
@@ -78,6 +62,30 @@ class OrderController extends AdminController
     }
 
 
+    public function orderSave(SaveOrderRequest $request)
+    {
+        $data = $request->input('order');
+
+        $serviceOrder = new ServiceOrder();
+
+        $order = Order::findOrNew($data["id"]);
+        $order->fill($data);
+        if($order->save())
+        {
+            foreach ($data['products'] as $product)
+            {
+                $pivot = $product['pivot'];
+                if(isset($pivot['is_delete']))
+                {
+                    $serviceOrder->productDelete($pivot['product_id'], $order->id);
+                }else{
+                    $serviceOrder->productAdd($pivot['product_id'], $order->id, $pivot['quantity'], $pivot['price']);
+                }
+            }
+        }
+
+        return  $this->sendResponse($order->id);
+    }
 
 
     public function users()

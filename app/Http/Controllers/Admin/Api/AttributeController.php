@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin\Api;
 use App\Http\Controllers\Admin\AdminController;
 use App\Requests\SaveAttributeRequest;
-use App\Services\ServiceAttribute;
 use Illuminate\Http\Request;
 use App\Models\Attribute;
 use App\Models\AttributeValue;
@@ -15,11 +14,7 @@ class AttributeController extends AdminController
 {
     use UploadableTrait;
 
-    private $serviceAttribute;
-    public function __construct(ServiceAttribute $serviceAttribute)
-    {
-        $this->serviceAttribute = $serviceAttribute;
-    }
+
 
     public function list(Request $request)
     {

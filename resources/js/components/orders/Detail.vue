@@ -1,19 +1,32 @@
 <template>
     <div>
 
-
-
-
+        <div class="box">
+        <div class="box-header with-border"><a href="/admin/orders/create" class="btn btn-primary ladda-button"><span class="ladda-label"><i class="fa fa-plus"></i> Создать заказ
+            </span></a></div>
+        </div>
 
         <div class="row">
             <div class="col-md-12 well">
-                <h2>Заказ #{{ order.id }} -
-                    |
-                    <router-link :to="{ path: '/users/edit/' + order.user_id}" v-if="order.user">
-                        {{ order.user.name }} {{ order.user.surname }}
+                <h2>
+                    <router-link :to="{path: '/orders'}">
+                        <i class="fa fa-angle-double-left"></i>
+                        Заказы
                     </router-link>
-                    |
-                    {{ datetimeFormat(order.created_at) }}
+
+                    Заказ #{{ order.id }}
+
+                    <router-link :to="{ path: '/users/edit/' + order.user_id}" v-if="order.user">
+                        - | {{ order.user.name }} {{ order.user.surname }}
+                    </router-link>
+
+                    {{ order.created_at ? '|'  + datetimeFormat(order.created_at) : ''}}
+
+                    <a class="btn btn-success ladda-button pull-right" @click="saveOrder">
+                        <span class="ladda-label">
+                            <i class="fa fa-cart-arrow-down"></i> {{ order.id ? 'Сохранить заказ' : 'Создать заказ'}}
+                        </span>
+                    </a>
 
                 </h2>
             </div>
@@ -94,7 +107,7 @@
                     </div>
 
                     <div class="box-body">
-                        <div class="col-md-12 well">
+                        <div class="well">
                             <table class="table table-condensed table-hover">
                                 <tbody>
                                     <tr>
@@ -138,7 +151,7 @@
                     </div>
 
                     <div class="box-body">
-                        <div class="col-md-12 well">
+                        <div class="well">
                             <table class="table table-condensed table-hover">
                                 <tbody>
                                     <tr>
@@ -294,7 +307,7 @@
                     </div>
 
                     <div class="box-body">
-                        <div class="col-md-12">
+
                             <table class="table table-striped table-hover">
                                 <thead>
                                 <tr>
@@ -306,45 +319,39 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr v-for="(product, index) in order.products">
-                                    <td class="vertical-align-middle">
-                                        <router-link :to="{ path: '/products/edit/' + product.pivot.product_id}">
-                                            <img v-bind:src="'/uploads/products/' + product.pivot.product_id + '/' + product.photo" class="photo"/>
-                                            {{ product.pivot.name }}
-                                        </router-link>
-                                        <p class="font-12"><b>SKU:</b> {{ product.pivot.sku }}</p>
-                                    </td>
-                                    <td class="vertical-align-middle">
-                                        <input type="text" class="form-control pull-left product-price" v-model="product.pivot.price"/>
-                                        &nbsp;&nbsp;
-                                        <span class="pull-left">тг</span>
-                                    </td>
-                                    <td class="vertical-align-middle">
-                                        <input min="1" type="number" class="form-control product-quantity" v-model="product.pivot.quantity"/>
-                                    </td>
-                                    <td class="vertical-align-middle text-right">{{ product.pivot.quantity * product.pivot.price }} тг</td>
-                                    <td class="vertical-align-middle text-right">
-                                        <a class="btn btn-xs btn-default" @click="productDelete(index)">
-                                            <i class="fa fa-remove red"></i> Удалить
-                                        </a>
-                                    </td>
-                                </tr>
+                                    <tr v-for="(product, index) in order.products" v-if="!product.pivot.is_delete">
+                                        <td class="vertical-align-middle">
+                                            <router-link :to="{ path: '/products/edit/' + product.pivot.product_id}">
+                                                <img v-bind:src="'/uploads/products/' + product.pivot.product_id + '/' + product.photo" class="photo"/>
+                                                {{ product.pivot.name }}
+                                            </router-link>
+                                            <p class="font-12"><b>SKU:</b> {{ product.pivot.sku }}</p>
+                                        </td>
+                                        <td class="vertical-align-middle">
+                                            <input type="text" class="form-control pull-left product-price" v-model="product.pivot.price"/>
+                                            &nbsp;&nbsp;
+                                            <div class="pull-left product-price-tg">тг</div>
+                                        </td>
+                                        <td class="vertical-align-middle">
+                                            <input min="1" type="number" class="form-control product-quantity" v-model="product.pivot.quantity"/>
+                                        </td>
+                                        <td class="vertical-align-middle text-right">{{ product.pivot.quantity * product.pivot.price }} тг</td>
+                                        <td class="vertical-align-middle text-right">
+                                            <a class="btn btn-xs btn-default" @click="productDelete(index)">
+                                                <i class="fa fa-remove red"></i> Удалить
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="vertical-align-middle text-right" colspan="4"><b>Доставка:</b></td>
+                                        <td class="vertical-align-middle text-right">{{ order.carrier ? order.carrier.price : 0 }} тг</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="vertical-align-middle text-right" colspan="4"><b>ИТОГО:</b></td>
+                                        <td class="vertical-align-middle text-right">{{ order.total }} тг</td>
+                                    </tr>
                                 </tbody>
                             </table>
-                        </div>
-
-                        <div class="col-md-6 col-md-offset-6">
-                            <table class="table table-condensed">
-                                <tbody><tr>
-                                    <td class="text-right"><strong>Доставка:</strong></td>
-                                    <td class="text-right" v-if="order.carrier">{{ order.carrier.price }} тг</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-right"><strong>ИТОГО:</strong></td>
-                                    <td class="text-right"><strong>{{ order.total }} тг</strong></td>
-                                </tr>
-                                </tbody></table>
-                        </div>
 
                     </div>
                 </div>
@@ -355,7 +362,7 @@
 
 
         <div class="row" v-if="order.status_history">
-            <div class="col-md-12">
+            <div class="col-md-12" v-if="order.status_history.length > 0">
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">
@@ -364,7 +371,6 @@
                     </div>
 
                     <div class="box-body">
-                        <div class="col-md-12">
                             <table class="table table-striped table-hover" id="status-table">
                                 <thead>
                                 <tr>
@@ -388,12 +394,21 @@
                                 </tr>
                                 </tbody>
                             </table>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
+
+        <div class="row">
+            <div class="col-md-12 well">
+                <a class="btn btn-success ladda-button pull-right" @click="saveOrder">
+                    <span class="ladda-label">
+                        <i class="fa fa-cart-arrow-down"></i> {{ order.id ? 'Сохранить заказ' : 'Создать заказ'}}
+                    </span>
+                </a>
+            </div>
+        </div>
 
 
         <div class="modal" tabindex="-1" role="dialog" id="show-product-add-form">
@@ -409,8 +424,7 @@
                         <Select2
                                 @select="productAdd($event)"
                                 :settings="products.settings"
-                                :options="products.options"
-                        />
+                                :options="products.options"/>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
@@ -445,17 +459,21 @@
                     locale: 'ru'
                 },
                 order: {
-                    id: this.$route.params.id ? this.$route.params.id : 0,
-                    created_at: '',
+                    id: parseInt(this.$route.params.id) > 0 ? this.$route.params.id : 0,
+                    user_id: 0,
                     status_id: 1,
-                    comment: '',
                     carrier_id: 2,
                     shipping_address_id: 0,
+                    comment: '',
                     delivery_date: '',
-                    paid: 0,
+                    //total
                     payment_id: 1,
+                    paid: 0,
                     payment_date: '',
-                    user_id: 0,
+                    //payment_result
+                    created_at: '',
+                    //updated_at
+
                     products: [],
                 },
                 order_statuses: [],
@@ -502,17 +520,31 @@
             $('.selectpicker').selectpicker('refresh');
         },
         methods:{
+            saveOrder(){
+                axios.post('/admin/order-save', {order: this.order}).then((res)=>{
+                    if(res.data)
+                    {
+                        this.$helper.swalSuccess(parseInt(this.$route.params.id) ? 'Заказ изменен' : 'Заказ создан');
+                        if(!parseInt(this.$route.params.id))
+                            this.$router.push('/orders/' + res.data);
+                        this.getOrder(res.data);
+                    }
+                });
+            },
             productDelete(index){
-
+                if(!this.order.id)
+                    this.$delete(this.order.products, index);
+                else
+                    this.$set(this.order.products[index].pivot, 'is_delete', true);
             },
             productAdd({id, text, sku, price, photo}){
-
                 var self = this;
                 var add  = true;
 
                 this.order.products.forEach(function (item, index) {
                     if(item.pivot.product_id == id){
                         self.$set(self.order.products[index].pivot, 'quantity', self.order.products[index].pivot.quantity + 1);
+                        self.$delete(self.order.products[index].pivot, 'is_delete');
                         add = false;
                         return;
                     }
@@ -538,13 +570,16 @@
             showProductAddForm(){
                 $('#show-product-add-form').modal('show');
             },
-            convertDataSelect2(values, column_text, column_id){
-                return this.$helper.convertDataSelect2(values, column_text, column_id);
+            convertDataSelect2(values, column_id, column_text, disabled_column, default_option){
+                return this.$helper.convertDataSelect2(values, column_id, column_text, disabled_column, default_option);
             },
-            getOrder(){
-                axios.get('/admin/order/' + this.order.id).then((res)=>{
-                    this.order = res.data;
-                });
+            getOrder(order_id){
+                if(order_id)
+                {
+                    axios.get('/admin/order/' + order_id).then((res)=>{
+                        this.order = res.data;
+                    });
+                }
             },
             //формат даты
             datetimeFormat(date){
@@ -552,8 +587,7 @@
             },
         },
         created(){
-            if(this.order.id > 0)
-                this.getOrder();
+            this.getOrder(this.order.id);
 
             axios.get('/admin/order-statuses-list', {params:  {perPage: 1000}}).then((res)=>{
                 this.order_statuses = res.data.data;
@@ -570,9 +604,6 @@
             axios.get('/admin/order/users').then((res)=>{
                 this.users = res.data;
             });
-
-
-
         },
         computed:{
             addresses(){
@@ -581,8 +612,12 @@
                 this.users.forEach(function(item, index) {
                     if(self.order.user_id == item.id)
                     {
-                        addresses = item.addresses;
-                        return;
+                        if(item.addresses.length > 0)
+                        {
+                            addresses = item.addresses;
+                            //self.order.shipping_address_id = addresses[0].id;
+                            return;
+                        }
                     }
                 });
                 return addresses;
@@ -627,5 +662,9 @@
     }
     #show-product-add-form .select2{
         width: 100%!important;
+    }
+    .product-price-tg{
+        margin-top: 7px;
+        margin-left: 7px;
     }
 </style>

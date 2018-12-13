@@ -15,7 +15,7 @@ class ServiceOrder
         return true;
     }
 
-    public function productAdd($product_id, $quantity, $order_id)
+    public function productAdd($product_id, $order_id, $quantity = 1, $price = 0)
     {
         $product = Product::with(['specificPrice' => function($query){
             $query->DateActive();
@@ -23,10 +23,13 @@ class ServiceOrder
 
         if($product)
         {
-            if($product->specificPrice)
-                $price = $product->specificPrice->getReducedPrice();
-            else
-                $price = $product->price;
+            if($price == 0)
+            {
+                if($product->specificPrice)
+                    $price = $product->specificPrice->getReducedPrice();
+                else
+                    $price = $product->price;
+            }
 
             //findOrNew
             $order = Order::find($order_id);

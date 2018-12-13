@@ -1,103 +1,150 @@
 <template>
     <div class="box">
 
-                    <div class="box-header with-border">
-
-                        <router-link :to="{ path: '/orders/create'}" class="btn btn-primary ladda-button">
-                            <span class="ladda-label">
-                                <i class="fa fa-plus"></i> Создать заказ
-                            </span>
-                        </router-link>
-
-
-                        <input id="filter-search" type="search" class="form-control input-sm pull-right" placeholder="Поиск" v-model="filter.search">
-                    </div>
+        <div class="box-header with-border">
+            <router-link :to="{ path: '/orders/create'}" class="btn btn-primary ladda-button">
+                <span class="ladda-label">
+                    <i class="fa fa-plus"></i> Создать заказ
+                </span>
+            </router-link>
+        </div>
 
         <div class="box-header with-border">
             <div class="row">
                 <div class="col-md-6">
                     <table class="table table-bordered ">
-                        <tbody>
-                        <tr class="odd even">
-                            <td><b>Номер заказа №:</b></td>
-                            <td>
-                                <input type="text" class="form-control" v-model="filter.order_id"/>
-                            </td>
-                        </tr>
-                        <tr class="odd even">
-                            <td><b>Статус:</b></td>
-                            <td>
-                            </td>
-                        </tr>
-                        <!--
-                        <tr class="odd even">
-                            <td><b>ID карты доступа:</b></td>
-                            <td>
-                                <input type="text" class="form-control" v-model="filter.access_card_id"/>
-                            </td>
-                        </tr>
-                        <tr class="odd even">
-                            <td><b>Столовая:</b></td>
-                            <td>
-                                <Select2 v-model="filter.canteen_id" :options="convertDataSelect2(canteens, false, false, false, true)"/>
-                            </td>
-                        </tr>
-                        <tr class="odd even">
-                            <td><b>План питания:</b></td>
-                            <td>
-                                <Select2 v-model="filter.nutrition_plan_id" :options="convertDataSelect2(nutrition_plans, false, false, false, true)"/>
-                            </td>
-                        </tr>-->
+                        <tbody class="filter">
+                            <tr class="odd even">
+                                <td><b>Номер заказа №:</b></td>
+                                <td>
+                                    <input type="text" class="form-control" v-model="filter.id"/>
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td><b>Клиент:</b></td>
+                                <td>
+                                    <Select2 :settings="{multiple: true}" v-model="filter.user_id" :options="convertDataSelect2(users)"/>
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td><b>Текущее состояние:</b></td>
+                                <td>
+                                    <select class="selectpicker form-control" v-model="filter.status_id">
+                                        <option value="">Все</option>
+                                        <option v-for="os in order_statuses"
+                                                v-bind:value="os.id"
+                                                :data-icon="os.class">
+                                            {{ os.name }}
+                                        </option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td><b>Курьер:</b></td>
+                                <td>
+                                    <Select2 :settings="{multiple: true}" v-model="filter.carrier_id" :options="convertDataSelect2(carriers)"/>
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td><b>Адрес:</b></td>
+                                <td>
+                                    <Select2 :settings="{multiple: true}" v-model="filter.shipping_address_id" :options="convertDataSelect2(addresses, 'id', 'address|city')"/>
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td><b>Комментарии:</b></td>
+                                <td>
+                                    <textarea class="form-control" v-model="filter.comment"></textarea>
+                                </td>
+                            </tr>
+
+
+
+
                         </tbody>
                     </table>
                 </div>
                 <div class="col-md-6">
-                    <!--
                     <table class="table table-bordered ">
-                        <tbody>
-                        <tr class="odd even">
-                            <td><b>Дата:</b></td>
-                            <td>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <date-picker :config="datetimepicker" v-model="filter.date_start"></date-picker>
+                        <tbody class="filter">
+                            <tr class="odd even">
+                                <td><b>Дата доставки:</b></td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <date-picker :config="datetimepicker" v-model="filter.delivery_date_start"></date-picker>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <date-picker :config="datetimepicker" v-model="filter.delivery_date_end"></date-picker>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <date-picker :config="datetimepicker" v-model="filter.date_end"></date-picker>
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td><b>Итого:</b></td>
+                                <td>
+                                    <input type="number" class="form-control" v-model="filter.total"/>
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td><b>Тип оплаты:</b></td>
+                                <td>
+                                    <Select2 :settings="{multiple: true}" v-model="filter.payment_id" :options="convertDataSelect2(payments)"/>
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td><b>Оплачен:</b></td>
+                                <td>
+                                    <select class="selectpicker form-control" v-model="filter.paid">
+                                        <option value="">Все</option>
+                                        <option value="1" data-icon="fa fa-check-circle status-completed">Да</option>
+                                        <option value="0" data-icon="fa fa-check-circle status-canceled">Нет</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td><b>Дата оплаты:</b></td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <date-picker :config="datetimepicker" v-model="filter.payment_date_start"></date-picker>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <date-picker :config="datetimepicker" v-model="filter.payment_date_end"></date-picker>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="odd even">
-                            <td><b>Статус:</b></td>
-                            <td>
-                                <select class="form-control" v-model="filter.status">
-                                    <option value="">Все</option>
-                                    <option value="ОК">ОК (Проходит по плану питания и процент совпадения >= 60%)</option>
-                                    <option value="NONE FACE">NONE FACE (Когда процент совпадения <60%, но вход по карте разрешен)</option>
-                                    <option value="NO RESIDENT">NO RESIDENT (Не найден пользователь)</option>
-                                    <option value="ANTIPASSBACK">ANTIPASSBACK (Вход запрещен когда по этой карте нельзя заходить в эту столовую в это время)</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr class="odd even">
-                            <td><b>Камера:</b></td>
-                            <td>
-                                <Select2 v-model="filter.camera_id" :options="convertDataSelect2(cameras, false, false, false, true)"/>
-                            </td>
-                        </tr>
-                        <tr class="odd even">
-                            <td><b>Компания:</b></td>
-                            <td>
-                                <Select2 v-model="filter.company_id" :options="convertDataSelect2(companies, false, false, false, true)"/>
-                            </td>
-                        </tr>
-
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td><b>Дата заказа:</b></td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <date-picker :config="datetimepicker" v-model="filter.created_at_start"></date-picker>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <date-picker :config="datetimepicker" v-model="filter.created_at_end"></date-picker>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td></td>
+                                <td>
+                                    <button type="button" class="btn btn-danger pull-right" @click="clearFilters">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                        Очистить все фильтры
+                                    </button>
+                                </td>
+                            </tr>
                         </tbody>
-                    </table>-->
+                    </table>
                 </div>
+
             </div>
         </div>
+
+
 
                    <table class="table table-bordered ">
                             <thead>
@@ -167,18 +214,46 @@
 
 <script>
     import Paginate from 'vuejs-paginate';
+    import Select2 from 'v-select2-component';
+    import datePicker from 'vue-bootstrap-datetimepicker';
 
     export default {
         components:{
-            Paginate
+            Paginate, Select2, datePicker
         },
         data () {
             return {
+                datetimepicker: {
+                    format: 'YYYY-MM-DD HH:mm:ss',
+                    useCurrent: false,
+                    showClear: true,
+                    showClose: true,
+                },
+
                 orders: [],
+                users: [],
+                order_statuses: [],
+                carriers: [],
+                addresses: [],
+                payments: [],
+
                 filter:{
-                    order_id:   (this.$route.query.order_id   ? this.$route.query.order_id : ''),
-                    page:   (this.$route.query.page   ? this.$route.query.page : 1),
-                    search: (this.$route.query.search ? this.$route.query.search : '')
+                    id:   (this.$route.query.id   ? this.$route.query.id : ''),
+                    user_id:   (this.$route.query.user_id   ? this.$route.query.user_id : ''),
+                    status_id:   (this.$route.query.status_id   ? this.$route.query.status_id : ''),
+                    carrier_id:   (this.$route.query.carrier_id   ? this.$route.query.carrier_id : ''),
+                    shipping_address_id:   (this.$route.query.shipping_address_id   ? this.$route.query.shipping_address_id : ''),
+                    comment:   (this.$route.query.comment   ? this.$route.query.comment : ''),
+                    delivery_date_start:   (this.$route.query.delivery_date_start   ? this.$route.query.delivery_date_start : ''),
+                    delivery_date_end:   (this.$route.query.delivery_date_end   ? this.$route.query.delivery_date_end : ''),
+                    total:   (this.$route.query.total   ? this.$route.query.total : ''),
+                    payment_id:   (this.$route.query.payment_id   ? this.$route.query.payment_id : ''),
+                    paid:   (this.$route.query.paid   ? this.$route.query.paid : ''),
+                    payment_date_start:   (this.$route.query.payment_date_start   ? this.$route.query.payment_date_start : ''),
+                    payment_date_end:   (this.$route.query.payment_date_end   ? this.$route.query.payment_date_end : ''),
+                    created_at_start:   (this.$route.query.created_at_start   ? this.$route.query.created_at_start : ''),
+                    created_at_end:   (this.$route.query.created_at_end   ? this.$route.query.created_at_end : ''),
+                    page:   (this.$route.query.page > 1 ? this.$route.query.page : ''),
                 }
             }
         },
@@ -192,18 +267,56 @@
         },
         created(){
             this.ordersList();
+
+            axios.get('/admin/order/users').then((res)=>{
+                this.users = res.data;
+            });
+
+            axios.get('/admin/order-statuses-list', {params:  {perPage: 1000}}).then((res)=>{
+                this.order_statuses = res.data.data;
+            });
+
+            axios.get('/admin/carriers-list', {params:  {perPage: 1000}}).then((res)=>{
+                this.carriers = res.data.data;
+            });
+
+            axios.get('/admin/addresses-list').then((res)=>{
+                this.addresses = res.data;
+            });
+
+            axios.get('/admin/payments-list', {params:  {perPage: 1000}}).then((res)=>{
+                this.payments = res.data.data;
+            });
+
+        },
+        updated () {
+            $('.selectpicker').selectpicker('refresh');
         },
         methods:{
+            convertDataSelect2(values, column_id, column_text, disabled_column, default_option){
+                return this.$helper.convertDataSelect2(values, column_id, column_text, disabled_column, default_option);
+            },
             SetPage(page){
                 this.filter.page = page;
             },
+            clearFilters(){
+                var self = this;
+                Object.keys(this.filter).forEach(function (column) {
+                    if(self.filter[column])
+                        self.filter[column] = '';
+                });
+            },
             ordersList(){
                 var params = {};
-                if(this.filter.page > 1 && !this.filter.search)
+                if(this.filter.page > 1)
                     params['page'] = this.filter.page;
 
-                if(this.filter.search)
-                    params['search'] = this.filter.search;
+                var self = this;
+                Object.keys(this.filter).forEach(function (column) {
+                    if(self.filter[column] && column != 'page'){
+                        params[column] = self.filter[column];
+                    }
+                });
 
                 axios.get('/admin/orders-list', {params:  params}).then((res)=>{
                     this.orders = res.data;
@@ -216,8 +329,30 @@
 </script>
 
 
-<style scoped>
+<style>
     #filter-search{
         max-width: 300px;
+    }
+    .filter{
+        font-size: 12px;
+    }
+    .filter .form-control {
+        height: 25px;
+        padding: 3px 12px;
+        font-size: 12px;
+    }
+    .filter .select2-selection--multiple {
+        height: 25px!important;
+        min-height: 25px!important;
+    }
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        margin-top: 2px;
+    }
+    .select2-results__option {
+        padding: 3px 6px;
+        font-size: 12px;
+    }
+    .filter td{
+        border:0!important;
     }
 </style>

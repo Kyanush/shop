@@ -1,11 +1,39 @@
 export default function(Vue){
     Vue.helper = {
-        convertDataSelect2(values, column_text, column_id){
+        convertDataSelect2(values, column_id, column_text, disabled_column, default_option){
             var data = [];
+
+            if(default_option)
+                data.push({
+                    id: 0,
+                    text: 'По умолчанию',
+                    disabled: false,
+                });
+
             values.forEach(function(item, index){
+
+                var disabled = false;
+                if(disabled_column)
+                    disabled = item[disabled_column] ? true : false;
+
+                var text = '';
+
+                if(column_text)
+                    if(column_text.indexOf('|') != -1)
+                    {
+                        var columns = column_text.split('|');
+                        for (var i = 0; i < columns.length; i++)
+                            text += item[columns[i]] + ', ';
+                        text = text.substring(0, text.length - 2.);
+                    }
+
+                if(!text)
+                    text = item[column_text ? column_text : 'name'];
+
                 data.push({
                     id:   item[column_id   ? column_id   : 'id'],
-                    text: item[column_text ? column_text : 'name']
+                    text: text,
+                    disabled: disabled,
                 });
             });
             return data;

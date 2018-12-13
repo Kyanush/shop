@@ -35,26 +35,27 @@ class SpecificPrice extends Model
         return $oldPrice;
     }
 
-    public function scopeDateActive($query){
+    public function scopeDateActive($query)
+    {
         $current_date = date('Y-m-d H:i:s');
 
-        return
-            $query->where(function ($query) use ($current_date){
-                $query->whereDate('start_date',      '<=', $current_date)
-                      ->whereDate('expiration_date', '>=', $current_date);
+        return $query->where(function ($query) use ($current_date){
+                    $query->whereDate('start_date',      '<=', $current_date)
+                          ->whereDate('expiration_date', '>=', $current_date);
 
-            })->where(function ($query) use ($current_date) {
-                $query->whereDate('start_date',      '<=', $current_date)
-                    ->orWhereDate('expiration_date', '>=', $current_date);
+               })->where(function ($query) use ($current_date) {
+                    $query->whereDate('start_date',      '<=', $current_date)
+                        ->orWhereDate('expiration_date', '>=', $current_date);
 
-            })->where(function ($query) use ($current_date) {
-                $query->whereNull('start_date')
-                      ->whereNull('expiration_date');
-            })
-            ->where('reduction', '>', 0);
+               })->where(function ($query) use ($current_date) {
+                    $query->whereNull('start_date')
+                          ->whereNull('expiration_date');
+               })
+               ->where('reduction', '>', 0);
     }
 
-    public function product(){
+    public function product()
+    {
         return $this->hasOne('App\Models\Product', 'id', 'product_id');
     }
 }
