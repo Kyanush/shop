@@ -11,6 +11,7 @@
     },
     "devDependencies": {
         "axios": "^0.18",
+        "babel-preset-stage-2": "^6.24.1",
         "bootstrap": "^4.0.0",
         "cross-env": "^5.1",
         "jquery": "^3.2",
@@ -22,9 +23,15 @@
         "vue": "^2.5.7"
     },
     "dependencies": {
+        "fullcalendar-scheduler": "^1.9.4",
         "luxon": "^1.6.2",
         "v-select2-component": "^0.3.1",
         "vue-bootstrap-datetimepicker": "^5.0.1",
+        "vue-ckeditor2": "^2.1.1",
+        "vue-full-calendar": "^2.7.0",
+        "vue-inputmask": "^0.2.1",
+        "vue-jstree": "^2.1.6",
+        "vue-loader": "^14.2.2",
         "vue-router": "^3.0.1",
         "vue-sortable-tree": "^1.2.2",
         "vue-sweetalert2": "^1.5.7",

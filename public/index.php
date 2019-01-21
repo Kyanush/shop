@@ -7,6 +7,13 @@
  * @author   Taylor Otwell <taylor@laravel.com>
  */
 
+function p($arr, $exit = false){
+    echo '<pre>';
+    print_r($arr);
+    echo '</pre>';
+    if($exit)
+         exit();
+}
 
 define('LARAVEL_START', microtime(true));
 

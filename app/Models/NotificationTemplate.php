@@ -21,7 +21,7 @@ class NotificationTemplate extends Model
     // protected $guarded = ['id'];
     protected $fillable = [
         'name',
-        'slug',
+        'url',
         'model',
         'body'
     ];

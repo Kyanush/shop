@@ -25,7 +25,10 @@
                                     <th>ID</th>
                                     <th>Родитель</th>
                                     <th>Название</th>
-                                    <th>Slug</th>
+                                    <th>Url</th>
+                                    <th>Класс</th>
+                                    <th>Сортировка</th>
+                                    <th>Тип</th>
                                     <th>Действия</th>
                                 </tr>
                             </thead>
@@ -34,7 +37,10 @@
                                     <td>{{ item.id }}</td>
                                     <td>{{ item.parent ? item.parent.name : '' }}</td>
                                     <td>{{ item.name }}</td>
-                                    <td>{{ item.slug }}</td>
+                                    <td>{{ item.url }}</td>
+                                    <td>{{ item.class }}</td>
+                                    <td>{{ item.sort }}</td>
+                                    <td>{{ item.type }}</td>
                                     <td>
                                         <router-link :to="{ path: '/categories/edit/' + item.id}" class="btn btn-xs btn-default">
                                             <i class="fa fa-edit"></i> Изменить
@@ -51,7 +57,10 @@
                                     <th>ID</th>
                                     <th>Родитель</th>
                                     <th>Название</th>
-                                    <th>Slug</th>
+                                    <th>Url</th>
+                                    <th>Класс</th>
+                                    <th>Сортировка</th>
+                                    <th>Тип</th>
                                     <th>Действия</th>
                                 </tr>
                             </tfoot>

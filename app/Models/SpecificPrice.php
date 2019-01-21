@@ -18,38 +18,29 @@ class SpecificPrice extends Model
                            'product_id',
     ];
 
-    public function getReducedPrice()
-    {
-        $oldPrice = $this->product->price;
 
-        if($oldPrice) {
-
-            if($this->discount_type == 'percent'){
-                return number_format($oldPrice - $this->reduction / 100 * $oldPrice, 2);
-            }
-            if($this->discount_type == 'sum'){
-                return number_format($oldPrice - $this->reduction, 2);
-            }
-            return number_format($oldPrice, 2);
-        }
-        return $oldPrice;
-    }
 
     public function scopeDateActive($query)
     {
         $current_date = date('Y-m-d H:i:s');
 
         return $query->where(function ($query) use ($current_date){
-                    $query->whereDate('start_date',      '<=', $current_date)
-                          ->whereDate('expiration_date', '>=', $current_date);
-
-               })->where(function ($query) use ($current_date) {
-                    $query->whereDate('start_date',      '<=', $current_date)
-                        ->orWhereDate('expiration_date', '>=', $current_date);
-
-               })->where(function ($query) use ($current_date) {
-                    $query->whereNull('start_date')
-                          ->whereNull('expiration_date');
+                    $query->where(function ($query) use ($current_date) {
+                        $query->whereDate('start_date',      '<=', $current_date)
+                              ->whereDate('expiration_date', '>=', $current_date);
+                    });
+                    $query->orWhere(function ($query) use ($current_date) {
+                        $query->whereNull('start_date')
+                              ->whereNull('expiration_date');
+                    });
+                    $query->orWhere(function ($query) use ($current_date) {
+                        $query->whereDate('start_date', '<=', $current_date)
+                              ->whereNull('expiration_date');
+                    });
+                    $query->orWhere(function ($query) use ($current_date) {
+                        $query->whereNull('start_date');
+                        $query->whereDate('expiration_date', '>=', $current_date);
+                    });
                })
                ->where('reduction', '>', 0);
     }

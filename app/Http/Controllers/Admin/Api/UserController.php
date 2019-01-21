@@ -15,24 +15,9 @@ class UserController extends AdminController
 
     public function list(Request $request)
     {
-        $search  = trim(mb_strtolower($request->input('search')));
-        $role_id = $request->input('role_id', 0);
-
-        $list =  User::withTrashed()->with('role')->where(function ($query) use ($search){
-
-                if(!empty($search))
-                {
-                    $query->Where(   DB::raw('LOWER(name)'),    'like', "%"  . $search . "%");
-                    $query->OrWhere( DB::raw('LOWER(email)'),   'like', "%"  . $search . "%");
-                    $query->OrWhere( DB::raw('LOWER(surname)'), 'like', "%"  . $search . "%");
-                    $query->OrWhere( DB::raw('LOWER(phone)'),   'like', "%"  . $search . "%");
-                }
-
-            })
-            ->where(function ($query) use ($role_id){
-                if($role_id > 0)
-                    $query->where('role_id', $role_id);
-            })
+        $list =  User::with('role')
+            ->search($request->input('search'))
+            ->role($request->input('role_id', 0))
             ->OrderBy('id', 'DESC')
             ->paginate($request->input('perPage', 10));
 
@@ -44,7 +29,7 @@ class UserController extends AdminController
     {
         $data = $request->input('user');
 
-        $user = User::withTrashed()->findOrNew($data["id"]);
+        $user = User::findOrNew($data["id"]);
 
         if (empty($data['password']))
             unset($data['password']);
@@ -62,10 +47,9 @@ class UserController extends AdminController
                 foreach ($data['addresses'] as $item)
                 {
                     if(intval($item['is_delete']) == 1){
-                        Address::destroy($item["id"]);
+                        $user->addresses()->destroy($item["id"]);
                     }else{
-                        $address = Address::findOrNew($item["id"]);
-                        $item['user_id'] = $user->id;
+                        $address = $user->addresses()->findOrNew($item["id"]);
                         $address->fill($item);
                         $address->save();
                     }
@@ -77,21 +61,14 @@ class UserController extends AdminController
                 foreach ($data['companies'] as $item)
                 {
                     if(intval($item['is_delete']) == 1){
-                        Company::destroy($item["id"]);
+                        $user->companies()->destroy($item["id"]);
                     }else{
-                        $company = Company::findOrNew($item["id"]);
-                        $item['user_id'] = $user->id;
+                        $company = $user->companies()->findOrNew($item["id"]);
                         $company->fill($item);
                         $company->save();
                     }
                 }
             }
-
-            if(($user->deleted_at ? 0 : 1) != intval($data['active']))
-                if(intval($data['active']) == 0)
-                    $user->delete();
-                else
-                   $user->restore();
         }
 
         return  $this->sendResponse($user->save() ? $user->id : false);
@@ -101,7 +78,7 @@ class UserController extends AdminController
 
     public function view($id)
     {
-        $user = User::with(['addresses', 'companies'])->withTrashed()->findOrFail($id);
+        $user = User::with(['addresses', 'companies'])->findOrFail($id);
 
         if($user){
             if($user->addresses)
@@ -111,7 +88,6 @@ class UserController extends AdminController
                         'id'        => $item->id,
                         'address'   => $item->address,
                         'city'      => $item->city,
-                        'comment'   => $item->comment,
                         'is_delete' => false
                     ];
                 });
@@ -142,8 +118,8 @@ class UserController extends AdminController
 
     public function delete($id)
     {
-        $user = User::withTrashed()->find($id);
-        return  $this->sendResponse($user->forceDelete() ? true : false);
+        $user = User::find($id);
+        return  $this->sendResponse($user->delete() ? true : false);
     }
 
 

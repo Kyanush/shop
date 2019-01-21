@@ -81,11 +81,11 @@
                         <p class="role-desc">{{ RoleDesc }}</p>
                         <small>
                             <small>
-                                <router-link :to="{ path: '/my-account'}">
-                                    <span>
+                                <router-link :to="{ path: '/users/edit/' + UserId}">
+                                     <span>
                                         <i class="fa fa-user-circle-o"></i> Мой аккаунт
                                     </span>
-                                </router-link>&nbsp;
+                                </router-link>
                                 <a @click="logout" class="logout">
                                     <i class="fa fa-sign-out"></i>
                                     <span>Выйти</span>
@@ -102,33 +102,62 @@
                     <!-- ================================================ -->
 
 
-
-
-
-                    <li v-bind:class="{'active' : menu_active('/products/')}">
-                        <router-link :to="{ path: '/products'}">
+                    <li class="treeview">
+                        <a href="#">
                             <i class="fa fa-shopping-basket" aria-hidden="true"></i>
                             <span>Товары</span>
-                        </router-link>
-                    </li>
-                    <li v-bind:class="{'active' : menu_active('/specific-prices/')}">
-                        <router-link :to="{ path: '/specific-prices'}">
-                            <i class="fa fa-money"></i>
-                            <span>Скидки</span>
-                        </router-link>
-                    </li>
-                    <li v-bind:class="{'active' : menu_active('/attributes/')}">
-                        <router-link :to="{ path: '/attributes'}">
-                            <i class="fa fa-tag"></i>
-                            <span>Атрибуты</span>
-                        </router-link>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu" style="display: none;">
+                                <li v-bind:class="{'active' : menu_active('/products/')}">
+                                    <router-link :to="{ path: '/products'}">
+                                        <i class="fa fa-shopping-basket" aria-hidden="true"></i>
+                                        <span>Товары</span>
+                                    </router-link>
+                                </li>
+                                <li v-bind:class="{'active' : menu_active('/reviews/')}">
+                                    <router-link :to="{ path: '/reviews'}">
+                                        <i class="fa fa-comment" aria-hidden="true"></i>
+                                        <span>Отзывы</span>
+                                    </router-link>
+                                </li>
+                                <li v-bind:class="{'active' : menu_active('/questions-answers/')}">
+                                    <router-link :to="{ path: '/questions-answers'}">
+                                        <i class="fa fa-question-circle" aria-hidden="true"></i>
+                                        <span>Вопросы-ответы</span>
+                                    </router-link>
+                                </li>
+                                <li v-bind:class="{'active' : menu_active('/specific-prices/')}">
+                                    <router-link :to="{ path: '/specific-prices'}">
+                                        <i class="fa fa-money"></i>
+                                        <span>Скидки</span>
+                                    </router-link>
+                                </li>
+
+                        </ul>
                     </li>
 
-                    <li v-bind:class="{'active' : menu_active('/attributes-sets/')}">
-                        <router-link :to="{ path: '/attributes-sets'}">
-                            <i class="fa fa-tags"></i>
-                            <span>Наборы атрибутов</span>
-                        </router-link>
+
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-tag"></i>
+                            <span>Атрибуты</span>
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu" style="display: none;">
+                            <li v-bind:class="{'active' : menu_active('/attributes/')}">
+                                <router-link :to="{ path: '/attributes'}">
+                                    <i class="fa fa-tag"></i>
+                                    <span>Атрибуты</span>
+                                </router-link>
+                            </li>
+                            <li v-bind:class="{'active' : menu_active('/attributes-sets/')}">
+                                <router-link :to="{ path: '/attributes-sets'}">
+                                    <i class="fa fa-tags"></i>
+                                    <span>Наборы атрибутов</span>
+                                </router-link>
+                            </li>
+                        </ul>
                     </li>
 
                     <li v-bind:class="{'active' : menu_active('/orders/')}">
@@ -144,6 +173,21 @@
                             <span>Клиенты и пользователи</span>
                         </router-link>
                     </li>
+
+                    <li v-bind:class="{'active' : menu_active('/sliders/')}">
+                        <router-link :to="{ path: '/sliders'}">
+                            <i class="fa fa-sliders" aria-hidden="true"></i>
+                            <span>Слайдеры</span>
+                        </router-link>
+                    </li>
+
+                    <li v-bind:class="{'active' : menu_active('/callbacks/')}">
+                        <router-link :to="{ path: '/callbacks'}">
+                            <i class="fa fa-phone" aria-hidden="true"></i>
+                            <span>Обратный звонок</span>
+                        </router-link>
+                    </li>
+
 
 
                     <li class="treeview">
@@ -264,7 +308,7 @@
         },
         computed:{
             ...mapGetters([
-                'UserName', 'RoleDesc', 'RoleName'
+                'UserName', 'RoleDesc', 'RoleName', 'UserId'
             ])
         }
 

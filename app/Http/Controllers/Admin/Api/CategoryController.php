@@ -20,43 +20,60 @@ class CategoryController extends AdminController
 
     public function list(Request $request)
     {
-        $search = trim(mb_strtolower($request->input('search')));
-
         $list =  Category::with(['parent' => function($query){
                     $query->select(['id', 'name']);
                  }])
-                ->where(function ($query) use ($search){
-
-                    //Поиск по ФИО, телефону или email
-                    if(!empty($search))
-                    {
-                        $query->Where(   DB::raw('LOWER(name)'), 'like', "%"  . $search . "%");
-                        $query->OrWhere( DB::raw('LOWER(slug)'), 'like', "%"  . $search . "%");
-                    }
-
-                })
+                ->search($request->input('search'))
                 ->OrderBy('id', 'DESC')
-                ->paginate($request->input('per_page') ?? 5);
+                ->paginate($request->input('per_page', 10));
 
         return  $this->sendResponse($list);
     }
-    public function create(SaveCategoryRequest $request)
+
+    public function save(SaveCategoryRequest $request)
     {
-        $category = Category::create($request->input('category'));
-        return $this->sendResponse($category ? $category->id : false);
-    }
-    public function view($id)
-    {
-        return  $this->sendResponse(
-            Category::findOrFail($id)
-        );
+        $data = $request->all();
+        $data = $data['category'];
+
+        $category = Category::findOrNew($data["id"]);
+        $category->fill($data);
+        if($category->save())
+        {
+            $ids = [];
+
+            if(isset($data['category_filter_links']))
+                foreach ($data['category_filter_links'] as $item)
+                {
+                    if(isset($item['id']))
+                        $ids[] = $item['id'];
+                }
+            if(count($ids) > 0)
+                $category->categoryFilterLinks()->whereNotIn('id', $ids)->delete();
+            else
+                $category->categoryFilterLinks()->delete();
+
+            if(isset($data['category_filter_links']))
+                foreach ($data['category_filter_links'] as $item)
+                {
+                   $categoryFilterLink = $category->categoryFilterLinks()->findOrNew($item['id'] ?? 0);
+                   $categoryFilterLink->fill($item);
+                   $categoryFilterLink->save();
+                }
+        }
+
+
+        return  $this->sendResponse($category ? $category->id : false);
     }
 
-    public function update(SaveCategoryRequest $request, $id)
+
+    public function view($id)
     {
-        return  $this->sendResponse(
-            Category::where('id', $id)->update($request->input('category')) ? true : false
-        );
+        $category = Category::with(['categoryFilterLinks' => function($query){
+            $query->OrderBy('sort', 'asc');
+        }])->findOrFail($id);
+        $category->path_image = $category->pathImage(true);
+
+        return  $this->sendResponse($category);
     }
 
     public function delete($id)
@@ -64,31 +81,23 @@ class CategoryController extends AdminController
         return  $this->sendResponse(Category::destroy($id) ? true : false);
     }
 
-    public function reorder()
+    public function catalogsTree($type = 1)
     {
-        $list = Category::select(['id', 'name', 'parent_id'])->get();
-        $tree = $this->serviceCategory->createTree($list);
-
-        return  $this->sendResponse($tree);
+        return  $this->sendResponse(
+            $this->serviceCategory->catalogsTree($type)
+        );
     }
 
-    public function reorder_save(Request $request)
+    public function reorderSave(Request $request)
     {
         $data = $request->input('reorder_send');
-
         foreach ($data as $item)
         {
-            $id = $item['id'];
-            unset($item['id']);
-            Category::where('id', $id)->update($item);
+            $category = Category::find($item["id"]);
+            $category->fill($item);
+            $category->save();
         }
-
         return  $this->sendResponse(true);
     }
-
-
-
-
-
 
 }

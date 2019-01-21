@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -15,7 +14,6 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-
 //Роутеры
 import router from './router'
 
@@ -23,14 +21,11 @@ import router from './router'
 import Helper from './packages/Helper';
 Vue.use(Helper);
 
-
-
-
 //Vuex
 import store from './store';
 
 axios.interceptors.response.use(function (response) {
-    console.log(response);
+    //console.log(response);
 
     var res = response;
 
@@ -42,7 +37,7 @@ axios.interceptors.response.use(function (response) {
     return response;
 }, function (error) {
 
-    console.log(error.response);
+    //console.log(error.response);
 
 
     var status =  error.response.status
@@ -75,14 +70,19 @@ axios.interceptors.response.use(function (response) {
 import VueSweetalert2 from 'vue-sweetalert2';
 Vue.use(VueSweetalert2);
 
+//mask input
+const VueInputMask = require('vue-inputmask').default
+Vue.use(VueInputMask);
+
 router.beforeEach((to, from, next) => {
-    document.title = to.name;
+    if (to.name)
+        document.title = to.name;
     store.dispatch('SetErrors', null);
     return next();
 });
 
 const app = new Vue({
-    el: '#admin',
+    el: '#app',
     router,
     store
 });

@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-//use App\Mail\NotificationTemplateMail;
-use App\Models\OrderStatusHistory;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use DB;
+use Mail;
 
 class Order extends Model
 {
@@ -15,6 +14,7 @@ class Order extends Model
 
     protected $table = 'orders';
     protected $fillable = [
+        'type',
         'user_id',
         'status_id',
         'carrier_id',
@@ -29,52 +29,26 @@ class Order extends Model
         'created_at',
         'updated_at'
     ];
-    /*
-        public $notificationVars = [
-            'userSalutation',
-            'userName',
-            'userEmail',
-            'carrier',
-            'total',
-            'status'
-        ];
-    */
-    /*
-    |--------------------------------------------------------------------------
-    | NOTIFICATIONS VARIABLES
-    |--------------------------------------------------------------------------
-    */
-    /*
-    public function notificationVariables()
-    {
-        return [
-            'userSalutation' => $this->user->salutation,
-            'userName'       => $this->user->name,
-            'userEmail'      => $this->user->email,
-            'total'          => $this->total(),
-            'carrier'        => $this->carrier()->first()->name,
-            'status'         => $this->status->name
-        ];
-    }
-*/
-    /*
-    |--------------------------------------------------------------------------
-    | EVENTS
-    |--------------------------------------------------------------------------
-    */
+
     protected static function boot()
     {
         parent::boot();
 
         static::updating(function($order) {
-            /*
-            // Send notification when order status was changed
-            $oldStatus = $order->getOriginal();
-            if ($order->status_id != $oldStatus['status_id'] && $order->status->notification != 0) {
-                // example of usage: (be sure that a notification template mail with the slug "example-slug" exists in db)
-                return \Mail::to($order->user->email)->send(new NotificationTemplateMail($order, "order-status-changed"));
+
+            if(env('APP_TEST') == 0)
+            {
+                if($order->status_id != self::find($order->id)->status_id && $order->status->notification != 0)
+                {
+
+                    $subject = env('APP_NAME') . ' - ' . 'заказ №:' . $order->id . ', статус вашего заказа';
+                    Mail::send('mails.status_update_order', ['order' => $order, 'subject' => $subject], function ($m) use ($order, $subject) {
+                        $m->to($order->user->email)->subject($subject);
+                    });
+                }
             }
-*/
+
+
             if($order->status_id != self::find($order->id)->status_id)
             {
                 OrderStatusHistory::create([
@@ -86,8 +60,17 @@ class Order extends Model
 
         });
 
+
         //Событие до
         static::Saving(function($model) {
+        });
+
+
+        //Событие после
+        static::Created(function ($modal) {
+
+
+
         });
     }
 
@@ -95,7 +78,7 @@ class Order extends Model
     {
         return $this->products->sum(function ($product) {
                 return $product->pivot->price * $product->pivot->quantity;
-            }, 0) + $this->carrier->price;
+            }, 0) + ($this->carrier ? $this->carrier->price : 0);
     }
 
     public function user()
@@ -130,7 +113,7 @@ class Order extends Model
 
     public function products()
     {
-        return $this->belongsToMany('App\Models\Product')->withPivot(['name', 'sku', 'price', 'quantity'])->withTrashed();
+        return $this->belongsToMany('App\Models\Product')->withPivot(['name', 'sku', 'price', 'quantity']);
     }
 
 
@@ -145,6 +128,9 @@ class Order extends Model
 
         if(isset($filter['user_id']))
             $query->WhereIn('user_id', $this->convertArr($filter['user_id']));
+
+        if(isset($filter['type']))
+            $query->WhereIn('type', $this->convertArr($filter['type']));
 
         if(isset($filter['status_id']))
             $query->WhereIn('status_id', $this->convertArr($filter['status_id']));

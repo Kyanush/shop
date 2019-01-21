@@ -27,7 +27,7 @@
                                     <td>{{ item.id }}</td>
                                     <td>{{ item.name }}</td>
                                     <td>
-                                        <img v-if="item.logo" v-bind:src="item.logo ? '/uploads/payments/' + item.logo : ''" width="70"/>
+                                        <img  class="img" v-if="item.logo" v-bind:src="item.logo ? '/uploads/payments/' + item.logo : ''" width="70"/>
                                     </td>
                                     <td>
                                         <router-link :to="{ path: '/payments/edit/' + item.id}" class="btn btn-xs btn-default">

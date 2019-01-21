@@ -7,9 +7,15 @@ use App\Models\Product;
 class ServiceOrder
 {
 
+    private $model;
+    public function __construct()
+    {
+        $this->model = new Order();
+    }
+
     public function productDelete($product_id, $order_id)
     {
-        $order = Order::find($order_id);
+        $order = $this->model::find($order_id);
         $order->products()->detach($product_id);
         $this->totalOrder($order_id);
         return true;
@@ -26,13 +32,13 @@ class ServiceOrder
             if($price == 0)
             {
                 if($product->specificPrice)
-                    $price = $product->specificPrice->getReducedPrice();
+                    $price = $product->getReducedPrice();
                 else
                     $price = $product->price;
             }
 
             //findOrNew
-            $order = Order::find($order_id);
+            $order = $this->model::find($order_id);
 
             $order->products()->syncWithoutDetaching([$product_id =>
                 [
@@ -51,7 +57,7 @@ class ServiceOrder
 
     public function totalOrder($order_id)
     {
-        $order = Order::find($order_id);
+        $order = $this->model::find($order_id);
         $order->total = $order->total();
         return $order->save();
     }

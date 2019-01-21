@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class AttributeSet extends Model
 {
@@ -18,7 +19,14 @@ class AttributeSet extends Model
         });
     }
 
-
+    public function scopeSearch($query, $search){
+        $search = trim(mb_strtolower($search));
+        if($search)
+        {
+            $query->Where(   DB::raw('LOWER(name)'), 'like', "%"  . $search . "%");
+        }
+        return $query;
+    }
 
 	public function attributes() {
     	return $this->belongsToMany('App\Models\Attribute', 'attribute_attribute_set', 'attribute_set_id', 'attribute_id');

@@ -110,7 +110,7 @@
                     self.list_attributes.push({
                         id: item.id,
                         text: item.name,
-                        disabled: item.deleted_at ? true : false
+                        disabled: item.active ? false : true
                     });
                 });
             });

@@ -12,7 +12,7 @@ class SaveCategoryRequest extends FormRequest
 
         return [
             'category.name' => ['required', 'unique:categories,name' . ($id ? (',' . $id . ',id') : '')],
-            'category.slug' => ['required', 'unique:categories,slug' . ($id ? (',' . $id . ',id') : '')]
+            'category.url' => ['nullable', 'unique:categories,url' . ($id ? (',' . $id . ',id') : '')]
         ];
     }
 
@@ -20,7 +20,7 @@ class SaveCategoryRequest extends FormRequest
     {
         return [
             'category.name' => "'Название'",
-            'category.slug' => "'Slug'"
+            'category.url' => "'Url'"
         ];
     }
 

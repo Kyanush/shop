@@ -1,12 +1,113 @@
 <?php
 
-Route::get('/', function () {
-    return view('welcome');
+//загрузить файл
+Route::post('ckeditor-upload-image',   'UploadImageController@CkeditorUploadImage');
+
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
+
+Route::group(['namespace'  => 'Site'], function () {
+
+    Route::get('/',          'MainController@main');
+    Route::post('product-features-compare/{product_id}', 'ProductFeaturesCompareController@addAndDelete')->where(['product_id' => '[0-9]+']);
+
+    //Корзина
+    Route::post('cart-save',                'CartController@cartSave');
+    Route::post('cart-delete/{product_id}', 'CartController@cartDelete')->where(['product_id' => '[0-9]+']);
+    Route::get('cart-total/{carrier_id?}', 'CartController@cartTotal')->where(['carrier_id' => '[0-9]+']);;
+    Route::get('header-cart-info',          'CartController@header_cart_info');
+
+    Route::get('checkout',   'CartController@checkout');
+    Route::post('checkout',  'CartController@saveCheckout');
+    Route::post('one-click-order',  'CartController@oneClickOrder');
+
+
+    Route::post('list-cart',                'CartController@listCart');
+
+    Route::post('list-carriers',            'CarrierController@listCarriers');
+    Route::post('list-payments',            'PaymentController@listPayments');
+
+
+    Route::get('product-search', 'ProductController@productSearch');
+
+
+    Route::get('card-success-popup/{product_id}', 'ProductController@cardSuccessPopup')->where(['product_id' => '[0-9]+']);
+
+    Route::get('product-features-compare-count',   'ProductFeaturesCompareController@count');
+    Route::get('product-features-wishlist-count',  'ProductFeaturesWishlistController@count');
+
+    Route::get('compare-products',                      'ProductFeaturesCompareController@compareProducts');
+    Route::get('compare-product-delete/{product_id}',   'ProductFeaturesCompareController@compareProductDelete')->where(['product_id' => '[0-9]+']);
+
+    Route::post('callback',  'CallbackController@callback');
+    Route::post('contact',  'CallbackController@contact');
+
+
+
+    Route::post('subscribe', 'SubscribeController@subscribe');
+
+
+    $params = '';
+    for ($i = 0; $i <= 100; $i++){
+        $params .= "/{param$i?}";
+    }
+    Route::get('catalog/{category?}' . $params, 'CatalogController@catalog')->where(['category']);
+
+    Route::get('product/{category_url}/{product_url}/{product_tab?}',  'ProductController@productDetail')->where(['category_url'])
+                                                                                                         ->where(['product_url'])
+                                                                                                         ->where(['product_tab']);
+
+    Route::post('product-review-set-like', 'ReviewController@setLike');
+
+    Route::post('write-review',            'ReviewController@writeReview');
+    Route::post('write-question',          'QuestionAnswerController@writeQuestion');
+
+
+    Route::get('delivery-payment',          'PageController@deliveryPayment');
+    Route::get('guaranty',          'PageController@guaranty');
+    Route::get('contact',          'PageController@contact');
+    Route::get('publicoferta',          'PageController@publicoferta');
+    Route::get('about',          'PageController@about');
+
+
+    //sitemap
+    Route::get('sitemap.xml', 'SitemapController@sitemap');
+});
+
+Route::group(['middleware' => 'auth', 'namespace'  => 'Site'], function () {
+
+    Route::post('product-features-wishlist/{product_id}', 'ProductFeaturesWishlistController@addAndDelete')->where(['product_id' => '[0-9]+']);
+
+    Route::get('my-account',    'UserController@myAccount');
+    Route::get('account-edit',  'UserController@accountEdit');
+    Route::post('account-edit', 'UserController@accountEditSave');
+
+    Route::get('change-password',  'UserController@changePassword');
+    Route::post('change-password', 'UserController@changePasswordSave');
+
+    Route::get('order-history',             'OrderController@orderHistory');
+    Route::get('order-history/{order_id}',  'OrderController@orderHistoryDetail')->where(['order_id' => '[0-9]+']);;
+
+
+
+
+    Route::get('wishlist',               'ProductFeaturesWishlistController@wishlist');
+    Route::get('wishlist-delete/{product_id}',  'ProductFeaturesWishlistController@delete')->where(['product_id' => '[0-9]+']);
+
 });
 
 
+
+
+
+
+
+
+
+
+
+
 // Admin Interface
-Route::group([/*'middleware' => 'auth',*/ 'prefix'     => 'admin', 'namespace'  => 'Admin'], function () {
+Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespace'  => 'Admin'], function () {
 
 
     if (!request()->ajax()){
@@ -17,19 +118,15 @@ Route::group([/*'middleware' => 'auth',*/ 'prefix'     => 'admin', 'namespace'  
         });
 
     }else{
-        //Route::resource('category', 'Api\CategoryController');
-
-       // Route::get('category/reorder', 'Api\CategoryController@reorder');
 
 
         Route::get('categories-list',          'Api\CategoryController@list');
-        Route::get('category-reorder',         'Api\CategoryController@reorder');
         Route::get('category-view/{id}',       'Api\CategoryController@view')->where(['id' => '[0-9]+']);
+        Route::get('catalogs-tree/{type}',     'Api\CategoryController@catalogsTree')->where(['type' => '[0-9]+']);
 
-        Route::post('category-create',         'Api\CategoryController@create');
-        Route::post('category-update/{id}',    'Api\CategoryController@update')->where(['id' => '[0-9]+']);
+        Route::post('category-save',          'Api\CategoryController@save');
         Route::post('category-delete/{id}',    'Api\CategoryController@delete')->where(['id' => '[0-9]+']);
-        Route::post('reorder-save',            'Api\CategoryController@reorder_save');
+        Route::post('reorder-save',            'Api\CategoryController@reorderSave');
 
         Route::get('attributes-list',          'Api\AttributeController@list');
         Route::post('attribute-save',          'Api\AttributeController@save');
@@ -41,15 +138,28 @@ Route::group([/*'middleware' => 'auth',*/ 'prefix'     => 'admin', 'namespace'  
         Route::get('attribute-set-view/{id}',    'Api\AttributeSetController@view')->where(['id' => '[0-9]+']);
         Route::post('attribute-set-delete/{id}', 'Api\AttributeSetController@delete')->where(['id' => '[0-9]+']);
 
-        Route::get('products-list',              'Api\ProductController@list');
+        Route::any('products-list',              'Api\ProductController@list');
         Route::get('attribute-sets-more-info',   'Api\ProductController@AttributeSetsMoreInfo');
         Route::post('product-save',              'Api\ProductController@save');
         Route::get('product-view/{id}',          'Api\ProductController@view')->where(['id' => '[0-9]+']);
         Route::post('product-delete/{id}',       'Api\ProductController@delete')->where(['id' => '[0-9]+']);
-
+        Route::post('product-price-min-max',     'Api\ProductController@priceMinMax');
+        Route::post('products-attributes-filters',   'Api\ProductController@productsAttributesFilters');
         Route::get('group-products/{group_id}',  'Api\ProductController@groupProducts')->where(['group_id' => '[0-9]+']);
+        Route::post('clone-product',             'Api\ProductController@cloneProduct');
+        Route::get('all-products-select2',       'Api\ProductController@allProductsSelect2');
 
-        Route::post('clone-product',              'Api\ProductController@cloneProduct');
+
+        //отзывы
+        Route::get('reviews-list',                'Api\ReviewController@list');
+        Route::post('review-delete/{review_id}',  'Api\ReviewController@delete')->where(['review_id' => '[0-9]+']);
+        Route::post('review-save',                'Api\ReviewController@save');
+
+
+        //Вопросы-ответы
+        Route::get('questions-answers-list',               'Api\QuestionAnswerController@list');
+        Route::post('question-answer-delete/{review_id}',  'Api\QuestionAnswerController@delete')->where(['review_id' => '[0-9]+']);
+        Route::post('question-answer-save',                'Api\QuestionAnswerController@save');
 
 
         //Пользователи
@@ -66,6 +176,13 @@ Route::group([/*'middleware' => 'auth',*/ 'prefix'     => 'admin', 'namespace'  
         Route::post('carrier-save',              'Api\CarrierController@save');
         Route::get('carrier-view/{id}',          'Api\CarrierController@view')->where(['id' => '[0-9]+']);
         Route::post('carrier-delete/{id}',       'Api\CarrierController@delete')->where(['id' => '[0-9]+']);
+
+        //Слайдер
+        Route::get('sliders-list',              'Api\SliderController@list');
+        Route::post('slider-save',              'Api\SliderController@save');
+        Route::get('slider-view/{id}',          'Api\SliderController@view')->where(['id' => '[0-9]+']);
+        Route::post('slider-delete/{id}',       'Api\SliderController@delete')->where(['id' => '[0-9]+']);
+
 
         //тип оплаты
         Route::get('payments-list',              'Api\PaymentController@list');
@@ -85,74 +202,33 @@ Route::group([/*'middleware' => 'auth',*/ 'prefix'     => 'admin', 'namespace'  
         Route::post('specific-price-delete/{id}',      'Api\SpecificPriceController@delete')->where(['id' => '[0-9]+']);
 
 
+        //Обратный звонок
+        Route::get('callbacks-list',             'Api\CallbackController@list');
+        Route::post('callback-delete/{id}',      'Api\CallbackController@delete')->where(['id' => '[0-9]+']);
+
+
         //Заказы
         Route::get('orders-list',         'Api\OrderController@list');
         Route::get('order/{id}',          'Api\OrderController@view')->where(['id' => '[0-9]+']);
         Route::get('order/users',         'Api\OrderController@users');
         Route::post('order-save',         'Api\OrderController@orderSave');
+        Route::get('calendar-orders',     'Api\OrderController@calendarOrders');
+
 
         //компания
         Route::get('addresses-list',        'Api\AddressController@list');
+
+        //Группа атрибутов
+        Route::get('attribute-groups-list',        'Api\AttributeGroupController@list');
     }
 
-
-    /*
-    CRUD::resource('categories', 'CategoryController');
-    CRUD::resource('currencies', 'CurrencyCrudController');
-    CRUD::resource('carriers', 'CarrierCrudController');
-    CRUD::resource('attributes', 'AttributeCrudController');
-    CRUD::resource('attributes-sets', 'AttributeSetCrudController');
-    CRUD::resource('products', 'ProductCrudController');
-
-    CRUD::resource('orders', 'OrderCrudController');
-    CRUD::resource('order-statuses', 'OrderStatusCrudController');
-    CRUD::resource('clients', 'ClientCrudController');
-    CRUD::resource('users', 'UserCrudController');
-    CRUD::resource('cart-rules', 'CartRuleCrudController');
-    CRUD::resource('specific-prices', 'SpecificPriceCrudController');
-    CRUD::resource('notification-templates', 'NotificationTemplateCrudController');
-
-    // Clone Products
-    Route::post('products/clone', ['as' => 'clone.product', 'uses' => 'ProductCrudController@cloneProduct']);
-
-    // Update Order Status
-    Route::post('orders/update-status', ['as' => 'updateOrderStatus', 'uses' => 'OrderCrudController@updateStatus']);
-    */
 });
 
-/*
-// Ajax
-Route::group(['middleware' => 'admin',
-    'prefix' => 'ajax',
-    'namespace' => 'Admin'
-], function() {
-    // Get attributes by set id
-    Route::post('attribute-sets/list-attributes', ['as' => 'getAttrBySetId', 'uses' => 'AttributeSetCrudController@ajaxGetAttributesBySetId']);
 
-    // Product images upload routes
-    Route::post('product/image/upload', ['as' => 'uploadProductImages', 'uses' => 'ProductCrudController@ajaxUploadProductImages']);
-    Route::post('product/image/reorder', ['as' => 'reorderProductImages', 'uses' => 'ProductCrudController@ajaxReorderProductImages']);
-    Route::post('product/image/delete', ['as' => 'deleteProductImage', 'uses' => 'ProductCrudController@ajaxDeleteProductImage']);
 
-    // Get group products by group id
-    Route::post('product-group/list/products', ['as' => 'getGroupProducts', 'uses' => 'ProductGroupController@getGroupProducts']);
-    Route::post('product-group/list/ungrouped-products', ['as' => 'getUngroupedProducts', 'uses' => 'ProductGroupController@getUngroupedProducts']);
-    Route::post('product-group/add/product', ['as' => 'addProductToGroup', 'uses' => 'ProductGroupController@addProductToGroup']);
-    Route::post('product-group/remove/product', ['as' => 'removeProductFromGroup', 'uses' => 'ProductGroupController@removeProductFromGroup']);
 
-    // Client address
-    Route::post('client/list/addresses', ['as' => 'getClientAddresses', 'uses' => 'ClientAddressController@getClientAddresses']);
-    Route::post('client/add/address', ['as' => 'addClientAddress', 'uses' => 'ClientAddressController@addClientAddress']);
-    Route::post('client/delete/address', ['as' => 'deleteClientAddress', 'uses' => 'ClientAddressController@deleteClientAddress']);
 
-    // Client company
-    Route::post('client/list/companies', ['as' => 'getClientCompanies', 'uses' => 'ClientCompanyController@getClientCompanies']);
-    Route::post('client/add/company', ['as' => 'addClientCompany', 'uses' => 'ClientCompanyController@addClientCompany']);
-    Route::post('client/delete/company', ['as' => 'deleteClientCompany', 'uses' => 'ClientCompanyController@deleteClientCompany']);
 
-    // Notification templates
-    Route::post('notification-templates/list-model-variables', ['as' => 'listModelVars', 'uses' => 'NotificationTemplateCrudController@listModelVars']);
-});
-*/
+
 
 Auth::routes();

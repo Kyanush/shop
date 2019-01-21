@@ -1,47 +1,64 @@
-@extends('layouts.app')
+@extends('layouts.site')
+
+<?php $title = 'Забыли пароль?';?>
+@section('title', $title)
+@section('description', $title)
+@section('keywords', $title)
 
 @section('content')
+
+
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
 
-                    <form method="POST" action="{{ route('password.email') }}">
-                        @csrf
+    <?php $breadcrumb = [
+        [
+            'title' => 'Главная',
+            'link'  => '/'
+        ],
+        [
+            'title' => $title,
+            'link'  => ''
+        ]
+    ];?>
+    @include('includes.breadcrumb', ['breadcrumb' => $breadcrumb])
 
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+    @if (session('status'))
+        <div class="success">
+            {{ session('status') }}
+        </div>
+    @endif
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
 
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
+    <div id="content" style="overflow: visible;">  <h1>Забыли пароль?</h1>
+        <form id="form" method="POST" action="{{ route('password.email') }}">
+            @csrf
 
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Send Password Reset Link') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+
+            <p>Введите адрес электронной почты Вашей учетной записи. Нажмите кнопку Вперед, чтобы получить пароль по электронной почте.</p>
+            <h2>Ваш E-Mail</h2>
+            <div class="content">
+                <table class="form">
+                    <tbody><tr>
+                        <td>E-Mail:</td>
+                        <td>
+                            <input id="email" type="email" name="email" value="{{ old('email') }}" required>
+                        </td>
+                    </tr>
+                    </tbody></table>
+            </div>
+            <div class="buttons">
+                <div class="left">
+                    <a href="/login" class="button">
+                        <span>Назад</span>
+                    </a>
+                </div>
+                <div class="right">
+                    <a class="button" onclick="$('#form').submit();"><span>Продолжить</span></a>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
+
 @endsection

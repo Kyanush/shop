@@ -11,7 +11,7 @@
              <form v-on:submit="carrierSave">
                  <div class="box">
                      <div class="box-header with-border">
-                         <h3 class="box-title">{{ carrier.id ? 'Редактировать' : 'Создать категорию'}}</h3>
+                         <h3 class="box-title">{{ carrier.id ? 'Редактировать' : 'Создать'}}</h3>
                      </div>
                      <div class="box-body row">
                          <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('carrier.name')}">
@@ -38,7 +38,7 @@
                          <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('carrier.logo')}">
                              <label>Логотип</label>
                              <p>
-                                 <img v-bind:src="carrier.logo ? '/uploads/carriers/' + carrier.logo : ''" id="logo-view"/>
+                                 <img id="logo-view" class="img" width="100" v-bind:src="carrier.logo ? '/uploads/carriers/' + carrier.logo : ''"/>
                              </p>
                              <label class="btn btn-primary btn-file">
                                  <i class="fa fa-file-image-o" aria-hidden="true"></i>  Логотип
@@ -180,12 +180,3 @@
         }
     }
 </script>
-
-<style>
-    #logo-view {
-        width: 200px;
-        margin-bottom: 5px;
-        border: 1px solid #d9cece;
-        padding: 2px;
-    }
-</style>

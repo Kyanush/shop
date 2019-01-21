@@ -6,16 +6,22 @@ const state = {
 
 const getters = {
     RoleName: (state) => {
-        return state.user.id ? state.user.role.name: null;
+        if(state.user)
+            if( state.user.role)
+        return state.user.role.name;
     },
     UserId: (state) => {
-        return parseInt(state.user.id);
+        if(state.user)
+            return parseInt(state.user.id);
     },
     RoleDesc: (state) => {
-        return state.user.role.description;
+        if(state.user)
+            if(state.user.role)
+                return state.user.role.description;
     },
     UserName: (state) => {
-        return state.user.name;
+        if(state.user)
+            return state.user.name;
     }
 }
 

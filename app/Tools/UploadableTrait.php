@@ -10,11 +10,9 @@ trait UploadableTrait
 
     public function uploadFile($file, $path)
     {
-        //is_file($file) and
-        if($file)
+        if(is_uploaded_file($file))
         {
             $fileName = md5(uniqid('', true)).'.'.$file->extension();
-
             if($file->move($path, $fileName))
                 return $fileName;
             else

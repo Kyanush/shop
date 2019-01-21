@@ -1,6 +1,7 @@
 export default function(Vue){
     Vue.helper = {
         convertDataSelect2(values, column_id, column_text, disabled_column, default_option){
+
             var data = [];
 
             if(default_option)
@@ -36,18 +37,19 @@ export default function(Vue){
                     disabled: disabled,
                 });
             });
+
+
+
             return data;
         },
-        setImgSrc(event, attr){
+        setImgSrc(value, element){
             var reader = new FileReader();
             reader.onload = function(e) {
-                $(attr).attr('src', e.target.result);
+                $(element).attr('src', e.target.result);
             }
-            reader.readAsDataURL(event);
+            reader.readAsDataURL(value);
         },
-        clear(value){
-            return value == null ? '' : value;
-        },
+
         isMobile() {
             return window.screen.width < 800 ? true : false;
         },
@@ -133,40 +135,43 @@ export default function(Vue){
                 }
             }
         },
-        datetimeFormat(dateString){
-            if(!dateString) return '';
 
-            console.log(dateString);
+        isNullClear(value, default_value){
+          if(!default_value)
+              default_value = '';
 
-            var reggie = /(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/;
-            var dateArray = reggie.exec(dateString);
-
-            if(!dateArray) return 'f';
-
-            //текущая дата
-            var today = new Date();
-            var dd = today.getDate();
-            var mm = today.getMonth()+1;
-            var yyyy = today.getFullYear();
-            var current_date = dd + '.' + (mm > 10 ? mm : '0'+ mm)  + '.' + yyyy;
-
-            if((dateArray[3] + '.' + dateArray[2] + '.' + dateArray[1]) == current_date){
-                return dateArray[4] +':'+ dateArray[5]
-            }else{
-                return dateArray[3] + '.' + dateArray[2] + '.' + dateArray[1]
-                    + ' ' +
-                    dateArray[4] + ':' + dateArray[5];
-            }
+          if(value === null){
+              return default_value;
+          }else{
+              return value;
+          }
         },
-        dateFormat(dateString){
+
+        dateFormat(dateString, type_format){
+
             if(!dateString) return '';
+            if(!type_format) type_format = 'datetime';
+
             var reggie = /(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/;
             var dateArray = reggie.exec(dateString);
+
+            if(!dateArray)
+            {
+                reggie = /(\d{4})-(\d{2})-(\d{2})/;
+                dateArray = reggie.exec(dateString);
+            }
 
             if(dateArray){
-                return dateArray[3] + '.' + dateArray[2] + '.' + dateArray[1]
+                if(type_format == 'date')
+                    return dateArray[3] + '.' + dateArray[2] + '.' + dateArray[1];
+                else if(type_format == 'datetime')
+                    return dateArray[3] + '.' + dateArray[2] + '.' + dateArray[1]
                         + ' ' +
                         dateArray[4] + ':' + dateArray[5];
+                else if(type_format == 'time')
+                    return dateArray[4] + ':' + dateArray[5];
+                else if(type_format == 'fulltime')
+                    return dateArray[4] + ':' + dateArray[5] + ':' + dateArray[6];
             }else{
                 return '';
             }

@@ -1,10 +1,6 @@
 <template>
     <div>
 
-        <div class="box">
-        <div class="box-header with-border"><a href="/admin/orders/create" class="btn btn-primary ladda-button"><span class="ladda-label"><i class="fa fa-plus"></i> Создать заказ
-            </span></a></div>
-        </div>
 
         <div class="row">
             <div class="col-md-12 well">
@@ -20,7 +16,7 @@
                         - | {{ order.user.name }} {{ order.user.surname }}
                     </router-link>
 
-                    {{ order.created_at ? '|'  + datetimeFormat(order.created_at) : ''}}
+                    {{ order.created_at ? '|'  + dateFormat(order.created_at) : ''}}
 
                     <a class="btn btn-success ladda-button pull-right" @click="saveOrder">
                         <span class="ladda-label">
@@ -74,8 +70,22 @@
                                 </td>
                                 <td v-if="order.updated_at">
                                     <b><p>Дата изменение</p></b>
-                                    <p>{{ datetimeFormat(order.updated_at) }}</p>
+                                    <p>{{ dateFormat(order.updated_at) }}</p>
                                 </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b><p>Тип заказа</p></b>
+                                    <p>
+                                        <select class="form-control" v-model="order.type">
+                                            <option value="1">Оформление заказа</option>
+                                            <option value="2">Купить в 1 клик</option>
+                                        </select>
+                                    </p>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             </tbody>
                         </table>
@@ -110,33 +120,33 @@
                         <div class="well">
                             <table class="table table-condensed table-hover">
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            <i class="fa fa-user-circle-o"></i>
-                                            Клиент:
-                                        </td>
-                                        <td>
-                                            <Select2 v-model="order.user_id" :options="convertDataSelect2(users)"/>
-                                        </td>
-                                    </tr>
-                                    <tr v-if="order.user">
-                                        <td>
-                                            <i class="fa fa-envelope"></i>
-                                            E-mail:
-                                        </td>
-                                        <td>
-                                            <a  v-bind:href="'mailto:' + order.user.email"  v-if="order.user">{{ order.user.email }}</a>
-                                        </td>
-                                    </tr>
-                                    <tr v-if="order.user">
-                                        <td>
-                                            <i class="fa fa-phone"></i>
-                                            Телефон
-                                        </td>
-                                        <td>
-                                            <a v-bind:href="'tel:' + order.user.phone"  v-if="order.user">{{ order.user.phone }}</a>
-                                        </td>
-                                    </tr>
+                                <tr>
+                                    <td>
+                                        <i class="fa fa-user-circle-o"></i>
+                                        Клиент:
+                                    </td>
+                                    <td>
+                                        <Select2 v-model="order.user_id" :options="convertDataSelect2(users)"/>
+                                    </td>
+                                </tr>
+                                <tr v-if="order.user">
+                                    <td>
+                                        <i class="fa fa-envelope"></i>
+                                        E-mail:
+                                    </td>
+                                    <td>
+                                        <a  v-bind:href="'mailto:' + order.user.email"  v-if="order.user">{{ order.user.email }}</a>
+                                    </td>
+                                </tr>
+                                <tr v-if="order.user">
+                                    <td>
+                                        <i class="fa fa-phone"></i>
+                                        Телефон
+                                    </td>
+                                    <td>
+                                        <a v-bind:href="'tel:' + order.user.phone"  v-if="order.user">{{ order.user.phone }}</a>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -154,27 +164,27 @@
                         <div class="well">
                             <table class="table table-condensed table-hover">
                                 <tbody>
-                                    <tr>
-                                        <td colspan="2">
-                                            <select class="form-control" v-model="order.shipping_address_id" >
-                                                <option v-bind:value="item.id" v-for="item in addresses">
-                                                    {{ item.city }} {{ item.address }}
-                                                </option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr v-if=" order.shipping_address">
-                                        <td>Адрес:</td>
-                                        <td>{{ order.shipping_address.address }}</td>
-                                    </tr>
-                                    <tr v-if="order.shipping_address">
-                                        <td>Город:</td>
-                                        <td>{{ order.shipping_address.city }}</td>
-                                    </tr>
-                                    <tr v-if="order.shipping_address">
-                                        <td>Комментарий:</td>
-                                        <td>{{ order.shipping_address.comment }}</td>
-                                    </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <select class="form-control" v-model="order.shipping_address_id" >
+                                            <option v-bind:value="item.id" v-for="item in addresses">
+                                                {{ item.city }} {{ item.address }}
+                                            </option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr v-if=" order.shipping_address">
+                                    <td>Адрес:</td>
+                                    <td>{{ order.shipping_address.address }}</td>
+                                </tr>
+                                <tr v-if="order.shipping_address">
+                                    <td>Город:</td>
+                                    <td>{{ order.shipping_address.city }}</td>
+                                </tr>
+                                <tr v-if="order.shipping_address">
+                                    <td>Комментарий:</td>
+                                    <td>{{ order.shipping_address.comment }}</td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -308,50 +318,50 @@
 
                     <div class="box-body">
 
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                <tr>
-                                    <th>Товар</th>
-                                    <th>Цена</th>
-                                    <th>Количество</th>
-                                    <th class="text-right">Всего</th>
-                                    <th class="text-right">Действия</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(product, index) in order.products" v-if="!product.pivot.is_delete">
-                                        <td class="vertical-align-middle">
-                                            <router-link :to="{ path: '/products/edit/' + product.pivot.product_id}">
-                                                <img v-bind:src="'/uploads/products/' + product.pivot.product_id + '/' + product.photo" class="photo"/>
-                                                {{ product.pivot.name }}
-                                            </router-link>
-                                            <p class="font-12"><b>SKU:</b> {{ product.pivot.sku }}</p>
-                                        </td>
-                                        <td class="vertical-align-middle">
-                                            <input type="text" class="form-control pull-left product-price" v-model="product.pivot.price"/>
-                                            &nbsp;&nbsp;
-                                            <div class="pull-left product-price-tg">тг</div>
-                                        </td>
-                                        <td class="vertical-align-middle">
-                                            <input min="1" type="number" class="form-control product-quantity" v-model="product.pivot.quantity"/>
-                                        </td>
-                                        <td class="vertical-align-middle text-right">{{ product.pivot.quantity * product.pivot.price }} тг</td>
-                                        <td class="vertical-align-middle text-right">
-                                            <a class="btn btn-xs btn-default" @click="productDelete(index)">
-                                                <i class="fa fa-remove red"></i> Удалить
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="vertical-align-middle text-right" colspan="4"><b>Доставка:</b></td>
-                                        <td class="vertical-align-middle text-right">{{ order.carrier ? order.carrier.price : 0 }} тг</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="vertical-align-middle text-right" colspan="4"><b>ИТОГО:</b></td>
-                                        <td class="vertical-align-middle text-right">{{ order.total }} тг</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th>Товар</th>
+                                <th>Цена</th>
+                                <th>Количество</th>
+                                <th class="text-right">Всего</th>
+                                <th class="text-right">Действия</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="(product, index) in order.products" v-if="!product.pivot.is_delete">
+                                <td class="vertical-align-middle">
+                                    <router-link :to="{ path: '/products/edit/' + product.pivot.product_id}">
+                                        <img v-bind:src="'/uploads/products/' + product.pivot.product_id + '/' + product.photo" class="photo"/>
+                                        {{ product.pivot.name }}
+                                    </router-link>
+                                    <p class="font-12"><b>SKU:</b> {{ product.pivot.sku }}</p>
+                                </td>
+                                <td class="vertical-align-middle">
+                                    <input type="text" class="form-control pull-left product-price" v-model="product.pivot.price"/>
+                                    &nbsp;&nbsp;
+                                    <div class="pull-left product-price-tg">тг</div>
+                                </td>
+                                <td class="vertical-align-middle">
+                                    <input min="1" type="number" class="form-control product-quantity" v-model="product.pivot.quantity"/>
+                                </td>
+                                <td class="vertical-align-middle text-right">{{ product.pivot.quantity * product.pivot.price }} тг</td>
+                                <td class="vertical-align-middle text-right">
+                                    <a class="btn btn-xs btn-default" @click="productDelete(index)">
+                                        <i class="fa fa-remove red"></i> Удалить
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="vertical-align-middle text-right" colspan="4"><b>Доставка:</b></td>
+                                <td class="vertical-align-middle text-right">{{ order.carrier ? order.carrier.price : 0 }} тг</td>
+                            </tr>
+                            <tr>
+                                <td class="vertical-align-middle text-right" colspan="4"><b>ИТОГО:</b></td>
+                                <td class="vertical-align-middle text-right">{{ order.total }} тг</td>
+                            </tr>
+                            </tbody>
+                        </table>
 
                     </div>
                 </div>
@@ -371,29 +381,47 @@
                     </div>
 
                     <div class="box-body">
-                            <table class="table table-striped table-hover" id="status-table">
-                                <thead>
-                                <tr>
-                                    <th>Статус</th>
-                                    <th>Дата изменение</th>
-                                    <th>Пользователь</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="h in order.status_history">
-                                    <td>
-                                        <i v-bind:class="h.status.class"></i>
-                                        {{ h.status.name }}
-                                    </td>
-                                    <td>{{ h.created_at }}</td>
-                                    <td>
-                                        <router-link :to="{ path: '/users/edit/' + h.user_id}">
-                                            {{ h.user.name }}
-                                        </router-link>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <table class="table table-striped table-hover" id="status-table">
+                            <thead>
+                            <tr>
+                                <th>Статус</th>
+                                <th>Дата изменение</th>
+                                <th>Пользователь</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="h in order.status_history">
+                                <td>
+                                    <i v-bind:class="h.status.class"></i>
+                                    {{ h.status.name }}
+                                </td>
+                                <td>{{ h.created_at }}</td>
+                                <td>
+                                    <router-link :to="{ path: '/users/edit/' + h.user_id}">
+                                        {{ h.user.name }}
+                                    </router-link>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="row" v-if="order.user_id > 0">
+            <div class="col-md-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <span><i class="fa fa-shopping-cart"></i> Другие заказы клиента</span>
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        <orders :filter_user_id="order.user_id" :no_show_order_id="order.id"></orders>
                     </div>
                 </div>
             </div>
@@ -445,9 +473,11 @@
     //https://select2.org/configuration/options-api
     import Select2 from 'v-select2-component';
 
+    import orders from '../orders/List';
+
     export default {
         components:{
-            datePicker, Select2
+            datePicker, Select2, orders
         },
         data () {
             return {
@@ -458,24 +488,9 @@
                     showClose: true,
                     locale: 'ru'
                 },
-                order: {
-                    id: parseInt(this.$route.params.id) > 0 ? this.$route.params.id : 0,
-                    user_id: 0,
-                    status_id: 1,
-                    carrier_id: 2,
-                    shipping_address_id: 0,
-                    comment: '',
-                    delivery_date: '',
-                    //total
-                    payment_id: 1,
-                    paid: 0,
-                    payment_date: '',
-                    //payment_result
-                    created_at: '',
-                    //updated_at
 
-                    products: [],
-                },
+                order: this.orderDefault(),
+
                 order_statuses: [],
                 carriers: [],
                 payments: [],
@@ -498,14 +513,13 @@
                             processResults: function (data) {
                                 var results = [];
                                 data.data.forEach(function (item, index){
-                                    if(!item.deleted_at)
-                                        results.push({
-                                            id:    item.id,
-                                            text:  item.name,
-                                            sku:   item.sku,
-                                            price: item.price,
-                                            photo: item.photo,
-                                        });
+                                    results.push({
+                                        id:    item.id,
+                                        text:  item.name,
+                                        sku:   item.sku,
+                                        price: item.price,
+                                        photo: item.photo,
+                                    });
                                 });
                                 return {
                                     results: results
@@ -520,6 +534,28 @@
             $('.selectpicker').selectpicker('refresh');
         },
         methods:{
+            orderDefault(){
+                return {
+                    id: parseInt(this.$route.params.id) > 0 ? this.$route.params.id : 0,
+                    user_id: 0,
+                    type: 1,
+                    status_id: 1,
+                    carrier_id: 2,
+                    shipping_address_id: 0,
+                    comment: '',
+                    delivery_date: '',
+                    //total
+                    payment_id: 1,
+                    paid: 0,
+                    payment_date: '',
+                    //payment_result
+                    created_at: '',
+                    //updated_at
+
+                    products: [],
+                };
+            },
+
             saveOrder(){
                 axios.post('/admin/order-save', {order: this.order}).then((res)=>{
                     if(res.data)
@@ -551,6 +587,7 @@
                 });
 
                 if(add)
+                {
                     setTimeout(function () {
                         this.order.products.push({
                             photo: photo,
@@ -564,8 +601,10 @@
                             }
                         });
                     }.bind(this), 500);
+                    $('#show-product-add-form').modal('hide');
+                }else
+                    alert('Товар уже добавлен');
 
-                $('#show-product-add-form').modal('hide');
             },
             showProductAddForm(){
                 $('#show-product-add-form').modal('show');
@@ -579,11 +618,12 @@
                     axios.get('/admin/order/' + order_id).then((res)=>{
                         this.order = res.data;
                     });
-                }
+                }else
+                    this.order = this.orderDefault();
             },
             //формат даты
-            datetimeFormat(date){
-                return this.$helper.datetimeFormat(date) ;
+            dateFormat(date, format){
+                return this.$helper.dateFormat(date, format) ;
             },
         },
         created(){
@@ -605,6 +645,13 @@
                 this.users = res.data;
             });
         },
+        watch: {
+            '$route'() {
+                this.getOrder(
+                    parseInt(this.$route.params.id) > 0 ? this.$route.params.id : 0
+                );
+            }
+        },
         computed:{
             addresses(){
                 var addresses = [];
@@ -620,6 +667,7 @@
                         }
                     }
                 });
+//                console.log(addresses);
                 return addresses;
             }
         }

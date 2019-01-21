@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin\Api;
 use App\Http\Controllers\Admin\AdminController;
 
-use App\Models\AttributeAttributeSet;
 use App\Models\AttributeSet;
 use App\Requests\SaveAttributeSetRequest;
 use Illuminate\Http\Request;
@@ -14,54 +13,35 @@ class AttributeSetController extends AdminController
 
     public function list(Request $request)
     {
-        $search = trim(mb_strtolower($request->input('search')));
-
-        $list =  AttributeSet::where(function ($query) use ($search){
-
-                    if(!empty($search))
-                        $query->Where(   DB::raw('LOWER(name)'), 'like', "%"  . $search . "%");
-
-                })
-                ->OrderBy('id', 'DESC')
-                ->paginate($request->input('per_page') ?? 100);
+        $list =  AttributeSet::search($request->input('search'))
+                            ->OrderBy('id', 'DESC')
+                            ->paginate($request->input('per_page', 100));
 
         return  $this->sendResponse($list);
     }
 
     public function view($id)
     {
-        $AttributeSet = AttributeSet::select(['id', 'name'])->with(['attributes' => function($query){
-            $query->select(DB::raw('t_attributes.id'));
-        }])->findOrFail($id);
+        $attributeSet = AttributeSet::select(['id', 'name'])->with(['attributes'])->findOrFail($id);
+        $attributes = $attributeSet->attributes->map(function ($item) {
+            return [$item->id];
+        });
 
-        foreach ($AttributeSet->attributes as $k => $v)
-            $AttributeSet->attributes[$k] = $v->id;
+        unset($attributeSet->attributes);
+        $attributeSet->attributes = $attributes;
 
-        return  $this->sendResponse(
-            $AttributeSet
-        );
+        return  $this->sendResponse($attributeSet);
     }
 
     public function save(SaveAttributeSetRequest $request)
     {
-        $data = $request->all();
-        $data = $data['attribute_set'];
+        $data = $request->input('attribute_set');
 
         $attribute = AttributeSet::findOrNew($data["id"]);
-        $attribute->name = $data['name'];
+        $attribute->fill($data);
+
         if($attribute->save())
-        {
-
-            AttributeAttributeSet::where('attribute_set_id', $attribute->id)->delete();
-
-            foreach ($data['attributes'] as $attribute_id)
-            {
-                AttributeAttributeSet::create([
-                    'attribute_id' => $attribute_id,
-                    'attribute_set_id' => $attribute->id
-                ]);
-            }
-        }
+            $attribute->attributes()->sync($data['attributes']);
 
         return  $this->sendResponse($attribute->id);
     }
@@ -70,10 +50,4 @@ class AttributeSetController extends AdminController
     {
         return  $this->sendResponse(AttributeSet::destroy($id) ? true : false);
     }
-
-
-
-
-
-
 }

@@ -24,7 +24,7 @@
                          <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('payment.logo')}">
                              <label>Логотип</label>
                              <p>
-                                 <img v-bind:src="payment.logo ? '/uploads/payments/' + payment.logo : ''" id="logo-view"/>
+                                 <img width="100" class="img" v-bind:src="payment.logo ? '/uploads/payments/' + payment.logo : ''"/>
                              </p>
                              <label class="btn btn-primary btn-file">
                                  <i class="fa fa-file-image-o" aria-hidden="true"></i>  Логотип
@@ -160,12 +160,3 @@
         }
     }
 </script>
-
-<style>
-    #logo-view {
-        width: 200px;
-        margin-bottom: 5px;
-        border: 1px solid #d9cece;
-        padding: 2px;
-    }
-</style>

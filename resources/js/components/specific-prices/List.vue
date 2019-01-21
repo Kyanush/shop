@@ -11,6 +11,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Товар</th>
+                                    <th>Фото товара</th>
                                     <th>Дата начала</th>
                                     <th>Дата окончания срока</th>
                                     <th>Тип скидки</th>
@@ -21,15 +22,25 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="odd even" v-for="(item, index) in specific_prices.data">
+                                <tr class="odd even" v-for="(item, index) in specific_prices.data" v-bind:class="{'opacity': item.product.format_price == item.product.reduced_price}">
                                     <td>{{ item.id }}</td>
-                                    <td>{{ item.product.name }}</td>
+                                    <td>
+                                        <router-link :to="{ path: '/products/edit/' + item.product.id}">
+                                            {{ item.product.name }}
+                                        </router-link>
+                                    </td>
+                                    <img v-bind:src="item.product.path_photo" width="70" class="img"/>
                                     <td>{{ item.start_date }}</td>
                                     <td>{{ item.expiration_date }}</td>
                                     <td>{{ item.discount_type == 'percent' ? 'Процент' : 'Сумма' }}</td>
                                     <td>{{ item.reduction }}</td>
-                                    <td>{{ item.product.price }}</td>
-                                    <td>{{ item.reduced_price }}</td>
+                                    <td>
+                                        <del v-if="item.product.format_price != item.product.reduced_price">{{ item.product.format_price }}</del>
+                                        <span v-else>
+                                            {{ item.product.format_price }}
+                                        </span>
+                                    </td>
+                                    <td>{{ item.product.reduced_price }}</td>
                                     <td>
                                         <router-link :to="{ path: '/products/edit/' + item.product_id}" class="btn btn-xs btn-default">
                                             <i class="fa fa-edit"></i> Изменить
@@ -45,6 +56,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Товар</th>
+                                    <th>Фото товара</th>
                                     <th>Дата начала</th>
                                     <th>Дата окончания срока</th>
                                     <th>Тип скидки</th>

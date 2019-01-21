@@ -5,9 +5,9 @@
         </h1>
         <ol class="breadcrumb">
             <li v-for="(breadcrumb, idx) in breadcrumbList" :key="idx" :class="{'linked': !!breadcrumb.link}">
-                <a @click="routeTo(idx)" v-if="breadcrumb.link">
+                <router-link :to="{ path: breadcrumb.link}">
                     {{ breadcrumb.name }}
-                </a>
+                </router-link>
             </li>
             <li>
                 <a class="active">
@@ -29,10 +29,6 @@
         mounted () { this.updateList() },
         watch: { '$route' () { this.updateList() } },
         methods: {
-            routeTo (pRouteTo) {
-                if (this.breadcrumbList[pRouteTo].link)
-                    this.$router.push(this.breadcrumbList[pRouteTo].link)
-            },
             updateList () {
                 this.breadcrumbList = this.$route.meta.breadcrumb;
             }

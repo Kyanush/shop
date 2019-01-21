@@ -4,7 +4,7 @@
         <p>
             <a for="pictures">
                 <i class="fa fa-upload green"></i> Загрузить фото
-                <input type="file" multiple id="pictures" @change="setImages($event)"/>
+                <input type="file" accept="image/*"  multiple id="pictures" @change="setImages($event)"/>
             </a>
             &nbsp;
             <a v-if="images.length" @click="deleteAll($event)">
@@ -15,7 +15,7 @@
 
         <div class="images-view">
             <div class="image" v-for="(item, index) in images" v-if="!item.is_delete">
-                <img v-bind:src="item.image_view"/>
+                <img v-bind:id="'img' + index" v-bind:src="item.image_view"/>
                 <a @click="deleteImage($event, index)">
                     <i class="fa fa-remove"></i> Удалить
                 </a>
@@ -40,36 +40,34 @@
             }
         },
         methods:{
-
             setImages(event){
-                var self = this;
-                for(var i = 0; i < event.target.files.length; i++){
-                    var value = event.target.files[i];
-                    var reader = new FileReader();
-                    reader.onload = function(e)  {
-                        self.images.push({
-                            id: 0,
-                            is_delete: 0,
-                            value: value,
-                            image_view: e.target.result
-                        });
-                    }
-                    reader.readAsDataURL(event.target.files[i]);
+                for(var i = 0; i < event.target.files.length; i++)
+                {
+                    this.images.push({
+                        id: 0,
+                        is_delete: 0,
+                        value: event.target.files[i]
+                    });
                 }
                 this.return_images();
             },
             deleteImage(event, index){
+                event.preventDefault();
 
-                if(this.images[index].id)
-                    this.$set(this.images[index], 'is_delete', 1);
-                else
+                if(this.images[index])
+                {
+                    if(this.images[index].id > 0)
+                        this.$set(this.images[index], 'is_delete', 1);
+                    else
+                        this.$delete(this.images, index);
+                }else
                     this.$delete(this.images, index);
 
-
-                event.preventDefault();
                 this.return_images();
             },
             deleteAll(event){
+                event.preventDefault();
+
                 var self = this;
                 $.each(this.images, function(index, item) {
                     self.deleteImage(event, index);
@@ -77,13 +75,28 @@
             },
             return_images(){
                 this.$emit('return_images', this.images);
+            },
+            setImgSrc(value, element){
+                this.$helper.setImgSrc(value, element);
             }
         },
         computed:{
             ...mapGetters([
                 'IsError'
             ])
-        }
+        },
+        watch: {
+            images: {
+                handler: function (val, oldVal) {
+                    var self = this;
+                    $.each(val, function(key, value) {
+                        if(value.value.name)
+                            self.setImgSrc(value.value, '#img' + key);
+                    });
+                },
+                deep: true
+            }
+        },
     }
 </script>
 

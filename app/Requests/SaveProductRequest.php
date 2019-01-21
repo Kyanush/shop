@@ -16,11 +16,11 @@ class SaveProductRequest extends FormRequest
             'product.attribute_set_id' => 'integer|exists:attribute_sets,id',
             'product.name'        => 'max:255|required|unique:products,name' . ($product_id ? (',' . $product_id . ',id') : ''),
             'product.url'         => 'max:255|nullable|unique:products,url'  . ($product_id ? (',' . $product_id . ',id') : ''),
-            'product.description' => 'max:1000|required',
+            'product.description' => 'required',
             'product.price'       => 'numeric|required|min:1',
             'product.sku'         => 'max:100|unique:products,sku' . ($product_id ? (',' . $product_id . ',id') : ''),
             'product.stock'       => 'integer',
-            'product.deleted_at'  => 'required|integer|min:0|max:1',
+            'product.active'      => 'required|integer|min:0|max:1',
 
             'categories'          => 'required|exists:categories,id',
             'categories.*'        => 'required|exists:categories,id',
@@ -36,8 +36,11 @@ class SaveProductRequest extends FormRequest
 
         if ($this->input('specific_price.reduction') > 0)
         {
-            $rules['specific_price.start_date']      = 'nullable|date_format:"Y-m-d H:i:s"';
-            $rules['specific_price.expiration_date'] = 'nullable|date_format:"Y-m-d H:i:s"';
+            if ($this->input('specific_price.start_date'))
+                $rules['specific_price.start_date']      = 'nullable|date_format:"Y-m-d H:i:s"';
+
+            if ($this->input('specific_price.expiration_date'))
+                $rules['specific_price.expiration_date'] = 'nullable|date_format:"Y-m-d H:i:s"';
         }
 
         $atts = $this->input('attributes');
@@ -70,7 +73,7 @@ class SaveProductRequest extends FormRequest
             'product.price'       => "'Цена'",
             'product.sku'         => "'SKU'",
             'product.stock'       => "'Количество на складе'",
-            'product.deleted_at'  => "'Статус'",
+            'product.active'      => "'Статус'",
 
             'photo'       => "'Фото товара'",
 

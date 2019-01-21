@@ -20,6 +20,10 @@
                 <th>Название</th>
                 <th>Тип</th>
                 <th>Обязательные поля</th>
+                <th>Код</th>
+                <th>Показывать в фильтре</th>
+                <th>Описание</th>
+                <th>Группа</th>
                 <th>Действия</th>
             </tr>
             </thead>
@@ -29,13 +33,17 @@
                 <td>{{ item.name }}</td>
                 <td>{{ item.type }}</td>
                 <td>{{ item.required == 1 ? 'Да' : 'Нет' }}</td>
+                <td>{{ item.code }}</td>
+                <td>{{ item.use_in_filter == 1 ? 'Да' : 'Нет' }}</td>
+                <td>{{ item.description }}</td>
+                <td>{{ item.attribute_group ? item.attribute_group.name : ''}}</td>
                 <td>
                     <router-link :to="{ path: '/attributes/edit/' + item.id}" class="btn btn-xs btn-default">
-                        <i class="fa fa-edit"></i> Изменить
+                        <i class="fa fa-edit"></i>
                     </router-link>
 
                     <span class="btn btn-xs btn-default" @click="deleteAttribute(item, index)">
-                         <i class="fa fa-remove"></i> Удалить
+                         <i class="fa fa-remove"></i>
                     </span>
                 </td>
             </tr>
@@ -46,6 +54,10 @@
                 <th>Название</th>
                 <th>Тип</th>
                 <th>Обязательные поля</th>
+                <th>Код</th>
+                <th>Показывать в фильтре</th>
+                <th>Описание</th>
+                <th>Группа</th>
                 <th>Действия</th>
             </tr>
             </tfoot>

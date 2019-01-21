@@ -20,15 +20,23 @@
                 </div>
                 <div class="box-body row">
 
-                    <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('attribute.name')}">
+                    <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('attribute.name')}">
                         <label>Название <span class="red">*</span></label>
-                        <input type="text" name="name" value="" class="form-control" v-model="attribute.name"/>
+                        <input type="text" name="text" value="" class="form-control" v-model="attribute.name"/>
                         <span v-if="IsError('attribute.name')" class="help-block" v-for="e in IsError('attribute.name')">
                             {{ e }}
                         </span>
                     </div>
 
-                    <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('attribute.required')}">
+                    <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('attribute.code')}">
+                        <label>Код</label>
+                        <input type="text" name="text" value="" class="form-control" v-model="attribute.code"/>
+                        <span v-if="IsError('attribute.code')" class="help-block" v-for="e in IsError('attribute.code')">
+                            {{ e }}
+                        </span>
+                    </div>
+
+                    <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('attribute.required')}">
                         <label>Обязательные поля <span class="red">*</span></label>
                         <select class="form-control" v-model="attribute.required">
                             <option value="0">Нет</option>
@@ -39,7 +47,18 @@
                         </span>
                     </div>
 
-                    <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('attribute.type')}">
+                    <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('attribute.use_in_filter')}">
+                        <label>Показывать в фильтре <span class="red">*</span></label>
+                        <select class="form-control" v-model="attribute.use_in_filter" v-bind:disabled="attribute.type != 'dropdown' && attribute.type != 'multiple_select'">
+                            <option value="0">Нет</option>
+                            <option value="1">Да</option>
+                        </select>
+                        <span v-if="IsError('attribute.use_in_filter')" class="help-block" v-for="e in IsError('attribute.use_in_filter')">
+                            {{ e }}
+                        </span>
+                    </div>
+
+                    <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('attribute.type')}">
                         <label>Тип <span class="red">*</span></label>
                         <select name="type" id="attribute_type" class="form-control" v-model="attribute.type" v-on:change="selectedAttributeType" v-bind:disabled="attribute.id > 0">
                             <option v-for="type in types" v-bind:value="type.value">
@@ -51,7 +70,21 @@
                         </span>
                     </div>
 
+                    <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('attribute.description')}">
+                        <label>Описание</label>
+                        <textarea class="form-control" v-model="attribute.description"></textarea>
+                        <span v-if="IsError('attribute.description')" class="help-block" v-for="e in IsError('attribute.description')">
+                            {{ e }}
+                        </span>
+                    </div>
 
+                    <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('attribute.attribute_group_id')}">
+                        <label>Группа</label>
+                        <Select2 class="standard-input" v-model="attribute.attribute_group_id" :options="convertDataSelect2(attribute_groups, false, false, false, true)"/>
+                        <span v-if="IsError('attribute.attribute_group_id')" class="help-block" v-for="e in IsError('attribute.attribute_group_id')">
+                            {{ e }}
+                        </span>
+                    </div>
 
                     <div class="form-group col-md-12 attr-field attr-type-media image" v-if="attribute.type == 'media'" v-bind:class="{'has-error' : IsError('attribute.values.0.value')}">
                         <div>
@@ -59,7 +92,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-6" style="margin-bottom: 20px;">
-                                <img id="mainImage" src="" v-bind:src="attribute.values[0].value ? '/uploads/attributes/' + attribute.values[0].value : ''">
+                                <img width="100"  class="img" id="mainImage" src="" v-bind:src="attribute.values[0].value ? '/uploads/attributes/' + attribute.values[0].value : ''">
                             </div>
                         </div>
                         <div class="btn-group">
@@ -116,7 +149,14 @@
                                 <div class="form-group option" v-for="(item, index) in attribute.values">
                                     <label>вариант #{{ index + 1}}</label>
                                     <div class="input-group">
-                                        <input  type="text" v-model="attribute.values[index].value" class="form-control" v-bind:disabled="item.is_delete == 1" placeholder="Значение">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input  type="text" v-model="attribute.values[index].value" class="form-control" v-bind:disabled="item.is_delete == 1" placeholder="Значение">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input  type="text" v-model="attribute.values[index].code"  class="form-control" v-bind:disabled="item.is_delete == 1" placeholder="Код">
+                                            </div>
+                                        </div>
                                         <span class="input-group-addon">
                                             <a @click="deleteOption(index)" class="remove-option">
                                                 <i class="fa fa-remove"></i>
@@ -200,12 +240,32 @@
 <script>
     import { mapGetters } from 'vuex';
     import { mapActions } from 'vuex';
+    import Select2 from 'v-select2-component';
 
     export default {
+        components:{
+            Select2
+        },
         data () {
             return {
                 method_redirect: 'save_and_back',
-                attribute: this.attributeDefault(),
+                attribute_groups: [],
+                attribute: {
+                    id: 0,
+                    name: '',
+                    type: '',
+                    required: 0,
+                    code: '',
+                    use_in_filter: 0,
+                    description: '',
+                    attribute_group_id: 0,
+                    values: [{
+                        id: 0,
+                        value: '',
+                        code: '',
+                        is_delete: 0
+                    }]
+                },
                 types:[
                     {
                         value: '',
@@ -245,20 +305,24 @@
                     this.attribute = res.data;
                 });
             }
+
+            axios.get('/admin/attribute-groups-list').then((res)=>{
+                this.attribute_groups = res.data;
+            });
+
+        },
+        watch: {
+            'attribute.type': {
+                handler: function (val, oldVal) {
+                    if(val != 'dropdown' && val != 'multiple_select')
+                        this.attribute.use_in_filter = 0;
+                },
+                deep: true
+            },
         },
         methods:{
-            attributeDefault(){
-                return {
-                    id: 0,
-                    name: '',
-                    type: '',
-                    required: 0,
-                    values: [{
-                        id: 0,
-                        value: '',
-                        is_delete: 0
-                    }]
-                };
+            convertDataSelect2(values, column_id, column_text, disabled_column, default_option){
+                return this.$helper.convertDataSelect2(values, column_id, column_text, disabled_column, default_option);
             },
             setFile(event){
                 this.$set(this.attribute.values[0],'value', event.target.files[0]);
@@ -269,6 +333,7 @@
                     this.attribute.values = [{
                         id: 0,
                         value: '',
+                        code: '',
                         is_delete: 0
                     }];
 
@@ -281,6 +346,7 @@
                     this.attribute.values = [{
                         id: 0,
                         value: '',
+                        code: '',
                         is_delete: 0
                     }];
                 }
@@ -294,6 +360,7 @@
                 this.attribute.values.push({
                     id: 0,
                     value: '',
+                    code: '',
                     is_delete: false
                 });
             },
@@ -312,21 +379,27 @@
 
                 var form_data = new FormData();
 
-                form_data.append('attribute[id]', this.attribute.id);
-                form_data.append('attribute[name]', this.attribute.name);
-                form_data.append('attribute[type]', this.attribute.type);
-                form_data.append('attribute[required]', this.attribute.required);
+                form_data.append('attribute[id]',            this.attribute.id);
+                form_data.append('attribute[name]',          this.attribute.name);
+                form_data.append('attribute[type]',          this.attribute.type);
+                form_data.append('attribute[required]',      this.attribute.required);
+                form_data.append('attribute[code]',          this.attribute.code);
+                form_data.append('attribute[use_in_filter]', this.attribute.use_in_filter);
+                form_data.append('attribute[description]',   this.attribute.description);
+                form_data.append('attribute[attribute_group_id]',   this.attribute.attribute_group_id);
+
+
 
                 this.attribute.values.forEach(function (value, i) {
-                    form_data.append('attribute[values]['+i+'][id]', value.id);
-                    form_data.append('attribute[values]['+i+'][value]', value.value);
+                    form_data.append('attribute[values]['+i+'][id]',        value.id);
+                    form_data.append('attribute[values]['+i+'][value]',     value.value);
+                    form_data.append('attribute[values]['+i+'][code]',      value.code);
                     form_data.append('attribute[values]['+i+'][is_delete]', value.is_delete);
                 });
 
                 axios.post('/admin/attribute-save', form_data).then((res)=>{
                     if(res.data)
                     {
-                        console.log(res.data);
 
                         this.$helper.swalSuccess(this.attribute.id ? 'Успешно изменено' : 'Успешно создано');
 
@@ -342,7 +415,22 @@
                         }else if(this.method_redirect == 'save_and_new'){
                             this.$router.push('/attributes/create');
 
-                            this.attribute = this.attributeDefault();
+                            this.attribute = {
+                                id: 0,
+                                    name: '',
+                                    type: '',
+                                    required: 0,
+                                    code: '',
+                                    use_in_filter: 0,
+                                    description: '',
+                                    attribute_group_id: 0,
+                                    values: [{
+                                        id: 0,
+                                        value: '',
+                                        code: '',
+                                        is_delete: 0
+                                    }]
+                            };
                         }
                     }
                 });

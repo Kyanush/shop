@@ -60,16 +60,11 @@
 </template>
 
 <script>
-
-    import SortableTree from 'vue-sortable-tree'
+    import SortableTree from 'vue-sortable-tree';
     export default {
-
         components: {
             SortableTree
         },
-
-
-
         name: 'hello',
         data () {
             return {
@@ -122,7 +117,7 @@
                 //console.log('changePosition: ', option)
             },
             getCategoryReorder(){
-                axios.get('/admin/category-reorder').then((res)=>{
+                axios.get('/admin/catalogs-tree/2').then((res)=>{
                     this.treeData.children = res.data;
                 });
             }

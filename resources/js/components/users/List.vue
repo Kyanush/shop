@@ -42,14 +42,14 @@
                 </tr>
             </thead>
             <tbody>
-            <tr class="odd even" v-for="(item, index) in users.data">
+            <tr class="odd even" v-for="(item, index) in users.data" v-bind:class="{ 'deleted': !item.active }">
                 <td>{{ item.id }}</td>
                 <td>{{ item.name }}</td>
                 <td>{{ item.surname }}</td>
                 <td>{{ item.email }}</td>
                 <td>{{ item.role.description }}</td>
                 <td>
-                    <i class="fa" v-bind:class="{'red fa-times-circle' : item.deleted_at, 'green fa-check-circle' : !item.deleted_at }"></i>
+                    <i class="fa" v-bind:class="{'red fa-times-circle' : !item.active, 'green fa-check-circle' : item.active }"></i>
                 </td>
                 <td>
                     <router-link :to="{ path: '/users/edit/' + item.id}" class="btn btn-xs btn-default">

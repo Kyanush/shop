@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Api;
 use App\Http\Controllers\Admin\AdminController;
 
 use App\Models\SpecificPrice;
+use App\Tools\Helpers;
 use Illuminate\Http\Request;
 use DB;
 
@@ -13,24 +14,22 @@ class SpecificPriceController extends AdminController
     {
         $search = trim(mb_strtolower($request->input('search')));
 
-        $list =  SpecificPrice::with(['product' => function($query){
-
-            $query->select(['id', 'name', 'price']);
-
-        }])->where(function ($query) use ($search){
+        $list =  SpecificPrice::with(['product'])->where(function ($query) use ($search){
                 if(!empty($search))
                 {
                     $query->whereHas('product', function($query) use ($search){
-                        $query->Where(DB::raw('LOWER(name)'), 'like', "%"  . $search . "%");
+                        $query->filters(['name' => $search]);
                     });
                 }
         })
         ->OrderBy('id', 'DESC')
-        ->paginate($request->input('perPage') ?? 5);
+        ->paginate($request->input('perPage', 5));
 
         foreach ($list as $key => $item)
         {
-            $list[$key]->setAttribute('reduced_price', $item->getReducedPrice());
+            $list[$key]->product->reduced_price  = Helpers::priceFormat($item->product->getReducedPrice());
+            $list[$key]->product->path_photo     = $item->product->pathPhoto(true);
+            $list[$key]->product->format_price   = Helpers::priceFormat($item->product->price);
         }
 
         return  $this->sendResponse($list);

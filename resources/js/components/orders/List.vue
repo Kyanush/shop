@@ -7,56 +7,72 @@
                     <i class="fa fa-plus"></i> Создать заказ
                 </span>
             </router-link>
+            <div class="btn btn-primary pull-right" @click="setOrderShowFilter">
+                <i class="fa"
+                   v-bind:class="{'fa-eye': !order_show_filter,  'fa-eye-slash': order_show_filter}"
+                   aria-hidden="true"></i>
+                {{ order_show_filter ? 'Скрыть фильтр' : 'Показать фильтр'}}
+            </div>
         </div>
 
-        <div class="box-header with-border">
+        <div class="box-header with-border" v-show="order_show_filter">
             <div class="row">
                 <div class="col-md-6">
                     <table class="table table-bordered ">
                         <tbody class="filter">
-                            <tr class="odd even">
-                                <td><b>Номер заказа №:</b></td>
-                                <td>
-                                    <input type="text" class="form-control" v-model="filter.id"/>
-                                </td>
-                            </tr>
-                            <tr class="odd even">
-                                <td><b>Клиент:</b></td>
-                                <td>
-                                    <Select2 :settings="{multiple: true}" v-model="filter.user_id" :options="convertDataSelect2(users)"/>
-                                </td>
-                            </tr>
-                            <tr class="odd even">
-                                <td><b>Текущее состояние:</b></td>
-                                <td>
-                                    <select class="selectpicker form-control" v-model="filter.status_id">
-                                        <option value="">Все</option>
-                                        <option v-for="os in order_statuses"
-                                                v-bind:value="os.id"
-                                                :data-icon="os.class">
-                                            {{ os.name }}
-                                        </option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr class="odd even">
-                                <td><b>Курьер:</b></td>
-                                <td>
-                                    <Select2 :settings="{multiple: true}" v-model="filter.carrier_id" :options="convertDataSelect2(carriers)"/>
-                                </td>
-                            </tr>
-                            <tr class="odd even">
-                                <td><b>Адрес:</b></td>
-                                <td>
-                                    <Select2 :settings="{multiple: true}" v-model="filter.shipping_address_id" :options="convertDataSelect2(addresses, 'id', 'address|city')"/>
-                                </td>
-                            </tr>
-                            <tr class="odd even">
-                                <td><b>Комментарии:</b></td>
-                                <td>
-                                    <textarea class="form-control" v-model="filter.comment"></textarea>
-                                </td>
-                            </tr>
+                        <tr class="odd even">
+                            <td><b>Номер заказа №:</b></td>
+                            <td>
+                                <input type="text" class="form-control" v-model="filter.id"/>
+                            </td>
+                        </tr>
+                        <tr class="odd even">
+                            <td><b>Тип заказа:</b></td>
+                            <td>
+                                <select class="form-control" v-model="filter.type">
+                                    <option value="">Все</option>
+                                    <option value="1">Оформление заказа</option>
+                                    <option value="2">Купить в 1 клик</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="odd even">
+                            <td><b>Клиент:</b></td>
+                            <td>
+                                <Select2 :settings="{multiple: true, disabled: (filter_user_id ? true : false)  }" v-model="filter.user_id" :options="convertDataSelect2(users)"/>
+                            </td>
+                        </tr>
+                        <tr class="odd even">
+                            <td><b>Текущее состояние:</b></td>
+                            <td>
+                                <select class="selectpicker form-control" v-model="filter.status_id">
+                                    <option value="">Все</option>
+                                    <option v-for="os in order_statuses"
+                                            v-bind:value="os.id"
+                                            :data-icon="os.class">
+                                        {{ os.name }}
+                                    </option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="odd even">
+                            <td><b>Курьер:</b></td>
+                            <td>
+                                <Select2 :settings="{multiple: true}" v-model="filter.carrier_id" :options="convertDataSelect2(carriers)"/>
+                            </td>
+                        </tr>
+                        <tr class="odd even">
+                            <td><b>Адрес:</b></td>
+                            <td>
+                                <Select2 :settings="{multiple: true}" v-model="filter.shipping_address_id" :options="convertDataSelect2(addresses, 'id', 'address|city')"/>
+                            </td>
+                        </tr>
+                        <tr class="odd even">
+                            <td><b>Комментарии:</b></td>
+                            <td>
+                                <textarea class="form-control" v-model="filter.comment"></textarea>
+                            </td>
+                        </tr>
 
 
 
@@ -67,76 +83,76 @@
                 <div class="col-md-6">
                     <table class="table table-bordered ">
                         <tbody class="filter">
-                            <tr class="odd even">
-                                <td><b>Дата доставки:</b></td>
-                                <td>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <date-picker :config="datetimepicker" v-model="filter.delivery_date_start"></date-picker>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <date-picker :config="datetimepicker" v-model="filter.delivery_date_end"></date-picker>
-                                        </div>
+                        <tr class="odd even">
+                            <td><b>Дата доставки:</b></td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <date-picker :config="datetimepicker" v-model="filter.delivery_date_start"></date-picker>
                                     </div>
-                                </td>
-                            </tr>
-                            <tr class="odd even">
-                                <td><b>Итого:</b></td>
-                                <td>
-                                    <input type="number" class="form-control" v-model="filter.total"/>
-                                </td>
-                            </tr>
-                            <tr class="odd even">
-                                <td><b>Тип оплаты:</b></td>
-                                <td>
-                                    <Select2 :settings="{multiple: true}" v-model="filter.payment_id" :options="convertDataSelect2(payments)"/>
-                                </td>
-                            </tr>
-                            <tr class="odd even">
-                                <td><b>Оплачен:</b></td>
-                                <td>
-                                    <select class="selectpicker form-control" v-model="filter.paid">
-                                        <option value="">Все</option>
-                                        <option value="1" data-icon="fa fa-check-circle status-completed">Да</option>
-                                        <option value="0" data-icon="fa fa-check-circle status-canceled">Нет</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr class="odd even">
-                                <td><b>Дата оплаты:</b></td>
-                                <td>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <date-picker :config="datetimepicker" v-model="filter.payment_date_start"></date-picker>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <date-picker :config="datetimepicker" v-model="filter.payment_date_end"></date-picker>
-                                        </div>
+                                    <div class="col-md-6">
+                                        <date-picker :config="datetimepicker" v-model="filter.delivery_date_end"></date-picker>
                                     </div>
-                                </td>
-                            </tr>
-                            <tr class="odd even">
-                                <td><b>Дата заказа:</b></td>
-                                <td>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <date-picker :config="datetimepicker" v-model="filter.created_at_start"></date-picker>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <date-picker :config="datetimepicker" v-model="filter.created_at_end"></date-picker>
-                                        </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="odd even">
+                            <td><b>Итого:</b></td>
+                            <td>
+                                <input type="number" class="form-control" v-model="filter.total"/>
+                            </td>
+                        </tr>
+                        <tr class="odd even">
+                            <td><b>Тип оплаты:</b></td>
+                            <td>
+                                <Select2 :settings="{multiple: true}" v-model="filter.payment_id" :options="convertDataSelect2(payments)"/>
+                            </td>
+                        </tr>
+                        <tr class="odd even">
+                            <td><b>Оплачен:</b></td>
+                            <td>
+                                <select class="selectpicker form-control" v-model="filter.paid">
+                                    <option value="">Все</option>
+                                    <option value="1" data-icon="fa fa-check-circle status-completed">Да</option>
+                                    <option value="0" data-icon="fa fa-check-circle status-canceled">Нет</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr class="odd even">
+                            <td><b>Дата оплаты:</b></td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <date-picker :config="datetimepicker" v-model="filter.payment_date_start"></date-picker>
                                     </div>
-                                </td>
-                            </tr>
-                            <tr class="odd even">
-                                <td></td>
-                                <td>
-                                    <button type="button" class="btn btn-danger pull-right" @click="clearFilters">
-                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                        Очистить все фильтры
-                                    </button>
-                                </td>
-                            </tr>
+                                    <div class="col-md-6">
+                                        <date-picker :config="datetimepicker" v-model="filter.payment_date_end"></date-picker>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="odd even">
+                            <td><b>Дата заказа:</b></td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <date-picker :config="datetimepicker" v-model="filter.created_at_start"></date-picker>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <date-picker :config="datetimepicker" v-model="filter.created_at_end"></date-picker>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="odd even">
+                            <td></td>
+                            <td>
+                                <button type="button" class="btn btn-danger pull-right" @click="clearFilters">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                    Очистить все фильтры
+                                </button>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -146,54 +162,58 @@
 
 
 
-                   <table class="table table-bordered ">
-                            <thead>
-                                <tr>
-                                    <th>Номер заказа №</th>
-                                    <th>Клиент</th>
-                                    <th>Статус</th>
-                                    <th>Оплачен</th>
-                                    <th>Сумма</th>
-                                    <th>Дата</th>
-                                    <th>Действия</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="odd even" v-for="(item, index) in orders.data">
-                                    <td>{{ item.id }}</td>
-                                    <td>
-                                        <router-link :to="{ path: '/users/edit/' + item.user_id}">
-                                            {{ item.user.name }}
-                                        </router-link>
-                                    </td>
-                                    <td>
-                                        <i v-bind:class="item.status.class"></i>
-                                        {{ item.status.name }}
-                                    </td>
-                                    <td>
-                                        <span v-if="item.paid == 1"><i class="fa fa-check-circle status-completed"></i>&nbsp;Да</span>
-                                        <span v-else><i class="fa fa-check-circle status-canceled"></i>&nbsp;Нет</span>
-                                    </td>
-                                    <td>{{ item.total }}</td>
-                                    <td>{{ item.created_at }}</td>
-                                    <td>
-                                        <router-link :to="{ path: '/orders/' + item.id}" class="btn btn-xs btn-default">
-                                            <i class="fa fa-eye"></i> Посмотреть
-                                        </router-link>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>Номер заказа №</th>
-                                    <th>Клиент</th>
-                                    <th>Статус</th>
-                                    <th>Сумма</th>
-                                    <th>Дата</th>
-                                    <th>Действия</th>
-                                </tr>
-                            </tfoot>
-                   </table>
+        <table class="table table-bordered ">
+            <thead>
+            <tr>
+                <th>Номер заказа №</th>
+                <th>Клиент</th>
+                <th>Статус</th>
+                <th>Тип заказа</th>
+                <th>Оплачен</th>
+                <th>Сумма</th>
+                <th>Дата</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="odd even" v-for="(item, index) in orders.data" v-if="no_show_order_id != item.id">
+                <td>{{ item.id }}</td>
+                <td>
+                    <router-link :to="{ path: '/users/edit/' + item.user_id}">
+                        {{ item.user.name }}
+                    </router-link>
+                </td>
+                <td>
+                    <i v-bind:class="item.status.class"></i>
+                    {{ item.status.name }}
+                </td>
+                <td>
+                    {{ item.type == 1 ? 'Оформление заказа' : 'Купить в 1 клик' }}
+                </td>
+                <td>
+                    <span v-if="item.paid == 1"><i class="fa fa-check-circle status-completed"></i>&nbsp;Да</span>
+                    <span v-else><i class="fa fa-check-circle status-canceled"></i>&nbsp;Нет</span>
+                </td>
+                <td>{{ item.total }}</td>
+                <td>{{ item.created_at }}</td>
+                <td>
+                    <router-link :to="{ path: '/orders/' + item.id}" class="btn btn-xs btn-default">
+                        <i class="fa fa-eye"></i> Посмотреть
+                    </router-link>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <th>Номер заказа №</th>
+                <th>Клиент</th>
+                <th>Статус</th>
+                <th>Сумма</th>
+                <th>Дата</th>
+                <th>Действия</th>
+            </tr>
+            </tfoot>
+        </table>
 
         <div class="text-center">
             <paginate
@@ -218,11 +238,14 @@
     import datePicker from 'vue-bootstrap-datetimepicker';
 
     export default {
+         props: ['filter_user_id', 'no_show_order_id'],
         components:{
             Paginate, Select2, datePicker
         },
         data () {
             return {
+                order_show_filter: false,
+
                 datetimepicker: {
                     format: 'YYYY-MM-DD HH:mm:ss',
                     useCurrent: false,
@@ -239,7 +262,8 @@
 
                 filter:{
                     id:   (this.$route.query.id   ? this.$route.query.id : ''),
-                    user_id:   (this.$route.query.user_id   ? this.$route.query.user_id : ''),
+                     user_id: this.filter_user_id ? this.filter_user_id : (this.$route.query.user_id   ? this.$route.query.user_id : ''),
+                    type:   (this.$route.query.type   ? this.$route.query.type : ''),
                     status_id:   (this.$route.query.status_id   ? this.$route.query.status_id : ''),
                     carrier_id:   (this.$route.query.carrier_id   ? this.$route.query.carrier_id : ''),
                     shipping_address_id:   (this.$route.query.shipping_address_id   ? this.$route.query.shipping_address_id : ''),
@@ -269,6 +293,7 @@
             this.ordersList();
 
             axios.get('/admin/order/users').then((res)=>{
+                console.log(res.data);
                 this.users = res.data;
             });
 
@@ -288,11 +313,19 @@
                 this.payments = res.data.data;
             });
 
+            var order_show_filter = localStorage.getItem('order_show_filter');
+            if(order_show_filter)
+               this.order_show_filter = order_show_filter === 'true' ? true : false;
+
         },
         updated () {
             $('.selectpicker').selectpicker('refresh');
         },
         methods:{
+            setOrderShowFilter(){
+                this.order_show_filter = !this.order_show_filter;
+                localStorage.setItem('order_show_filter', this.order_show_filter);
+            },
             convertDataSelect2(values, column_id, column_text, disabled_column, default_option){
                 return this.$helper.convertDataSelect2(values, column_id, column_text, disabled_column, default_option);
             },
@@ -317,6 +350,9 @@
                         params[column] = self.filter[column];
                     }
                 });
+
+                if(this.filter_user_id)
+                    delete params['user_id'];
 
                 axios.get('/admin/orders-list', {params:  params}).then((res)=>{
                     this.orders = res.data;

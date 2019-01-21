@@ -16,6 +16,10 @@ import attributes_sets_save    from  '../components/attributes-sets/Save.vue';
 import products_list    from  '../components/products/List.vue';
 import products_save    from  '../components/products/Save.vue';
 
+import reviews    from  '../components/reviews/reviews.vue';
+import questions_answers    from  '../components/questions-answers/QuestionsAnswers.vue';
+
+
 import users_list from  '../components/users/List.vue';
 import users_save from  '../components/users/Save.vue';
 
@@ -30,15 +34,20 @@ import order_statuses_save from  '../components/order-statuses/Save.vue';
 
 import specific_prices_list from  '../components/specific-prices/List.vue';
 
-import orders_list from  '../components/orders/List.vue';
-import orders_detail from  '../components/orders/Detail.vue';
+import callbacks_list from  '../components/callbacks/List.vue';
+
+import orders_list     from  '../components/orders/List.vue';
+import orders_detail   from  '../components/orders/Detail.vue';
+
+import sliders_list from  '../components/sliders/List.vue';
+import sliders_save from  '../components/sliders/Save.vue';
 
 
-
-Vue.component('layout', require('../components/Layout.vue'));
-
+Vue.component('layout',                    require('../components/Layout.vue'));
+Vue.component('checkout',                    require('../components/checkout/Checkout.vue'));
 
 Vue.use(Router);
+
 
 export default new Router({
     mode: 'history',
@@ -46,7 +55,7 @@ export default new Router({
     routes: [
 
         {
-            path: '/',
+            path: '/main',
             name: 'Главная страница',
             component: main
         },
@@ -191,7 +200,7 @@ export default new Router({
 
         //Товары
         {
-            path: '/products',
+            path: '/products/:category?',
             name: 'Товары',
             component: products_list,
             meta: {
@@ -201,7 +210,7 @@ export default new Router({
             }
         },
         {
-            path: '/products/create',
+            path: '/product/create',
             name: 'Добавить товар',
             component: products_save,
             meta: {
@@ -223,6 +232,33 @@ export default new Router({
             }
         },
 
+
+
+        //Отзывы
+        {
+            path: '/reviews',
+            name: 'Отзывы',
+            component: reviews,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Товары', link: '/products' },
+                ]
+            }
+        },
+
+        //Вопросы-ответы
+        {
+            path: '/questions-answers',
+            name: 'Вопросы-ответы',
+            component: questions_answers,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Товары', link: '/products' },
+                ]
+            }
+        },
 
 
         /**********************************************************************************************************************/
@@ -299,6 +335,40 @@ export default new Router({
             }
         },
 
+        //Слайдеры
+        {
+            path: '/sliders',
+            name: 'Слайдеры',
+            component: sliders_list,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                ]
+            }
+        },
+        {
+            path: '/sliders/create',
+            name: 'Создать слайдер',
+            component: sliders_save,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Слайдеры', link: '/sliders' },
+                ]
+            }
+        },
+        {
+            path: '/sliders/edit/:id',
+            name: 'Редактировать слайдер',
+            component: sliders_save,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Слайдеры', link: '/sliders' },
+                ]
+            }
+        },
+
 
         //статус
         {
@@ -348,6 +418,20 @@ export default new Router({
         },
 
 
+        //Обратный звонок
+        {
+            path: '/callbacks',
+            name: 'Обратный звонок',
+            component: callbacks_list,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                ]
+            }
+        },
+
+
+
 
         //заказы
         {
@@ -382,6 +466,7 @@ export default new Router({
                 ]
             }
         },
+
 
 
 

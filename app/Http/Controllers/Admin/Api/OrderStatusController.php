@@ -13,19 +13,9 @@ class OrderStatusController extends AdminController
 
     public function list(Request $request)
     {
-        $search = trim(mb_strtolower($request->input('search')));
-        $list   =  OrderStatus::where(function ($query) use ($search){
-
-                    //Поиск по ФИО, телефону или email
-                    if(!empty($search))
-                    {
-                        $query->Where(   DB::raw('LOWER(name)'),  'like', "%"  . $search . "%");
-                        $query->OrWhere(   DB::raw('LOWER(description)'),  'like', "%"  . $search . "%");
-                    }
-
-                })
-                ->OrderBy('id', 'asc')
-                ->paginate($request->input('perPage', 10));
+        $list   =  OrderStatus::Search($request->input('search'))
+                                ->OrderBy('id', 'asc')
+                                ->paginate($request->input('perPage', 10));
 
         return  $this->sendResponse($list);
     }

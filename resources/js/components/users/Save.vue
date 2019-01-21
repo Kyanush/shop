@@ -112,7 +112,6 @@
                                 <tr>
                                     <th>Адрес</th>
                                     <th>Город</th>
-                                    <th>Комментарий</th>
                                     <th>Действия</th>
                                 </tr>
                                 </thead>
@@ -120,7 +119,6 @@
                                 <tr v-for="(item, index) in user.addresses" v-bind:class="{'is-delete' : item.is_delete == 1}">
                                     <td class="vertical-align-middle">{{ item.address }}</td>
                                     <td class="vertical-align-middle">{{ item.city }}</td>
-                                    <td class="vertical-align-middle">{{ item.comment }}</td>
                                     <td class="vertical-align-middle">
                                                 <span class="btn btn-xs btn-default" @click="editAddress(item, index)">
                                                     <i class="fa fa-edit"></i> Изменить
@@ -250,13 +248,6 @@
                                         {{ e }}
                                     </span>
                                 </div>
-                                <div class="form-group" v-bind:class="{'has-error' : IsError('address_save.comment')}">
-                                    <label>Комментарий</label>
-                                    <textarea  v-model="address_save.comment" class="form-control"></textarea>
-                                    <span v-if="IsError('address_save.comment')" class="help-block" v-for="e in IsError('address_save.comment')">
-                                         {{ e }}
-                                    </span>
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Отменить</button>
@@ -381,7 +372,7 @@
                         this.user.email      = data.email;
                         this.user.phone      = data.phone;
                         this.user.role_id    = data.role_id;
-                        this.user.active     = data.deleted_at ? 0 : 1;
+                        this.user.active     = data.active;
                         this.user.addresses  = data.addresses;
                         this.user.companies  = data.companies;
 

@@ -10,9 +10,9 @@ class AttributeValue extends Model
     protected $table = 'attribute_values';
     protected $fillable = [
     	'attribute_id',
-    	'value'
+    	'value',
+        'code'
 	];
-
 
     protected static function boot()
     {
@@ -26,8 +26,12 @@ class AttributeValue extends Model
             return $model;
         });
 
+        //Событие до
+        static::Saving(function($model) {
+            //чпу
+            $model->code = str_slug(empty($model->code) ? $model->value : $model->code);
+        });
+
     }
-
-
 
 }

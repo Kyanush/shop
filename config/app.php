@@ -65,8 +65,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
-
+    'timezone' => 'Asia/Almaty',
     /*
     |--------------------------------------------------------------------------
     | Application Locale Configuration
@@ -160,6 +159,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        //is mobile
+        Riverskies\Laravel\MobileDetect\MobileDetectServiceProvider::class
     ],
 
     /*
@@ -208,7 +209,10 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Helper' => App\Tools\Helpers::class,
 
+        //is mobile
+        'MobileDetect' => Riverskies\Laravel\MobileDetect\Facades\MobileDetect::class
     ],
 
 ];
