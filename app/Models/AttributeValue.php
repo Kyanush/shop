@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use File;
+use App\Models\AttributeProductValue;
+
 
 class AttributeValue extends Model
 {
@@ -23,6 +25,11 @@ class AttributeValue extends Model
             if($model->value and File::exists(public_path($path)))
                 File::delete($path);
 
+
+            //удалить
+            AttributeProductValue::where('attribute_id', $model->attribute_id)->where('value', $model->value)->delete();
+
+
             return $model;
         });
 
@@ -30,8 +37,22 @@ class AttributeValue extends Model
         static::Saving(function($model) {
             //чпу
             $model->code = str_slug(empty($model->code) ? $model->value : $model->code);
+
+            //обновить multiple_select, dropdown
+            if(isset($model->id))
+            {
+                AttributeProductValue::where('attribute_id', $model->attribute_id)
+                                     ->where('value', self::find($model->id)->value)
+                                     ->update(['value' => $model->value]);
+            }
         });
 
+    }
+
+
+    public function attribute()
+    {
+        return $this->hasOne('App\Models\Attribute', 'id', 'attribute_id');
     }
 
 }

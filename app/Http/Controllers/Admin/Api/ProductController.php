@@ -199,9 +199,13 @@ class ProductController extends AdminController
 
     public function delete($product_id)
     {
-        return  $this->sendResponse(
-            $this->serviceProduct->productDelete($product_id)
-        );
+        $data = $this->serviceProduct->productDelete($product_id);
+        if($data['success'])
+        {
+            return $this->sendResponse(true);
+        }else{
+            return $this->sendResponse($data['message'], 422);
+        }
     }
 
     public function cloneProduct(CloneProductRequest $req)
@@ -211,17 +215,19 @@ class ProductController extends AdminController
                     $this->serviceProduct->productClone(
                         $req['product_id'],
                         ['sku' => $req['sku'], 'name' => $req['name']],
-                        $req['group'],
-                        $req['photo'],
-                        $req['attributes'],
-                        $req['specific_price'],
-                        $req['product_images'],
-                        $req['reviews']
+                        [
+                            'group'               => $req['group'],
+                            'photo'               => $req['photo'],
+                            'attributes'          => $req['attributes'],
+                            'specific_price'      => $req['specific_price'],
+                            'product_images'      => $req['product_images'],
+                            'reviews'             => $req['reviews'],
+                            'product_accessories' => $req['product_accessories'],
+                            'questions_answers'   => $req['questions_answers']
+                        ]
                     )
         );
     }
-
-
 
     public function priceMinMax(Request $request)
     {

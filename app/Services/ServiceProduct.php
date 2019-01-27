@@ -3,6 +3,7 @@ namespace App\Services;
 
 use App\Models\Attribute;
 use App\Models\AttributeProductValue;
+use App\Models\Order;
 use File;
 use App\Tools\UploadableTrait;
 use App\Models\ProductGroup;
@@ -25,14 +26,21 @@ class ServiceProduct
 
     public function productDelete($product_id)
     {
+        if(Order::whereHas('products', function ($query) use ($product_id){
+            $query->where('product_id', $product_id);
+        })->first())
+            return [
+                'message' => 'Вы не можете удалить, есть привязанные заказы!',
+                'success' => false
+            ];
+
         $product = $this->model::find($product_id);
+
+        //папка товара
+        File::deleteDirectory($product->productFileFolder());
 
         //категории
         $product->categories()->detach();
-
-        //картинки
-        if($product->images)
-            $product->images()->delete();
 
         //арритуты
         if($product->attributes)
@@ -43,33 +51,60 @@ class ServiceProduct
             $product->attributes()->detach();
         }
 
-        //папка товара
-        File::deleteDirectory($product->productFileFolder());
+        //картинки
+        $product->images()->delete();
+
+        //аксессуары
+        $product->productAccessories()->detach();
 
         //Отзывы
         $product->reviews()->delete();
 
+        //Вопрос-ответ
+        $product->questionsAnswers()->delete();
+
+        //подписка
+        $product->subscribe()->delete();
+
         //скидки
-        if($product->specificPrice)
-            $product->specificPrice->delete();
+        $product->specificPrice()->delete();
+
+
 
         $group_id = $product->group_id;
 
         if($product->delete())
         {
-            //удалить группу
+            //Группа товаров
             $countGroupProducts = $this->model::where('group_id', $group_id)->count();
             if(!$countGroupProducts)
                 ProductGroup::destroy($group_id);
 
-            return true;
+            return [
+                'message' => 'Ok',
+                'success' => true
+            ];
         }
-        return false;
+
+        return [
+            'message' => 'Ошибка',
+            'success' => false
+        ];
     }
 
-    public function productClone($product_id, array $data, $group, $photo, $attributes, $specific_price, $product_images, $reviews)
+    public function productClone($product_id, array $data, array $copy = [])
     {
         $product = $this->model::find($product_id);
+
+        $group               = $copy['group']               ?? false;
+        $photo               = $copy['photo']               ?? false;
+        $attributes          = $copy['attributes']          ?? false;
+        $specific_price      = $copy['specific_price']      ?? false;
+        $product_images      = $copy['product_images']      ?? false;
+        $reviews             = $copy['reviews']             ?? false;
+        $product_accessories = $copy['product_accessories'] ?? false;
+        $questions_answers   = $copy['questions_answers']   ?? false;
+
 
         // Create clone object
         $clone = $product->replicate();
@@ -126,18 +161,36 @@ class ServiceProduct
             }
         }
 
-       //Отзывы
-       if($reviews)
-       {
+        //С этим товаром покупают
+        if($product_accessories)
+        {
+           foreach ($product->productAccessories as $item)
+               $clone->productAccessories()->attach([$item->pivot->accessory_product_id]);
+        }
+
+        //Отзывы
+        if($reviews)
+        {
             foreach($product->reviews()->get() as $item)
             {
                 $data = $item->toArray();
                 unset($data['id']);
                 $clone->reviews()->create($data);
             }
-       }
+        }
 
-       return true;
+        //Вопросы-ответы
+        if($questions_answers)
+        {
+            foreach($product->questionsAnswers()->get() as $item)
+            {
+                $data = $item->toArray();
+                unset($data['id']);
+                $clone->questionsAnswers()->create($data);
+            }
+        }
+
+        return true;
     }
 
     //Группа товаров

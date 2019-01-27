@@ -43,12 +43,24 @@ axios.interceptors.response.use(function (response) {
     var status =  error.response.status
     var res    = error.response;
 
+    console.log(status);
+    console.log(res);
+
     if(status == 404 || status == 403 || status == 401){
         Vue.helper.swalError(res.data, status);
 
     }else if(status == 422){
-        store.dispatch('SetErrors', res.data.errors);
-        Vue.helper.swalError(store.getters.ListErrors);
+        var errors = null;
+        if(res.data.errors)
+            errors = res.data.errors;
+        else if(res.data)
+            errors = res.data;
+
+        if(errors){
+            store.dispatch('SetErrors', errors);
+            Vue.helper.swalError(store.getters.ListErrors);
+        }else
+            alert('Ошибка!');
 
     }else if(status == 500){
         if(res.data.message.indexOf('foreign key') !== -1){

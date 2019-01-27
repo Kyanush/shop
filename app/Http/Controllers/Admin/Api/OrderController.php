@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Api;
 use App\Http\Controllers\Admin\AdminController;
 
+use App\Models\Callback;
 use App\Models\Order;
 use App\Requests\SaveOrderRequest;
 use App\Tools\Helpers;
@@ -110,38 +111,38 @@ class OrderController extends AdminController
                 'title' => ' №' . $item->id . ', ' . Helpers::priceFormat($item->total),
                 'start' => date('Y-m-d H:i:s', strtotime($item->created_at)),
                 'end'   => date('Y-m-d H:i:s', strtotime($item->created_at)),
-                'color' => '#222D32',
+                'color' => '#b8c7ce',
+                'textColor'  =>  '#222D32',
                 'allDay' => false,
-                'icon'  => $item->status->class,
                 'url'   => '/admin/orders/' . $item->id,
-                'description' => 'my test event'
+                'icon_class'  => $item->status->class,
+                'icon_title'  => $item->status->name
             ];
+        }
 
-            /*
-            $minutes = 40;
+        $callbacks = Callback::whereDate('created_at', '>=', $start)->whereDate('created_at', '<=', $end)->get();
+        foreach ($callbacks as $item)
+        {
             $data[] = [
-                'title' => date('H:i', strtotime($item->created_at)),
-                'resourceId' => $item->visitor_id,
-                'icon' => 'fa fa-cutlery',
+                'id'    => $item->id,
+                'title' => ' №' . $item->id . ', ' . $item->phone,
                 'start' => date('Y-m-d H:i:s', strtotime($item->created_at)),
-                'end'   => date('Y-m-d H:i:s', (strtotime($item->created_at) + ($minutes * 60)))
+                'end'   => date('Y-m-d H:i:s', strtotime($item->created_at)),
+                'color' => '#ffb45f',
+                'textColor'  =>  '#222D32',
+                'allDay' => false,
+                'url'   => '/admin/callbacks',
+                'icon_class'  => 'fa fa-phone',
+                'icon_title'  => $item->type
             ];
-
-            $data[] = [
-                'title'      =>  $item->nutritionTime->name . ' ' . date('H:i', strtotime($item->nutritionTime->start)) . ' - ' . date('H:i', strtotime($item->nutritionTime->end)),
-                'resourceId' => $item->visitor_id,
-                'start'      => date('Y-m-d', strtotime($item->created_at)) . ' ' . date('H:i:s', strtotime($item->nutritionTime->start)),
-                'end'        => date('Y-m-d', strtotime($item->created_at)) . ' ' . date('H:i:s', strtotime($item->nutritionTime->end)),
-                'color'      =>  '#a5a5a5',
-                'textColor'  =>  '#fff',
-                'rendering'  => 'background',
-            ];*/
         }
 
 
-
-
         return  $this->sendResponse($data);
+    }
+
+    public function orderDelete($order_id){
+        return  $this->sendResponse(Order::destroy($order_id));
     }
 
 }

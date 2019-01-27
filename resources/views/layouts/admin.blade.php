@@ -150,6 +150,10 @@
 <link rel="stylesheet" href="{{ asset('includes/bootstrap-select-1.12.4') }}/bootstrap-select.css"/>
 <script src="{{ asset('includes/bootstrap-select-1.12.4') }}/bootstrap-select.js" type="text/javascript"></script>
 
+<!-- Mask --->
+<script type="text/javascript" src="/site/js/jquery.maskedinput.min.js"></script>
+<!-- Mask --->
+
 
 </body>
 </html>

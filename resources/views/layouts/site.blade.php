@@ -446,13 +446,13 @@
 <script type="text/javascript" src="/site/product_slider/script.js"></script>
 <!-- product slider --->
 
-<script src="/site/js/script.js"></script>
-
-@yield('end_scripts')
-
 <!-- Mask --->
 <script type="text/javascript" src="/site/js/jquery.maskedinput.min.js"></script>
 <!-- Mask --->
+
+<script src="/site/js/script.js"></script>
+
+@yield('end_scripts')
 
 <!-- jquery-ui --->
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>

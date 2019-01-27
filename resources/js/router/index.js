@@ -43,8 +43,11 @@ import sliders_list from  '../components/sliders/List.vue';
 import sliders_save from  '../components/sliders/Save.vue';
 
 
-Vue.component('layout',                    require('../components/Layout.vue'));
-Vue.component('checkout',                    require('../components/checkout/Checkout.vue'));
+import layout from  '../components/Layout.vue';
+import checkout from  '../components/checkout/Checkout.vue';
+Vue.component('layout',                   layout);
+Vue.component('checkout',                    checkout);
+
 
 Vue.use(Router);
 

@@ -26,8 +26,11 @@ class ServiceAttribute
                 foreach ($data['values'] as $key => $item)
                 {
                     if(intval($item['is_delete'])){
-                        //AttributeValue::destroy($item['id']);
-                        $attribute->values()->destroy($item['id']);
+
+                        AttributeValue::destroy($item['id']);
+
+                        //$attribute->values()->where('id', $item['id'])->delete();
+
                     }else{
                         $value = $attribute->values()->findOrNew($item['id']);
 

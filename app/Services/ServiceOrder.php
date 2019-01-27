@@ -13,6 +13,8 @@ class ServiceOrder
         $this->model = new Order();
     }
 
+
+
     public function productDelete($product_id, $order_id)
     {
         $order = $this->model::find($order_id);

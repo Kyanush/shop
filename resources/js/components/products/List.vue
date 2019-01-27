@@ -329,7 +329,7 @@
                                         <li>
                                             <label>
                                                 <input type="checkbox" v-model="clone_product.specific_price"/>
-                                                Конкретная цена
+                                                Скидки
                                             </label>
                                         </li>
                                         <li>
@@ -340,12 +340,22 @@
                                         </li>
                                         <li>
                                             <label>
+                                                <input type="checkbox" v-model="clone_product.product_accessories"/>
+                                                С этим товаром покупают
+                                            </label>
+                                        </li>
+                                        <li>
+                                            <label>
                                                 <input type="checkbox" v-model="clone_product.reviews"/>
                                                 Отзывы
                                             </label>
                                         </li>
-
-
+                                        <li>
+                                            <label>
+                                                <input type="checkbox" v-model="clone_product.questions_answers"/>
+                                                Вопросы-ответы
+                                            </label>
+                                        </li>
 
                                     </ul>
                                     <span v-if="IsError('clone_product.images')" class="help-block" v-for="e in IsError('clone_product.images')">
@@ -426,7 +436,9 @@
                     product_images: false,
                     specific_price: true,
                     group: true,
-                    reviews: false
+                    product_accessories: false,
+                    reviews: false,
+                    questions_answers: false
                 }
             }
         },

@@ -9,13 +9,12 @@
     import "fullcalendar-scheduler";
     import "fullcalendar/dist/fullcalendar.min.css";
     import "fullcalendar-scheduler/dist/scheduler.min.css";
-    import 'fullcalendar/dist/locale/ru'
+    import 'fullcalendar/dist/locale/ru';
 
     export default {
         components:{
             FullCalendar
         },
-        name: "hello",
         data() {
             return {
                 events: function(start, end, timezone, callback) {
@@ -25,66 +24,79 @@
                         end: end.format("YYYY-MM-DD"),
                     };
 
-                    /*
-                    axios.get('/panel/visitor1', {params:  params}).then((res)=>{
+                    axios.get('/admin/calendar-orders', {params:  params}).then((res)=>{
                         callback(res.data);
-                    });*/
+                    });
+
                 },
                 config: {
-                    eventRender: function(event, element) {
-                        /*
-                        if(event.icon){
-                            element.find(".fc-title").prepend("<i class='"+event.icon+"'></i> ");
-                        }
-                        if (event.rendering == 'background') {
-                            element.append(event.title);
-                        }*/
+                    monthNames: ['Январь','Февраль','Март','Апрель','Май','οюнь','οюль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+                    monthNamesShort: ['Янв.','Фев.','Март','Апр.','Май','οюнь','οюль','Авг.','Сент.','Окт.','Ноя.','Дек.'],
+                    dayNames: ["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"],
+                    dayNamesShort: ["ВС","ПН","ВТ","СР","ЧТ","ПТ","СБ"],
+                    buttonText: {
+                        prev: "<",
+                        next: ">",
+                        prevYear: "<",
+                        nextYear: ">",
+                        today: "Сегодня",
+                        month: "Месяц",
+                        week: "Неделя",
+                        day: "День"
                     },
 
-                    resourceAreaWidth: 130,
-                    editable: false,
-                    /*
-                    slotDuration: '00:15:00',
-                    slotLabelInterval: 15,
-                    slotLabelFormat: 'h(:mm)',
-                    */
-                    //  lang: 'ru',
+
+                    lang: 'ru',
                     schedulerLicenseKey: "GPL-My-Project-Is-Open-Source",
-                    defaultView: "timelineDay",
-                    header: {
-                        left: "prev,next",
-                        center: "title",
-                        right: "timelineDay"//,timelineWeek,timelineMonth
+                    eventRender: function(event, element) {
+                             element.find(".fc-title").prepend("<i title='" + event.icon_title + "' class='" + event.icon_class + "'></i>&nbsp;");
                     },
-                    /*
-                    olumnFormat: {
-                        month: 'ddd',
-                        week: 'ddd d/M',
-                        day: 'dddd d/M'
-                    },*/
-                    resourceLabelText: "Посетители",
-                    resources: function (callback) {
-                        /*
-                        axios.get('/panel/visitor2').then((res)=>{
-                            callback(res.data); //return event data to the calendar via the provided callback function
-                        });*/
-                    }
+                    defaultView: 'month',
 
+                    eventLimit: true, // If you set a number it will hide the itens
+                    eventLimitText: "еще", // Default is `more` (or "more" in the lang you pick in the option)
+                    views: {
+                        agenda: {
+                            eventLimit: 3// adjust to 6 only for agendaWeek/agendaDay
+                        }
+                    }
                 }
             }
         },
-        created(){
+        updated(){
+
+            /*
+            $('#calendar').fullCalendar({
+                firstDay: 1,
+                height: 200,
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                monthNames: ['Январь','Февраль','Март','Апрель','Май','οюнь','οюль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+                monthNamesShort: ['Янв.','Фев.','Март','Апр.','Май','οюнь','οюль','Авг.','Сент.','Окт.','Ноя.','Дек.'],
+                dayNames: ["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"],
+                dayNamesShort: ["ВС","ПН","ВТ","СР","ЧТ","ПТ","СБ"],
+                buttonText: {
+                    prev: "&nbsp;&#9668;&nbsp;",
+                    next: "&nbsp;&#9658;&nbsp;",
+                    prevYear: "&nbsp;&lt;&lt;&nbsp;",
+                    nextYear: "&nbsp;&gt;&gt;&nbsp;",
+                    today: "Сегодня",
+                    month: "Месяц",
+                    week: "Неделя",
+                    day: "День"
+                }
+            });*/
 
         }
     }
 </script>
 
 <style>
-    .fc-bgevent {
-        opacity: .7;
-        color: #000;
-        text-align: center;
-        padding-top: 19px;
-        font-size: 11px;
-    }
+  .fc-today {
+      background:#CDDC39 !important;
+      font-weight: bold;
+  }
 </style>

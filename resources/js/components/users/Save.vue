@@ -58,7 +58,7 @@
                             </div>
                             <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('user.phone')}">
                                 <label>Телефон</label>
-                                <input v-model="user.phone" type="text" class="form-control">
+                                <input v-model="user.phone" type="text" class="form-control phone-mask">
                                 <span v-if="IsError('user.phone')" class="help-block" v-for="e in IsError('user.phone')">
                                              {{ e }}
                                     </span>
@@ -558,6 +558,9 @@
 
             },
             ...mapActions(['SetErrors'])
+        },
+        updated(){
+            $(".phone-mask").mask("+7(999) 999-9999");
         },
         computed:{
             ...mapGetters([

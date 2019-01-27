@@ -1,4 +1,7 @@
+$(".phone-mask").mask("+7(999) 999-9999");
+
 $(document).ready(function() {
+
 
 
     $(isMobile() ? '.product-search-mobile' : '.product-search-desktop').autocomplete({
@@ -104,7 +107,7 @@ $(document).ready(function() {
         $(this).removeClass('active');
     });
 
-  //  $(".phone-mask").mask("+7 (999) 999-9999");
+
 
     //Обратный звонок
     $('.callback_button').on('click', function() {
@@ -504,6 +507,10 @@ $(document).ready(function() {
             }
         };
     });
+
+
+
+
 });
 
 

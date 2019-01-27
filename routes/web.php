@@ -208,11 +208,12 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
 
 
         //Заказы
-        Route::get('orders-list',         'Api\OrderController@list');
-        Route::get('order/{id}',          'Api\OrderController@view')->where(['id' => '[0-9]+']);
-        Route::get('order/users',         'Api\OrderController@users');
-        Route::post('order-save',         'Api\OrderController@orderSave');
-        Route::get('calendar-orders',     'Api\OrderController@calendarOrders');
+        Route::get('orders-list',                'Api\OrderController@list');
+        Route::get('order/{id}',                 'Api\OrderController@view')->where(['id' => '[0-9]+']);
+        Route::get('order/users',                'Api\OrderController@users');
+        Route::post('order-save',                'Api\OrderController@orderSave');
+        Route::get('calendar-orders',            'Api\OrderController@calendarOrders');
+        Route::post('order-delete/{order_id}',   'Api\OrderController@orderDelete')->where(['order_id' => '[0-9]+']);
 
 
         //компания

@@ -10,6 +10,7 @@ use App\Tools\UploadableTrait;
 use DB;
 use App\Tools\Helpers;
 use Auth;
+use Mail;
 
 class Product extends Model
 {
@@ -150,6 +151,33 @@ class Product extends Model
         });
 
         //Событие до
+        static::Updating(function($product) {
+
+
+            if(env('APP_TEST') == 0 and $product->stock > 0)
+            {
+                    $old_stock = self::find($product->id)->stock;
+
+                    if ($product->stock != $old_stock and empty($old_stock))
+                    {
+                        $subscribe = $product->subscribe;
+                        if($subscribe)
+                        {
+                            foreach ($subscribe as $item)
+                            {
+                                $subject = env('APP_NAME') . ' - ' . 'Товар "' . $product->name . '" в наличии';
+                                Mail::send('mails.is_stock_product', ['product' => $product, 'subject' => $subject], function ($m) use ($item, $subject) {
+                                    $m->to($item->email)->subject($subject);
+                                });
+                            }
+                        }
+                    }
+            }
+
+
+        });
+
+        //Событие до
         static::Saving(function($product) {
 
             //группа товара
@@ -176,59 +204,79 @@ class Product extends Model
     }
 
 
-
+    //категория
 	public function categories()
 	{
         return $this->belongsToMany('App\Models\Category', 'category_product', 'product_id', 'category_id');
     }
 
+    //атрибуты
 	public function attributes()
 	{
 		return $this->belongsToMany('App\Models\Attribute', 'attribute_product_value', 'product_id', 'attribute_id')
                     ->withPivot('value');
 	}
 
+    //Картинка
 	public function images()
 	{
 		return $this->hasMany('App\Models\ProductImage')->orderBy('order', 'ASC');
 	}
 
+	//аксессуары
     public function productAccessories()
     {
         return $this->belongsToMany('App\Models\Product', 'product_accessories', 'product_id', 'accessory_product_id');
     }
 
+    //Отзывы
     public function reviews()
     {
         return $this->hasMany('App\Models\Review', 'product_id', 'id');
     }
 
+    //Вопрос-ответ
     public function questionsAnswers()
     {
         return $this->hasMany('App\Models\QuestionAnswer', 'product_id', 'id');
     }
 
-    public function avgRating()
+    //подписка
+    public function subscribe()
     {
-        return $this->hasOne('App\Models\Review', 'product_id', 'id')
-                    ->select(['product_id', DB::raw('TRUNCATE(avg(rating), 0) as avg_rating')])
-                    ->isActive()
-                    ->GroupBy('product_id');
+        return $this->hasMany('App\Models\Subscribe', 'product_id', 'id');
     }
 
+    //Скидки
+    public function specificPrice()
+    {
+        return $this->belongsTo('App\Models\SpecificPrice', 'id', 'product_id');
+    }
+
+
+
+    //Группа товаров
     public function group()
     {
         return $this->belongsTo('App\Models\ProductGroup');
     }
-
     public function groupProducts()
     {
         return $this->hasMany('App\Models\Product', 'group_id', 'group_id');
     }
+    //Группа товаров
 
-    public function specificPrice()
+
+
+
+
+
+    public function avgRating()
     {
-        return $this->belongsTo('App\Models\SpecificPrice', 'id', 'product_id');
+        return $this->hasOne('App\Models\Review', 'product_id', 'id')
+            ->select(['product_id', DB::raw('TRUNCATE(avg(rating), 0) as avg_rating')])
+            ->isActive()
+            ->GroupBy('product_id');
     }
 
     public function oneProductFeaturesCompare()

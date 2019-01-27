@@ -177,7 +177,11 @@
             </thead>
             <tbody>
             <tr class="odd even" v-for="(item, index) in orders.data" v-if="no_show_order_id != item.id">
-                <td>{{ item.id }}</td>
+                <td>
+                    <router-link :to="{ path: '/orders/' + item.id}" title="Посмотреть">
+                        {{ item.id }}
+                    </router-link>
+                </td>
                 <td>
                     <router-link :to="{ path: '/users/edit/' + item.user_id}">
                         {{ item.user.name }}
@@ -197,9 +201,14 @@
                 <td>{{ item.total }}</td>
                 <td>{{ item.created_at }}</td>
                 <td>
-                    <router-link :to="{ path: '/orders/' + item.id}" class="btn btn-xs btn-default">
-                        <i class="fa fa-eye"></i> Посмотреть
+                    <router-link :to="{ path: '/orders/' + item.id}" title="Посмотреть" class="btn btn-xs btn-default">
+                        <i class="fa fa-eye"></i> <!--Посмотреть--->
                     </router-link>
+
+                    <a class="btn btn-xs btn-default red" title="Удалить" @click="deleteOrder(item, index)">
+                        <i class="fa fa-remove"></i> <!--Удалить-->
+                    </a>
+
                 </td>
             </tr>
             </tbody>
@@ -322,6 +331,27 @@
             $('.selectpicker').selectpicker('refresh');
         },
         methods:{
+            deleteOrder(item, index){
+                this.$swal({
+                    title: 'Вы действительно хотите удалить заказ №' + item.id + '?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Да',
+                    cancelButtonText: 'Нет'
+                }).then((result) => {
+                    if (result.value) {
+                        axios.post('/admin/order-delete/' + item.id).then((res)=>{
+                            if(res.data)
+                            {
+                                this.$helper.swalSuccess('Успешно удален');
+                                this.$delete(this.orders.data, index);
+                            }
+                        });
+                    }
+                });
+            },
             setOrderShowFilter(){
                 this.order_show_filter = !this.order_show_filter;
                 localStorage.setItem('order_show_filter', this.order_show_filter);

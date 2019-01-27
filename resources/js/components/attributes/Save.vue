@@ -303,6 +303,9 @@
             {
                 axios.get('/admin/attribute-view/' + this.$route.params.id).then((res)=>{
                     this.attribute = res.data;
+
+                    if(!this.attribute.attribute_group_id)
+                        this.attribute.attribute_group_id = 0;
                 });
             }
 
