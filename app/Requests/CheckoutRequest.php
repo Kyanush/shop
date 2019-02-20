@@ -22,17 +22,20 @@ class CheckoutRequest extends FormRequest
             $rules['user.phone'] = 'required|max:17|min:17';
         }
 
-        if($this->input('address.id', 0) > 0){
-            $rules['address.id'] = ['required',
-                Rule::exists('addresses', 'id')
-                    ->where(function ($query) {
-                        if(Auth::check())
-                            $query->where('user_id', Auth::user()->id);
-                    })
-            ];
-        }else{
-            $rules['address.city']     = 'required|max:255';
-            $rules['address.address']  = 'required|max:255';
+        if($this->input('carrier_id', 0) == 1)
+        {
+            if ($this->input('address.id', 0) > 0) {
+                $rules['address.id'] = ['required',
+                    Rule::exists('addresses', 'id')
+                        ->where(function ($query) {
+                            if (Auth::check())
+                                $query->where('user_id', Auth::user()->id);
+                        })
+                ];
+            } else {
+                $rules['address.city'] = 'required|max:255';
+                $rules['address.address'] = 'required|max:255';
+            }
         }
 
         return $rules;

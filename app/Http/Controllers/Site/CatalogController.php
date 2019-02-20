@@ -33,7 +33,19 @@ class CatalogController extends Controller
         $priceMinMax = $this->serviceProduct->priceMinMax($filters);
         $productsAttributesFilters = $this->serviceProduct->productsAttributesFilters($filters);
 
+
+
+
         $products = Product::productInfoWith()
+                            ->where(function ($query){
+                                //скидки
+                                if(strpos(url()->current(), '/specials') !== false)
+                                {
+                                    $query->WhereHas('specificPrice', function ($query) {
+                                        $query->dateActive();
+                                    });
+                                }
+                            })
                             ->filters($filters)
                             ->filtersAttributes($filters)
                             ->OrderBy($column, $order)

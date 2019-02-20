@@ -6,13 +6,11 @@ use App\Requests\SaveAttributeRequest;
 use App\Services\ServiceAttribute;
 use Illuminate\Http\Request;
 use App\Models\Attribute;
-use App\Tools\UploadableTrait;
 use DB;
 use File;
 
 class AttributeController extends AdminController
 {
-    use UploadableTrait;
 
     private $serviceAttribute;
 

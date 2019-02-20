@@ -160,7 +160,14 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         //is mobile
-        Riverskies\Laravel\MobileDetect\MobileDetectServiceProvider::class
+        Riverskies\Laravel\MobileDetect\MobileDetectServiceProvider::class,
+
+        //image resize
+        Intervention\Image\ImageServiceProvider::class,
+
+        //form Captcha
+        //https://github.com/mewebstudio/captcha
+        Mews\Captcha\CaptchaServiceProvider::class,
     ],
 
     /*
@@ -212,7 +219,14 @@ return [
         'Helper' => App\Tools\Helpers::class,
 
         //is mobile
-        'MobileDetect' => Riverskies\Laravel\MobileDetect\Facades\MobileDetect::class
+        'MobileDetect' => Riverskies\Laravel\MobileDetect\Facades\MobileDetect::class,
+
+        //image resize
+        'Image' => Intervention\Image\Facades\Image::class,
+
+        //form Captcha
+        //https://github.com/mewebstudio/captcha
+        'Captcha' => Mews\Captcha\Facades\Captcha::class,
     ],
 
 ];

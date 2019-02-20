@@ -845,29 +845,41 @@ function subscribe(self) {
     });
 }
 
+var callbackWait = false;
 function callback(self){
+    if(!callbackWait)
+    {
+        callbackWait = true;
+        $(self).find('.callback_button img').css('display', 'block');
 
-    $.ajax({
-        type: 'POST',
-        url: '/callback',
-        data: getFormData(self),
-        success: function(data) {
-            if(data){
-                es_close_temp_window();
-                Swal({
-                    title: 'Обратный звонок',
-                    html: 'Заявка отправлена! В ближайшее время с Вами свяжется наш менеджер.'
-                });
-                clearFormData(self);
+        $.ajax({
+            type: 'POST',
+            url: '/callback',
+            data: getFormData(self),
+            success: function (data) {
+                if (data) {
+                    es_close_temp_window();
+                    Swal({
+                        title: 'Обратный звонок',
+                        html: 'Заявка отправлена! В ближайшее время с Вами свяжется наш менеджер.'
+                    });
+                    clearFormData(self);
+                }
+
+                callbackWait = false;
+                $(self).find('.callback_button img').css('display', 'none');
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 422) {
+                    swalErrors(jqXHR.responseJSON.errors, 'Ошибка 422');
+                }
+
+                callbackWait = false;
+                $(self).find('.callback_button img').css('display', 'none');
             }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            if(jqXHR.status == 422)
-            {
-                swalErrors(jqXHR.responseJSON.errors, 'Ошибка 422');
-            }
-        }
-    });
+        });
+    }
 }
 
 function getCsrfToken() {
@@ -888,35 +900,47 @@ function headerCartInfo() {
     });
 }
 
+var ocoWait = false;
 function oneClickOrder(self) {
-    $.ajax({
-        type: 'POST',
-        url: '/one-click-order',
-        data: getFormData(self),
-        success: function(data) {
-            if(data)
-            {
-                this.order_id = data['order_id'];
-                if(this.order_id)
-                {
-                    Swal({
-                        type:  'success',
-                        html: 'Номер заказа <a style="font-size: 20px;" href="/order-history/' + this.order_id + '">№:' + this.order_id + '</a>',
-                        title: 'Ваш заказ успешно оформлен'
-                    });
+
+    if(!ocoWait)
+    {
+        ocoWait = true;
+       // console.log($(self).find('.oneclick_button img').length);
+        $(self).find('.oneclick_button img').css('display', 'block');
+
+        $.ajax({
+            type: 'POST',
+            url: '/one-click-order',
+            data: getFormData(self),
+            success: function (data) {
+                if (data) {
+                    this.order_id = data['order_id'];
+                    if (this.order_id) {
+                        Swal({
+                            type: 'success',
+                            html: 'Номер заказа <a style="font-size: 20px;" href="/order-history/' + this.order_id + '">№:' + this.order_id + '</a>',
+                            title: 'Ваш заказ успешно оформлен'
+                        });
+                    }
+                } else {
+                    alert('Ошибка БД');
                 }
-            }else{
-                alert('Ошибка БД');
+                es_close_temp_window();
+                ocoWait = false;
+                $(self).find('.oneclick_button img').css('display', 'none');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (jqXHR.status == 422) {
+                    swalErrors(jqXHR.responseJSON.errors, 'Ошибка 422');
+                }
+                ocoWait = false;
+                $(self).find('.oneclick_button img').css('display', 'none');
             }
-            es_close_temp_window();
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            if(jqXHR.status == 422)
-            {
-                swalErrors(jqXHR.responseJSON.errors, 'Ошибка 422');
-            }
-        }
-    });
+        });
+
+    }
+
 }
 
 function addToCart(product_id) {
@@ -1006,6 +1030,11 @@ function cardSuccessPopup(product_id) {
 
                 setTimeout(function () {
 
+                    if(window.innerWidth < 700 && $('.items:not(.slick-slider)').length > 0)
+                    {
+                        $('.items').css('width', (window.innerWidth - 50) + 'px');
+                    }
+
                     $('.items:not(.slick-slider)').slick({
                         adaptiveHeight: true,
                         dots: false,
@@ -1021,23 +1050,24 @@ function cardSuccessPopup(product_id) {
                         swipeToSlide: true,
                         nextArrow: '<a href="javascript:void(0);" class="slick-next"></a>',
                         prevArrow: '<a href="javascript:void(0);" class="slick-prev"></a>',
+                        /*
                         responsive: [
                             {
-                                breakpoint: 1300,
+                                breakpoint: 400,
                                 settings: {
                                     slidesToShow: 4,
                                     slidesToScroll: 4,
                                 }
                             },
                             {
-                                breakpoint: 990,
+                                breakpoint: 400,
                                 settings: {
                                     slidesToShow: 3,
                                     slidesToScroll: 3,
                                 }
                             },
                             {
-                                breakpoint: 600,
+                                breakpoint: 400,
                                 settings: {
                                     slidesToShow: 2,
                                     slidesToScroll: 2,
@@ -1054,7 +1084,7 @@ function cardSuccessPopup(product_id) {
                                     centerMode: true
                                 }
                             },
-                        ]
+                        ]*/
                     });
                 }.bind(this), 250);
 

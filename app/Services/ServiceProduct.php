@@ -3,18 +3,20 @@ namespace App\Services;
 
 use App\Models\Attribute;
 use App\Models\AttributeProductValue;
+use App\Models\CartItem;
 use App\Models\Order;
+use App\Models\ProductFeaturesCompare;
+use App\Models\ProductFeaturesWishlist;
 use File;
-use App\Tools\UploadableTrait;
 use App\Models\ProductGroup;
 use App\Models\Product;
 use App\Models\ProductImage;
-
+use App\Tools\Upload;
+use App\Tools\CopyFile;
 
 class ServiceProduct
 {
 
-    use UploadableTrait;
     private $serviceAttrProductVal, $model;
 
     public function __construct(ServiceAttributeProductValue $serviceAttrProductVal)
@@ -69,6 +71,17 @@ class ServiceProduct
         //скидки
         $product->specificPrice()->delete();
 
+        //товары в корзине
+        $product->cartItems()->delete();
+
+        //Сравнение товаров
+        $product->featuresCompare()->delete();
+
+        //Мои закладки
+        $product->featuresWishlist()->delete();
+
+        //Вы смотрели продукты
+        $product->youWatchedProducts()->delete();
 
 
         $group_id = $product->group_id;
@@ -122,7 +135,11 @@ class ServiceProduct
         //Фото товара
         if($photo and $product->pathPhoto())
         {
-            $clone->photo = $this->copyFile($product->pathPhoto(), $clone->productFileFolder());
+            $copyFile = new CopyFile();
+            $copyFile->setNewPath($clone->productFileFolder());
+            $copyFile->setOldPath($product->pathPhoto());
+
+            $clone->photo = $copyFile->copy();
             $clone->save();
         }
 
@@ -242,13 +259,20 @@ class ServiceProduct
             //добавить
             if(intval($item['is_delete']) == 0)
             {
-                if(is_uploaded_file($item['value']))
+                if(is_uploaded_file($item['value'])){
+
+                    $upload = new Upload();
+                    $upload->setWidth(460);
+                    $upload->setHeight(350);
+                    $upload->setPath($product->productFileFolder());
+                    $upload->setFile($item['value']);
+
                     $images_data = [
                         'product_id' => $product_id,
-                        'name'       => $this->uploadFile($item['value'], $product->productFileFolder()),
+                        'name'       => $upload->save(),
                         'order'      => $key
                     ];
-                else
+                }else
                     $images_data = ['order' => $key];
 
                 $attribute = ProductImage::findOrNew($item["id"]);
@@ -292,7 +316,13 @@ class ServiceProduct
             if(!is_array($item['value']))
                 if(is_uploaded_file($item['value']))
                 {
-                    $item['value'] = $this->uploadFile($item['value'], config('shop.attributes_path_file'));
+                    $upload = new Upload();
+                    $upload->setWidth(460);
+                    $upload->setHeight(350);
+                    $upload->setPath(config('shop.attributes_path_file'));
+                    $upload->setFile($item['value']);
+
+                    $item['value'] = $upload->save();
 
                     //delete old image
                     if(!$new_attributes)

@@ -8,6 +8,9 @@
 
 
 /**************Вас может заинтересовать**************/
+.you-may-be-interested .items{
+    max-width: 540px;
+}
 .you-may-be-interested .rr-widget{
      margin-top: 0!important;
 }

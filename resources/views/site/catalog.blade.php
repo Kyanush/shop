@@ -1,8 +1,17 @@
 @extends('layouts.site')
 
-<?php $default_title = 'Каталог товаров'; ?>
+<?php
+$default_title = 'Каталог товаров';
+$catalog_url = 'catalog';
 
-@section('title',    	 $category ? $category->name : 'Каталог товаров')
+if(strpos(url()->current(), '/specials') !== false)
+{
+    $catalog_url = 'specials';
+    $default_title = 'Скидки';
+}
+?>
+
+@section('title',    	 $category ? $category->name : $default_title)
 @section('description', $category ? ($category->seo_description ? $category->seo_description : $category->name) : $default_title)
 @section('keywords',    $category ? ($category->seo_keywords    ? $category->seo_keywords    : $category->name) : $default_title)
 
@@ -31,7 +40,7 @@
             ],
             [
                 'title' => $default_title,
-                'link'  => $category ? '/catalog' : ''
+                'link'  => $category ? '/' . $catalog_url : ''
             ],
         ];
 
@@ -94,7 +103,7 @@
 											@foreach($category_childrens as $value)
 												<tr>
 													<td class="checkbox_td">
-														<a href="/catalog/{{ $value->url }}">
+														<a href="/{{$catalog_url}}/{{ $value->url }}">
 															{{ $value->name }}
 														</a>
 													</td>

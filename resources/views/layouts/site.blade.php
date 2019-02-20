@@ -1,5 +1,3 @@
-<?php Helper::generateVisitNumber(); ?>
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -17,22 +15,25 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     --->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <meta property="og:title" content="@yield('title')">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ env('APP_URL') }}">
-    <meta property="og:image" content="{{ env('APP_URL') }}/site/images/logo_firm.png">
-    <meta property="og:description" content="@yield('description')">
-    <meta property="og:site_name" content="@yield('title')">
-
     <meta name="viewport" content="initial-scale=1.0,width=device-width">
-    <script type="text/javascript" src="/site/js/jquery-3.3.1.min.js"></script>
 
+
+    <meta property="og:locale"       content="ru_KZ" />
+    <meta property="og:type"         content="website">
+    <meta property="og:url"          content="{{ url()->current() }}"/>
+    <meta property="og:site_name"    content="{{ env('APP_NAME') }}" />
+    <meta property="og:title"        content="@yield('og_title')"/>
+    <meta property="og:description"  content="@yield('og_description')"/>
+    <meta property="og:image"        content="@yield('og_image')"/>
+    <meta property="og:image:width"  content="80">
+    <meta property="og:image:height" content="80">
+
+    <script type="text/javascript" src="/site/js/jquery-3.3.1.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/site/css/stylesheet.css">
     <link rel="stylesheet" type="text/css" href="/site/css/stylesheet_adaptive.css">
     <link rel="stylesheet" type="text/css" href="/site/css/style.css">
-
+    <link rel="icon" type="image/png" href="/site/images/logo_firm.png" />
 
 
     @yield('end_styles')
@@ -59,12 +60,12 @@
 
 
     <!-- slick js --->
+
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="http://kenwheeler.github.io/slick/slick/slick-theme.css"/>
     <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
     <!-- slick js --->
-
-
 </head>
 
 
@@ -99,11 +100,13 @@
                         <b>(</b> <a href="/logout">Выйти</a> <b>)</b>
                     @endauth
                 </div>
+                <a href="/wishlist">Мои закладки</a>
+                <a href="/compare-products">Сравнение товаров</a>
                 <a href="/about">Магазины</a>
                 <a href="/contact">Контакты</a>
                 <a href="/delivery-payment">Доставка и оплата</a>
                 <a href="/guaranty">Гарантия</a>
-                <a href="/">Скидки</a>
+                <a href="/specials">Акции</a>
                 <a href="/about">О компании</a>
             </div>
         </div>
@@ -141,7 +144,7 @@
             </div>
             <div id="search_adaptive_icon"></div>
             <div id="header_phones">
-                <a href="tel:84951202325"><span class="phone_top">+7 (495) <span>120 23 25</span></span></a>
+                <a href="tel:+77075511979"><span class="phone_top">+7 (707) <span>551 19 79</span></span></a>
                 <div class="everyday_text">Круглосуточно
                     <span class="callback_button"><span>Обратный звонок</span></span>
                 </div>
@@ -235,7 +238,7 @@
                 </div>
             </div>
             <div id="header_middle_menu">
-                <a href="/specials">Скидки</a>
+                <a href="/specials">Акции</a>
                 <a href="/delivery-payment">Доставка, оплата</a>
                 <a href="/guaranty">Гарантия</a>
                 <a href="/contact">Контакты</a>
@@ -250,10 +253,10 @@
                 $servicePFWCount  = $servicePFW->count();
                 $serviceCartTotal = $serviceCart->cartTotal();
             ?>
-            <a class="header_wishlist <?=$servicePFWCount == 0 ? 'non_active' : ''?>" href="/wishlist">
+            <a title="Мои закладки" class="header_wishlist <?=$servicePFWCount == 0 ? 'non_active' : ''?>" href="/wishlist">
                 <span>{{ $servicePFWCount }}</span>
             </a>
-            <a class="header_compare <?=$servicePFCCount == 0 ? 'non_active' : ''?>" href="/compare-products">
+            <a title="Сравнение товаров" class="header_compare <?=$servicePFCCount == 0 ? 'non_active' : ''?>" href="/compare-products">
                 <span>{{ $servicePFCCount }}</span>
             </a>
             <div id="cart">
@@ -284,27 +287,27 @@
     <div class="advantages_bottom_rumi">
     <div class="container">
         <div class="advantages_bottom_container_rumi">
-            <a class="advantages_bottom_element_rumi advantage_1_rumi" href="https://market.yandex.ru/shop/273957/reviews?sort_by=date" target="_blank">
-                <div class="advantages_bottom_element_rumi_header">Супер<br>репутация</div>
-                <div class="advantages_bottom_element_rumi_text">Более 6 000 положительных<br>отзывов на Яндекс.Маркете</div>
+            <a class="advantages_bottom_element_rumi advantage_1_rumi" href="/guaranty">
+                <div class="advantages_bottom_element_rumi_header">12 месяцев гарантии<br/>для смартфонов</div>
+                <div class="advantages_bottom_element_rumi_text">Качественное гарантийное<br/>обслуживание.</div>
                 <div class="advantages_bottom_element_rumi_image"></div>
             </a>
-            <a class="advantages_bottom_element_rumi advantage_2_rumi" href="/dostavka">
-                <div class="advantages_bottom_element_rumi_header">Удобная<br>доставка</div>
-                <div class="advantages_bottom_element_rumi_text">Более 3 500 пунктов<br>самовывоза по всей России</div>
+            <a class="advantages_bottom_element_rumi advantage_2_rumi" href="/delivery-payment">
+                <div class="advantages_bottom_element_rumi_header">По городу Алматы</div>
+                <div class="advantages_bottom_element_rumi_text">Бесплатная доставка от 30 000тг</div>
                 <div class="advantages_bottom_element_rumi_image"></div>
             </a>
-            <a class="advantages_bottom_element_rumi advantage_3_rumi" href="/mibonus">
-                <div class="advantages_bottom_element_rumi_header">Экономия<br>с MI-бонусами</div>
-                <div class="advantages_bottom_element_rumi_text">Оплата от 10 до 100% заказа<br>специальными Mi-бонусами</div>
+            <a class="advantages_bottom_element_rumi advantage_3_rumi" href="/guaranty">
+                <div class="advantages_bottom_element_rumi_header">6 месяцев гарантии<br/>для аксессуаров</div>
+                <div class="advantages_bottom_element_rumi_text">Время, отведенное на диагностику<br/>и ремонт телефона.</div>
                 <div class="advantages_bottom_element_rumi_image"></div>
             </a>
-            <a class="advantages_bottom_element_rumi advantage_4_rumi" href="https://vk.com/rumicomrussia" target="_blank">
+            <a class="advantages_bottom_element_rumi advantage_4_rumi" href="https://www.instagram.com/onepoint.kz"  title="Вы в Instagram" target="_blank">
                 <div class="advantages_bottom_element_rumi_header">Много<br>фанатов</div>
                 <div class="advantages_bottom_element_rumi_text">Живые обсуждения<br>в наших группах</div>
                 <div class="advantages_bottom_element_rumi_image"></div>
             </a>
-            <a class="advantages_bottom_element_rumi advantage_5_rumi" href="/guaranty">
+            <a class="advantages_bottom_element_rumi advantage_5_rumi">
                 <div class="advantages_bottom_element_rumi_header">Надёжный<br>сервисный центр</div>
                 <div class="advantages_bottom_element_rumi_text">Собственный гарантийный<br>центр, если что-то сломается</div>
                 <div class="advantages_bottom_element_rumi_image"></div>
@@ -348,8 +351,8 @@
     <div class="container">
         <div class="footer_column footer_column_1">
             <div id="footer_logo">
-                <img class="footer_normal_logo"   src="/site/images/logo_firm.png" title="{{ env('APP_NAME') }}" alt="{{ env('APP_NAME') }}">
-                <img class="footer_adaptive_logo" src="/site/images/logo_firm.png" title="{{ env('APP_NAME') }}" alt="{{ env('APP_NAME') }}">
+                <img class="footer_normal_logo"   src="/site/images/onepoint_logo_white.png" title="{{ env('APP_NAME') }}" alt="{{ env('APP_NAME') }}">
+                <img class="footer_adaptive_logo" src="/site/images/onepoint_logo_white.png" title="{{ env('APP_NAME') }}" alt="{{ env('APP_NAME') }}">
             </div>
         </div>
         <div class="footer_column footer_column_2">
@@ -359,24 +362,28 @@
                 <li><a href="/delivery-payment">Оплата</a></li>
                 <li><a href="/specials">Акции</a></li>
                 <li><a href="/guaranty">Гарантия</a></li>
-                <li><a href="/publicoferta">Оферта</a></li>
+                <li><a href="/wishlist">Мои закладки</a></li>
+                <li><a href="/compare-products">Сравнение товаров</a></li>
+                <li><a href="/checkout">Оформление заказа</a></li>
+
+
             </ul>
         </div>
         <div class="footer_column footer_column_3">
             <div class="footer_column_header">Каталог</div>
             <ul>
-                <li><a href="/smartphones/">Смартфоны Xiaomi</a></li>
-                <li><a href="/device/">Гаджеты и устройства</a></li>
-                <li><a href="/transport/">Электронный транспорт</a></li>
-                <li><a href="/naushniki-i-kolonki/">Наушники и колонки</a></li>
-                <li><a href="/accessories/">Аксессуары</a></li>
-                <li><a href="/brands/">Бренды</a></li>
+                <li><a href="/smartphones">Смартфоны Xiaomi</a></li>
+                <li><a href="/device">Гаджеты и устройства</a></li>
+                <li><a href="/transport">Электронный транспорт</a></li>
+                <li><a href="/naushniki-i-kolonki">Наушники и колонки</a></li>
+                <li><a href="/accessories">Аксессуары</a></li>
+                <li><a href="/brands">Бренды</a></li>
             </ul>
         </div>
         <div class="footer_column footer_column_4">
             <div class="footer_column_header">О компании</div>
             <ul>
-                <li><a href="/contact/">Контакты</a></li>
+                <li><a href="/contact">Контакты</a></li>
                 <li><a href="/about">О нас</a></li>
             </ul>
         </div>
@@ -386,7 +393,7 @@
                 Все права защищены.			</div>
             <div class="footer_bottom_social">
                 <div class="contact_block_social" style="padding: 0;">
-                    <a href="https://www.instagram.com/rumicomrussia/" class="contact_in" target="_blank"></a>
+                    <a href="https://www.instagram.com/onepoint.kz" class="contact_in" target="_blank" title="Вы в Instagram"></a>
                     <!--
                     <a href="https://vk.com/rumicomrussia" class="contact_vk" target="_blank"></a>
                     <a href="https://www.youtube.com/channel/UCvK29FNCSg46Eik86viJtjQ" class="contact_yt" target="_blank"></a>
@@ -428,7 +435,10 @@
             </div>
             <div class="callback_button" onclick="$(this).parents('form').submit()">
                 <a href="#" class="callback_one_click button">
-                    <span>Заказать</span>
+                    <span>
+                         <img style="display: none" src="/site/images/ajax-loader.gif"/>
+                        Заказать
+                    </span>
                 </a>
             </div>
         </div>
@@ -459,6 +469,15 @@
 <link href="http://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.min.css" rel="stylesheet" type="text/css" />
 <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
 <!-- jquery-ui --->
+
+<!-- slick js --->
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="http://kenwheeler.github.io/slick/slick/slick-theme.css"/>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<!-- slick js --->
+
+@include('includes.analytics')
+
 
 
 </body>

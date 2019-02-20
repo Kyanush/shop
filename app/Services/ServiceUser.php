@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\User;
+use Auth;
 use Illuminate\Support\Facades\Hash;
 
 class ServiceUser
@@ -27,6 +28,25 @@ class ServiceUser
             $data['password'] = Hash::make($password);
 
         return $this->model::create($data);
+    }
+
+    public function findOrNewUserCart($email, $name, $phone){
+        //Пользователь
+        if(Auth::check()){
+            return Auth::user();
+        }else{
+            $user = $this->model::where('email', $email)->first();
+            if(!$user){
+                $user = $this->createUser(
+                    $email,
+                    null,
+                    $name,
+                    $phone
+                );
+                Auth::loginUsingId($user->id);
+            }
+            return $user;
+        }
     }
 
 }

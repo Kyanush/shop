@@ -12,7 +12,7 @@
 .rr-widget .item:hover{-webkit-box-shadow:0 5px 10px rgba(0, 0, 0, .08);-moz-box-shadow:0 5px 10px rgba(0, 0, 0, .08);box-shadow:0 5px 10px rgba(0, 0, 0, .08);-webkit-transform:scale(1);-moz-transform:scale(1);-ms-transform:scale(1);-o-transform:scale(1);transform:scale(1);z-index:1;}
 .rr-widget .item .block{padding:18px 15px;list-style:none;text-align:center;background:#fff;border-right:1px solid #ebedf1;border-top:1px solid #ebedf1;border-bottom:1px solid #ebedf1;font-size:9px;color:#5d5e4f;position:relative;}
 .rr-widget .item-image{width:100%;line-height:150px;overflow:hidden;}
-.rr-widget .item-image img{width:auto;height:auto;max-width:200px;max-height:100%;vertical-align:middle;margin:0 auto}
+.rr-widget .item-image img{width:auto;height:200px;max-width:200px;max-height:100%;vertical-align:middle;margin:0 auto}
 .rr-widget .item-title{font-size:15px;font-weight:400;font-family: 'Roboto', Arial, Helvetica, sans-serif;color:#31373f;margin:0;text-align:left;height:36px;overflow:hidden;margin:6px 0 13px 0;}
 .item-block-price{display:inline-block;float:left;position:absolute;bottom:9px;left:0;text-align:left;}
 .rr-widget .item-old-price{font-size:17px;font-weight:400;color:#a0a7b1;text-decoration:line-through;margin-bottom:5px;}
@@ -30,7 +30,16 @@
 .rr-widget .item-actions .item-actions-buy:hover{-webkit-transform:scale(1.03);-moz-transform:scale(1.03);-ms-transform:scale(1.03);-o-transform:scale(1.03);transform:scale(1.03);-webkit-transition:0.2s;-moz-transition:0.2s;-ms-transition:0.2s;-o-transition:0.2s;transition:0.2s;}
 .rr-widget .slick-list{position:relative;display:block;overflow:hidden;padding:5px 0;margin:0 2px 0 0;}
 
-.rr-widget .slick-prev,.rr-widget .slick-next{position:absolute;top:50%;transform:translate(0,-50%);width:44px;height:44px;display:block;cursor:pointer;background-size:100%;z-index:1;-webkit-border-radius:50%;-moz-border-radius:50%;border-radius:50%;-webkit-box-shadow:0px 3px 5.2px 1.8px rgba(0, 3, 7, 0.15);-moz-box-shadow:0px 3px 5.2px 1.8px rgba(0, 3, 7, 0.15);box-shadow:0px 3px 5.2px 1.8px rgba(0, 3, 7, 0.15);background:#fff;}
+.rr-widget .slick-prev,.rr-widget .slick-next{
+    position:absolute;
+    top:50%;
+    z-index: 1000000;
+    opacity: 1!important;
+    transform:translate(0,-50%);
+    width:44px;height:44px;display:block;cursor:pointer;background-size:100%;z-index:1;-webkit-border-radius:50%;-moz-border-radius:50%;border-radius:50%;
+    -webkit-box-shadow:0px 3px 5.2px 1.8px rgba(0, 3, 7, 0.15);-moz-box-shadow:0px 3px 5.2px 1.8px rgba(0, 3, 7, 0.15);box-shadow:0px 3px 5.2px 1.8px rgba(0, 3, 7, 0.15);
+    background:#fff!important;
+}
 .rr-widget .slick-prev{left:0;}
 .rr-widget .slick-next{right:0;}
 .rr-widget .slick-prev::after{content:'';background:url(https://gallery.retailrocket.net/57d574e265bf1940b4626285/left.png);position:absolute;top:50%;left:50%;-webkit-transform:translate(-50%, -50%);-moz-transform:translate(-50%, -50%);-ms-transform:translate(-50%, -50%);-o-transform:translate(-50%, -50%);transform:translate(-50%, -50%);width:9px;height:15px;}

@@ -4,6 +4,9 @@
 @section('description', $product->seo_description ? $product->seo_description : $product->name)
 @section('keywords',    $product->seo_keywords    ? $product->seo_keywords    : $product->name)
 
+@section('og_title',    	 $product->name)
+@section('og_description',  $product->seo_description ? $product->seo_description : strip_tags(\App\Tools\Helpers::closeTags(\App\Tools\Helpers::limitWords($product->description, 100))))
+@section('og_image',    	 env('APP_URL') . $product->pathPhoto(true))
 
 @section('content')
 
@@ -99,22 +102,7 @@
                                 <div class="product_inons_social_popup">
                                     <script src="//yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
                                     <script src="//yastatic.net/share2/share.js"></script>
-                                    <div class="ya-share2 ya-share2_inited" id="my-share" data-services="vkontakte,facebook,odnoklassniki,gplus,twitter"><div class="ya-share2__container ya-share2__container_size_m"><ul class="ya-share2__list ya-share2__list_direction_horizontal"><li class="ya-share2__item ya-share2__item_service_vkontakte"><a class="ya-share2__link" href="https://vk.com/share.php?url=https%3A%2F%2Fru-mi.com%2Fxiaomi-mi5s-plus-4gb-64gb-zolotoy-rst%2Ffaq&amp;title=Xiaomi%20Mi5S%20Plus%204%2F64GB%20(%D0%B7%D0%BE%D0%BB%D0%BE%D1%82%D0%BE%D0%B9)%3A%20%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%8B%20%D0%BD%D0%B0%20%D0%B2%D0%B0%D1%88%D0%B8%20%D0%B2%D0%BE%D0%BF%D1%80%D0%BE%D1%81%D1%8B&amp;utm_source=share2" rel="nofollow noopener" target="_blank" title="ВКонтакте"><span class="ya-share2__badge"><span class="ya-share2__icon"></span><span class="ya-share2__counter"></span></span><span class="ya-share2__title">ВКонтакте</span></a></li><li class="ya-share2__item ya-share2__item_service_facebook"><a class="ya-share2__link" href="https://www.facebook.com/sharer.php?src=sp&amp;u=https%3A%2F%2Fru-mi.com%2Fxiaomi-mi5s-plus-4gb-64gb-zolotoy-rst%2Ffaq&amp;title=Xiaomi%20Mi5S%20Plus%204%2F64GB%20(%D0%B7%D0%BE%D0%BB%D0%BE%D1%82%D0%BE%D0%B9)%3A%20%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%8B%20%D0%BD%D0%B0%20%D0%B2%D0%B0%D1%88%D0%B8%20%D0%B2%D0%BE%D0%BF%D1%80%D0%BE%D1%81%D1%8B&amp;utm_source=share2" rel="nofollow noopener" target="_blank" title="Facebook"><span class="ya-share2__badge"><span class="ya-share2__icon"></span><span class="ya-share2__counter"></span></span><span class="ya-share2__title">Facebook</span></a></li><li class="ya-share2__item ya-share2__item_service_odnoklassniki"><a class="ya-share2__link" href="https://connect.ok.ru/offer?url=https%3A%2F%2Fru-mi.com%2Fxiaomi-mi5s-plus-4gb-64gb-zolotoy-rst%2Ffaq&amp;title=Xiaomi%20Mi5S%20Plus%204%2F64GB%20(%D0%B7%D0%BE%D0%BB%D0%BE%D1%82%D0%BE%D0%B9)%3A%20%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%8B%20%D0%BD%D0%B0%20%D0%B2%D0%B0%D1%88%D0%B8%20%D0%B2%D0%BE%D0%BF%D1%80%D0%BE%D1%81%D1%8B&amp;utm_source=share2" rel="nofollow noopener" target="_blank" title="Одноклассники"><span class="ya-share2__badge"><span class="ya-share2__icon"></span><span class="ya-share2__counter"></span></span><span class="ya-share2__title">Одноклассники</span></a></li><li class="ya-share2__item ya-share2__item_service_twitter"><a class="ya-share2__link" href="https://twitter.com/intent/tweet?text=Xiaomi%20Mi5S%20Plus%204%2F64GB%20(%D0%B7%D0%BE%D0%BB%D0%BE%D1%82%D0%BE%D0%B9)%3A%20%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D1%8B%20%D0%BD%D0%B0%20%D0%B2%D0%B0%D1%88%D0%B8%20%D0%B2%D0%BE%D0%BF%D1%80%D0%BE%D1%81%D1%8B&amp;url=https%3A%2F%2Fru-mi.com%2Fxiaomi-mi5s-plus-4gb-64gb-zolotoy-rst%2Ffaq&amp;utm_source=share2" rel="nofollow noopener" target="_blank" title="Twitter"><span class="ya-share2__badge"><span class="ya-share2__icon"></span></span><span class="ya-share2__title">Twitter</span></a></li></ul></div></div>
-                                    <script type="text/javascript">
-                                        Ya.share2('my-share', {
-                                            hooks: {
-                                                onshare: function (name) {
-                                                    $.ajax({
-                                                        type:'post',
-                                                        url:'index.php?route=account/bonus/addrepost',
-                                                        success:function(data){
-
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        });
-                                    </script>
+                                    <div class="ya-share2" data-services="vkontakte,facebook,whatsapp,telegram"></div>
                                 </div>
                             </div>
 
@@ -132,9 +120,7 @@
 
                         </div>
 
-                        <h1 itemprop="name">
-                            {{ $product->name }}
-                        </h1>
+                        <h2>{{ $product->name }}</h2>
 
                         <div class="under_h1">
                             <div class="left_info_product_last_review_rating" itemprop="aggregateRating" itemscope="" itemtype="http://schema.org/AggregateRating">
@@ -611,7 +597,12 @@
                     </div>
                 </div>
                 <div class="oneclick_button">
-                    <a href="#" onclick="$(this).parents('form').submit()" class="buy_one_click button"><span>Заказать</span></a>
+                    <a href="#" onclick="$(this).parents('form').submit()" class="buy_one_click button">
+                        <span>
+                            <img style="display: none" src="/site/images/ajax-loader.gif"/>
+                            Заказать
+                        </span>
+                    </a>
                 </div>
             </form>
         </div>

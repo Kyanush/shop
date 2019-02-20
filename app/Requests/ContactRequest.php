@@ -10,9 +10,10 @@ class ContactRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'phone' => 'max:255|required',
-            'email' => 'max:255|required',
+            'phone'   => 'max:255|required',
+            'email'   => 'max:255|required',
             'message' => 'max:1000|required',
+            'captcha' => 'required|captcha'
         ];
         return $rules;
     }
@@ -20,9 +21,10 @@ class ContactRequest extends FormRequest
     public function attributes()
     {
         return [
-            'phone' => "'Телефон'",
-            'email' => "'E-mail'",
+            'phone'   => "'Телефон'",
+            'email'   => "'E-mail'",
             'message' => "'Сообщение'",
+            'captcha' => "'Введите код подтверждения'"
         ];
     }
 

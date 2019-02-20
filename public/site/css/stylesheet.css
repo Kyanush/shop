@@ -1338,7 +1338,7 @@ ul.box-filter > li ul {
     position: relative;
     margin-top: 14px;
 }
-.product-info h1 {
+.product-info h1, .product-info h2 {
     padding-right: 130px;
     font-size: 24px;
     font-weight: 600;
@@ -3201,6 +3201,9 @@ body {
     top: 6px;
     left: 0;
 }
+#header #logo img{
+    width: 150px;
+}
 #header #header_middle_menu {
     position: absolute;
     left: 303px;
@@ -4918,6 +4921,9 @@ a.button_unavailable_lus:hover:before {
     height: 200px;
     position: relative;
 }
+#footer #footer_logo img{
+    max-width: 204px;
+}
 #footer .footer_payment {
     position: absolute;
     bottom: 0px;
@@ -5680,6 +5686,15 @@ a.button_unavailable_lus:hover:before {
     line-height: 44px;
     font-size: 15px;
 }
+.callback_popup .callback_button span{
+    position: relative;
+}
+.callback_popup .callback_button span img{
+    position: absolute;
+    left: -33px;
+    top: -3px;
+    width: 25px;
+}
 .callback_popup .callback_button a:before {
     background: #ff6c30;
     -webkit-border-radius: 22px;
@@ -5775,6 +5790,15 @@ a.button_unavailable_lus:hover:before {
     -moz-border-radius: 22px;
     -khtml-border-radius: 22px;
     border-radius: 22px;
+}
+.oneclick_popup .oneclick_button span{
+    position: relative;
+}
+.oneclick_popup .oneclick_button span img{
+    position: absolute;
+    left: -33px;
+    top: -3px;
+    width: 25px;
 }
 .oneclick_phone_error {
     color: red;

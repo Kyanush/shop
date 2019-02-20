@@ -1103,6 +1103,14 @@ input[type=text], input[type=email],input[type=tel],input[type=phone],input[type
     font-weight: 300;
     color: #fff!important;
 }
+.checkout_main_button span{
+    position: relative;
+}
+.checkout_main_button span img{
+    position: absolute;
+    left: -40px;
+    top: -3px;
+}
 .checkout_main_button:focus {
     color: #fff;
 }
@@ -1783,19 +1791,12 @@ input.simplecheckout-red-border-error, input[type="text"].simplecheckout-red-bor
     #header.header_checkout #header_middle {
         padding-top: 0px;
     }
-    #header #logo {
-        top: 5px;
-        padding-left: 0px;
-    }
     #header #header_phones a {
         color: #fff;
         margin-top: 0;
     }
     #header #header_phones {
         top: -38px;
-    }
-    #header #header_middle {
-        height: 90px;
     }
     #header #header_phones .phone_top {
         font-size: 18px;

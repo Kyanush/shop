@@ -1,16 +1,15 @@
 <?php
 namespace App\Services;
 
+use App\Contracts\CartInterface;
 use App\Models\Carrier;
 use App\Models\Cart;
-use App\Models\Order;
 use App\Tools\Helpers;
 use Auth;
-use App\User;
-use Mail;
 
 
-class ServiceCart
+
+class ServiceCart implements CartInterface
 {
 
     private $model;
@@ -113,45 +112,9 @@ class ServiceCart
 
 
 
-    public function findOrNewUserCart($email, $name, $phone){
-        //Пользователь
-        if(Auth::check()){
-            return Auth::user();
-        }else{
-            $user = User::where('email', $email)->first();
-            if(!$user){
-                $serviceUser = new ServiceUser();
-                $user = $serviceUser->createUser(
-                    $email,
-                    null,
-                    $name,
-                    $phone
-                );
-            }
-            return $user;
-        }
-    }
 
 
-    public function orderSendMessage($order_id){
-        if(env('APP_TEST') == 0)
-        {
-            $order = Order::find($order_id);
-            if (!$order)
-                return false;
 
-            $emails[] = env('MAIL_ADMIN');
 
-            if($order->user->email)
-                $emails[] = $order->user->email;
-
-            $subject = env('APP_NAME') . ' - ' . 'заказ №:' . $order->id;
-            Mail::send('mails.new_order', ['order' => $order, 'subject' => $subject], function($m) use($subject, $emails)
-            {
-                $m->to($emails)->subject($subject);
-            });
-        }
-        return true;
-    }
 
 }

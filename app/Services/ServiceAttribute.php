@@ -3,12 +3,11 @@ namespace App\Services;
 
 use App\Models\Attribute;
 use App\Models\AttributeValue;
-use App\Tools\UploadableTrait;
 use File;
+use App\Tools\Upload;
 
 class ServiceAttribute
 {
-    use UploadableTrait;
 
     private $model;
     public function __construct()
@@ -42,8 +41,15 @@ class ServiceAttribute
                                 if(File::exists($path_delete))
                                     File::delete($path_delete);
                             }
+
                             if(is_uploaded_file($item['value']))
-                                $item['value'] = $this->uploadFile($item['value'], config('shop.attributes_path_file'));
+                            {
+                                $upload = new Upload();
+                                $upload->setPath(config('shop.attributes_path_file'));
+                                $upload->setFile($item['value']);
+
+                                $item['value'] = $upload->save();
+                            }
                         }
 
                         $value->fill($item);

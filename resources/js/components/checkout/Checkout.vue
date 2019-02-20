@@ -119,10 +119,17 @@
                                     </div>
                                 </div>
                                 <div class="cart_rumi_last">
-                                    <a class="checkout_main_button go_checkout" @click="checkout">Оформить заказ</a>
+
+                                    <a class="checkout_main_button go_checkout" @click="checkout">
+                                        <span>
+                                            <img v-show="checkout_wait" src="/site/images/ajax-loader.gif"/>
+                                            Оформить заказ
+                                        </span>
+                                    </a>
+
                                     <div class="undercheckout_text">
                                         Нажимая «Завершить оформление», я соглашаюсь<br>
-                                        <a class="oferta_colorbox" href="/publicoferta" target="_blank" alt="c публичным договором оферты">
+                                        <a class="oferta_colorbox" href="/guaranty" target="_blank" alt="c публичным договором оферты">
                                             <b>c публичным договором оферты</b>
                                         </a>
                                     </div>
@@ -301,7 +308,9 @@
                     email:  this._user ? this._user.email      : '',
                     name:   this._user ? this._user.name       : ''
                 },
-                comment: ''
+                comment: '',
+
+                checkout_wait: false
             }
         },
         updated () {
@@ -355,43 +364,47 @@
                 var valid = regexp.test(num);
                 return valid;
             },
-            checkout(){
+            async checkout(){
+                if(!this.checkout_wait)
+                {
+                    this.checkout_wait = true;
 
-                var data = {
-                    carrier_id: this.carrier.id,
-                    payment_id: this.payment.id,
-                    address:{
-                        id: this.address.id,
-                        city: this.address.city,
-                        address: this.address.address
-                    },
-                    user:{
-                        phone: this.user.phone,
-                        email: this.user.email,
-                        name:  this.user.name
-                    },
-                    comment: this.comment
-                };
+                    var data = {
+                        carrier_id: this.carrier.id,
+                        payment_id: this.payment.id,
+                        address: {
+                            id:      this.address.id,
+                            city:    this.address.city,
+                            address: this.address.address
+                        },
+                        user: {
+                            phone: this.user.phone,
+                            email: this.user.email,
+                            name:  this.user.name
+                        },
+                        comment: this.comment
+                    };
 
-                if(!this.checkPhoneNumber(this.user.phone))
-                    data.user.phone = ''
+                    if (!this.checkPhoneNumber(this.user.phone))
+                        data.user.phone = ''
 
-                axios.post('/checkout', data).then((res)=>{
-                    var data = res.data;
-                    if(data)
-                    {
-                        this.order_id = data['order_id'];
-                        if(this.order_id)
-                        {
-                            this.list_cart = [];
-                            this.$swal({
-                                type:  'success',
-                                html: 'Номер заказа <a style="font-size: 20px;" href="/order-history/' + this.order_id + '">№:' + this.order_id + '</a>',
-                                title: 'Ваш заказ успешно оформлен'
-                            });
+                    await axios.post('/checkout', data).then((res) => {
+                        var data = res.data;
+                        if (data) {
+                            this.order_id = data['order_id'];
+                            if (this.order_id) {
+                                this.list_cart = [];
+                                this.$swal({
+                                    type: 'success',
+                                    html: 'Номер заказа <a style="font-size: 20px;" href="/order-history/' + this.order_id + '">№:' + this.order_id + '</a>',
+                                    title: 'Ваш заказ успешно оформлен'
+                                });
+                            }
                         }
-                    }
-                });
+                    });
+
+                    this.checkout_wait = false;
+                }
             }
         },
         watch: {

@@ -18,7 +18,7 @@
         <div style="padding:30px;">
             <div style="margin-bottom:60px;">
                 <a href="{{ env('APP_URL') }}" class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
-                    <img src="{{ env('APP_URL') }}/site/images/logo_firm.png">
+                    <img width="150" src="{{ env('APP_URL') }}/site/images/logo_firm.png">
                 </a>
                 <div style="float:right;padding-top:10px;padding-right:5px;color:#cbcbcb;">
                     {{ env('APP_NAME') }}
@@ -73,7 +73,7 @@
 
             <div style="float:right;margin-right:50px;overflow:hidden;">
                 <div style="float:left;margin-right:5px;">
-                    <a href="https://instagram.com"  title="Мы в Instagram" class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
+                    <a href="https://instagram.com/onepoint.kz"  title="Мы в Instagram" class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
                         <img width="29" src="https://cdn0.iconfinder.com/data/icons/social-media-circle-6/1024/instagram-512.png">
                     </a>
                 </div>
@@ -122,8 +122,8 @@
         </div>
 
         <div style="background:#fff;height:60px;line-height:60px;padding-left:30px;">
-            <div style="display:inline-block;height:60px;padding-top:20px;margin-right:15px;vertical-align:top;">
-               <img src="{{ env('APP_URL') }}/site/images/logo_firm.png" height="20"/>
+            <div style="display:inline-block;height:60px;padding-top:10px;margin-right:15px;vertical-align:top;">
+               <img src="{{ env('APP_URL') }}/site/images/logo_firm.png" width="100px"/>
             </div>
 
             <div style="display:inline-block;text-decoration:underline;vertical-align:top;">

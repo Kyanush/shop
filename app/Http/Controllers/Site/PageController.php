@@ -19,15 +19,8 @@ class PageController extends Controller
         return view('site.page.contact');
     }
 
-    public function publicoferta(){
-        return view('site.page.publicoferta');
-    }
-
     public function about(){
         return view('site.page.about');
     }
-
-
-
 
 }

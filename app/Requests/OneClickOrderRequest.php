@@ -18,9 +18,9 @@ class OneClickOrderRequest extends FormRequest
         ];
         if(!Auth::check())
         {
-            $rules['email'] = 'required|max:255';
+            $rules['email'] = 'required|email|max:255';
             $rules['name']  = 'required|max:255';
-            $rules['phone'] = 'required|max:17|min:17';
+            $rules['phone'] = 'required';
         }
         return $rules;
     }

@@ -35,7 +35,7 @@
 
                 <thead>
                 <tr>
-                   <td class="compare-product" colspan="5">Описание</td>
+                   <td class="compare-product" colspan="{{ count($productFeaturesCompareList)+1 }}">Описание</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -101,6 +101,8 @@
                       </td>
                    @endforeach
                 </tr>
+
+                @if(false)
                 <tr>
                    <td>Краткое описание</td>
                    @foreach($productFeaturesCompareList as $item)
@@ -109,12 +111,14 @@
                         </td>
                    @endforeach
                 </tr>
+                @endif
+
                 </tbody>
 
                 @foreach($attributeGroups as $group)
                    <thead>
                       <tr>
-                         <td class="compare-product" colspan="5">{{ $group->name }}</td>
+                         <td class="compare-product" colspan="{{ count($productFeaturesCompareList)+1 }}">{{ $group->name }}</td>
                       </tr>
                    </thead>
                    <tbody>

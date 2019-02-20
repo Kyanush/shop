@@ -1,10 +1,12 @@
 <?php
 namespace App\Services;
 
+use App\Contracts\OrderInterface;
 use App\Models\Order;
 use App\Models\Product;
+use Mail;
 
-class ServiceOrder
+class ServiceOrder implements OrderInterface
 {
 
     private $model;
@@ -62,6 +64,27 @@ class ServiceOrder
         $order = $this->model::find($order_id);
         $order->total = $order->total();
         return $order->save();
+    }
+
+    public function orderSendMessage($order_id){
+        if(env('APP_TEST') == 0)
+        {
+            $order = $this->model::find($order_id);
+            if (!$order)
+                return false;
+
+            $emails[] = env('MAIL_ADMIN');
+
+            if($order->user->email)
+                $emails[] = $order->user->email;
+
+            $subject = env('APP_NAME') . ' - ' . 'заказ №:' . $order->id;
+            Mail::send('mails.new_order', ['order' => $order, 'subject' => $subject], function($m) use($subject, $emails)
+            {
+                $m->to($emails)->subject($subject);
+            });
+        }
+        return true;
     }
 
 }

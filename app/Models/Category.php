@@ -4,13 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use DB;
-use App\Tools\UploadableTrait;
 use File;
+use App\Tools\Upload;
 
 class Category extends Model
 {
 
-     use UploadableTrait;
 
      protected $table = 'categories';
      protected $fillable = [
@@ -59,7 +58,14 @@ class Category extends Model
             {
                 if($model->id)
                     self::find($model->id)->deleteImage();
-                $model->image = $model->uploadFile($model->image, config('shop.categories_path_file'));
+
+                $upload = new Upload();
+                $upload->setWidth(100);
+                $upload->setHeight(100);
+                $upload->setPath(config('shop.categories_path_file'));
+                $upload->setFile($model->image);
+
+                $model->image = $upload->save();
             }
         });
 

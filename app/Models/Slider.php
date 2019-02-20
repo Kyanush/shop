@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use File;
 use DB;
-use App\Tools\UploadableTrait;
+use App\Tools\Upload;
 
 class Slider extends Model
 {
-    use UploadableTrait;
 
     protected $table = 'sliders';
     protected $fillable = [
@@ -56,7 +55,11 @@ class Slider extends Model
                 if($model->id)
                     self::find($model->id)->deleteImage();
 
-                $model->image = $model->uploadFile($model->image, config('shop.sliders_path_file'));
+                $upload = new Upload();
+                $upload->setPath(config('shop.sliders_path_file'));
+                $upload->setFile($model->image);
+
+                $model->image = $upload->save();
             }
         });
 

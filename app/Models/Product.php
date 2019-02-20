@@ -6,7 +6,7 @@ namespace App\Models;
 use App\Services\ServiceCategory;
 use Illuminate\Database\Eloquent\Model;
 use File;
-use App\Tools\UploadableTrait;
+use App\Tools\Upload;
 use DB;
 use App\Tools\Helpers;
 use Auth;
@@ -14,7 +14,6 @@ use Mail;
 
 class Product extends Model
 {
-    use UploadableTrait;
 
 
     protected $table = 'products';
@@ -80,13 +79,15 @@ class Product extends Model
         {
             $serviceCategory = new ServiceCategory();
 
-            $parent_id = Category::where('url', $filters['category'])->first()->id;
-            $categories_ids = $serviceCategory->categoryChildIds($parent_id);
+            $category = Category::where('url', $filters['category'])->first();
+            if($category)
+            {
+                $categories_ids = $serviceCategory->categoryChildIds($category->id);
 
-            $query->whereHas('categories', function($query) use ($categories_ids){
-                $query->whereIn('category_id', $categories_ids);
-            });
-
+                $query->whereHas('categories', function($query) use ($categories_ids){
+                    $query->whereIn('category_id', $categories_ids);
+                });
+            }
         }
 
         return $query;
@@ -197,7 +198,12 @@ class Product extends Model
                     $product_id = $statement[0]->Auto_increment;
                 }
 
-                $product->photo = $product->uploadFile($product->photo, $product->productFileFolder(false, $product_id ?? 0));
+                $upload = new Upload();
+                $upload->setWidth(460);
+                $upload->setHeight(350);
+                $upload->setPath($product->productFileFolder(false, $product_id ?? 0));
+                $upload->setFile($product->photo);
+                $product->photo = $upload->save();
             }
 
         });
@@ -266,8 +272,26 @@ class Product extends Model
     }
     //Группа товаров
 
+    //товары в корзине
+    public function cartItems()
+    {
+        return $this->hasMany('App\Models\CartItem', 'product_id', 'id');
+    }
 
+    //Сравнение товаров
+    public function featuresCompare(){
+        return $this->hasMany('App\Models\ProductFeaturesCompare', 'product_id', 'id');
+    }
 
+    //Мои закладки
+    public function featuresWishlist(){
+        return $this->hasMany('App\Models\ProductFeaturesWishlist', 'product_id', 'id');
+    }
+
+    //Вы смотрели продукты
+    public function youWatchedProducts(){
+        return $this->hasMany('App\Models\YouWatchedProduct', 'product_id', 'id');
+    }
 
 
 
@@ -323,49 +347,34 @@ class Product extends Model
     public function getReducedPrice()
     {
         $price = $this->price;
-
-        if(isset($this->specificPrice))
         if($this->specificPrice)
         {
-            $current_date = date('Y-m-d H:i:s');
-            if(
-                ($this->specificPrice->start_date <= $current_date and $this->specificPrice->expiration_date >= $current_date)
-                or
-                (empty($this->specificPrice->start_date) and empty($this->specificPrice->expiration_date))
-                or
-                ($this->specificPrice->start_date <= $current_date and empty($this->specificPrice->expiration_date))
-                or
-                (empty($this->specificPrice->start_date) and $this->specificPrice->expiration_date >= $current_date)
-            )
+            switch ($this->specificPrice->discount_type)
             {
-                if($price)
-                {
-                    if($this->specificPrice->discount_type == 'percent'){
-                        $price = $price - $this->specificPrice->reduction / 100 * $price;
-                    }
-                    if($this->specificPrice->discount_type == 'sum'){
-                        $price = $price - $this->specificPrice->reduction;
-                    }
-                }
+                case 'percent':
+                    $price = $price - $this->specificPrice->reduction / 100 * $price;
+                break;
+                case 'sum':
+                    $price = $price - $this->specificPrice->reduction;
+                break;
             }
         }
-
         return $price;
     }
     public function getDiscountTypeinfo(){
-
-        if(isset($this->specificPrice))
-            if($this->specificPrice)
-                switch ($this->specificPrice->discount_type) {
-                    case 'percent':
-                        return '-' . $this->specificPrice->reduction . '%';
-                        break;
-                    case 'sum':
-                        return   '-' . $this->specificPrice->reduction . '₸';
-                        break;
-                    default:
-                        return '';
-                }
+        if($this->specificPrice)
+        {
+            switch ($this->specificPrice->discount_type) {
+                case 'percent':
+                    return '-' . $this->specificPrice->reduction . '%';
+                    break;
+                case 'sum':
+                    return '-' . $this->specificPrice->reduction . '₸';
+                    break;
+                default:
+                    return '';
+            }
+        }
         return '';
     }
 

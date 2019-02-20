@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Validation\Factory;
-use App\Tools\UploadableTrait;
+use App\Tools\Upload;
 
 class UploadImageController extends Controller
 {
-    use UploadableTrait;
 
     public function __construct()
     {
@@ -36,7 +35,13 @@ class UploadImageController extends Controller
         if(empty($path))
             return false;
 
-        $file_name = $this->uploadFile($file, $path);
+        $upload = new Upload();
+        $upload->setWidth(500);
+        $upload->setHeight(500);
+        $upload->setPath($path);
+        $upload->setFile($file);
+
+        $file_name = $upload->save();
 
         if($file_name)
         {

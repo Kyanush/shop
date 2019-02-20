@@ -5,12 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use File;
 use DB;
-use App\Tools\UploadableTrait;
+use App\Tools\Upload;
 
 class Payment extends Model
 {
-
-    use UploadableTrait;
 
     protected $table = 'payments';
     public $timestamps = false;
@@ -42,7 +40,14 @@ class Payment extends Model
             {
                 if($model->id)
                     self::find($model->id)->deleteLogo();
-                $model->logo = $model->uploadFile($model->logo, config('shop.payments_path_file'));
+
+                $upload = new Upload();
+                $upload->setWidth(100);
+                $upload->setHeight(100);
+                $upload->setPath(config('shop.payments_path_file'));
+                $upload->setFile($model->logo);
+
+                $model->logo = $upload->save();
             }
         });
     }

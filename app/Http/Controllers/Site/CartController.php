@@ -7,6 +7,7 @@ use App\Requests\CheckoutRequest;
 use App\Requests\OneClickOrderRequest;
 use App\Services\ServiceCart;
 use App\Services\ServiceOrder;
+use App\Services\ServiceUser;
 use App\Tools\Helpers;
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -87,7 +88,8 @@ class CartController extends Controller
     public function saveCheckout(CheckoutRequest $request)
     {
         //Пользователь
-        $user = $this->serviceCart->findOrNewUserCart(
+        $serviceUser = new ServiceUser();
+        $user = $serviceUser->findOrNewUserCart(
             $request->input('user.email'),
             $request->input('user.name'),
             $request->input('user.phone')
@@ -101,7 +103,6 @@ class CartController extends Controller
             $address_id = $address->id;
         }
 
-        $serviceCart  = new ServiceCart();
         $serviceOrder = new ServiceOrder();
 
         //заказ
@@ -116,13 +117,13 @@ class CartController extends Controller
         if($order->save())
         {
             //товара заказа
-            foreach ($serviceCart->cartProductsList() as $item)
+            foreach ($this->serviceCart->cartProductsList() as $item)
                 $serviceOrder->productAdd($item->product_id, $order->id, $item->quantity);
 
             //удалить корзину
-            $serviceCart->cartDeleteAll();
+            $this->serviceCart->cartDeleteAll();
 
-            $this->serviceCart->orderSendMessage($order->id);
+            $serviceOrder->orderSendMessage($order->id);
 
             return $this->sendResponse(['order_id' => $order->id]);
         }
@@ -135,7 +136,8 @@ class CartController extends Controller
     public function oneClickOrder(OneClickOrderRequest $request)
     {
         //Пользователь
-        $user = $this->serviceCart->findOrNewUserCart(
+        $serviceUser = new ServiceUser();
+        $user = $serviceUser->findOrNewUserCart(
             $request->input('email'),
             $request->input('name'),
             $request->input('phone')
@@ -151,7 +153,7 @@ class CartController extends Controller
             $serviceOrder = new ServiceOrder();
             $serviceOrder->productAdd($request->input('product_id'), $order->id);
 
-            $this->serviceCart->orderSendMessage($order->id);
+            $serviceOrder->orderSendMessage($order->id);
 
             return $this->sendResponse(['order_id' => $order->id]);
         }

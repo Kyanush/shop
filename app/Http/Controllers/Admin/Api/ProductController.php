@@ -13,14 +13,12 @@ use App\Services\ServiceAttributeProductValue;
 use App\Services\ServiceProduct;
 use App\Services\ServiceCategory;
 use App\Tools\Helpers;
-use App\Tools\UploadableTrait;
 use Illuminate\Http\Request;
 use DB;
-use File;
 
 class ProductController extends AdminController
 {
-    use UploadableTrait;
+
     private $serviceAttrProductVal, $serviceProduct, $serviceCategory;
 
     public function __construct(ServiceAttributeProductValue $serviceAttrProductVal,

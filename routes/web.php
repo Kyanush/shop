@@ -50,7 +50,11 @@ Route::group(['namespace'  => 'Site'], function () {
     for ($i = 0; $i <= 100; $i++){
         $params .= "/{param$i?}";
     }
+
     Route::get('catalog/{category?}' . $params, 'CatalogController@catalog')->where(['category']);
+    Route::get('specials/{category?}' . $params, 'CatalogController@catalog')->where(['category']);
+
+
 
     Route::get('product/{category_url}/{product_url}/{product_tab?}',  'ProductController@productDetail')->where(['category_url'])
                                                                                                          ->where(['product_url'])
@@ -65,7 +69,6 @@ Route::group(['namespace'  => 'Site'], function () {
     Route::get('delivery-payment',          'PageController@deliveryPayment');
     Route::get('guaranty',          'PageController@guaranty');
     Route::get('contact',          'PageController@contact');
-    Route::get('publicoferta',          'PageController@publicoferta');
     Route::get('about',          'PageController@about');
 
 
