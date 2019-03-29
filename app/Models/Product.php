@@ -102,13 +102,13 @@ class Product extends Model
             {
                 if(!empty($code) and !empty($value))
                 {
-                    $attribute_codes[] = $code;
+                    $attribute_codes[] = (string)$code;
                     if(is_array($value)){
                         foreach ($value as $v)
                             if(trim($v))
-                                $value_codes[] = $v;
+                                $value_codes[] = (string)$v;
                 }elseif(trim($value))
-                        $value_codes[] = $value;
+                        $value_codes[] = (string)$value;
                 }
             }
 
@@ -116,13 +116,17 @@ class Product extends Model
             {
                 $attributes = Attribute::whereIn('code', $attribute_codes)->with(['values' => function($query) use ($value_codes){
                     $query->whereIn('code', $value_codes);
-                }])->get();
+                }])
+                    ->whereHas('values', function($query) use ($value_codes){
+                        $query->whereIn('code', $value_codes);
+                    })
+                    ->get();
 
                 foreach ($attributes as $attribute)
                 {
                     foreach ($attribute->values as $value)
                     {
-                        $values[] = $value->value;
+                        $values[] = (string)$value->value;
                     }
                 }
 
@@ -205,6 +209,9 @@ class Product extends Model
                 $upload->setFile($product->photo);
                 $product->photo = $upload->save();
             }
+
+            if(empty($product->sku))
+                $product->sku = $product->id ?? $product_id;
 
         });
     }

@@ -86,7 +86,6 @@ class ProductController extends AdminController
         $request = $req->all();
 
         $reqProduct = $request['product'];
-
         $product = Product::findOrNew($reqProduct['id']);
         $product->fill($reqProduct);
 

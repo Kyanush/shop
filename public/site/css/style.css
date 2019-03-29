@@ -16,6 +16,7 @@
 }
 .you-may-be-interested .rr-widget .item-image img {
     max-width: 90px!important;
+    height: auto;
 }
 .you-may-be-interested .rr-widget .item {
     width: 236px!important;

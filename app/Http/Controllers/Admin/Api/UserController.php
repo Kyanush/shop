@@ -47,7 +47,7 @@ class UserController extends AdminController
                 foreach ($data['addresses'] as $item)
                 {
                     if(intval($item['is_delete']) == 1){
-                        $user->addresses()->destroy($item["id"]);
+                        $user->addresses()->find($item["id"])->delete();
                     }else{
                         $address = $user->addresses()->findOrNew($item["id"]);
                         $address->fill($item);
@@ -61,7 +61,7 @@ class UserController extends AdminController
                 foreach ($data['companies'] as $item)
                 {
                     if(intval($item['is_delete']) == 1){
-                        $user->companies()->destroy($item["id"]);
+                        $user->companies()->find($item["id"])->delete();
                     }else{
                         $company = $user->companies()->findOrNew($item["id"]);
                         $company->fill($item);

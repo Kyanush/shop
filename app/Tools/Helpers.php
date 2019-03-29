@@ -13,17 +13,22 @@ class Helpers
 {
 
     public static function filtersProductsDecodeUrl($category = ''){
-        $params = explode('/', url()->full());
+        $params = explode('/', url()->current());
         $filters = [];
         foreach ($params as $key => $param_item)
         {
             if($key < 6) continue;
             $code = explode('-', $param_item)[0];
+
             $values = str_replace($code . '-', '', $param_item);
+            $values = str_replace('?', '', $values);
+
             $filters[$code] = (strpos($values, '-or-') !== false) ? explode('-or-', $values) : $values;
         }
+
         if ($category)
-        $filters['category'] = $category;
+            $filters['category'] = $category;
+
         return $filters;
     }
 
@@ -44,6 +49,7 @@ class Helpers
     public static function limitWords($string, $word_limit = 10)
     {
         $words = explode(" ", $string);
+
         if (count($words) > $word_limit) {
             return implode(" ", array_splice($words, 0, $word_limit)) . ' ...';
         }
@@ -244,5 +250,7 @@ class Helpers
     public static function priceFormat($price){
         return number_format($price, 0, ',', ' ') . ' ₸';
     }
+
+
 
 }

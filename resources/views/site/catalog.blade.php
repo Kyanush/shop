@@ -231,11 +231,12 @@ if(strpos(url()->current(), '/specials') !== false)
             </div>
 
 
+            <!--
             <div class="team_banners">
                 <a href="/contact">
                     <img src="https://ru-mi.com/image/data/team_banners/rumi_team_banner_sergey.jpg">
                 </a>
-            </div>
+            </div>--->
 
         </div>
 

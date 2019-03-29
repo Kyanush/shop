@@ -271,7 +271,7 @@
 
                 filter:{
                     id:   (this.$route.query.id   ? this.$route.query.id : ''),
-                     user_id: this.filter_user_id ? this.filter_user_id : (this.$route.query.user_id   ? this.$route.query.user_id : ''),
+                    user_id: this.filter_user_id ? this.filter_user_id : (this.$route.query.user_id   ? this.$route.query.user_id : ''),
                     type:   (this.$route.query.type   ? this.$route.query.type : ''),
                     status_id:   (this.$route.query.status_id   ? this.$route.query.status_id : ''),
                     carrier_id:   (this.$route.query.carrier_id   ? this.$route.query.carrier_id : ''),
@@ -381,11 +381,12 @@
                     }
                 });
 
-                if(this.filter_user_id)
-                    delete params['user_id'];
-
                 axios.get('/admin/orders-list', {params:  params}).then((res)=>{
                     this.orders = res.data;
+
+                    if(this.filter_user_id)
+                        delete params['user_id'];
+
                     this.$router.push({query: params});
                 });
             }

@@ -41,6 +41,11 @@ class Category extends Model
         return $this->hasOne(self::class, 'id', 'parent_id');
     }
 
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id', 'id');
+    }
+
     public function categoryFilterLinks()
     {
         return $this->hasMany('App\Models\CategoryFilterLink', 'category_id', 'id');

@@ -109,8 +109,7 @@
                 res.data.data.forEach(function (item, index) {
                     self.list_attributes.push({
                         id: item.id,
-                        text: item.name,
-                        disabled: item.active ? false : true
+                        text: item.name
                     });
                 });
             });

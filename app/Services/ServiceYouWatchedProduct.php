@@ -28,11 +28,15 @@ class ServiceYouWatchedProduct
         return false;
     }
 
-    public function listProducts()
+    public function listProducts($product_id = false)
     {
         $products = [];
-        $youWatchedProducts = $this->model::searchVisitNumber()->with(['product' => function($query){
+        $youWatchedProducts = $this->model::searchVisitNumber()->with(['product' => function($query) use ($product_id){
                                     $query->productInfoWith();
+
+                                    if($product_id)
+                                       $query->whereNotIn('id', is_array($product_id) ? $product_id : [$product_id]);
+
                               }])->OrderBy('id', 'DESC')->get();
 
         foreach ($youWatchedProducts as $item)

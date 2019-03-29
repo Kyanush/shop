@@ -218,9 +218,7 @@ $(document).ready(function() {
             $('.sort_select').change();
         }
     });
-    $('.sort_select').on('change', function() {
-        urlParamsGenerate();
-    });
+
 
 
 
@@ -324,62 +322,7 @@ $(document).ready(function() {
 
 
 
-    /******************** Лайк отзыва ******************/
-    $('.as_yandex_review_plus').on('click', function() {
-        var review_id = $(this).attr('review_id');
-        var this_var = $(this);
 
-        $.ajax({
-            url: '/product-review-set-like',
-            type: 'post',
-            dataType: 'json',
-            data: {
-                review_id: review_id,
-                like: 1,
-                _token: getCsrfToken()
-            },
-            success: function(json) {
-                $('#as_yandex_review_'+review_id).find('.as_yandex_review_plus').find('.as_yandex_review_number').html(json['likes_count']);
-                $('#as_yandex_review_'+review_id).find('.as_yandex_review_minus').find('.as_yandex_review_number').html(json['dis_likes_count']);
-                this_var.addClass('as_yandex_review_plus_active');
-                this_var.parent().find('.as_yandex_review_minus').removeClass('as_yandex_review_minus_active');
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                if(jqXHR.status == 422)
-                {
-                    swalErrors(jqXHR.responseJSON.errors, 'Ошибка 422');
-                }
-            }
-        });
-    });
-    $('.as_yandex_review_minus').on('click', function() {
-        var review_id = $(this).attr('review_id');
-        var this_var = $(this);
-
-        $.ajax({
-            url: '/product-review-set-like',
-            type: 'post',
-            dataType: 'json',
-            data:{
-                    review_id: review_id,
-                    like: 0,
-                    _token: getCsrfToken()
-            },
-            success: function(json) {
-                $('#as_yandex_review_'+review_id).find('.as_yandex_review_plus').find('.as_yandex_review_number').html(json['likes_count']);
-                $('#as_yandex_review_'+review_id).find('.as_yandex_review_minus').find('.as_yandex_review_number').html(json['dis_likes_count']);
-                this_var.addClass('as_yandex_review_minus_active');
-                this_var.parent().find('.as_yandex_review_plus').removeClass('as_yandex_review_plus_active');
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                if(jqXHR.status == 422)
-                {
-                    swalErrors(jqXHR.responseJSON.errors, 'Ошибка 422');
-                }
-            }
-        });
-    });
-    /******************** Лайк отзыва ******************/
 
 
 
@@ -509,6 +452,37 @@ $(document).ready(function() {
     });
 
 
+
+    /******************** Лайк отзыва ******************/
+    $('.as_yandex_review_plus').on('click', function () {
+        var review_id = $(this).attr('review_id');
+        var this_var = $(this);
+
+        productReviewSetLike(review_id, 1, function (data) {
+            if(data)
+            {
+                $('#as_yandex_review_' + review_id).find('.as_yandex_review_plus').find('.as_yandex_review_number').html(data['likes_count']);
+                $('#as_yandex_review_' + review_id).find('.as_yandex_review_minus').find('.as_yandex_review_number').html(data['dis_likes_count']);
+                this_var.addClass('as_yandex_review_plus_active');
+                this_var.parent().find('.as_yandex_review_minus').removeClass('as_yandex_review_minus_active');
+            }
+        });
+    });
+    $('.as_yandex_review_minus').on('click', function () {
+        var review_id = $(this).attr('review_id');
+        var this_var = $(this);
+
+        productReviewSetLike(review_id, 0, function (data) {
+            if(data)
+            {
+                $('#as_yandex_review_' + review_id).find('.as_yandex_review_plus').find('.as_yandex_review_number').html(data['likes_count']);
+                $('#as_yandex_review_' + review_id).find('.as_yandex_review_minus').find('.as_yandex_review_number').html(data['dis_likes_count']);
+                this_var.addClass('as_yandex_review_minus_active');
+                this_var.parent().find('.as_yandex_review_plus').removeClass('as_yandex_review_plus_active');
+            }
+        });
+    });
+    /******************** Лайк отзыва ******************/
 
 
 });
@@ -695,66 +669,6 @@ function display(view) {
 
 
 
-function urlParamsGenerate(){
-
-    var filter = [];
-    var data = $('#filterpro').serializeArray();
-    data.forEach(function (item, index) {
-        if(!filter[item['name']])
-            filter[item['name']] = [];
-        filter[item['name']].push(item['value']);
-    });
-
-    var params = '';
-    if(filter.page > 1)
-        params += 'page-' + filter.page + '/';
-
-    var self = this;
-    Object.keys(filter).forEach(function (column) {
-        if(filter[column] && column != 'page' && column != 'category')
-        {
-            var value = filter[column];
-
-            if($.isArray(filter[column])){
-                value = '';
-                $.each(filter[column], function(idx2, val2) {
-                    if(val2)
-                        value += val2 + '-or-';
-                });
-                if(value)
-                    value = value.slice(0,-4);
-            }
-
-            if(value)
-                params += column + '-' + value + '/';
-        }
-    });
-
-    if($('.sort_select').val())
-        params += $('.sort_select').val() + '/';
-
-    if(params)
-        params = params.slice(0,-1);
-
-    var base_url = baseUrl();
-
-    //history.pushState({}, null, base_url + (params ? '/filters/' + params : ''));
-
-    location.href = base_url + (params ? '/filters/' + params : '');
-
-    return params;
-}
-
-function filtersClear() {
-//    history.pushState({}, null, baseUrl());
-    location.href = baseUrl();
-}
-
-function baseUrl() {
-    var url = window.location.href;
-    url =  url.split('/');
-    return url[0] + '//' + url[2] + '/' + url[3] + '/' + url[4];
-}
 
 //Написать отзыв
 function writeReview(self) {
@@ -882,9 +796,7 @@ function callback(self){
     }
 }
 
-function getCsrfToken() {
-    return $('meta[name="csrf-token"]').attr('content');
-}
+
 
 function headerCartInfo() {
     $.ajax({
@@ -1093,108 +1005,6 @@ function cardSuccessPopup(product_id) {
     });
 }
 
-function productFeaturesWishlist(self){
-    var product_id   = $(self).attr('product_id');
-    var product_url  = $(self).attr('product_url');
-    var product_name = $(self).attr('product_name');
-
-    $.ajax({
-        url: '/product-features-wishlist/' + product_id,
-        type: 'post',
-        data: { _token: getCsrfToken() },
-        dataType: 'json',
-        success: function(data) {
-            if(data)
-            {
-                productFeaturesWishlistCount();
-                if($(self).hasClass('active'))
-                    $(self).removeClass('active');
-                else{
-                    $(self).addClass('active');
-                    Swal({
-                        title: 'Закладки',
-                        html: '<p class="text-swal2">Товар <a href="' + product_url + '">'
-                        + product_name +
-                        '</a> добавлен в <a href="/wishlist">закладки</a>!</p>'
-                    });
-                }
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            if(jqXHR.status == 401)
-            {
-                Swal({
-                    title: 'Закладки',
-                    html: '<p class="text-swal2">Необходимо войти в <a href="/login">Личный Кабинет</a> или <a href="/register">создать учетную запись</a>, '
-                    +
-                    'чтобы сохранить товар <a href="' + product_url + '">' + product_name + '</a> в свои <a href="/wishlist">закладки</a>!</p>'
-                });
-            }
-        }
-    });
-
-}
-function productFeaturesCompare(self){
-    var product_id   = $(self).attr('product_id');
-    var product_url  = $(self).attr('product_url');
-    var product_name = $(self).attr('product_name');
-
-    $.ajax({
-        url: '/product-features-compare/' + product_id,
-        type: 'post',
-        data: { _token: getCsrfToken() },
-        dataType: 'json',
-        success: function(data) {
-            if(data)
-            {
-                productFeaturesCompareCount();
-                if($(self).hasClass('active'))
-                    $(self).removeClass('active');
-                else{
-                    $(self).addClass('active');
-                    Swal({
-                        title: 'Сравнение товаров',
-                        html: '<p class="text-swal2">Вы добавили <a href="' + product_url + '">' + product_name + '</a> в ваш <a href="/compare-products">список сравнения</a>!</p>'
-                    });
-                }
-            }
-        }
-    });
-}
-
-function productFeaturesCompareCount(){
-    $.ajax({
-        url: '/product-features-compare-count',
-        type: 'get',
-        data: { _token: getCsrfToken() },
-        dataType: 'json',
-        success: function(data) {
-                var count = parseInt(data);
-                if(!count)
-                    $('.header_compare').addClass('non_active');
-                else
-                    $('.header_compare').removeClass('non_active');
-                $('.header_compare span').html(count);
-        }
-    });
-}
-
-function productFeaturesWishlistCount(){
-    $.ajax({
-        url: '/product-features-wishlist-count',
-        type: 'get',
-        data: { _token: getCsrfToken() },
-        dataType: 'json',
-        success: function(data) {
-                var count = parseInt(data);
-                if(!count)
-                    $('.header_wishlist').addClass('non_active');
-                else
-                    $('.header_wishlist').removeClass('non_active');
-                $('.header_wishlist span').html(count);
-        }
-    });
-}
 
 function headerCartTotal(){
     $.ajax({

@@ -154,6 +154,10 @@
 <script type="text/javascript" src="/site/js/jquery.maskedinput.min.js"></script>
 <!-- Mask --->
 
+<a id="back-site" title="Переходит на сайт" href="/" class="btn btn-primary">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOAjYknCEUVppGNp8dwMY17QBFpytdJUkDyo1IF6346tKFrWU9">
+</a>
+
 
 </body>
 </html>

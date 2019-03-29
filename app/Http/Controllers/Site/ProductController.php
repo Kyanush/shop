@@ -50,7 +50,8 @@ class ProductController extends Controller
 
         //Вы смотрели
         $serviceYouWatchedProduct = new ServiceYouWatchedProduct();
-        $youWatchedProducts = $serviceYouWatchedProduct->listProducts();
+        $serviceYouWatchedProduct->youWatchedProduct($product->id);
+        $youWatchedProducts = $serviceYouWatchedProduct->listProducts($product->id);
 
         return view('site.product_detail', [
             'product'  => $product,

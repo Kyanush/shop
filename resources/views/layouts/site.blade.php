@@ -1,3 +1,5 @@
+{{ \App\Tools\Helpers::generateVisitNumber() }}
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -60,12 +62,13 @@
 
 
     <!-- slick js --->
-
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="http://kenwheeler.github.io/slick/slick/slick-theme.css"/>
     <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-
     <!-- slick js --->
+
+    <meta name="yandex-verification" content="d9d1d901f0c53a09" />
+    <meta name="google-site-verification" content="YOGU9Dh4gfT8os5uvRCSuQ_kwUhoUbXwqQFiNshBSHw" />
 </head>
 
 
@@ -115,6 +118,16 @@
     </div>
     <div id="header_top">
         <div class="container">
+
+            <div class="contact">
+                <span class="address"><img src="/site/images/rumi_shops_link.png"/> г. Алматы, ул. Жибек жолы 115, оф. 113 (Рядом Аэровокзала)</span>
+                <span class="phone">
+                    <img src="/site/images/callback_icon.png">
+                    <a href="tel:+77782002000">+7 (778) 200 20 00</a>,
+                    <a href="tel:+77075511979">+7 (707) 551 1979</a>
+                </span>
+            </div>
+
             <div id="welcome">
                 @guest
                     <a class="header_login_enter" href="/login">Войти</a>
@@ -129,6 +142,9 @@
             </div>
         </div>
     </div>
+
+
+
     <div id="header_middle">
         <div class="container">
             <a id="logo" href="/">
@@ -144,13 +160,15 @@
             </div>
             <div id="search_adaptive_icon"></div>
             <div id="header_phones">
-                <a href="tel:+77075511979"><span class="phone_top">+7 (707) <span>551 19 79</span></span></a>
+                <a href="tel:+77782002000"><span class="phone_top">+7 (778) <span>200 20 00</span></span></a>
                 <div class="everyday_text">Круглосуточно
                     <span class="callback_button"><span>Обратный звонок</span></span>
                 </div>
             </div>
         </div>
     </div>
+
+
     <div class="search_adaptive_line">
         <div class="container">
             <div id="search_adaptive">
@@ -179,8 +197,8 @@
 
                                 <?php
                                 $categories = [];
-                                $category_childrens = \App\Models\Category::orderBy('sort')->where('parent_id', $category->id)->get();
-                                foreach($category_childrens as $category_children){
+
+                                foreach($category->children()->orderBy('sort')->get() as $category_children){
                                     $categories[] = $category_children;
                                     $serviceCategory = new \App\Services\ServiceCategory();
 
@@ -307,7 +325,7 @@
                 <div class="advantages_bottom_element_rumi_text">Живые обсуждения<br>в наших группах</div>
                 <div class="advantages_bottom_element_rumi_image"></div>
             </a>
-            <a class="advantages_bottom_element_rumi advantage_5_rumi">
+            <a class="advantages_bottom_element_rumi advantage_5_rumi" href="/guaranty">
                 <div class="advantages_bottom_element_rumi_header">Надёжный<br>сервисный центр</div>
                 <div class="advantages_bottom_element_rumi_text">Собственный гарантийный<br>центр, если что-то сломается</div>
                 <div class="advantages_bottom_element_rumi_image"></div>
@@ -372,12 +390,12 @@
         <div class="footer_column footer_column_3">
             <div class="footer_column_header">Каталог</div>
             <ul>
-                <li><a href="/smartphones">Смартфоны Xiaomi</a></li>
-                <li><a href="/device">Гаджеты и устройства</a></li>
-                <li><a href="/transport">Электронный транспорт</a></li>
-                <li><a href="/naushniki-i-kolonki">Наушники и колонки</a></li>
-                <li><a href="/accessories">Аксессуары</a></li>
-                <li><a href="/brands">Бренды</a></li>
+                <li><a href="/catalog/xiaomi">Смартфоны Xiaomi</a></li>
+                <li><a href="/catalog/gadzhety">Гаджеты и устройства</a></li>
+                <li><a href="/catalog/transport">Электронный транспорт</a></li>
+                <li><a href="/catalog/naushniki-i-kolonki">Наушники и колонки</a></li>
+                <li><a href="/catalog/aksessuary">Аксессуары</a></li>
+                <li><a href="/catalog/zaryadnye-ustroystva">Зарядные устройства</a></li>
             </ul>
         </div>
         <div class="footer_column footer_column_4">
@@ -460,6 +478,7 @@
 <script type="text/javascript" src="/site/js/jquery.maskedinput.min.js"></script>
 <!-- Mask --->
 
+<script src="/global/script.js"></script>
 <script src="/site/js/script.js"></script>
 
 @yield('end_scripts')

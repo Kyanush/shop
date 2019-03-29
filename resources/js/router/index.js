@@ -203,7 +203,7 @@ export default new Router({
 
         //Товары
         {
-            path: '/products/:category?',
+            path: '/products',
             name: 'Товары',
             component: products_list,
             meta: {

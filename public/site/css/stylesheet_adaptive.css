@@ -114,7 +114,7 @@
         width: 199px;
     }
     .product-grid > div > .product_inner .image img, .you_watched > div > .product_inner .image img {
-        width: 90%;
+        max-width: 90%;
     }
     .product-grid > div .rating_right, .you_watched > div .rating_right {
         margin-right: 0;
@@ -1173,7 +1173,7 @@
     #header #header_top .town_selector {
         display: none;
     }
-    #header #header_top #welcome {
+    #header #header_top #welcome{
         display: none;
     }
     #header_phones a:nth-child(2) {
@@ -1183,7 +1183,7 @@
         display: none;
     }
     #header #header_phones {
-        top: -54px;
+        top: -115px;
         padding-right: 5px;
     }
     #header #header_phones a {
@@ -1258,6 +1258,9 @@
         padding: 0px;
         height: 43px;
         line-height: 43px;
+    }
+    .product-grid > div > .product_inner .image img, .you_watched > div > .product_inner .image img{
+        height: 130px;
     }
     .product-grid > div .product_bottom .cart, .you_watched > div .product_bottom .cart {
         margin-top: 13px;
@@ -1528,10 +1531,6 @@
         -moz-box-shadow: none;
         box-shadow: none;
     }
-    #header #header_top {
-        z-index: 10;
-        position: relative;
-    }
     #header #cart .heading {
         width: 100px;
         height: 85px;
@@ -1554,7 +1553,10 @@
         background: #fff;
     }
     #header #header_top {
-        background-color: transparent;
+        background-color: #464142;
+        z-index: 10;
+        position: relative;
+        height: 65px;
     }
     #header #cart {
         min-width: 0;
@@ -1602,7 +1604,7 @@
         height: 85px;
         position: absolute;
         z-index: 10;
-        top: 50px;
+        top: 111px;
         background: #464142;
         display: none;
     }
@@ -2459,14 +2461,26 @@
     .contact_main_content .contact_pickup_point_information_buttons .contact_pickup_point_information_button {
         margin-bottom: 5px;
     }
-    #header #header_top {
-        height: 0;
+    #header #header_top .contact{
+        margin: 0;
+        padding: 0 10px 0 40px;
+    }
+    #header #header_top .contact span{
+        float: left;
+        width: 100%;
+        padding-left: 0;
+    }
+    #header #header_top .contact,
+    #header #header_top .contact a{
+        font-size: 14px;
+        color: #fff;
+    }
+
+    #header #header_top .contact img {
+        left: -23px;
     }
     .header_top_adaptive {
         height: 55px;
-    }
-    #header #header_phones {
-        top: -51px;
     }
     .picturepopup {
         width: 100%;

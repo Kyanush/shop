@@ -84,4 +84,8 @@ class CatalogController extends Controller
         ]);
     }
 
+    public function filters(){
+
+    }
+
 }

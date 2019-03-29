@@ -184,7 +184,7 @@
                             <div class="product_right_top">
                                 <div class="product_manufacturer_logo_right_info">
                                     <a href="/catalog/{{ $category->url }}">Подробнее<br>
-                                        <span>о {{ $category->name }}</span>
+                                        <span>{{ $category->name }}</span>
                                     </a>
                                 </div>
                                 @if($category->image)
@@ -265,13 +265,7 @@
                                     </span>
                                 </a>
                                 <div class="product_delivery_container">
-                                    <div><a href="/dostavka">Доставка по всему казахстану:</a> от 1000 тг, завтра</div>
-                                    <div><a href="/dostavka">Самовывоз из Алматы:</a> завтра, <b>бесплатно</b></div>
-                                    <div class="product_delivery_container_blocks">
-                                        <a href="/dostavka" class="product_delivery_container_block_1">
-                                            <span>Экспресс доставка</span>
-                                        </a>
-                                    </div>
+                                    <div><a href="/delivery-payment">Доставка по всему казахстану:</a> от 1000 тг до 3000 тг</div>
                                 </div>
                             </div>
 
@@ -296,8 +290,10 @@
                         <div class="product_skladis_shop_right">Наличие</div>
                     </div>
                     <div class="product_skladis_shop">
-                        <div class="product_skladis_shop_left">БЦ "Толе би"
-                            <a href="/contact" target="_blank">(Жибек Жолы проспект, 115)</a>
+                        <div class="product_skladis_shop_left">
+                            <a href="/contact">
+                                г. Алматы, ул. Жибек жолы 115, оф. 113 (Рядом Аэровокзала)
+                            </a>
                         </div>
                         <div class="product_skladis_shop_metro product_skladis_shop_metro_1">г.Алматы</div>
 
@@ -372,7 +368,7 @@
                         </div>
                         <div @if($product_tab == 'attributes')   class="active"  @endif id="tab-attributes">
                             <div class="tab_attribute_all">
-                                <div class="tab_attribute_left tab_attribute_left_fixed">
+                                <div class="tab_attribute_left tab_attribute_left_fixed1">
 
                                     <div class="tab_attribute_left_div">
 

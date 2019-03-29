@@ -1,36 +1,26 @@
-<!-- ZERO.kz -->
-<span id="_zero_71208">
-    <noscript>
-        <a href="http://zero.kz/?s=71208" target="_blank">
-            <img src="http://c.zero.kz/z.png?u=71208" width="88" height="31" alt="ZERO.kz" />
-        </a>
-    </noscript>
-</span>
-
-<script type="text/javascript"><!--
-    var _zero_kz_ = _zero_kz_ || [];
-    _zero_kz_.push(["id", 71208]);
-    _zero_kz_.push(["type", 1]);
-
-    (function () {
-        var a = document.getElementsByTagName("script")[0],
-            s = document.createElement("script");
-        s.type = "text/javascript";
-        s.async = true;
-        s.src = (document.location.protocol == "https:" ? "https:" : "http:")
-            + "//c.zero.kz/z.js";
-        a.parentNode.insertBefore(s, a);
-    })(); //-->
-</script>
-<!-- End ZERO.kz -->
-
-
-<!-- Global site tag (gtag.js) - Google Ads: 791289214 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-791289214"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-135477957-1"></script>
 <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'AW-791289214');
+    gtag('config', 'UA-135477957-1');
 </script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+    ym(52615651, "init", {
+        id:52615651,
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true
+    });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/52615651" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->

@@ -425,7 +425,7 @@
                     stock_end:          this.urlParamsGet('stock_end'),
                     created_at_start:   this.urlParamsGet('created_at_start'),
                     created_at_end:     this.urlParamsGet('created_at_end'),
-                    category:           this.$route.params.category,
+                    category:           this.urlParamsGet('category')
                 },
                 clone_product:{
                     product_id: 0,
@@ -497,16 +497,12 @@
 
                 var params = '';
 
-                if(this.filter.page > 1)
-                    params += 'page-' + this.filter.page + '/';
-
-                if(this.filter.category)
-                    this.$router.push({ params: {category: this.filter.category }});
-
                 var self = this;
                 Object.keys(this.filter).forEach(function (column) {
-                    if(self.filter[column] && column != 'page' && column != 'category')
+                    if(self.filter[column])
                     {
+                        if(column == 'page' && self.filter[column] == 1) return;
+
                         var value = self.filter[column];
 
                         if($.isArray(self.filter[column])){
@@ -541,8 +537,6 @@
                     filters[param[0]] = d.indexOf('-or-') >= 0 ? d.split('-or-') : d;
                 }
 
-                filters['category'] = this.$route.params.category;
-
                 return key ? (filters[key] ? filters[key] : '') : filters;
             },
             clearFilters(){
@@ -554,8 +548,7 @@
                         self.filter[column] = '';
                     }
                 });
-                this.$router.push({path: '/products', params: {category: '' }});
-
+                this.$router.push({path: '/products'});
             },
             selectedCatalog (node) {
                 this.filter.category = node.model.url;
@@ -618,6 +611,8 @@
                         var data = res.data;
                         this.products_attributes_filters = data;
                     });
+
+                    console.log(this.filter);
 
                     axios.post('/admin/products-list', this.filter).then((res)=>{
                         this.products = res.data;

@@ -5,10 +5,37 @@ Route::post('ckeditor-upload-image',   'UploadImageController@CkeditorUploadImag
 
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
+
+Route::group(['namespace'  => 'Site'], function () {
+    Route::get('product-search', 'ProductController@productSearch');
+});
+
+session_start();
+if(isset($_GET['mobile'])){
+    if($_GET['mobile'] == 'Y')
+        $_SESSION['mobile'] = true;
+    elseif(isset($_SESSION['mobile']))
+        unset($_SESSION['mobile']);
+}
+
+Route::group(['namespace'  => 'Site'], function () {
+    Route::post('product-features-compare/{product_id}', 'ProductFeaturesCompareController@addAndDelete')->where(['product_id' => '[0-9]+']);
+    Route::get('product-features-compare-count',   'ProductFeaturesCompareController@count');
+    Route::get('product-features-wishlist-count',  'ProductFeaturesWishlistController@count');
+    Route::get('compare-products',                      'ProductFeaturesCompareController@compareProducts');
+    Route::get('compare-product-delete/{product_id}',   'ProductFeaturesCompareController@compareProductDelete')->where(['product_id' => '[0-9]+']);
+
+    //лайк
+    Route::post('product-review-set-like', 'ReviewController@setLike');
+
+});
+
+if(!isset($_SESSION['mobile'])){
+
+
 Route::group(['namespace'  => 'Site'], function () {
 
     Route::get('/',          'MainController@main');
-    Route::post('product-features-compare/{product_id}', 'ProductFeaturesCompareController@addAndDelete')->where(['product_id' => '[0-9]+']);
 
     //Корзина
     Route::post('cart-save',                'CartController@cartSave');
@@ -26,17 +53,11 @@ Route::group(['namespace'  => 'Site'], function () {
     Route::post('list-carriers',            'CarrierController@listCarriers');
     Route::post('list-payments',            'PaymentController@listPayments');
 
-
-    Route::get('product-search', 'ProductController@productSearch');
-
-
     Route::get('card-success-popup/{product_id}', 'ProductController@cardSuccessPopup')->where(['product_id' => '[0-9]+']);
 
-    Route::get('product-features-compare-count',   'ProductFeaturesCompareController@count');
-    Route::get('product-features-wishlist-count',  'ProductFeaturesWishlistController@count');
 
-    Route::get('compare-products',                      'ProductFeaturesCompareController@compareProducts');
-    Route::get('compare-product-delete/{product_id}',   'ProductFeaturesCompareController@compareProductDelete')->where(['product_id' => '[0-9]+']);
+
+
 
     Route::post('callback',  'CallbackController@callback');
     Route::post('contact',  'CallbackController@contact');
@@ -60,7 +81,7 @@ Route::group(['namespace'  => 'Site'], function () {
                                                                                                          ->where(['product_url'])
                                                                                                          ->where(['product_tab']);
 
-    Route::post('product-review-set-like', 'ReviewController@setLike');
+
 
     Route::post('write-review',            'ReviewController@writeReview');
     Route::post('write-question',          'QuestionAnswerController@writeQuestion');
@@ -75,6 +96,27 @@ Route::group(['namespace'  => 'Site'], function () {
     //sitemap
     Route::get('sitemap.xml', 'SitemapController@sitemap');
 });
+
+}else {
+    Route::group(['namespace' => 'Mobile'], function () {
+
+        Route::get('/', 'MainController@main');
+        Route::get('c/{category}', 'CatalogController@c')->where(['category']);
+
+        $params = '';
+        for ($i = 0; $i <= 100; $i++){
+            $params .= "/{param$i?}";
+        }
+
+        Route::get('catalog/{category?}' . $params,  'CatalogController@catalog')->where(['category']);
+        Route::get('specials/{category?}' . $params, 'CatalogController@catalog')->where(['category']);
+
+        Route::get('product/{category_url}/{product_url}/{product_tab?}',  'ProductController@productDetail')->where(['category_url'])
+            ->where(['product_url'])
+            ->where(['product_tab']);
+
+    });
+}
 
 Route::group(['middleware' => 'auth', 'namespace'  => 'Site'], function () {
 

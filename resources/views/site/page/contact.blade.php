@@ -26,7 +26,10 @@
                    <div class="contact_page_left_header">Связаться с нами</div>
 
                    <div style="padding: 20px;font-size: 14px;line-height: 22px;">
-                       Обсудить с нами возникшие вопросы или проконсультироваться звоните к нам по номеру: <a style="font-size: 14px;text-decoration: none;" href="tel:+77075511979">+7 (707) 551 19 79</a> (ежедневно с 11-00 до 19-00).
+                       Обсудить с нами возникшие вопросы или проконсультироваться звоните к нам по номеру:
+                       <a style="font-size: 14px;text-decoration: none;" href="tel:+77782002000">+7 (778) 200 20 00</a>,
+                       <a style="font-size: 14px;text-decoration: none;" href="tel:+77075511979">+7 (707) 551 1979</a>
+                       (ежедневно с 11-00 до 19-00).
                        Кроме того, Вы можете отправить любые запросы или вопросы нам на электронную почту <a style="font-size: 14px;text-decoration: none;" href="mailto:info@onepoint.kz">info@onepoint.kz</a> ,
                        не забудьте указать Ваше имя и контактные номера телефонов. Если Вас не устраивают какие-либо наши товары или услуги,
                        мы с удовольствием выслушаем Вас. Мы всегда готовы решить проблему.
@@ -38,9 +41,9 @@
                            <div class="contact_page_block_list">
                                <div class="contact_page_block_list_top">Ежедневно, круглосуточно(телефон или WhatsApp)</div>
                                <div class="contact_page_block_list_bottom">
-                                   <a href="tel:+77075511979">
-                                       +7 (707) 551 19 79
-                                   </a>
+                                   <a href="tel:+77782002000">+7 (778) 200 20 00</a>
+                                   <br/>
+                                   <a href="tel:+77075511979">+7 (707) 551 1979</a>
                                </div>
                            </div>
                            <div class="contact_page_block_list">
@@ -49,7 +52,7 @@
                            </div>
                            <div class="contact_page_block_list">
                                <div class="contact_page_block_list_top">Адрес</div>
-                               <div class="contact_page_block_list_bottom">г. Алматы, ул. Жибек жолы 115, оф. 113</div>
+                               <div class="contact_page_block_list_bottom">г. Алматы, ул. Жибек жолы 115, оф. 113 (Рядом Аэровокзала)</div>
                            </div>
                        </div>
                        <div class="contact_page_block">
