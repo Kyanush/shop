@@ -9,7 +9,6 @@
 
 @include('mobile.includes.space', ['style' => ''])
 
-
 @foreach(App\Models\AttributeGroup::OrderBy('sort')->get() as $attributeGroup)
     @if(!isset($attributes[$attributeGroup->id]))
         @continue

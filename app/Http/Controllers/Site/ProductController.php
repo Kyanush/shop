@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\AttributeGroup;
 use App\Services\ServiceYouWatchedProduct;
+use App\Tools\Helpers;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -36,10 +37,13 @@ class ProductController extends Controller
                                 'questionsAnswers' => function($query){
                                     $query->isActive();
                                 },
-                                'reviews' => function($query){
+                                'reviews' => function($query) use($product_tab){
                                     $query->with('isLike');
                                     $query->withCount(['likes', 'disLikes']);
                                     $query->isActive();
+
+                                    if(empty($product_tab) and Helpers::isMobile())
+                                        $query->limit(2);
                                 }
                             ])
                             ->where('url', $product_url)
@@ -53,7 +57,7 @@ class ProductController extends Controller
         $serviceYouWatchedProduct->youWatchedProduct($product->id);
         $youWatchedProducts = $serviceYouWatchedProduct->listProducts($product->id);
 
-        return view('site.product_detail', [
+        return view(Helpers::isMobile() ? 'mobile.product.index' : 'site.product_detail', [
             'product'  => $product,
             'product_tab' => $product_tab,
             'group_products' => $group_products,

@@ -85,6 +85,12 @@ $(document).ready(function() {
 
 });
 
+function checkPhoneNumber(num) {
+    var regexp = /\([0-9]{3}\)\s[0-9]{3}-[0-9]{4}/;
+    var valid = regexp.test(num);
+    return valid;
+}
+
 function reviewLikeRating(review_id, like){
     productReviewSetLike(review_id, like, function (data) {
         if(data)
@@ -92,10 +98,167 @@ function reviewLikeRating(review_id, like){
     });
 }
 
+function buyIn1Click(product_id, user_name, user_email, user_phone){
+    app.buyIn1Click.product_id = product_id;
+
+    app.buyIn1Click.user_name  = user_name;
+    app.buyIn1Click.user_email = user_email;
+    app.buyIn1Click.user_phone = user_phone;
+
+    app.componentDialog = 'buy-in-1-click';
+}
+
+function _addToCart(product_id){
+    if(addToCart(product_id))
+    {
+        Swal.fire({
+            title: 'Товар в корзине',
+            //text: "Товар в корзине",
+            type: 'success',
+            showCancelButton: true,
+            confirmButtonColor: '#4aa90b',
+            cancelButtonColor: '#0089d0',
+            confirmButtonText: 'Оформление заказа',
+            cancelButtonText: 'Продолжить покупки',
+        }).then((result) => {
+            if (result.value) {
+                location.href = '/checkout';
+            }
+        });
+    }
+}
+
 Vue.config.productionTip = false;
 
+Vue.component('buy-in-1-click', {
+    data: function() {
+        return{
+            auth:  app.buyIn1Click.user_name ? true : false,
 
+            name:  app.buyIn1Click.user_name,
+            email: app.buyIn1Click.user_email,
+            phone: app.buyIn1Click.user_phone,
 
+            focus:{
+                name: 0,
+                email: 0,
+                phone: 0,
+            },
+
+            wait: false
+        }
+    },
+    template: `
+        <div class="dialog">
+            <form v-on:submit="buyIn1Click" method="post" enctype="multipart/form-data">
+                <div class="dialog__content _topbar-off">
+                        <div class="topbar container _filter-dialog">
+                           <h1 class="topbar__heading">Быстрый заказ</h1>
+                           <div class="button _only-red-text" @click="close">Отмена</div>
+                        </div>
+                        <div>
+                            <div class="input" :class="{ '_has-value': name, '_focused': focus.name == 1, '_invalid': focus.name == 2 && !name }">
+                                <label class="input__label">Имя</label>
+                                <input 
+                                    type="text" 
+                                    v-bind:disabled="auth"
+                                    class="input__input" 
+                                    v-model="name" 
+                                    @focus="focus.name = 1"
+                                    @blur="focus.name = 2"/>
+                            </div>
+                            <div class="input__has-error" v-if="focus.name == 2">Пожалуйста, заполните это поле</div>
+                        </div>
+                        <div>
+                            <div class="input" :class="{ '_has-value': email, '_focused': focus.email == 1, '_invalid': focus.email == 2 && !email }">
+                                <label class="input__label">Ваш e-mail</label>
+                                <input 
+                                    type="email" 
+                                    v-bind:disabled="auth"
+                                    class="input__input" 
+                                    v-model="email" 
+                                    @focus="focus.email = 1"
+                                    @blur="focus.email = 2"/>
+                            </div>
+                            <div class="input__has-error" v-if="focus.email == 2">Пожалуйста, заполните это поле</div>
+                        </div>
+                        <div>
+                            <div class="input" :class="{ '_has-value': phone, '_focused': focus.phone == 1, '_invalid': focus.phone == 2 && !phone }">
+                                <label class="input__label">Введите номер телефона</label>
+                                <input 
+                                       type="text"
+                                       v-bind:disabled="auth"
+                                       class="input__input phone-mask" 
+                                       v-model="phone" 
+                                       @focus="focus.phone = 1" 
+                                       @blur="focus.phone = 2;phone = $event.target.value;"/>
+                            </div>
+                            <div class="input__has-error" v-if="focus.phone == 2">Пожалуйста, заполните это поле</div>
+                        </div>                      
+                </div>
+                <button type="submit" class="button _big-fixed button-sellers">
+                     <span class="ajax-loader">
+                        <img v-show="wait" src="/site/images/ajax-loader.gif"/>
+                        Заказать
+                     </span>
+                    
+                </button>
+            </form>          
+        </div>        
+    `,
+    methods:{
+        close(){
+            app.componentDialog = '';
+        },
+        buyIn1Click(event){
+            event.preventDefault();
+            var self = this;
+
+            if(!this.wait) {
+                this.wait = true;
+
+                if (!this.checkPhoneNumber(this.phone))
+                    this.phone = ''
+
+                let data = new FormData();
+                data.append('_token', getCsrfToken());
+                data.append('name', this.name);
+                data.append('email', this.email);
+                data.append('phone', this.phone);
+                data.append('product_id', app.buyIn1Click.product_id);
+
+                axios.post('/one-click-order', data).then(function (response) {
+                    if (response.data) {
+                        this.order_id = response.data.order_id;
+                        if (this.order_id) {
+                            self.close();
+                            Swal({
+                                type: 'success',
+                                html: 'Номер заказа <a style="font-size: 20px;" href="/order-history/' + this.order_id + '">№:' + this.order_id + '</a>',
+                                title: 'Ваш заказ успешно оформлен'
+                            });
+                        }
+                    } else {
+                        alert('Ошибка БД');
+                    }
+                    self.wait = false;
+                }).catch(function (error) {
+                    console.log(error);
+                    swalErrors(error.response.data.errors, 'Ошибка 422');
+                    self.wait = false;
+                });
+            }
+        },
+        checkPhoneNumber(num) {
+            return checkPhoneNumber(num);
+        },
+    },
+    created(){
+        setTimeout(function() {
+            $(".phone-mask").mask("+7(999) 999-9999");
+        }, 2000);
+    },
+});
 
 Vue.component('write-review', {
     data: function() {
@@ -120,71 +283,75 @@ Vue.component('write-review', {
     template: `
         <div class="dialog">
             <div class="dialog__content _topbar-off">
-
-                <div class="topbar container _filter-dialog">
-                   <h1 class="topbar__heading">Написать отзыв</h1>
-                   <div class="button _only-red-text" @click="close">Отмена</div>
-                </div>
-                                
-                <div>
-                    <div class="input" :class="{ '_has-value': rating, '_focused': focus.rating == 1, '_invalid': focus.rating == 2 && !rating }">
-                        <label class="input__label">Оценка</label>
-                        <select class="input__input" v-model="rating">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
+                <form v-on:submit="writeReview" method="post" enctype="multipart/form-data">
+                    <div class="topbar container _filter-dialog">
+                       <h1 class="topbar__heading">Написать отзыв</h1>
+                       <div class="button _only-red-text" @click="close">Отмена</div>
                     </div>
-                    <div class="input__has-error">Пожалуйста, заполните это поле</div>
-                </div>
-                
-                
-                <div>
-                    <div class="input" :class="{ '_has-value': plus, '_focused': focus.plus == 1, '_invalid': focus.plus == 2 && !plus }">
-                        <label class="input__label">Достоинства</label>
-                        <textarea class="input__input" v-model="plus" @focus="focus.plus = 1" @blur="focus.plus = 2"></textarea>
+                                    
+                    <div>
+                        <div class="input" :class="{ '_has-value': rating, '_focused': focus.rating == 1, '_invalid': focus.rating == 2 && !rating }">
+                            <label class="input__label">Оценка</label>
+                            <select class="input__input" v-model="rating" name="rating">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                        <div class="input__has-error">Пожалуйста, заполните это поле</div>
                     </div>
-                    <div class="input__has-error" v-if="focus.plus == 2">Пожалуйста, заполните это поле</div>
-                </div>
-                
-                
-                <div>
-                    <div class="input" :class="{ '_has-value': minus, '_focused': focus.minus == 1, '_invalid': focus.minus == 2 && !minus }">
-                        <label class="input__label">Недостатки</label>
-                        <textarea class="input__input" v-model="minus" @focus="focus.minus = 1" @blur="focus.minus = 2"></textarea>
+                    
+                    
+                    <div>
+                        <div class="input" :class="{ '_has-value': plus, '_focused': focus.plus == 1, '_invalid': focus.plus == 2 && !plus }">
+                            <label class="input__label">Достоинства</label>
+                            <textarea name="plus" class="input__input" v-model="plus" @focus="focus.plus = 1" @blur="focus.plus = 2"></textarea>
+                        </div>
+                        <div class="input__has-error" v-if="focus.plus == 2">Пожалуйста, заполните это поле</div>
                     </div>
-                    <div class="input__has-error" v-if="focus.minus == 2">Пожалуйста, заполните это поле</div>
-                </div>
-                
-                
-                <div>
-                    <div class="input" :class="{ '_has-value': name, '_focused': focus.name == 1, '_invalid': focus.name == 2 && !name }">
-                        <label class="input__label">Ваше имя</label>
-                        <textarea class="input__input" v-model="name" @focus="focus.name = 1" @blur="focus.name = 2"></textarea>
+                    
+                    
+                    <div>
+                        <div class="input" :class="{ '_has-value': minus, '_focused': focus.minus == 1, '_invalid': focus.minus == 2 && !minus }">
+                            <label class="input__label">Недостатки</label>
+                            <textarea name="minus" class="input__input" v-model="minus" @focus="focus.minus = 1" @blur="focus.minus = 2"></textarea>
+                        </div>
+                        <div class="input__has-error" v-if="focus.minus == 2">Пожалуйста, заполните это поле</div>
                     </div>
-                    <div class="input__has-error" v-if="focus.name == 2">Пожалуйста, заполните это поле</div>
-                </div>
-                
-                
-                <div>
-                    <div class="input" :class="{ '_has-value': email, '_focused': focus.email == 1, '_invalid': focus.email == 2 && !email }">
-                        <label class="input__label">Ваш e-mail</label>
-                        <input type="email" class="input__input" v-model="email" @focus="focus.email = 1" @blur="focus.email = 2"/>
+                    
+                    
+                    <div>
+                        <div class="input" :class="{ '_has-value': name, '_focused': focus.name == 1, '_invalid': focus.name == 2 && !name }">
+                            <label class="input__label">Ваше имя</label>
+                            <textarea name="name" class="input__input" v-model="name" @focus="focus.name = 1" @blur="focus.name = 2"></textarea>
+                        </div>
+                        <div class="input__has-error" v-if="focus.name == 2">Пожалуйста, заполните это поле</div>
                     </div>
-                    <div class="input__has-error" v-if="focus.email == 2">Пожалуйста, заполните это поле</div>
-                </div>
-                
-                
-                <div>
-                    <div class="input" :class="{ '_has-value': comment, '_focused': focus.comment == 1, '_invalid': focus.comment == 2 && !comment }">
-                        <label class="input__label">Комментарий</label>
-                        <textarea class="input__input" v-model="comment" @focus="focus.comment = 1" @blur="focus.comment = 2"></textarea>
+                    
+                    
+                    <div>
+                        <div class="input" :class="{ '_has-value': email, '_focused': focus.email == 1, '_invalid': focus.email == 2 && !email }">
+                            <label class="input__label">Ваш e-mail</label>
+                            <input name="email" type="email" class="input__input" v-model="email" @focus="focus.email = 1" @blur="focus.email = 2"/>
+                        </div>
+                        <div class="input__has-error" v-if="focus.email == 2">Пожалуйста, заполните это поле</div>
                     </div>
-                    <div class="input__has-error" v-if="focus.comment == 2">Пожалуйста, заполните это поле</div>
-                </div>
-              
+                    
+                    
+                    <div>
+                        <div class="input" :class="{ '_has-value': comment, '_focused': focus.comment == 1, '_invalid': focus.comment == 2 && !comment }">
+                            <label class="input__label">Комментарий</label>
+                            <textarea name="comment" class="input__input" v-model="comment" @focus="focus.comment = 1" @blur="focus.comment = 2"></textarea>
+                        </div>
+                        <div class="input__has-error" v-if="focus.comment == 2">Пожалуйста, заполните это поле</div>
+                    </div>
+                  
+                   <button type="submit" class="button _big-fixed button-sellers">
+                        Написать отзыв
+                   </button>
+              </form>
               
             </div>
         </div>        
@@ -193,6 +360,26 @@ Vue.component('write-review', {
         close(){
             app.componentDialog = '';
         },
+        writeReview(event){
+            event.preventDefault();
+
+            var self = this;
+            let data = new FormData(event.target);
+            data.append('_token', getCsrfToken());
+
+            axios.post('/write-review', data).then(function (response){
+                if(response){
+                    Swal({
+                        title: 'Написать отзыв',
+                        html: 'Ваш отзыв успешно оставлен'
+                    });
+                    self.close();
+                }
+            }).catch(function (error){
+                swalErrors(error.response.data.errors, 'Ошибка 422');
+            });
+
+        }
     }
 });
 
@@ -260,9 +447,6 @@ Vue.component('search-dialog', {
     }
 });
 
-
-
-
 Vue.component('filters', {
     data: function() {
         return  {
@@ -278,7 +462,7 @@ Vue.component('filters', {
                           <div class="filter-dialog">
                              <div class="filter-dialog__wrapper g-mb-gtn">
                                 <div class="topbar container _filter-dialog">
-                                   <div class="button _only-red-text" @click="close">Отмена</div>
+                                   <div class="button _only-red-text" @click="close">{{ subMenu ? 'Назад' : 'Отмена'}}</div>
                                    <h1 class="topbar__heading">Фильтр</h1>
                                    <div class="button _only-red-text" @click="filtersClear">Сбросить</div>
                                 </div>
@@ -398,7 +582,7 @@ Vue.component('filters', {
             return result;
         },
         urlParamsGenerate(){
-            urlParamsGenerate(true);
+            urlParamsGenerate();
         }
     },
     created(){
@@ -410,14 +594,418 @@ Vue.component('filters', {
     }
 });
 
+Vue.component('checkout', {
+    template: `<div class="pickup__wrapper">
 
+                    <span v-if="list_cart.length == 0">
+                        <p class="container-title" v-if="order_id > 0">
+                            Ваш заказ успешно оформлен, номер заказа <a style="font-size: 14px;" v-bind:href="'/order-history/' + order_id">№:{{ order_id }}</a>
+                        </p>
+                        <p v-else class="container-title">Ваша корзина пуста!</p> 
+                    </span>
+            
+                    <div v-else>
+
+                        <div class="container pickup-step g-bb-fat">
+                            <div class="pickup-step__header">
+                                <div class="pickup-step__number _active">1</div>
+                                <h3 class="pickup-step__title">Способ доставки</h3>
+                            </div>
+                            <ul class="nav-pills g-bg-c0 g-bb0">
+                                <li @click="selectedCarrier(item)"
+                                    class="nav-pills__button g-ttu"
+                                    v-bind:class="{'_active': item.id == carrier.id}"
+                                    v-for="(item, index) in list_carriers">
+                                        {{ item.name }}
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="">
+
+                            <div class="pickup__delivery-text-wrapper container g-bb-fat">
+                                <span>
+                                    <span class="pickup-point__info-delivery-link">{{ carrier.name }}</span>  
+                                    {{ carrier.price > 0 ? ' - ' + carrier.format_price : ''}}
+                                    <br/>
+                                    <span class="pickup-point__date-delivery-label" v-html="carrier.delivery_text"></span>
+                                    <br/>
+                                    <a class="pickup__padding-top pickup-point__change-link g-mt0" href="/delivery-payment">Условия доставки</a>
+                                </span>
+                            </div>
+
+                        
+                            
+                            <p class="container-title">Контакты</p>
+                           
+                            <div class="pickup-delivery g-bb-fat">
+                                <div>
+                                        <div class="input" :class="{ '_has-value': user.phone, '_focused': focus.phone == 1, '_invalid': focus.phone == 2 && !user.phone }">
+                                            <label class="input__label">Телефон *</label>
+                                           
+                                            <input 
+                                                v-bind:disabled="_user"
+                                                class="input__input phone-mask" 
+                                                v-model="user.phone" 
+                                                @focus="focus.phone = 1" 
+                                                @blur="focus.phone = 2;user.phone = $event.target.value;"/>
+                                        </div>
+                                        <div class="input__has-error" v-if="focus.phone == 2">Пожалуйста, заполните это поле</div>
+                                </div>
+                                <div>
+                                    <div class="input" :class="{ '_has-value': user.email, '_focused': focus.email == 1, '_invalid': focus.email == 2 && !user.email }">
+                                        <label class="input__label">Email *</label>
+                                        <input 
+                                            v-bind:disabled="_user"
+                                            class="input__input" 
+                                            v-model="user.email" 
+                                            @focus="focus.email = 1" 
+                                            @blur="focus.email = 2"/>
+                                    </div>
+                                    <div class="input__has-error" v-if="focus.email == 2">Пожалуйста, заполните это поле</div>
+                                </div>
+                                <div>
+                                    <div class="input" :class="{ '_has-value': user.name, '_focused': focus.name == 1, '_invalid': focus.name == 2 && !user.name }">
+                                        <label class="input__label">Имя *</label>
+                                        <input 
+                                            v-bind:disabled="_user"
+                                            class="input__input" 
+                                            v-model="user.name" 
+                                            @focus="focus.name = 1" 
+                                            @blur="focus.name = 2"/>
+                                    </div>
+                                    <div class="input__has-error" v-if="focus.name == 2">Пожалуйста, заполните это поле</div>
+                                </div>
+                            </div>
+                            
+                            
+                            <span v-if="carrier.id == 1">
+                                <p class="container-title">Укажите адрес доставки</p>
+                                
+                                <div class="pickup-delivery g-bb-fat" v-if="addresses.length > 0">
+                                    <div>
+                                        <div class="input _focused">
+                                            <label class="input__label">Ваш адрес *</label>
+                                            <select v-model="address.id" class="input__select input__input" style="width: 100%">
+                                                <option value="0">Новый адрес</option>
+                                                <option v-bind:value="item.id" v-for="item in addresses">
+                                                    {{ item.city }} - {{ item.address }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="input__has-error" v-if="focus.address == 2">Пожалуйста, заполните это поле</div>
+                                    </div>
+                                </div>    
+                                
+                                <div class="pickup-delivery g-bb-fat" v-if="address.id == 0">
+                                    <div>
+                                        <div class="input" :class="{ '_has-value': address.address, '_focused': focus.address == 1, '_invalid': focus.address == 2 && !address.address }">
+                                            <label class="input__label">Адрес *</label>
+                                            <input 
+                                                class="input__input" 
+                                                v-model="address.address" 
+                                                @focus="focus.address = 1" 
+                                                @blur="focus.address = 2"/>
+                                        </div>
+                                        <div class="input__has-error" v-if="focus.address == 2">Пожалуйста, заполните это поле</div>
+                                    </div>
+                                    <div>
+                                        <div class="input" :class="{ '_has-value': address.city, '_focused': focus.city == 1, '_invalid': focus.city == 2 && !address.city }">
+                                            <label class="input__label">Город *</label>
+                                            <input 
+                                                class="input__input" 
+                                                v-model="address.city" 
+                                                @focus="focus.city = 1" 
+                                                @blur="focus.city = 2"/>
+                                        </div>
+                                        <div class="input__has-error" v-if="focus.city == 2">Пожалуйста, заполните это поле</div>
+                                    </div>
+                                </div>    
+                            </span>
+                            
+                            <p class="container-title">Оплата</p>
+                            <div class="container pickup-step g-bb-fat">
+                                <ul class="nav-pills g-bg-c0 g-bb0">
+                                    <li 
+                                        @click="selectedPayment(item)" 
+                                        v-for="item in list_payments" 
+                                        class="nav-pills__button g-ttu"
+                                        v-bind:class="{'_active': item.id == payment.id}">
+                                             {{ item.name }}
+                                             <!--<img width="20" v-bind:src="item.logo">-->
+                                    </li>
+                                </ul>
+                            </div>
+                            
+                           
+                            <p class="container-title">Комментарий к заказу</p> 
+                            <div class="pickup-delivery g-bb-fat">
+                                <div>
+                                        <div class="input" :class="{ '_has-value': comment, '_focused': focus.comment == 1 }">
+                                            <label class="input__label">Комментарий к заказу</label>
+                                             <textarea
+                                                   v-model="comment" 
+                                                   name="comment"
+                                                   @focus="focus.comment = 1" 
+                                                   @blur="focus.comment = 2"
+                                                   class="input__input"></textarea>
+                                        </div>
+                                        <div class="input__has-error" v-if="focus.comment == 2">Пожалуйста, заполните это поле</div>
+                                </div>
+                            </div>    
+                           
+                           
+                           <p class="container-title">Состав заказа</p> 
+                           
+                           
+                          <div v-for="(item, index) in list_cart">
+                              <div class="header-cart__content">
+                                    <a v-bind:href="item.product_url"class="header-cart__image-wrapper">
+                                        <img 
+                                            height="105" 
+                                            width="140" 
+                                            v-bind:src="item.product_photo"
+                                            v-bind:alt="item.product_name"
+                                            v-bind:title="item.product_name"
+                                            class="header-cart__image">
+                                    </a>
+                                    <div class="header-cart__info">
+                                        <h3 class="header-cart__name">
+                                            <a  v-bind:href="item.product_url" class="header-cart__name-link">
+                                                 {{ item.product_name }}
+                                            </a>
+                                        </h3>
+                                        <div class="header-cart__more-info" v-if="false">Гипермаркет шин ecar-kz</div>
+                                        <div class="header-cart__prices">
+                                            <div class="header-cart__debet">
+                                                <span class="header-cart__price">{{ item.product_specific_price }}</span>
+                                                <br/>
+                                                <span class="header-cart__price">{{ item.quantity }} шт. x {{ item.sum }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                              </div>
+                              <div class="container product-quantity g-bt-thin">
+                                    <div class="product-quantity__counter">
+                                            <button @click="decreaseProductQuantity(item, index)" class="product-quantity__counter-button _minus" :class="{'_disabled' : item.quantity == 1}"></button>
+                                            <div class="product-quantity__counter-number">
+                                                {{ item.quantity }}
+                                            </div>
+                                            <button  @click="increaseProductQuantity(item, index)" class="product-quantity__counter-button _plus"></button>
+                                            <div class="product-quantity__text">шт</div>
+                                    </div>
+                              </div>
+                              <div class="container text-center">
+                                 <a class="button" @click="deleteProductQuantity(item.product_id)">Удалить</a>
+                              </div>   
+                          </div> 
+                          
+                          <div class="header-cart__content">
+                                <div class="header-cart__info">
+                                    <p class="header-cart__total-info"><b>Доставка:</b> {{ carrier.format_price }}</p>
+                                    <p class="header-cart__total-info"><b>Количество:</b> {{ cart_total.quantity }}</p>
+                                    <p class="header-cart__total-info"><b>Итого:</b> {{ cart_total.sum }}</p>
+                                </div>
+                          </div>
+
+                          <div class="button-wrapper _fixed">
+                                <button class="button _big _space" @click="checkout">
+                                    <span class="ajax-loader">
+                                        <img v-show="checkout_wait" src="/site/images/ajax-loader.gif"/>
+                                        Оформить заказ
+                                    </span>
+                                </button>
+                          </div>
+                    
+                          <div></div>
+                    
+                        </div>
+                    </div>
+                </div>`,
+    props:['_user'],
+    data () {
+        return {
+            list_cart: [],
+            list_carriers: [],
+            list_payments: [],
+            addresses: this._user ? (this._user.addresses ? this._user.addresses : [])  : [],
+            cart_total: {
+                sum: 0,
+                quantity: 0
+            },
+            order_id: 0,
+
+            carrier: {},
+            payment: {},
+            address:{
+                id: 0,
+                city: '',
+                address: ''
+            },
+            user:{
+                phone:  this._user ? this._user.phone      : '',
+                email:  this._user ? this._user.email      : '',
+                name:   this._user ? this._user.name       : ''
+            },
+            comment: '',
+
+            checkout_wait: false,
+
+            focus:{
+                phone: 0,
+                email: 0,
+                name: 0,
+                address: 0,
+                city: 0,
+                comment: 0
+            }
+        }
+    },
+    updated () {
+
+    },
+    methods:{
+        selectedCarrier(item){
+            this.carrier = item;
+        },
+        selectedPayment(item){
+            this.payment = item;
+        },
+        listCart(){
+            axios.post('/list-cart').then((res)=>{
+                this.list_cart = res.data;
+            });
+        },
+        decreaseProductQuantity(item, index){
+            if(this.list_cart[index].quantity > 1)
+                this.cartSave(item.product_id, this.list_cart[index].quantity -1 );
+        },
+        increaseProductQuantity(item, index){
+            this.cartSave(item.product_id, this.list_cart[index].quantity + 1);
+        },
+        deleteProductQuantity(product_id){
+            axios.post('/cart-delete/' + product_id).then((res)=>{
+                if(res.data)
+                {
+                    this.listCart();
+                    this.cartTotal();
+                }
+            });
+        },
+        cartTotal(){
+            axios.get('/cart-total/' + (this.carrier.id ? this.carrier.id : 0)).then((res)=>{
+                this.cart_total.sum = res.data.sum;
+                this.cart_total.quantity = res.data.quantity;
+            });
+        },
+        cartSave(product_id, quantity){
+            axios.post('/cart-save', {product_id: product_id, quantity: quantity}).then((res)=>{
+                if(res.data)
+                {
+                    this.listCart();
+                    this.cartTotal();
+                }
+            });
+        },
+        checkPhoneNumber(num) {
+            return checkPhoneNumber();
+        },
+        async checkout(){
+            if(!this.checkout_wait)
+            {
+                this.checkout_wait = true;
+
+                var data = {
+                    carrier_id: this.carrier.id,
+                    payment_id: this.payment.id,
+                    address: {
+                        id:      this.address.id,
+                        city:    this.address.city,
+                        address: this.address.address
+                    },
+                    user: {
+                        phone: this.user.phone,
+                        email: this.user.email,
+                        name:  this.user.name
+                    },
+                    comment: this.comment
+                };
+
+                if (!this.checkPhoneNumber(this.user.phone))
+                    data.user.phone = ''
+
+                var self = this;
+
+                await axios.post('/checkout', data).then((res) => {
+                    var data = res.data;
+                    if (data) {
+                        self.order_id = data['order_id'];
+                        if (self.order_id) {
+                            self.list_cart = [];
+                            Swal({
+                                type: 'success',
+                                html: 'Номер заказа <a style="font-size: 20px;" href="/order-history/' + self.order_id + '">№:' + self.order_id + '</a>',
+                                title: 'Ваш заказ успешно оформлен'
+                            });
+                        }
+                    }
+                }).catch(function (error){
+                    swalErrors(error.response.data.errors, 'Ошибка 422');
+                });
+
+                this.checkout_wait = false;
+            }
+        }
+    },
+    watch: {
+        carrier: {
+            handler: function (val, oldVal) {
+                this.cartTotal();
+            },
+            deep: true
+        }
+    },
+    created(){
+
+        this.listCart();
+        this.cartTotal();
+
+        axios.post('/list-carriers').then((res)=>{
+            if(res.data){
+                this.list_carriers = res.data;
+                this.carrier = this.list_carriers[0];
+            }
+        });
+
+        axios.post('/list-payments').then((res)=>{
+            if(res.data)
+                this.list_payments = res.data;
+            this.payment = this.list_payments[0];
+        });
+
+        setTimeout(function() {
+            $(".phone-mask").mask("+7(999) 999-9999");
+        }, 2000);
+
+    },
+    updated(){
+
+    }
+
+});
 
 const app = new Vue({
     el: '#app',
     data: {
         componentDialog: '',
         open_sort_catalog: false,
-        showFilters: false
+        showFilters: false,
+        buyIn1Click:{
+            product_id: 0,
+            user_name: '',
+            user_email: '',
+            user_phone: ''
+        }
     },
     methods:{
         catalogSort(sort){

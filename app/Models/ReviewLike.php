@@ -16,12 +16,9 @@ class ReviewLike extends Model
         'updated_at'
     ];
 
-    public function scopeSearchVisitNumber($query, $visit_number = '')
+    public function scopeSearchVisitNumber($query)
     {
-        if(empty($visit_number))
-            $visit_number = Helpers::getVisitNumber();
-
-        $query->where('visit_number', $visit_number);
+        $query->where('visit_number', Helpers::getVisitNumber());
         return $query;
     }
 

@@ -19,7 +19,7 @@ class CheckoutRequest extends FormRequest
         {
             $rules['user.email'] = 'required|max:255';
             $rules['user.name']  = 'required|max:255';
-            $rules['user.phone'] = 'required|max:17|min:17';
+            $rules['user.phone'] = 'required';
         }
 
         if($this->input('carrier_id', 0) == 1)

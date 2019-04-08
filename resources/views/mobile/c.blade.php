@@ -6,7 +6,11 @@
 
 @section('content')
 
-    @include('mobile.includes.topbar', ['class' => '', 'title' => $category->name])
+    @include('mobile.includes.topbar', [
+        'class'       => '',
+        'title'       => $category->name,
+        'search_show' => true
+    ])
 
     <div class="categories">
 
@@ -49,5 +53,7 @@
         </div>
 
     </div>
+
+    @include('mobile.includes.footer')
 
 @endsection

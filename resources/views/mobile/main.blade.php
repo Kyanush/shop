@@ -11,7 +11,7 @@
         <h1 class="topbar__heading ">
             <a href="/" class="topbar__heading-link">
                 <i class="topbar__heading-logo _icon"></i>
-                {{ env('APP_NAME') }}
+                OnePoint.kz
             </a>
         </h1>
         <a href="/login" class="topbar__icon icon icon_user"></a>

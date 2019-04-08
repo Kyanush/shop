@@ -6,6 +6,12 @@
             <div class="swiper-container" id="product-slider">
                 <div class="swiper-wrapper">
 
+                    <div class="swiper-slide">
+                        <div class="item__image-wrapper">
+                            <img alt="{{ $product->name }}" title="{{ $product->name }}" class="item__image" src="{{ $product->pathPhoto(true) }}"/>
+                        </div>
+                    </div>
+
                     @foreach($product->images as $image)
                         <div class="swiper-slide">
                             <div class="item__image-wrapper">
@@ -23,7 +29,10 @@
                     @endif
 
                 </div>
-                <div class="swiper-pagination"></div>
+
+                @if(count($product->images) > 0)
+                    <div class="swiper-pagination"></div>
+                @endif
             </div>
 
 
@@ -74,11 +83,21 @@
             <h1 class="item__name">
                 {{ $product->name }}
             </h1>
-            <a href="?v=reviews" class="item__rating">
+            <a class="item__rating">
                 <span class="rating _{{ ($product->avgRating->avg_rating ?? 0) * 2}}"></span>
                 <span class="rating-count">(<span> {{ $product->reviews_count }}</span>&nbsp;отзывов)</span>
             </a>
             <div class="item__sku">Код товара:&nbsp;{{ $product->sku }}</div>
+        </div>
+
+        <div class="item__info container text-center">
+            <?php $user = Auth::user();?>
+            <button
+                    type="button"
+                    class="button _white"
+                    onclick="buyIn1Click({{ $product->id }}, '{{ $user->name ?? '' }}', '{{ $user->email ?? '' }}', '{{ $user->phone ?? '' }}')">
+                Купить в 1 клик
+            </button>
         </div>
 
         <div class="item__prices">
@@ -93,12 +112,16 @@
                     {{ \App\Tools\Helpers::priceFormat($product->getReducedPrice()) }}
                 </span>
             </div>
+            <!--
             <div class="item__instalment">
                 <span class="item__prices-title">В кредит</span>
                 <span class="item__prices-price">19 654 ₸</span>
                 <span class="item__add-info">х24 мес</span>
-            </div>
+            </div>-->
         </div>
+
+
+
 
     </div>
 
@@ -143,6 +166,11 @@
             <div class="short-specifications container">
                 <ul class="short-specifications__list">
                     @foreach($product->attributes as $k => $attribute)
+
+                        @if(empty($attribute->attribute_group_id))
+                            @continue
+                        @endif
+
                         <li class="short-specifications__list-el">{{ $attribute->name }}: {{ $attribute->pivot->value }};</li>
                         @if($k == 5)
                             @php break; @endphp
@@ -204,9 +232,9 @@
             @include('mobile.includes.product_slider', ['products' => $products_interested, 'title' => 'С этим товаром покупаю', 'url' => ''])
             @include('mobile.includes.product_slider', ['products' => $youWatchedProducts,  'title' => 'Вы смотрели', 'url' => ''])
 
-            <a href="" class="button _big-fixed button-sellers">
-                КУПИТЬ
-            </a>
+            <button type="button" class="button _big-fixed button-sellers" onclick="_addToCart({{ $product->id }})">
+                Оформить заказ
+            </button>
 
         </div>
     </div>

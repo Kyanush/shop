@@ -1,6 +1,6 @@
 @extends('layouts.site')
 
-<?php $title = 'История заказов';?>
+<?php $title = 'Мои заказы';?>
 @section('title', $title)
 @section('description', $title)
 @section('keywords', $title)

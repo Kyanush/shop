@@ -1,8 +1,6 @@
 {{ \App\Tools\Helpers::generateVisitNumber() }}
 
 <!DOCTYPE html>
-<!-- saved from url=(0022)https://kaspi.kz/shop/ -->
-
 <html lang="ru" class="js" prefix="og: http://ogp.me/ns#"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 
@@ -13,7 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="yandex-verification" content="d9d1d901f0c53a09" />
     <meta name="google-site-verification" content="YOGU9Dh4gfT8os5uvRCSuQ_kwUhoUbXwqQFiNshBSHw" />
-    <link rel="icon" type="image/png" href="/site/images/logo_firm.png" />
+    <link rel="icon" type="image/png" href="/mobile/img/logo.png" />
 
 
     <title>@yield('title')</title>
@@ -61,6 +59,13 @@
     <link rel="stylesheet" type="text/css" href="/site/sweetalert2/sweetalert2.min.css">
     <!---- sweetalert2  ----->
 
+    <!-- Mask --->
+    <script type="text/javascript" src="/site/js/jquery.maskedinput.min.js"></script>
+    <!-- Mask --->
+
+    <meta name="yandex-verification" content="d9d1d901f0c53a09" />
+    <meta name="google-site-verification" content="YOGU9Dh4gfT8os5uvRCSuQ_kwUhoUbXwqQFiNshBSHw" />
+
 </head>
 
 
@@ -90,6 +95,8 @@
 
 <script src="/global/script.js"></script>
 <script type="text/javascript" src="/mobile/js/script.js?r={{rand(1, 1000000000)}}"></script>
+
+@include('includes.analytics')
 
 </body>
 </html>

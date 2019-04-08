@@ -197,9 +197,7 @@
                                     <div class="cart_rumi_table_tab_header">
                                         {{ item.name }} {{ item.format_price }}
                                     </div>
-                                    <div class="cart_rumi_table_tab_text">
-                                        {{ item.delivery_text }}
-                                    </div>
+                                    <div class="cart_rumi_table_tab_text" v-html="item.delivery_text"></div>
                                 </div>
                             </div>
                             <div style="clear: left"></div>

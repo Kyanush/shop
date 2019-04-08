@@ -474,12 +474,9 @@
 <script type="text/javascript" src="/site/product_slider/script.js"></script>
 <!-- product slider --->
 
-<!-- Mask --->
-<script type="text/javascript" src="/site/js/jquery.maskedinput.min.js"></script>
-<!-- Mask --->
 
-<script src="/global/script.js"></script>
-<script src="/site/js/script.js"></script>
+
+
 
 @yield('end_scripts')
 
@@ -497,7 +494,13 @@
 
 @include('includes.analytics')
 
+<!-- Mask --->
+<script type="text/javascript" src="/site/js/jquery.maskedinput.min.js"></script>
+<!-- Mask --->
 
+
+<script src="/global/script.js"></script>
+<script src="/site/js/script.js"></script>
 
 </body>
 </html>

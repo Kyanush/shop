@@ -12,15 +12,30 @@
 
 
     @if(empty($product_tab))
-        @include('mobile.includes.topbar', ['class' => 'g-bb0 g-bg-c0', 'title' => ''])
+        @include('mobile.includes.topbar', [
+            'class'       => 'g-bb0 g-bg-c0',
+            'title'       => '',
+            'search_show' => true
+        ])
     @elseif($product_tab == 'attributes')
-        @include('mobile.includes.topbar', ['class' => '_fixed', 'title' => 'Характеристики', 'go_back' => $product->detailUrlProduct()])
+        @include('mobile.includes.topbar', [
+            'class'       => '_fixed',
+            'title'       => 'Характеристики',
+            'search_show' => true
+        ])
     @elseif($product_tab == 'reviews')
-        @include('mobile.includes.topbar', ['class' => '_fixed _fixed-top', 'title' => 'Отзывы', 'go_back' => $product->detailUrlProduct()])
+        @include('mobile.includes.topbar', [
+            'class'       => '_fixed _fixed-top',
+            'title'       => 'Отзывы',
+            'search_show' => true
+        ])
     @elseif($product_tab == 'descriptions')
-        @include('mobile.includes.topbar', ['class' => '_fixed', 'title' => 'Описание', 'go_back' => $product->detailUrlProduct()])
+        @include('mobile.includes.topbar', [
+            'class'       => '_fixed',
+            'title'       => 'Описание',
+            'search_show' => true
+        ])
     @endif
-
 
 
     @if(empty($product_tab))

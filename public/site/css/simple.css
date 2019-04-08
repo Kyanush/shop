@@ -1339,7 +1339,7 @@ input[type=text], input[type=email],input[type=tel],input[type=phone],input[type
     color: #000;
 }
 .cart_rumi_table_tabs .cart_rumi_table_tab .cart_rumi_table_tab_text {
-    font-size: 15px;
+    font-size: 10px;
     color: #848484;
     font-weight: 300;
     margin-top: 3px;

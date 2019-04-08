@@ -27,9 +27,37 @@
                 </span>
             </div>
             <div class="item-card__instalment">
+
+                    @foreach($product->attributes as $attribute)
+                        @if($attribute->id == 49 and $attribute->pivot->value)
+                            @if($attribute->pivot->value == 'Хит')
+                                <div class="hit"><img src="/site/images/sticker_hit.png"> Хит</div>
+                            @endif
+                            @if($attribute->pivot->value == 'New!')
+                                <div class="new">New!</div>
+                            @endif
+                        @endif
+                    @endforeach
+
+                <!--
+                <span onclick="productFeaturesWishlist(this)"
+                   class="product_features_wishlist {{ $product->oneProductFeaturesWishlist ? 'active' : '' }}"
+                   product_id="{{ $product->id }}"
+                   product_url="{{ $product->detailUrlProduct() }}"
+                   product_name="{{ $product->name }}"
+                   tabindex="0"></span>
+
+                <span onclick="productFeaturesCompare(this)"
+                      class="product_features_compare {{ $product->oneProductFeaturesCompare  ? 'active' : '' }}"
+                      product_id="{{ $product->id }}"
+                      product_url="{{ $product->detailUrlProduct() }}"
+                      product_name="{{ $product->name }}"></span>
+--->
+                <!--
                 <span class="item-card__prices-title">В рассрочку</span>
                 <span class="item-card__prices-price">3 067 ₸</span>
                 <span class="item-card__add-info"> x 3 мес </span>
+                -->
             </div>
         </div>
     </div>

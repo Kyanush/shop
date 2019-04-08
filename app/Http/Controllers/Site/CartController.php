@@ -58,7 +58,7 @@ class CartController extends Controller
     }
 
     public function checkout(){
-        return view('site.checkout');
+        return view(Helpers::isMobile() ? 'mobile.checkout' : 'site.checkout');
     }
 
     public function listCart(){

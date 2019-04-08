@@ -21,6 +21,16 @@ class CatalogController extends Controller
         $this->serviceProduct = $serviceProduct;
     }
 
+    public function c($category){
+
+        $category = Category::where('url', $category)->first();
+
+        return view('mobile.c', [
+            'category' => $category
+        ]);
+
+    }
+
     public function catalog($category = ''){
         $filters = Helpers::filtersProductsDecodeUrl($category);
 
@@ -49,7 +59,7 @@ class CatalogController extends Controller
                             ->filters($filters)
                             ->filtersAttributes($filters)
                             ->OrderBy($column, $order)
-                            ->paginate(16);
+                            ->paginate(16)->onEachSide(1);
 
         $productsHitViewed = Product::productInfoWith()
                                     ->filters($category ? ['category' => $category] : [])
@@ -72,7 +82,8 @@ class CatalogController extends Controller
             $listCategoryFilterLinks = $serviceCategory->listCategoryFilterLinks($category->id);
         }
 
-        return view('site.catalog', [
+
+        return view(Helpers::isMobile() ? 'mobile.catalog' : 'site.catalog', [
             'products' => $products,
             'youWatchedProducts' => $youWatchedProducts,
             'productsHitViewed' => $productsHitViewed,
@@ -84,8 +95,5 @@ class CatalogController extends Controller
         ]);
     }
 
-    public function filters(){
-
-    }
 
 }

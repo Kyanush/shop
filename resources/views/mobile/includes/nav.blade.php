@@ -5,10 +5,17 @@
         <div class="kaspi-menu__header">
             <div class="mount-kaspi-menu-auth">
                 <div class="kaspi-menu__signin">
-                    <i class="kaspi-menu__signin-icon icon icon_user"></i>
-                    <a style="color: #fff;text-decoration: none;" href="/login">Вход</a>
-                    /
-                    <a style="color: #fff;text-decoration: none;" href="/register">Регистрация</a>
+
+                    @auth
+                        <i class="kaspi-menu__signin-icon icon icon_close"></i>
+                        <a style="color: #fff;text-decoration: none;" href="/logout">Выйти</a>
+                    @else
+                        <i class="kaspi-menu__signin-icon icon icon_user"></i>
+                        <a style="color: #fff;text-decoration: none;" href="/login">Вход</a>
+                        /
+                        <a style="color: #fff;text-decoration: none;" href="/register">Регистрация</a>
+                    @endauth
+
                 </div>
             </div>
             <!--
@@ -29,15 +36,15 @@
                        'title' => 'Акции',
                        'link'  => '/specials'
                    ],
-                   [
-                       'title' => 'Доставка, оплата',
-                       'link'  => '/delivery-payment'
-                   ],
-                   [
-                       'title' => 'Гарантия',
-                       'link'  => '/guaranty'
-                   ],
 
+                   [
+                       'title' => 'Мои заказы',
+                       'link'  => '/order-history'
+                   ],
+                   [
+                       'title' => 'Корзина',
+                       'link'  => '/checkout',
+                   ],
                    [
                        'title' => 'Мои закладки',
                        'link'  => '/wishlist',
@@ -47,8 +54,12 @@
                        'link'  => '/compare-products',
                    ],
                    [
-                       'title' => 'Корзина',
-                       'link'  => '/checkout',
+                       'title' => 'Гарантия',
+                       'link'  => '/guaranty'
+                   ],
+                   [
+                       'title' => 'Доставка, оплата',
+                       'link'  => '/delivery-payment'
                    ],
                    [
                        'title' => 'Контакты',
@@ -59,6 +70,18 @@
                        'link' => '/about',
                    ]
                ];
+
+               if(Auth::check())
+               {
+                   $menu[] = [
+                       'title' => 'Личный кабинет',
+                       'link' => '/my-account',
+                   ];
+                   $menu[] = [
+                       'title' => 'Изменить пароль',
+                       'link' => '/change-password',
+                   ];
+               }
             ?>
 
             @foreach($menu as $item)
@@ -68,6 +91,10 @@
                     </a>
                 </li>
             @endforeach
+
+
+
+
 
             <!--
             <li class="kaspi-menu__item kaspi-menu__item-apps">

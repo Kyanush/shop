@@ -8,6 +8,7 @@
 
 namespace App\Tools;
 
+use Mobile_Detect;
 
 class Helpers
 {
@@ -190,6 +191,7 @@ class Helpers
 
     public static function colorProduct($value){
         $colors = [
+            'Gold'=>		'#EC8902',
             'Золотой'=>		'#EC8902',
             'Красный'=>		'#D81D16',
             'Розовое золото'=>		'#E6BEB6',
@@ -207,7 +209,7 @@ class Helpers
             'Фиолетовый'=>		'#6D068F',
             'Черный'=>		'#000'
         ];
-        return $colors[$value];
+        return $colors[$value] ?? '#fff';
     }
 
     public static function ruDateFormat($date)
@@ -251,6 +253,15 @@ class Helpers
         return number_format($price, 0, ',', ' ') . ' ₸';
     }
 
+    public static function isMobile(){
+        //return false;
+        //mobile
+        $detect = new Mobile_Detect();
+        if($detect->isMobile())
+            return true;
+        else
+            return false;
+    }
 
 
 }

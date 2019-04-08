@@ -9,7 +9,7 @@ function gerArrayFilters() {
     return filter;
 }
 
-function urlParamsGenerate(location_href){
+function urlParamsGenerate(){
 
     var filter = gerArrayFilters();
 
@@ -48,10 +48,7 @@ function urlParamsGenerate(location_href){
 
     var base_url = baseUrl();
 
-    if(location_href)
-        location.href = base_url + (params ? '/filters/' + params : '');
-    else
-        return params;
+    location.href = base_url + (params ? '/filters/' + params : '');
 }
 
 function filtersClear() {
@@ -59,14 +56,16 @@ function filtersClear() {
 }
 
 function baseUrl() {
-    var url = window.location.href;
+    var url = window.location.origin + window.location.pathname;;
     url =  url.split('/');
-    return url[0] + '//' + url[2] + '/' + url[3] + '/' + url[4];
+    url = url[0] + '//' + url[2] + '/' + url[3] + (url[4] ? '/' + url[4] : '')
+
+    return url;
 }
 
 $(document).ready(function() {
     $('.sort_select').on('change', function () {
-        urlParamsGenerate(true);
+        urlParamsGenerate();
     });
 });
 
@@ -75,6 +74,9 @@ function getCsrfToken() {
 }
 
 function productFeaturesWishlist(self){
+
+
+
     var product_id   = $(self).attr('product_id');
     var product_url  = $(self).attr('product_url');
     var product_name = $(self).attr('product_name');
@@ -116,6 +118,9 @@ function productFeaturesWishlist(self){
 
 }
 function productFeaturesCompare(self){
+
+
+
     var product_id   = $(self).attr('product_id');
     var product_url  = $(self).attr('product_url');
     var product_name = $(self).attr('product_name');
@@ -199,3 +204,56 @@ function productReviewSetLike(review_id, like, callback){
         }
     });
 }
+
+
+function addToCart(product_id) {
+    product_id = parseInt(product_id);
+    if(product_id > 0)
+    {
+
+        var result = false;
+        $.ajax({
+            async: false,
+            url: '/cart-save',
+            type: 'post',
+            data: {
+                product_id: product_id,
+                _token: getCsrfToken()
+            },
+            dataType: 'json',
+            success: function(data) {
+                result = true;
+            }
+        });
+
+        return result;
+    }else{
+        alert('Error');
+    }
+}
+
+function swalErrors(errors_array, title, type) {
+
+    if(!title)
+        title = 'Ошибка';
+
+    if(!type)
+        type = 'error';
+
+    var errors_html = '';
+    $.each(errors_array, function(index, value) {
+        errors_html += value + '<br/>';
+    });
+
+    Swal({
+        type:  type,
+        title: title,
+        html: errors_html
+    });
+}
+
+
+$(document).ready(function() {
+    if($(".phone-mask").length > 0)
+        $(".phone-mask").mask("+7(999) 999-9999");
+});

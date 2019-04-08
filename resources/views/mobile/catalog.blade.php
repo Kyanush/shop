@@ -17,7 +17,11 @@ if(strpos(url()->current(), '/specials') !== false)
 
 @section('content')
 
-        @include('mobile.includes.topbar', ['class' => '_fixed', 'title' => $category->name])
+        @include('mobile.includes.topbar', [
+            'class'       => '_fixed',
+            'title'       => $category->name ?? 'Каталог',
+            'search_show' => true
+        ])
 
         @include('mobile.includes.space', ['style' => ''])
 
@@ -90,11 +94,9 @@ if(strpos(url()->current(), '/specials') !== false)
             @include('mobile.includes.space', ['style' => 'height: 36.273vw;'])
 
             <div class="catalog-grid _list _top">
-
                 @foreach($products as $product)
                     @include('mobile.includes.product_item', ['product' => $product])
                 @endforeach
-
             </div>
 
             {!! $products->links("pagination::mobile") !!}
@@ -107,5 +109,7 @@ if(strpos(url()->current(), '/specials') !== false)
 
         <input id="productsAttributesFilters" type="hidden" value='<?=json_encode($productsAttributesFilters);?>'/>
         <input id="filters"                   type="hidden" value='<?=json_encode($filters);?>'/>
+
+        @include('mobile.includes.footer')
 
 @endsection

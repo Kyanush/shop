@@ -912,12 +912,7 @@
     .contact_pickup_point_information_minibuttons > div {
         width: 25%;
     }
-    .garanty_service > div {
-        height: 141px;
-    }
-    .garanty_srok_blocks {
-        padding: 18px 10px;
-    }
+
     .empty_search_results_right {
         padding-right:65px;
     }
@@ -3172,28 +3167,7 @@
         height: auto;
         margin-top: -70px;
     }
-    .garanty_step {
-        width: 100%;
-        margin-bottom: 25px;
-    }
-    .garanty_top {
-        padding-bottom: 0px;
-    }
-    .garanty_srok_blocks {
-        padding: 18px 20px;
-    }
-    .garanty_srok_one_block {
-        width: 100%;
-        height: auto;
-        margin-bottom: 20px;
-    }
-    .garanty_service > div {
-        width: 100%;
-        height: auto;
-    }
-    .garanty_service_block2 > div {
-        border-right: none;
-    }
+
     .empty_search_results_left {
         width: 100%;
     }

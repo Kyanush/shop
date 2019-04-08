@@ -1,5 +1,3 @@
-$(".phone-mask").mask("+7(999) 999-9999");
-
 $(document).ready(function() {
 
 
@@ -488,25 +486,7 @@ $(document).ready(function() {
 });
 
 
-function swalErrors(errors_array, title, type) {
 
-    if(!title)
-        title = 'Ошибка';
-
-    if(!type)
-        type = 'error';
-
-    var errors_html = '';
-    $.each(errors_array, function(index, value) {
-        errors_html += value + '<br/>';
-    });
-
-    Swal({
-        type:  type,
-        title: title,
-        html: errors_html
-    });
-}
 
 
 /** Слайдер товара **/
@@ -855,31 +835,6 @@ function oneClickOrder(self) {
 
 }
 
-function addToCart(product_id) {
-    product_id = parseInt(product_id);
-    if(product_id > 0)
-    {
-
-        var result = false;
-        $.ajax({
-            async: false,
-            url: '/cart-save',
-            type: 'post',
-            data: {
-                product_id: product_id,
-                _token: getCsrfToken()
-            },
-            dataType: 'json',
-            success: function(data) {
-                result = true;
-            }
-        });
-
-        return result;
-    }else{
-        alert('Error');
-    }
-}
 
 function addToCartInList(self){
     $(self).addClass('added');

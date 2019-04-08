@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 
 use App\Requests\ChangePasswordRequest;
 use App\Requests\SaveAccountEditRequest;
+use App\Tools\Helpers;
 use Illuminate\Support\Facades\Auth;
 use Redirect;
 
@@ -19,12 +20,12 @@ class UserController extends Controller
 
     public function myAccount(){
         $user = Auth::user();
-        return view('site.my_account', ['user' => $user]);
+        return view(Helpers::isMobile() ? 'mobile.my_account' : 'site.my_account', ['user' => $user]);
     }
 
     public function accountEdit(){
         $user = Auth::user();
-        return view('site.account_edit', ['user' => $user]);
+        return view(Helpers::isMobile() ? 'mobile.account_edit' : 'site.account_edit', ['user' => $user]);
     }
 
     public function accountEditSave(SaveAccountEditRequest $request){
@@ -39,7 +40,7 @@ class UserController extends Controller
     }
 
     public function changePassword(){
-        return view('site.change-password');
+        return view(Helpers::isMobile() ? 'mobile.change-password' : 'site.change-password');
     }
 
     public function changePasswordSave(ChangePasswordRequest $request){
@@ -48,7 +49,5 @@ class UserController extends Controller
             $user->save();
             return Redirect::back()->with('success', 'Ваш пароль успешно изменен');
     }
-
-
 
 }

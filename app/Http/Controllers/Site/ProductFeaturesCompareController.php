@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\AttributeGroup;
 use App\Services\ServiceProductFeaturesCompare;
+use App\Tools\Helpers;
 use Redirect;
 
 class ProductFeaturesCompareController extends Controller
@@ -35,7 +36,7 @@ class ProductFeaturesCompareController extends Controller
         $productFeaturesCompareList = $this->servicePFC->productFeaturesCompareList();
 
 
-        return view('site.compare_products', [
+        return view(Helpers::isMobile() ? 'mobile.compare_products' : 'site.compare_products', [
             'attributeGroups' => $attributeGroups,
             'productFeaturesCompareList' => $productFeaturesCompareList
         ]);
