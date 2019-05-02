@@ -32,7 +32,7 @@ axios.interceptors.response.use(function (response) {
     if(res.data === '')
         Vue.helper.swalError('Пустой результат');
     else if(!res.data)
-        Vue.helper.swalError('Ошибка!');
+        console.log(['Ошибка!', res.data]);
 
     return response;
 }, function (error) {
@@ -60,7 +60,7 @@ axios.interceptors.response.use(function (response) {
             store.dispatch('SetErrors', errors);
             Vue.helper.swalError(store.getters.ListErrors);
         }else
-            alert('Ошибка!');
+            console.log(['Ошибка!', res.data]);
 
     }else if(status == 500){
         if(res.data.message.indexOf('foreign key') !== -1){
@@ -72,7 +72,7 @@ axios.interceptors.response.use(function (response) {
         if(res.data === '')
             Vue.helper.swalError('Пустой результат');
         else if(!res.data)
-            Vue.helper.swalError('Ошибка!');
+            console.log(['Ошибка!', res.data]);
     }
 
     return error;

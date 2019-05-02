@@ -18,7 +18,8 @@ class MainController extends Controller
         $productsRecommend = Product::productInfoWith()
             ->filtersAttributes(['rekomenduemoe_dlya_vas' => 'da'])
             ->limit(10)
-            ->OrderBy('id', 'DESC')
+            //->OrderBy('id', 'DESC')
+            ->inRandomOrder()
             ->get();
 
 
@@ -28,21 +29,24 @@ class MainController extends Controller
                 })
                 ->withCount('reviews')
                 ->limit(10)
-                ->OrderBy('id', 'DESC')
+                //->OrderBy('id', 'DESC')
+                ->inRandomOrder()
                 ->get();
 
 
         $productsHit = Product::productInfoWith()
                 ->filtersAttributes(['tipy_tovarov' => 'hit'])
                 ->limit(10)
-            ->OrderBy('id', 'DESC')
+                //->OrderBy('id', 'DESC')
+                ->inRandomOrder()
                 ->get();
 
 
         $productsNew = Product::productInfoWith()
                     ->filtersAttributes(['tipy_tovarov' => 'new'])
                     ->limit(10)
-                    ->OrderBy('id', 'DESC')
+                    //->OrderBy('id', 'DESC')
+                    ->inRandomOrder()
                     ->get();
 
         return view(Helpers::isMobile() ? 'mobile.main' : 'site.main',

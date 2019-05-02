@@ -1191,7 +1191,7 @@ img {
 }
 
 img[data-src] {
-    opacity: 0;
+    /*opacity: 0;*/
 }
 
 .wrapper.g-ttl-move:before {
@@ -2546,7 +2546,11 @@ img[data-src] {
     overflow-x: auto;
     white-space: nowrap;
 }
-
+.description img{
+    max-width: 100%!important;
+    width: auto!important;
+    height: auto!important;
+}
 .description table tbody {
     display: table;
     width: 100%;
@@ -2559,8 +2563,8 @@ img[data-src] {
 
 .description iframe,.description img {
     /*width: calc(100% + 8vw)!important;*/
-    margin: 0 -4vw 5.333vw;
-    display: block;
+    /*margin: 0 -4vw 5.333vw;*/
+    /*display: block;*/
 }
 
 .description iframe:last-child,.description img:last-child {
@@ -4760,10 +4764,16 @@ img[data-src] {
 
 .lightbox__thumbs {
     position: relative;
-    display: flex;
+    /*display: flex;*/
     align-items: center;
     justify-content: center;
     height: 17.333vw;
+
+    text-align: center;
+    padding-top: 10px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
 }
 
 .lightbox__thumb-focus {
@@ -4776,9 +4786,10 @@ img[data-src] {
 }
 
 .lightbox__thumb-wrapper {
-    width: 16vw;
+    width: 70px;
     margin-right: 2.667vw;
     text-align: center;
+    display: inline-block;
 }
 
 .lightbox__thumb-wrapper._video:after {
@@ -8025,8 +8036,18 @@ div,h1,h2,h3,h4,h5,h6,label,p,span {
     font-weight: bold;
 }
 /*************** Сравнение товаров ************/
-
-
+.padding-4vw{
+    padding: 0 4vw;
+}
+#back-call{
+    position: fixed;
+    right: 20px;
+    bottom: 90px;
+    z-index: 2;
+}
+#back-call img{
+    width: 60px;
+}
 
 
 /**************************** My code *****************************/

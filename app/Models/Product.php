@@ -31,7 +31,9 @@ class Product extends Model
         'seo_description',
     	'created_at',
     	'updated_at',
-        'active'
+        'active',
+        'youtube',
+        'view_count'
 	];
 
     public function scopeIsActive($query){

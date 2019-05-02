@@ -8,6 +8,12 @@
 .red{
     color: red;
 }
+.new-orders-count{
+    background-color: #F44336;
+    position: absolute;
+    top: 11px;
+    left: 95px;
+}
 .green{
     color: #00ba00;
 }

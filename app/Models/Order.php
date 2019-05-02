@@ -183,6 +183,8 @@ class Order extends Model
     }
 
 
-
+    public function scopeNew($query){
+        return $query->where('status_id', 1);
+    }
 
 }

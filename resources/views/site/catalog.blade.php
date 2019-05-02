@@ -9,6 +9,8 @@ if(strpos(url()->current(), '/specials') !== false)
     $catalog_url = 'specials';
     $default_title = 'Скидки';
 }
+
+
 ?>
 
 @section('title',    	 $category ? $category->name : $default_title)

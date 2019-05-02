@@ -20,10 +20,10 @@
                         </div>
                     @endforeach
 
-                    @if(!empty($product->attributes[200]->pivot->value))
+                    @if($product->youtube)
                         <div class="swiper-slide">
                             <div class="item__image-wrapper _video play-icon">
-                                <img class="item__image" src="https://i.ytimg.com/vi/{{ $product->attributes[200]->pivot->value }}/mqdefault.jpg">
+                                <img class="item__image" src="https://i.ytimg.com/vi/{{ $product->youtube }}/mqdefault.jpg">
                             </div>
                         </div>
                     @endif
@@ -37,15 +37,15 @@
 
 
             <div class="item__control">
-                @if(!empty($product->attributes[200]->pivot->value))
-                    <div class="item__control-button _video _show">
+                @if($product->youtube)
+                    <div class="item__control-button _video _show"onclick="productSliderZoom({{ $product->id }})" style="z-index: 1">
                         <i class="icon icon_video"></i>
                         <span>Видео</span>
                     </div>
                 @else
                     <div class="item__control-button"></div>
                 @endif
-                <div class="item__control-button _zoom _show">
+                <div class="item__control-button _zoom _show" onclick="productSliderZoom({{ $product->id }})" style="z-index: 1">
                     <span>Увеличить</span>
                     <i class="icon icon_zoom"></i>
                 </div>
@@ -203,7 +203,7 @@
             </div>
 
             @if(count($product->reviews) == 0)
-                <p>Нет отзывы</p>
+                <p class="padding-4vw">Нет отзывы</p>
             @else
                 @foreach($product->reviews as $review)
                     @include('mobile.product.review_item', ['review' => $review, 'like_show' => false, 'review_text_class' => '_short'])

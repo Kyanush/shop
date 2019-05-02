@@ -21,6 +21,7 @@ class SaveProductRequest extends FormRequest
             'product.sku'         => 'max:100|unique:products,sku' . ($product_id ? (',' . $product_id . ',id') : ''),
             'product.stock'       => 'integer',
             'product.active'      => 'required|integer|min:0|max:1',
+            'product.youtube'     => 'max:25',
 
             'categories'          => 'required|exists:categories,id',
             'categories.*'        => 'required|exists:categories,id',
@@ -74,6 +75,7 @@ class SaveProductRequest extends FormRequest
             'product.sku'         => "'SKU'",
             'product.stock'       => "'Количество на складе'",
             'product.active'      => "'Статус'",
+            'product.youtube'     => "'YouTube'",
 
             'photo'       => "'Фото товара'",
 

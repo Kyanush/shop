@@ -32,6 +32,7 @@ class CatalogController extends Controller
     }
 
     public function catalog($category = ''){
+
         $filters = Helpers::filtersProductsDecodeUrl($category);
 
         $filters['active'] = 1;
@@ -75,6 +76,7 @@ class CatalogController extends Controller
 
         //категория
         $category = Category::where('url', $category)->first();
+
         $listCategoryFilterLinks = null;
         if($category)
         {

@@ -83,6 +83,10 @@ $(document).ready(function() {
         app.componentDialog = 'write-review';
     });
 
+    $('#back-call').click(function(e) {
+        app.componentDialog = 'back-call';
+    });
+
 });
 
 function checkPhoneNumber(num) {
@@ -108,6 +112,11 @@ function buyIn1Click(product_id, user_name, user_email, user_phone){
     app.componentDialog = 'buy-in-1-click';
 }
 
+function productSliderZoom(product_id){
+    app.componentDialog = 'product_slider_zoom';
+    app.productSliderZoom.product_id = product_id;
+}
+
 function _addToCart(product_id){
     if(addToCart(product_id))
     {
@@ -129,6 +138,221 @@ function _addToCart(product_id){
 }
 
 Vue.config.productionTip = false;
+
+
+Vue.component('product_slider_zoom', {
+    data: function() {
+        return{
+            images: [],
+            photo: '',
+            youtube: '',
+            swiper: null
+        }
+    },
+    template: `
+           <div class="dialog">
+               <div class="topbar container g-bn">
+                    <a class="topbar__icon icon icon_close" @click="close"></a>
+               </div>
+               <div class="dialog__content">
+                  <div class="lightbox">
+                     <div class="lightbox__images container">
+                        <div class="swiper-container" id="ffffffff">
+                           <div class="swiper-wrapper">
+                              
+                              <div class="swiper-slide">
+                                <div class="lightbox__image-wrapper">
+                                    <img :src="photo" class="lightbox__image">
+                                </div>
+                              </div>
+                              
+                              
+                              <div class="swiper-slide" v-for="image in images">
+                                <div class="lightbox__image-wrapper">
+                                    <img :src="image" class="lightbox__image">
+                                </div>
+                              </div>
+                              
+                              <div class="swiper-slide" v-if="youtube">
+                                 <div class="lightbox__image-wrapper">
+                                    <iframe 
+                                        :id="youtube" 
+                                        frameborder="0" 
+                                        allowfullscreen="1" 
+                                        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                                        title="YouTube video player" 
+                                        width="640" 
+                                        height="360" 
+                                        :src="'https://www.youtube.com/embed/' + youtube + '?rel=0&amp;enablejsapi=1&amp;origin=https%3A%2F%2Fkaspi.kz&amp;widgetid=1'">
+                                    </iframe>
+                                 </div>
+                              </div>
+                           </div>
+                           
+                        </div>
+                     </div>
+                     
+                     <div class="lightbox__thumbs">
+                        <div class="lightbox__thumb-focus" style="left: 18px;" v-if="false"></div>
+
+                        <div class="lightbox__thumb-wrapper" @click="swiperCall(0)">
+                            <img :src="photo" class="lightbox__thumb">
+                        </div>
+
+                        <div class="lightbox__thumb-wrapper" v-for="(image, index) in images" @click="swiperCall(index + 1)">
+                            <img :src="image" class="lightbox__thumb">
+                        </div>
+                        
+                        <div class="lightbox__thumb-wrapper _video play-icon" v-if="youtube" @click="swiperCall(images.length + 1)">
+                            <img :src="'https://i.ytimg.com/vi/' + youtube + '/default.jpg'" class="lightbox__thumb">
+                        </div>
+                     </div>
+                     
+                  </div>
+               </div>
+            </div>   
+    `,
+    methods:{
+        close(){
+            app.componentDialog = '';
+        },
+        swiperCall(index){
+            console.log(index);
+            this.swiper.slideTo(index, 1000, false);
+        }
+    },
+    created(){
+
+        let data = new FormData();
+        data.append('_token', getCsrfToken());
+
+        var product_id = app.productSliderZoom.product_id;
+        var self = this;
+
+        axios.post('/product-images/' + product_id, data).then(function (response) {
+
+            self.photo   = response.data.photo;
+            self.images  = response.data.images;
+            self.youtube = response.data.youtube;
+
+            setTimeout(function() {
+                self.swiper = new Swiper ('#ffffffff', {
+                    direction: "horizontal",
+                    loop: !1,
+                    //pagination: { el: '.swiper-pagination' },
+                    //paginationClickable: true,
+                    iOSEdgeSwipeDetection: !0
+                });
+            }, 100);
+
+        }).catch(function (error) {
+            swalErrors(error.response.data.errors, 'Ошибка 422');
+        });
+
+
+    }
+});
+
+
+
+Vue.component('back-call', {
+    data: function() {
+        return{
+            phone: '',
+            focus:{
+                phone: 0,
+            },
+            wait: false
+        }
+    },
+    template: `
+        <div class="dialog">
+            <form v-on:submit="backCall" method="post" enctype="multipart/form-data">
+                <div class="dialog__content _topbar-off">
+                        <div class="topbar container _filter-dialog">
+                           <h1 class="topbar__heading">Заказать звонок</h1>
+                           <div class="button _only-red-text" @click="close">Отмена</div>
+                        </div>
+                        
+                        <h2 class="container-title">
+                            Если у вас есть вопрос, укажите, что вас интересует и оставьте номер телефона. Мы перезвоним в удобное для вас время и ответим на ваш вопрос.
+                        </h2>
+                        
+                        <div>
+                            <div class="input" :class="{ '_has-value': phone, '_focused': focus.phone == 1, '_invalid': focus.phone == 2 && !phone }">
+                                <label class="input__label">Введите номер телефона</label>
+                                <input 
+                                       type="text"
+                                       class="input__input phone-mask" 
+                                       v-model="phone" 
+                                       @focus="focus.phone = 1" 
+                                       @blur="focus.phone = 2;phone = $event.target.value;"/>
+                            </div>
+                            <div class="input__has-error" v-if="focus.phone == 2">Пожалуйста, заполните это поле</div>
+                        </div>                      
+                </div>
+                
+                <div class="button-wrapper _fixed">
+                    <button type="submit" class="button _big _space">
+                         <span class="ajax-loader">
+                            <img v-show="wait" src="/site/images/ajax-loader.gif"/>
+                            Заказать звонок
+                         </span>
+                    </button>
+                </div>
+                
+            </form>          
+        </div>        
+    `,
+    methods:{
+        close(){
+            app.componentDialog = '';
+        },
+        backCall(event){
+            event.preventDefault();
+            var self = this;
+
+            if(!this.wait) {
+                this.wait = true;
+
+                if (!this.checkPhoneNumber(this.phone))
+                    this.phone = ''
+
+                let data = new FormData();
+                data.append('_token', getCsrfToken());
+                data.append('phone', this.phone);
+
+                axios.post('/callback', data).then(function (response) {
+                    if (response.data)
+                    {
+                        self.close();
+                        Swal({
+                            title: 'Заказать звонок',
+                            html: 'Заявка отправлена! В ближайшее время с Вами свяжется наш менеджер.'
+                        });
+                    }else{
+                        alert('Ошибка БД');
+                    }
+                    self.wait = false;
+                }).catch(function (error) {
+                    swalErrors(error.response.data.errors, 'Ошибка 422');
+                    self.wait = false;
+                });
+
+            }
+        },
+        checkPhoneNumber(num) {
+            return checkPhoneNumber(num);
+        },
+    },
+    created(){
+        setTimeout(function() {
+            $(".phone-mask").mask("+7(999) 999-9999");
+        }, 2000);
+    },
+});
+
+
 
 Vue.component('buy-in-1-click', {
     data: function() {
@@ -1005,6 +1229,9 @@ const app = new Vue({
             user_name: '',
             user_email: '',
             user_phone: ''
+        },
+        productSliderZoom:{
+            product_id: 0,
         }
     },
     methods:{

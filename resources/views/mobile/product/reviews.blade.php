@@ -33,7 +33,7 @@
 
         <div class="reviews__reviews-wrapper">
             @if(count($product->reviews) == 0)
-                <p>Нет отзывы</p>
+                <p class="padding-4vw">Нет отзывы</p>
             @else
                 @foreach($product->reviews as $review)
                     @if($like == -1)

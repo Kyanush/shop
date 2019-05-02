@@ -185,7 +185,8 @@
                 <th>Категории</th>
                 <th>SKU</th>
                 <th>Цена</th>
-                <th>Количество на<br/> складе</th>
+                <th>Кол-во на<br/> складе</th>
+                <th>Кол-во <br/>просмотров</th>
                 <th>Дата создания<br/>Дата изменения</th>
                 <th>Статус</th>
                 <th>Действия</th>
@@ -219,6 +220,7 @@
                     </span>
                 </td>
                 <td>{{ item.stock }}</td>
+                <td>{{ item.view_count }}</td>
                 <td>
                     {{ dateFormat(item.created_at) }}
                     <br/>
@@ -228,17 +230,23 @@
                     <i class="fa fa-times-circle" aria-hidden="true" v-bind:class="{ 'fa-times-circle red': !item.active, 'fa-check-circle green': item.active }"></i>
                 </td>
                 <td>
-                    <router-link :to="{ path: '/products/edit/' + item.id}" class="btn btn-xs btn-default">
-                        <i class="fa fa-edit"></i> <!--Изменить-->
-                    </router-link>
+                    <p>
+                        <a class="btn btn-xs btn-default" :href="item.detail_url_product" target="_blank" title="Посмотреть товар">
+                            <i class="fa fa-internet-explorer" aria-hidden="true"></i>
+                        </a>
 
-                    <a class="btn btn-xs btn-default" @click="deleteProduct(item, index)">
-                        <i class="fa fa-remove"></i> <!--Удалить-->
-                    </a>
-
-                    <a class="btn btn-xs btn-default clone-btn" @click="cloneShow(item)">
-                        <i class="fa fa-clone"></i> <!--Создать дубликат-->
-                    </a>
+                        <router-link :to="{ path: '/products/edit/' + item.id}" class="btn btn-xs btn-default" title="Изменить">
+                            <i class="fa fa-edit"></i> <!--Изменить-->
+                        </router-link>
+                    </p>
+                    <p>
+                        <a class="btn btn-xs btn-default" @click="deleteProduct(item, index)" title="Удалить">
+                            <i class="fa fa-remove"></i> <!--Удалить-->
+                        </a>
+                        <a class="btn btn-xs btn-default clone-btn" @click="cloneShow(item)" title="Создать дубликат">
+                            <i class="fa fa-clone"></i> <!--Создать дубликат-->
+                        </a>
+                    </p>
                 </td>
             </tr>
             </tbody>
@@ -251,6 +259,7 @@
                 <th>SKU</th>
                 <th>Цена</th>
                 <th>Количество на<br/> складе</th>
+                <th>Кол-во <br/>просмотров</th>
                 <th>Дата создания<br/>Дата изменения</th>
                 <th>Статус</th>
                 <th>Действия</th>

@@ -57,6 +57,9 @@ class ProductController extends Controller
         $serviceYouWatchedProduct->youWatchedProduct($product->id);
         $youWatchedProducts = $serviceYouWatchedProduct->listProducts($product->id);
 
+        //Кол-во просмотров
+        $product->increment('view_count');
+
         return view(Helpers::isMobile() ? 'mobile.product.index' : 'site.product_detail', [
             'product'  => $product,
             'product_tab' => $product_tab,
@@ -82,4 +85,17 @@ class ProductController extends Controller
         return  $this->sendResponse($data);
     }
 
+    public function productImages($product_id){
+        $product = Product::with('images')->findOrFail($product_id);
+
+        $images = $product->images->map(function ($image) {
+            return [ $image->imagePath(true) ];
+        });
+
+        return  $this->sendResponse([
+            'images'  => $images,
+            'youtube' => $product->youtube,
+            'photo'   => $product->pathPhoto(true)
+        ]);
+    }
 }

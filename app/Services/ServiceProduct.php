@@ -1,12 +1,10 @@
 <?php
 namespace App\Services;
 
+use App\Contracts\ProductInterface;
 use App\Models\Attribute;
 use App\Models\AttributeProductValue;
-use App\Models\CartItem;
 use App\Models\Order;
-use App\Models\ProductFeaturesCompare;
-use App\Models\ProductFeaturesWishlist;
 use File;
 use App\Models\ProductGroup;
 use App\Models\Product;
@@ -14,7 +12,7 @@ use App\Models\ProductImage;
 use App\Tools\Upload;
 use App\Tools\CopyFile;
 
-class ServiceProduct
+class ServiceProduct implements ProductInterface
 {
 
     private $serviceAttrProductVal, $model;
@@ -241,7 +239,6 @@ class ServiceProduct
         return true;
     }
 
-
     //Картинки
     public function productImagesSave(array $images, $product_id)
     {
@@ -285,7 +282,6 @@ class ServiceProduct
         }
         return true;
     }
-
 
     public function productAttributesSave(int $product_id, array $attributes, bool $new_attributes)
     {
@@ -344,7 +340,6 @@ class ServiceProduct
         }
         return true;
     }
-
 
     public function priceMinMax($filters)
     {

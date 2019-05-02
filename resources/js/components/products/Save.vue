@@ -78,29 +78,33 @@
                                 </div>
 
 
-                                <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('categories')}">
-                                    <label>Категории <span class="red">*</span></label>
-                                    <Select2 v-model="categories"
-                                             :settings="{ multiple: true }"
-                                             :options="convertDataSelect2(categories_list)"/>
-                                    <p class="help-block pull-right">
-                                        Вы можете выбрать одну или несколько категорий, где будет отображаться товар
-                                    </p>
-                                    <span v-if="IsError('categories')" class="help-block" v-for="e in IsError('categories')">
-                                         {{ e }}
-                                    </span>
-
-                                </div>
-
-                                <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('product.sku')}">
-                                    <label>SKU</label>
-                                    <input type="text" v-model="product.sku" class="form-control"/>
-                                    <span v-if="IsError('product.sku')" class="help-block" v-for="e in IsError('product.sku')">
-                                         {{ e }}
-                                    </span>
-                                </div>
                                 <div class="row">
                                     <div class="col-md-12">
+                                        <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('categories')}">
+                                            <label>Категории <span class="red">*</span></label>
+                                            <Select2 v-model="categories"
+                                                     :settings="{ multiple: true }"
+                                                     :options="convertDataSelect2(categories_list)"/>
+                                            <p class="help-block pull-right">
+                                                Вы можете выбрать одну или несколько категорий, где будет отображаться товар
+                                            </p>
+                                            <span v-if="IsError('categories')" class="help-block" v-for="e in IsError('categories')">
+                                                 {{ e }}
+                                            </span>
+                                        </div>
+                                        <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('product.sku')}">
+                                            <label>SKU</label>
+                                            <input type="text" v-model="product.sku" class="form-control"/>
+                                            <span v-if="IsError('product.sku')" class="help-block" v-for="e in IsError('product.sku')">
+                                                 {{ e }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+
                                         <div class="form-group col-md-4" v-bind:class="{'has-error' : IsError('product.stock')}">
                                             <label for="stock">Количество на складе</label>
                                             <input id="stock" type="text" v-model="product.stock" class="form-control"/>
@@ -130,6 +134,24 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="form-group col-md-4">
+                                            <label for="stock">Количество просмотров</label>
+                                            <input disabled type="text" v-model="product.view_count" class="form-control"/>
+                                        </div>
+                                        <div class="form-group col-md-4" v-bind:class="{'has-error' : IsError('product.youtube')}">
+                                            <label>Youtube(Формат <a href="http://joxi.ru/EA4LOjjcoo3kYA" target="_blank">http://joxi.ru/EA4LOjjcoo3kYA</a>)</label>
+                                            <input type="text" v-model="product.youtube" class="form-control" placeholder="Формат: jmu2zb_cocE"/>
+                                            <span v-if="IsError('product.youtube')" class="help-block" v-for="e in IsError('product.youtube')">
+                                                 {{ e }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div v-bind:class="{'active' : tab_active == 'tab_product_description_and_photo'}" role="tabpanel" class="tab-pane" id="tab_product_description_and_photo">
@@ -442,9 +464,9 @@
 
                             <div class="btn-group">
 
-                                <button type="submit" class="btn btn-success" @click="setMethodRedirect('save_and_back')">
+                                <button type="submit" class="btn btn-success" @click="setMethodRedirect('save_and_continue')">
                                     <span class="fa fa-save" role="presentation" aria-hidden="true"></span> &nbsp;
-                                    <span data-value="save_and_back">Сохранить и назад</span>
+                                    <span data-value="save_and_back">Сохранить и продолжить</span>
                                 </button>
 
                                 <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aira-expanded="false">
@@ -454,8 +476,8 @@
 
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a @click="setMethodRedirect('save_and_continue')">
-                                            <button type="submit" class="btn-transparent">Сохранить и продолжить</button>
+                                        <a @click="setMethodRedirect('save_and_back')">
+                                            <button type="submit" class="btn-transparent">Сохранить и назад</button>
                                         </a>
                                     </li>
                                     <li>
@@ -574,8 +596,12 @@
                     stock: 0,
                     active: 1,
                     seo_keywords: '',
-                    seo_description: ''
+                    seo_description: '',
+                    youtube: '',
+                    view_count: 0
                 },
+
+
                 product_accessories: [],
                 attributes: [],
                 product_images: [],
@@ -739,7 +765,8 @@
 
                 //продукт
                 $.each(this.product, function(column, value) {
-                    data.append('product[' + column + ']', self.$helper.isNullClear(value));
+                    if(column != 'view_count')
+                        data.append('product[' + column + ']', self.$helper.isNullClear(value));
                 });
 
                 $.each(this.specific_price, function(column, value) {
@@ -819,6 +846,9 @@
                             this.product.sku              = product.sku;
                             this.product.stock            = product.stock;
                             this.product.active           = product.active;
+                            this.product.youtube          = product.youtube;
+                            this.product.view_count       = product.view_count;
+
 
 
                             this.selectAttributeSetId(product.attribute_set_id);

@@ -163,7 +163,10 @@
                     <li v-bind:class="{'active' : menu_active('/orders/')}">
                         <router-link :to="{ path: '/orders'}">
                             <i class="fa fa-cart-arrow-down" aria-hidden="true"></i>
-                            <span>Заказы</span>
+                            <span>Заказы </span>
+                            <span v-if="new_orders_count > 0" class="badge badge-success new-orders-count">
+                                {{ new_orders_count }}
+                            </span>
                         </router-link>
                     </li>
 
@@ -287,11 +290,20 @@
         components:{
             breadcrumbs
         },
+        data() {
+            return {
+                new_orders_count: 0
+            }
+        },
         props: ['user'],
         mounted() {
             console.log('Component mounted.')
         },
         created(){
+            axios.get('/admin/new-orders-count').then((res) => {
+                this.new_orders_count = res.data;
+            });
+
             this.SetUser(this.user);
         },
         methods:{

@@ -35,7 +35,7 @@
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&amp;subset=cyrillic" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/mobile/css/style.css?r={{rand(1, 1000000000)}}">
+    <link rel="stylesheet" type="text/css" href="/mobile/css/style.css">
 
 
     <!-- swiper -->
@@ -93,8 +93,14 @@
     </div>
 </span>
 
+@if(strpos($_SERVER['REQUEST_URI'], '/product/') === false or true)
+    <div id="back-call">
+        <img src="/mobile/img/call.png">
+    </div>
+@endif
+
 <script src="/global/script.js"></script>
-<script type="text/javascript" src="/mobile/js/script.js?r={{rand(1, 1000000000)}}"></script>
+<script type="text/javascript" src="/mobile/js/script.js"></script>
 
 @include('includes.analytics')
 
