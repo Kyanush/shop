@@ -2,18 +2,16 @@
     <div class="box">
 
         <div class="box-header with-border">
-
             <router-link :to="{ path: '/users/create'}" class="btn btn-primary ladda-button">
                             <span class="ladda-label">
                                 <i class="fa fa-plus"></i> Создать
                             </span>
             </router-link>
-
             <input id="filter-search" type="search" class="form-control input-sm pull-right" placeholder="Поиск" v-model="filter.search">
         </div>
 
-
-        <table class="table table-bordered ">
+        <div class="table-responsive">
+            <table class="table table-bordered ">
             <thead>
                 <tr>
                     <th></th>
@@ -73,6 +71,7 @@
             </tr>
             </tfoot>
         </table>
+        </div>
 
         <div class="text-center">
             <paginate

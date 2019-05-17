@@ -9,20 +9,16 @@ class OneClickOrderRequest extends FormRequest
 
     public function rules()
     {
-        $rules = [
+        return [
             'product_id' => ['required',
-                    Rule::exists('products', 'id')->where(function ($query){
-                        $query->where('active', 1);
-                    })
-            ]
+                Rule::exists('products', 'id')->where(function ($query){
+                    $query->where('active', 1);
+                })
+            ],
+            'email' => 'required|email|max:255',
+            'name'  => 'required|max:255',
+            'phone' => 'required|phone'
         ];
-        if(!Auth::check())
-        {
-            $rules['email'] = 'required|email|max:255';
-            $rules['name']  = 'required|max:255';
-            $rules['phone'] = 'required';
-        }
-        return $rules;
     }
 
     public function attributes()

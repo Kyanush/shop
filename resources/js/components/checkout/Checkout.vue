@@ -151,7 +151,6 @@
                                                     </td>
                                                     <td class="simplecheckout-table-form-right">
                                                         <input type="tel"
-                                                               v-bind:disabled="_user"
                                                                v-model="user.phone"
                                                                v-mask="'+7 (999) 999-9999'"
                                                                d="customer_telephone"
@@ -164,7 +163,7 @@
                                                         Email
                                                     </td>
                                                     <td class="simplecheckout-table-form-right">
-                                                        <input type="email" v-bind:disabled="_user" v-model="user.email"  id="customer_email" placeholder="Электронная почта *">
+                                                        <input type="email"  v-model="user.email"  id="customer_email" placeholder="Электронная почта *">
                                                     </td>
                                                 </tr>
                                                 <tr class="row-customer_firstname">
@@ -173,7 +172,7 @@
                                                         Имя
                                                     </td>
                                                     <td class="simplecheckout-table-form-right">
-                                                        <input type="text" v-bind:disabled="_user" v-model="user.name" id="customer_firstname" placeholder="Имя"/>
+                                                        <input type="text"  v-model="user.name" id="customer_firstname" placeholder="Имя"/>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -357,11 +356,6 @@
                     }
                 });
             },
-            checkPhoneNumber(num) {
-                var regexp = /\([0-9]{3}\)\s[0-9]{3}-[0-9]{4}/;
-                var valid = regexp.test(num);
-                return valid;
-            },
             async checkout(){
                 if(!this.checkout_wait)
                 {
@@ -383,8 +377,6 @@
                         comment: this.comment
                     };
 
-                    if (!this.checkPhoneNumber(this.user.phone))
-                        data.user.phone = ''
 
                     await axios.post('/checkout', data).then((res) => {
                         var data = res.data;

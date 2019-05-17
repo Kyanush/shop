@@ -1,72 +1,73 @@
 <template>
     <div class="box">
 
-                    <div class="box-header with-border">
-                        <input id="filter-search" type="search" class="form-control input-sm pull-right" placeholder="Поиск" v-model="filter.search">
-                    </div>
+        <div class="box-header with-border">
+            <input id="filter-search" type="search" class="form-control input-sm pull-right" placeholder="Поиск" v-model="filter.search">
+        </div>
 
+        <div class="table-responsive">
+               <table class="table table-bordered ">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Товар</th>
+                                <th>Фото товара</th>
+                                <th>Дата начала</th>
+                                <th>Дата окончания срока</th>
+                                <th>Тип скидки</th>
+                                <th>Снижение</th>
+                                <th>Старая цена</th>
+                                <th>Сниженная цена</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd even" v-for="(item, index) in specific_prices.data" v-bind:class="{'opacity': item.product.format_price == item.product.reduced_price}">
+                                <td>{{ item.id }}</td>
+                                <td>
+                                    <router-link :to="{ path: '/products/edit/' + item.product.id}">
+                                        {{ item.product.name }}
+                                    </router-link>
+                                </td>
+                                <img v-bind:src="item.product.path_photo" width="70" class="img"/>
+                                <td>{{ item.start_date }}</td>
+                                <td>{{ item.expiration_date }}</td>
+                                <td>{{ item.discount_type == 'percent' ? 'Процент' : 'Сумма' }}</td>
+                                <td>{{ item.reduction }}</td>
+                                <td>
+                                    <del v-if="item.product.format_price != item.product.reduced_price">{{ item.product.format_price }}</del>
+                                    <span v-else>
+                                        {{ item.product.format_price }}
+                                    </span>
+                                </td>
+                                <td>{{ item.product.reduced_price }}</td>
+                                <td>
+                                    <router-link :to="{ path: '/products/edit/' + item.product_id}" class="btn btn-xs btn-default">
+                                        <i class="fa fa-edit"></i> Изменить
+                                    </router-link>
 
-                   <table class="table table-bordered ">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Товар</th>
-                                    <th>Фото товара</th>
-                                    <th>Дата начала</th>
-                                    <th>Дата окончания срока</th>
-                                    <th>Тип скидки</th>
-                                    <th>Снижение</th>
-                                    <th>Старая цена</th>
-                                    <th>Сниженная цена</th>
-                                    <th>Действия</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="odd even" v-for="(item, index) in specific_prices.data" v-bind:class="{'opacity': item.product.format_price == item.product.reduced_price}">
-                                    <td>{{ item.id }}</td>
-                                    <td>
-                                        <router-link :to="{ path: '/products/edit/' + item.product.id}">
-                                            {{ item.product.name }}
-                                        </router-link>
-                                    </td>
-                                    <img v-bind:src="item.product.path_photo" width="70" class="img"/>
-                                    <td>{{ item.start_date }}</td>
-                                    <td>{{ item.expiration_date }}</td>
-                                    <td>{{ item.discount_type == 'percent' ? 'Процент' : 'Сумма' }}</td>
-                                    <td>{{ item.reduction }}</td>
-                                    <td>
-                                        <del v-if="item.product.format_price != item.product.reduced_price">{{ item.product.format_price }}</del>
-                                        <span v-else>
-                                            {{ item.product.format_price }}
-                                        </span>
-                                    </td>
-                                    <td>{{ item.product.reduced_price }}</td>
-                                    <td>
-                                        <router-link :to="{ path: '/products/edit/' + item.product_id}" class="btn btn-xs btn-default">
-                                            <i class="fa fa-edit"></i> Изменить
-                                        </router-link>
-
-                                        <a class="btn btn-xs btn-default" @click="specificPriceDelete(item, index)">
-                                            <i class="fa fa-remove"></i> Удалить
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Товар</th>
-                                    <th>Фото товара</th>
-                                    <th>Дата начала</th>
-                                    <th>Дата окончания срока</th>
-                                    <th>Тип скидки</th>
-                                    <th>Снижение</th>
-                                    <th>Старая цена</th>
-                                    <th>Сниженная цена</th>
-                                    <th>Действия</th>
-                                </tr>
-                            </tfoot>
-                   </table>
+                                    <a class="btn btn-xs btn-default" @click="specificPriceDelete(item, index)">
+                                        <i class="fa fa-remove"></i> Удалить
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Товар</th>
+                                <th>Фото товара</th>
+                                <th>Дата начала</th>
+                                <th>Дата окончания срока</th>
+                                <th>Тип скидки</th>
+                                <th>Снижение</th>
+                                <th>Старая цена</th>
+                                <th>Сниженная цена</th>
+                                <th>Действия</th>
+                            </tr>
+                        </tfoot>
+               </table>
+        </div>
 
         <div class="text-center">
             <paginate

@@ -21,7 +21,8 @@
             </div>
         </div>
 
-        <table class="table table-bordered ">
+        <div class="table-responsive">
+            <table class="table table-bordered ">
             <thead>
                 <tr>
                     <th>№</th>
@@ -84,6 +85,7 @@
                 </tr>
             </tfoot>
         </table>
+        </div>
 
         <div class="text-center">
                 <paginate

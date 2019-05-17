@@ -456,4 +456,8 @@
     img {
         max-width: 100%;
     }
+    .well{
+        height: 400px;
+        overflow-x: scroll;
+    }
 </style>

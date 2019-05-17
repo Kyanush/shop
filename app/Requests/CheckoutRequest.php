@@ -13,14 +13,10 @@ class CheckoutRequest extends FormRequest
             'carrier_id' => 'required|exists:carriers,id',
             'comment'    => 'max:1000',
             'payment_id' => 'required|exists:payments,id',
+            'user.email' => 'required|max:255',
+            'user.name'  => 'required|max:255',
+            'user.phone' => 'required|phone'
         ];
-
-        if(!Auth::check())
-        {
-            $rules['user.email'] = 'required|max:255';
-            $rules['user.name']  = 'required|max:255';
-            $rules['user.phone'] = 'required';
-        }
 
         if($this->input('carrier_id', 0) == 1)
         {
@@ -44,9 +40,9 @@ class CheckoutRequest extends FormRequest
     public function attributes()
     {
         return [
-            'carrier_id' => "'Способ доставки'",
-            'comment'    => "'Комментарий к заказу'",
-            'payment_id' => "'Оплата'",
+            'carrier_id'      => "'Способ доставки'",
+            'comment'         => "'Комментарий к заказу'",
+            'payment_id'      => "'Оплата'",
             'user.email'      => "'Email'",
             'user.name'       => "'Имя'",
             'user.phone'      => "'Телефон'",

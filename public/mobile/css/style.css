@@ -2852,6 +2852,7 @@ img[data-src] {
     list-style: none;
     margin: 0;
     padding: 0;
+    height: 80vh;
 }
 
 .filter-dialog__el {
@@ -4553,6 +4554,11 @@ img[data-src] {
     padding: 9.067vw 0 4vw 7.467vw;
     border-bottom: 1px solid #4a4a4a;
     line-height: 4.267vw;
+}
+
+.kaspi-menu__signin a{
+    color: #fff;
+    text-decoration: none;
 }
 
 .kaspi-menu__signin,.kaspi-menu__signin:focus,.kaspi-menu__signin:hover {

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Auth;
 use DB;
 use Mail;
+use Mobile_Detect;
 
 class Order extends Model
 {
@@ -27,7 +28,8 @@ class Order extends Model
         'payment_date',
         'payment_result',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'where_ordered'
     ];
 
     protected static function boot()
@@ -69,6 +71,23 @@ class Order extends Model
         //Событие после
         static::Created(function ($modal) {
         });
+
+
+        //Событие до
+        static::Creating(function ($modal) {
+
+            $detect = new Mobile_Detect();
+            if($detect->isMobile()){
+                $where_ordered = 2;
+            }elseif($detect->isTablet()){
+                $where_ordered = 3;
+            }else{
+                $where_ordered = 1;
+            }
+            $modal->where_ordered = $where_ordered;
+
+        });
+
 
 
         //до
@@ -182,9 +201,33 @@ class Order extends Model
         return $query;
     }
 
-
     public function scopeNew($query){
         return $query->where('status_id', 1);
+    }
+
+    public function whereOrdered(){
+        switch ($this->where_ordered) {
+            case 1:
+                $title = 'Компютер';
+                $class = 'fa fa-desktop';
+                break;
+            case 2:
+                $title = 'Телефон';
+                $class = 'fa fa-mobile';
+                break;
+            case 3:
+                $title = 'Планшет';
+                $class = 'fa fa-tablet';
+                break;
+            default:
+                $title = '';
+                $class = 'Не определено';
+        }
+
+        return [
+            'title' => $title,
+            'class' => $class
+        ];
     }
 
 }

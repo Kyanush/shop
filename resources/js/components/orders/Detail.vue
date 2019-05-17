@@ -37,7 +37,8 @@
                         </h3>
                     </div>
                     <div class="box-body">
-                        <table class="table table-striped table-hover">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
                             <tbody>
                             <tr>
                                 <td>
@@ -83,26 +84,34 @@
                                         </select>
                                     </p>
                                 </td>
-                                <td></td>
+                                <td>
+                                    <b><p>Где заказал</p></b>
+                                    <p v-if="whereOrdered">
+                                        <i :class="whereOrdered.class"></i>
+                                        {{ whereOrdered.title }}
+                                    </p>
+                                </td>
                                 <td></td>
                                 <td></td>
                             </tr>
                             </tbody>
                         </table>
-
+                        </div>
                         <hr>
 
                         <div class="box-body">
-                            <table class="table table-striped table-hover">
-                                <tbody>
-                                <tr>
-                                    <td>Комментарии</td>
-                                    <td colspan="3">
-                                        <textarea class="form-control" v-model="order.comment"></textarea>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <tbody>
+                                    <tr>
+                                        <td>Комментарии</td>
+                                        <td colspan="3">
+                                            <textarea class="form-control" v-model="order.comment"></textarea>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
 
                     </div>
@@ -118,7 +127,8 @@
 
                     <div class="box-body">
                         <div class="well">
-                            <table class="table table-condensed table-hover">
+                            <div class="table-responsive">
+                                <table class="table table-condensed table-hover">
                                 <tbody>
                                 <tr>
                                     <td>
@@ -149,6 +159,7 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -162,7 +173,8 @@
 
                     <div class="box-body">
                         <div class="well">
-                            <table class="table table-condensed table-hover">
+                            <div class="table-responsive">
+                                <table class="table table-condensed table-hover">
                                 <tbody>
                                 <tr>
                                     <td colspan="2">
@@ -187,6 +199,7 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -204,7 +217,8 @@
                     </div>
 
                     <div class="box-body">
-                        <table class="table table-condensed">
+                        <div class="table-responsive">
+                            <table class="table table-condensed">
                             <thead>
                             <tr>
                                 <th style="width: 150px;">Логотип</th>
@@ -237,6 +251,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -254,7 +269,8 @@
                     </div>
 
                     <div class="box-body">
-                        <table class="table table-condensed">
+                        <div class="table-responsive">
+                            <table class="table table-condensed">
                             <thead>
                             <tr>
                                 <th style="width: 150px;">Логотип</th>
@@ -294,6 +310,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -317,8 +334,8 @@
                     </div>
 
                     <div class="box-body">
-
-                        <table class="table table-striped table-hover">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
                             <thead>
                             <tr>
                                 <th>Товар</th>
@@ -362,7 +379,7 @@
                             </tr>
                             </tbody>
                         </table>
-
+                        </div>
                     </div>
                 </div>
             </div>
@@ -381,7 +398,8 @@
                     </div>
 
                     <div class="box-body">
-                        <table class="table table-striped table-hover" id="status-table">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="status-table">
                             <thead>
                             <tr>
                                 <th>Статус</th>
@@ -404,6 +422,7 @@
                             </tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -490,6 +509,7 @@
                 },
 
                 order: this.orderDefault(),
+                whereOrdered: '',
 
                 order_statuses: [],
                 carriers: [],
@@ -616,7 +636,8 @@
                 if(order_id)
                 {
                     axios.get('/admin/order/' + order_id).then((res)=>{
-                        this.order = res.data;
+                        this.order        = res.data.order;
+                        this.whereOrdered = res.data.whereOrdered;
                     });
                 }else
                     this.order = this.orderDefault();

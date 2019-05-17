@@ -18,7 +18,8 @@
         <div class="box-header with-border" v-show="order_show_filter">
             <div class="row">
                 <div class="col-md-6">
-                    <table class="table table-bordered ">
+                    <div class="table-responsive">
+                        <table class="table table-bordered ">
                         <tbody class="filter">
                         <tr class="odd even">
                             <td><b>Номер заказа №:</b></td>
@@ -79,9 +80,11 @@
 
                         </tbody>
                     </table>
+                    </div>
                 </div>
                 <div class="col-md-6">
-                    <table class="table table-bordered ">
+                    <div class="table-responsive">
+                        <table class="table table-bordered ">
                         <tbody class="filter">
                         <tr class="odd even">
                             <td><b>Дата доставки:</b></td>
@@ -155,14 +158,15 @@
                         </tr>
                         </tbody>
                     </table>
+                    </div>
                 </div>
 
             </div>
         </div>
 
 
-
-        <table class="table table-bordered ">
+        <div class="table-responsive">
+            <table class="table table-bordered ">
             <thead>
             <tr>
                 <th>Номер заказа №</th>
@@ -199,7 +203,7 @@
                     <span v-else><i class="fa fa-check-circle status-canceled"></i>&nbsp;Нет</span>
                 </td>
                 <td>{{ item.total }}</td>
-                <td>{{ item.created_at }}</td>
+                <td>{{ dateFormatTodayYesterday(item.created_at) }}</td>
                 <td>
                     <router-link :to="{ path: '/orders/' + item.id}" title="Посмотреть" class="btn btn-xs btn-default">
                         <i class="fa fa-eye"></i> <!--Посмотреть--->
@@ -223,6 +227,7 @@
             </tr>
             </tfoot>
         </table>
+        </div>
 
         <div class="text-center">
             <paginate
@@ -331,6 +336,9 @@
             $('.selectpicker').selectpicker('refresh');
         },
         methods:{
+            dateFormatTodayYesterday(dateString){
+                return this.$helper.dateFormatTodayYesterday(dateString);
+            },
             deleteOrder(item, index){
                 this.$swal({
                     title: 'Вы действительно хотите удалить заказ №' + item.id + '?',

@@ -27,7 +27,6 @@
 
                    <div style="padding: 20px;font-size: 14px;line-height: 22px;">
                        Обсудить с нами возникшие вопросы или проконсультироваться звоните к нам по номеру:
-                       <a style="font-size: 14px;text-decoration: none;" href="tel:+77782002000">+7 (778) 200 20 00</a>,
                        <a style="font-size: 14px;text-decoration: none;" href="tel:+77075511979">+7 (707) 551 1979</a>
                        (ежедневно с 11-00 до 19-00).
                        Кроме того, Вы можете отправить любые запросы или вопросы нам на электронную почту <a style="font-size: 14px;text-decoration: none;" href="mailto:info@onepoint.kz">info@onepoint.kz</a> ,
@@ -41,8 +40,6 @@
                            <div class="contact_page_block_list">
                                <div class="contact_page_block_list_top">Ежедневно, круглосуточно(телефон или WhatsApp)</div>
                                <div class="contact_page_block_list_bottom">
-                                   <a href="tel:+77782002000">+7 (778) 200 20 00</a>
-                                   <br/>
                                    <a href="tel:+77075511979">+7 (707) 551 1979</a>
                                </div>
                            </div>
@@ -116,10 +113,28 @@
                            <div class="rumi-contact" style="padding: 0px;">
 
                                <div class="rumi-contact-text">Номер телефона *</div>
-                               <input  @auth readonly="readonly" value="{{ Auth::user()->phone }}" @else d value="{{ old('phone') }}"  @endauth type="text" name="phone" class="form-control phone-mask" placeholder="+7 (___) ___-__-__">
+                               <input
+                                       @auth
+                                            value="{{ Auth::user()->phone }}"
+                                       @else
+                                            value="{{ old('phone') }}"
+                                       @endauth
+                                       type="text"
+                                       name="phone"
+                                       class="form-control phone-mask"
+                                       placeholder="+7 (___) ___-__-__"/>
 
                                <div class="rumi-contact-text">Введите свой e-mail *</div>
-                               <input  @auth readonly="readonly" value="{{ Auth::user()->email }}" @else value="{{ old('email') }}" @endauth type="text" name="email"  class="form-control" placeholder="E-mail">
+                               <input
+                                       @auth
+                                            value="{{ Auth::user()->email }}"
+                                       @else
+                                            value="{{ old('email') }}"
+                                       @endauth
+                                       type="text"
+                                       name="email"
+                                       class="form-control"
+                                       placeholder="E-mail"/>
 
                                <div class="rumi-contact-text">Сообщение *</div>
                                <textarea name="message" cols="50" rows="4" class="form-control" placeholder="Введите текст сообщения">{{ old('message') }}</textarea>

@@ -91,11 +91,10 @@
         </div>
 
         <div class="item__info container text-center">
-            <?php $user = Auth::user();?>
             <button
                     type="button"
                     class="button _white"
-                    onclick="buyIn1Click({{ $product->id }}, '{{ $user->name ?? '' }}', '{{ $user->email ?? '' }}', '{{ $user->phone ?? '' }}')">
+                    onclick="buyIn1Click({{ $product->id }})">
                 Купить в 1 клик
             </button>
         </div>

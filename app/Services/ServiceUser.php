@@ -31,22 +31,21 @@ class ServiceUser
     }
 
     public function findOrNewUserCart($email, $name, $phone){
-        //Пользователь
-        if(Auth::check()){
-            return Auth::user();
+        $user = $this->model::where('email', $email)->first();
+        if(!$user){
+            $user = $this->createUser(
+                $email,
+                null,
+                $name,
+                $phone
+            );
+            Auth::loginUsingId($user->id);
         }else{
-            $user = $this->model::where('email', $email)->first();
-            if(!$user){
-                $user = $this->createUser(
-                    $email,
-                    null,
-                    $name,
-                    $phone
-                );
-                Auth::loginUsingId($user->id);
-            }
-            return $user;
+            $user->phone = $phone;
+            $user->name  = $name;
+            $user->save();
         }
+        return $user;
     }
 
 }

@@ -1,3 +1,7 @@
+var user_info = $('#user_info').val();
+if(user_info)
+    user_info = JSON.parse(user_info);
+
 
 $(document).ready(function() {
 
@@ -89,11 +93,6 @@ $(document).ready(function() {
 
 });
 
-function checkPhoneNumber(num) {
-    var regexp = /\([0-9]{3}\)\s[0-9]{3}-[0-9]{4}/;
-    var valid = regexp.test(num);
-    return valid;
-}
 
 function reviewLikeRating(review_id, like){
     productReviewSetLike(review_id, like, function (data) {
@@ -102,19 +101,14 @@ function reviewLikeRating(review_id, like){
     });
 }
 
-function buyIn1Click(product_id, user_name, user_email, user_phone){
-    app.buyIn1Click.product_id = product_id;
-
-    app.buyIn1Click.user_name  = user_name;
-    app.buyIn1Click.user_email = user_email;
-    app.buyIn1Click.user_phone = user_phone;
-
+function buyIn1Click(product_id){
+    app.product_id = product_id;
     app.componentDialog = 'buy-in-1-click';
 }
 
 function productSliderZoom(product_id){
     app.componentDialog = 'product_slider_zoom';
-    app.productSliderZoom.product_id = product_id;
+    app.product_id = product_id;
 }
 
 function _addToCart(product_id){
@@ -226,7 +220,7 @@ Vue.component('product_slider_zoom', {
         let data = new FormData();
         data.append('_token', getCsrfToken());
 
-        var product_id = app.productSliderZoom.product_id;
+        var product_id = app.product_id;
         var self = this;
 
         axios.post('/product-images/' + product_id, data).then(function (response) {
@@ -258,7 +252,7 @@ Vue.component('product_slider_zoom', {
 Vue.component('back-call', {
     data: function() {
         return{
-            phone: '',
+            phone: user_info.phone,
             focus:{
                 phone: 0,
             },
@@ -282,7 +276,7 @@ Vue.component('back-call', {
                             <div class="input" :class="{ '_has-value': phone, '_focused': focus.phone == 1, '_invalid': focus.phone == 2 && !phone }">
                                 <label class="input__label">Введите номер телефона</label>
                                 <input 
-                                       type="text"
+                                       type="tel"
                                        class="input__input phone-mask" 
                                        v-model="phone" 
                                        @focus="focus.phone = 1" 
@@ -291,16 +285,14 @@ Vue.component('back-call', {
                             <div class="input__has-error" v-if="focus.phone == 2">Пожалуйста, заполните это поле</div>
                         </div>                      
                 </div>
-                
-                <div class="button-wrapper _fixed">
-                    <button type="submit" class="button _big _space">
-                         <span class="ajax-loader">
-                            <img v-show="wait" src="/site/images/ajax-loader.gif"/>
-                            Заказать звонок
-                         </span>
-                    </button>
-                </div>
-                
+                               
+                <button type="submit" class="button _big _space">
+                     <span class="ajax-loader">
+                        <img v-show="wait" src="/site/images/ajax-loader.gif"/>
+                        Заказать звонок
+                     </span>
+                </button>
+                                
             </form>          
         </div>        
     `,
@@ -315,8 +307,6 @@ Vue.component('back-call', {
             if(!this.wait) {
                 this.wait = true;
 
-                if (!this.checkPhoneNumber(this.phone))
-                    this.phone = ''
 
                 let data = new FormData();
                 data.append('_token', getCsrfToken());
@@ -340,10 +330,7 @@ Vue.component('back-call', {
                 });
 
             }
-        },
-        checkPhoneNumber(num) {
-            return checkPhoneNumber(num);
-        },
+        }
     },
     created(){
         setTimeout(function() {
@@ -357,25 +344,21 @@ Vue.component('back-call', {
 Vue.component('buy-in-1-click', {
     data: function() {
         return{
-            auth:  app.buyIn1Click.user_name ? true : false,
-
-            name:  app.buyIn1Click.user_name,
-            email: app.buyIn1Click.user_email,
-            phone: app.buyIn1Click.user_phone,
-
+            name:  user_info.name,
+            email: user_info.email,
+            phone: user_info.phone,
             focus:{
                 name: 0,
                 email: 0,
                 phone: 0,
             },
-
             wait: false
         }
     },
     template: `
         <div class="dialog">
             <form v-on:submit="buyIn1Click" method="post" enctype="multipart/form-data">
-                <div class="dialog__content _topbar-off">
+                <div class="dialog__content _topbar-off" style="height: 400px;">
                         <div class="topbar container _filter-dialog">
                            <h1 class="topbar__heading">Быстрый заказ</h1>
                            <div class="button _only-red-text" @click="close">Отмена</div>
@@ -385,7 +368,6 @@ Vue.component('buy-in-1-click', {
                                 <label class="input__label">Имя</label>
                                 <input 
                                     type="text" 
-                                    v-bind:disabled="auth"
                                     class="input__input" 
                                     v-model="name" 
                                     @focus="focus.name = 1"
@@ -398,7 +380,6 @@ Vue.component('buy-in-1-click', {
                                 <label class="input__label">Ваш e-mail</label>
                                 <input 
                                     type="email" 
-                                    v-bind:disabled="auth"
                                     class="input__input" 
                                     v-model="email" 
                                     @focus="focus.email = 1"
@@ -410,8 +391,7 @@ Vue.component('buy-in-1-click', {
                             <div class="input" :class="{ '_has-value': phone, '_focused': focus.phone == 1, '_invalid': focus.phone == 2 && !phone }">
                                 <label class="input__label">Введите номер телефона</label>
                                 <input 
-                                       type="text"
-                                       v-bind:disabled="auth"
+                                       type="tel"
                                        class="input__input phone-mask" 
                                        v-model="phone" 
                                        @focus="focus.phone = 1" 
@@ -420,13 +400,16 @@ Vue.component('buy-in-1-click', {
                             <div class="input__has-error" v-if="focus.phone == 2">Пожалуйста, заполните это поле</div>
                         </div>                      
                 </div>
-                <button type="submit" class="button _big-fixed button-sellers">
+                
+                <button type="submit" class="button _big _space">
                      <span class="ajax-loader">
                         <img v-show="wait" src="/site/images/ajax-loader.gif"/>
                         Заказать
                      </span>
-                    
                 </button>
+                
+                
+                
             </form>          
         </div>        
     `,
@@ -441,15 +424,12 @@ Vue.component('buy-in-1-click', {
             if(!this.wait) {
                 this.wait = true;
 
-                if (!this.checkPhoneNumber(this.phone))
-                    this.phone = ''
-
                 let data = new FormData();
-                data.append('_token', getCsrfToken());
-                data.append('name', this.name);
-                data.append('email', this.email);
-                data.append('phone', this.phone);
-                data.append('product_id', app.buyIn1Click.product_id);
+                data.append('_token',     getCsrfToken());
+                data.append('name',       this.name);
+                data.append('email',      this.email);
+                data.append('phone',      this.phone);
+                data.append('product_id', app.product_id);
 
                 axios.post('/one-click-order', data).then(function (response) {
                     if (response.data) {
@@ -472,10 +452,7 @@ Vue.component('buy-in-1-click', {
                     self.wait = false;
                 });
             }
-        },
-        checkPhoneNumber(num) {
-            return checkPhoneNumber(num);
-        },
+        }
     },
     created(){
         setTimeout(function() {
@@ -680,7 +657,7 @@ Vue.component('filters', {
             start_page: true
         }
     },
-    template: `<div class="dialog">
+    template: `<div class="dialog a-fadeInRight">
                     <form id="filterpro">
                        <div class="dialog__content _topbar-off ">
                           <div class="filter-dialog">
@@ -868,7 +845,7 @@ Vue.component('checkout', {
                                             <label class="input__label">Телефон *</label>
                                            
                                             <input 
-                                                v-bind:disabled="_user"
+                                                type="tel"
                                                 class="input__input phone-mask" 
                                                 v-model="user.phone" 
                                                 @focus="focus.phone = 1" 
@@ -880,7 +857,6 @@ Vue.component('checkout', {
                                     <div class="input" :class="{ '_has-value': user.email, '_focused': focus.email == 1, '_invalid': focus.email == 2 && !user.email }">
                                         <label class="input__label">Email *</label>
                                         <input 
-                                            v-bind:disabled="_user"
                                             class="input__input" 
                                             v-model="user.email" 
                                             @focus="focus.email = 1" 
@@ -892,7 +868,6 @@ Vue.component('checkout', {
                                     <div class="input" :class="{ '_has-value': user.name, '_focused': focus.name == 1, '_invalid': focus.name == 2 && !user.name }">
                                         <label class="input__label">Имя *</label>
                                         <input 
-                                            v-bind:disabled="_user"
                                             class="input__input" 
                                             v-model="user.name" 
                                             @focus="focus.name = 1" 
@@ -1032,27 +1007,24 @@ Vue.component('checkout', {
                                 </div>
                           </div>
 
-                          <div class="button-wrapper _fixed">
-                                <button class="button _big _space" @click="checkout">
+                          <div class="header-cart__content">
+                              <button class="button _big _space" @click="checkout">
                                     <span class="ajax-loader">
                                         <img v-show="checkout_wait" src="/site/images/ajax-loader.gif"/>
                                         Оформить заказ
                                     </span>
-                                </button>
-                          </div>
-                    
-                          <div></div>
+                              </button>
+                          </div>    
                     
                         </div>
                     </div>
                 </div>`,
-    props:['_user'],
     data () {
         return {
             list_cart: [],
             list_carriers: [],
             list_payments: [],
-            addresses: this._user ? (this._user.addresses ? this._user.addresses : [])  : [],
+            addresses: user_info.addresses,
             cart_total: {
                 sum: 0,
                 quantity: 0
@@ -1067,9 +1039,9 @@ Vue.component('checkout', {
                 address: ''
             },
             user:{
-                phone:  this._user ? this._user.phone      : '',
-                email:  this._user ? this._user.email      : '',
-                name:   this._user ? this._user.name       : ''
+                name:  user_info.name,
+                email: user_info.email,
+                phone: user_info.phone,
             },
             comment: '',
 
@@ -1131,9 +1103,6 @@ Vue.component('checkout', {
                 }
             });
         },
-        checkPhoneNumber(num) {
-            return checkPhoneNumber();
-        },
         async checkout(){
             if(!this.checkout_wait)
             {
@@ -1155,8 +1124,6 @@ Vue.component('checkout', {
                     comment: this.comment
                 };
 
-                if (!this.checkPhoneNumber(this.user.phone))
-                    data.user.phone = ''
 
                 var self = this;
 
@@ -1221,18 +1188,10 @@ Vue.component('checkout', {
 const app = new Vue({
     el: '#app',
     data: {
-        componentDialog: '',
+        componentDialog:   '',
         open_sort_catalog: false,
-        showFilters: false,
-        buyIn1Click:{
-            product_id: 0,
-            user_name: '',
-            user_email: '',
-            user_phone: ''
-        },
-        productSliderZoom:{
-            product_id: 0,
-        }
+        showFilters:       false,
+        product_id:        0,
     },
     methods:{
         catalogSort(sort){

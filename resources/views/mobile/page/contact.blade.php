@@ -18,7 +18,6 @@
     <div class="container">
         <p>
             Обсудить с нами возникшие вопросы или проконсультироваться звоните к нам по номеру:
-            <a style="font-size: 14px;text-decoration: none;" href="tel:+77782002000">+7 (778) 200 20 00</a>,
             <a style="font-size: 14px;text-decoration: none;" href="tel:+77075511979">+7 (707) 551 1979</a>
             (ежедневно с 11-00 до 19-00).
             Кроме того, Вы можете отправить любые запросы или вопросы нам на электронную почту <a style="font-size: 14px;text-decoration: none;" href="mailto:info@onepoint.kz">info@onepoint.kz</a> ,
@@ -31,8 +30,6 @@
                     <b>Телефоны:</b>
                     <br/>
                     Ежедневно, круглосуточно(телефон или WhatsApp)
-                    <br/>
-                    <a href="tel:+77782002000">+7 (778) 200 20 00</a>
                     <br/>
                     <a href="tel:+77075511979">+7 (707) 551 1979</a>
                 </li>

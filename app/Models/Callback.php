@@ -14,7 +14,9 @@ class Callback extends Model
         'phone',
         'type',
         'message',
-        'email'
+        'email',
+        'status',
+        'comment'
 	];
 
     public function scopeSearch($query, $search){
@@ -44,6 +46,8 @@ class Callback extends Model
                 });
             }
         });
+
     }
+
 
 }

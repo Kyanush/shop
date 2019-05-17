@@ -16,7 +16,7 @@
     @include('mobile.includes.space', ['style' => 'height: 3.073vw;'])
 
     <div class="mount-checkout-spa">
-        <checkout @if(Auth::check()) :_user="{{ \App\User::with('addresses')->find(Auth::user()->id) }}" @endif></checkout>
+        <checkout></checkout>
     </div>
 
     @include('mobile.includes.footer')

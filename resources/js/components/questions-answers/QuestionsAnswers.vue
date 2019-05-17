@@ -21,7 +21,8 @@
             </div>
         </div>
 
-        <table class="table table-bordered " v-if="questions_answers">
+        <div class="table-responsive">
+            <table class="table table-bordered " v-if="questions_answers">
             <thead>
                 <tr>
                     <th>№</th>
@@ -80,6 +81,7 @@
                 </tr>
             </tfoot>
         </table>
+        </div>
 
         <div class="text-center">
                 <paginate

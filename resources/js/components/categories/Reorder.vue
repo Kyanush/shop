@@ -103,9 +103,9 @@
                 axios.post('/admin/reorder-save', {reorder_send: this.reorder_send} ).then((res)=>{
                     if(res.data)
                     {
-                         this.reorder_send = [];
-                         this.getCategoryReorder();
-                         this.$helper.swalSuccess('Успешно изменено порядок');
+                        this.reorder_send = [];
+                        this.getCategoryReorder();
+                        this.$helper.swalSuccess('Успешно изменено порядок');
                     }
                 });
 

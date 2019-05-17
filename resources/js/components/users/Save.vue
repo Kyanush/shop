@@ -58,10 +58,16 @@
                             </div>
                             <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('user.phone')}">
                                 <label>Телефон</label>
-                                <input v-model="user.phone" type="text" class="form-control phone-mask">
+
+                                <input
+                                        @blur="user.phone = $event.target.value;"
+                                        v-model="user.phone"
+                                        type="text"
+                                        class="form-control phone-mask"/>
+
                                 <span v-if="IsError('user.phone')" class="help-block" v-for="e in IsError('user.phone')">
-                                             {{ e }}
-                                    </span>
+                                   {{ e }}
+                                </span>
                             </div>
                             <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('user.password')}">
                                 <label>Пароль <span v-if="user.id == 0" class="red">*</span></label>
@@ -107,31 +113,33 @@
                                     </a>
                                 </div>
                             </div>
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Адрес</th>
-                                    <th>Город</th>
-                                    <th>Действия</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="(item, index) in user.addresses" v-bind:class="{'is-delete' : item.is_delete == 1}">
-                                    <td class="vertical-align-middle">{{ item.address }}</td>
-                                    <td class="vertical-align-middle">{{ item.city }}</td>
-                                    <td class="vertical-align-middle">
-                                                <span class="btn btn-xs btn-default" @click="editAddress(item, index)">
-                                                    <i class="fa fa-edit"></i> Изменить
-                                                </span>
-                                        <span class="btn btn-xs btn-default" @click="deleteAddress(index)">
-                                                     <span v-if="item.is_delete == 0"><i class="fa fa-remove" ></i> Удалить</span>
-                                                     <span v-else><i class="fa green fa-history"></i> Восстановить</span>
-                                                </span>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Адрес</th>
+                                        <th>Город</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="(item, index) in user.addresses" v-bind:class="{'is-delete' : item.is_delete == 1}">
+                                        <td class="vertical-align-middle">{{ item.address }}</td>
+                                        <td class="vertical-align-middle">{{ item.city }}</td>
+                                        <td class="vertical-align-middle">
+                                                    <span class="btn btn-xs btn-default" @click="editAddress(item, index)">
+                                                        <i class="fa fa-edit"></i> Изменить
+                                                    </span>
+                                            <span class="btn btn-xs btn-default" @click="deleteAddress(index)">
+                                                         <span v-if="item.is_delete == 0"><i class="fa fa-remove" ></i> Удалить</span>
+                                                         <span v-else><i class="fa green fa-history"></i> Восстановить</span>
+                                                    </span>
 
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div v-bind:class="{'active' : tab_active == 'tab_companies'}" role="tabpanel" class="tab-pane" id="tab_companies">
                             <div class="row">
@@ -141,37 +149,39 @@
                                     </a>
                                 </div>
                             </div>
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Название компании</th>
-                                    <th>Адрес</th>
-                                    <th>Страна</th>
-                                    <th>Город</th>
-                                    <th>Информация о компании<br/>реквизиты банка и.д.</th>
-                                    <th>Действия</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr v-for="(item, index) in user.companies" v-bind:class="{'is-delete' : item.is_delete == 1}">
-                                    <td class="vertical-align-middle">{{ item.name }}</td>
-                                    <td class="vertical-align-middle">{{ item.address }}</td>
-                                    <td class="vertical-align-middle">{{ item.county }}</td>
-                                    <td class="vertical-align-middle">{{ item.city }}</td>
-                                    <td class="vertical-align-middle">{{ item.info }}</td>
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Название компании</th>
+                                        <th>Адрес</th>
+                                        <th>Страна</th>
+                                        <th>Город</th>
+                                        <th>Информация о компании<br/>реквизиты банка и.д.</th>
+                                        <th>Действия</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="(item, index) in user.companies" v-bind:class="{'is-delete' : item.is_delete == 1}">
+                                        <td class="vertical-align-middle">{{ item.name }}</td>
+                                        <td class="vertical-align-middle">{{ item.address }}</td>
+                                        <td class="vertical-align-middle">{{ item.county }}</td>
+                                        <td class="vertical-align-middle">{{ item.city }}</td>
+                                        <td class="vertical-align-middle">{{ item.info }}</td>
 
-                                    <td class="vertical-align-middle">
-                                        <span class="btn btn-xs btn-default" @click="editCompany(item, index)">
-                                            <i class="fa fa-edit"></i> <!--Изменить-->
-                                        </span>
-                                        <span class="btn btn-xs btn-default" @click="deleteCompany(index)">
-                                             <span v-if="item.is_delete == 0"><i class="fa fa-remove" ></i> <!--Удалить--></span>
-                                             <span v-else><i class="fa green fa-history"></i> <!--Восстановить--></span>
-                                        </span>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                        <td class="vertical-align-middle">
+                                            <span class="btn btn-xs btn-default" @click="editCompany(item, index)">
+                                                <i class="fa fa-edit"></i> <!--Изменить-->
+                                            </span>
+                                            <span class="btn btn-xs btn-default" @click="deleteCompany(index)">
+                                                 <span v-if="item.is_delete == 0"><i class="fa fa-remove" ></i> <!--Удалить--></span>
+                                                 <span v-else><i class="fa green fa-history"></i> <!--Восстановить--></span>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
@@ -383,6 +393,10 @@
                 this.roles_list =  res.data;
             });
 
+            setTimeout(()=>{
+                $(".phone-mask").mask("+7(999) 999-9999");
+            },2000);
+
         },
         methods:{
             showAddAddress(){
@@ -426,20 +440,6 @@
                 else
                     this.$delete(this.user.addresses, index);
             },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             showAddCompany(){
                 this.company_save.index   = -1;
                 this.company_save.name    = '';
@@ -558,9 +558,6 @@
 
             },
             ...mapActions(['SetErrors'])
-        },
-        updated(){
-            $(".phone-mask").mask("+7(999) 999-9999");
         },
         computed:{
             ...mapGetters([

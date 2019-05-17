@@ -1,61 +1,61 @@
 <template>
     <div class="box">
 
-                    <div class="box-header with-border">
+        <div class="box-header with-border">
 
-                        <router-link :to="{ path: '/carriers/create'}" class="btn btn-primary ladda-button">
-                            <span class="ladda-label">
-                                <i class="fa fa-plus"></i> Создать курьер
-                            </span>
-                        </router-link>
+            <router-link :to="{ path: '/carriers/create'}" class="btn btn-primary ladda-button">
+                <span class="ladda-label">
+                    <i class="fa fa-plus"></i> Создать курьер
+                </span>
+            </router-link>
 
-                        <input id="filter-search" type="search" class="form-control input-sm pull-right" placeholder="Поиск" v-model="filter.search">
-                    </div>
+            <input id="filter-search" type="search" class="form-control input-sm pull-right" placeholder="Поиск" v-model="filter.search">
+        </div>
 
+        <div class="table-responsive">
+               <table class="table table-bordered ">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Название</th>
+                                <th>Цена</th>
+                                <th>Описание</th>
+                                <th>Логотип</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="odd even" v-for="(item, index) in carriers.data">
+                                <td>{{ item.id }}</td>
+                                <td>{{ item.name }}</td>
+                                <td>{{ item.price }}</td>
+                                <td>{{ item.delivery_text }}</td>
+                                <td>
+                                    <img class="img" v-if="item.logo" v-bind:src="item.logo ? '/uploads/carriers/' + item.logo : ''" width="70"/>
+                                </td>
+                                <td>
+                                    <router-link :to="{ path: '/carriers/edit/' + item.id}" class="btn btn-xs btn-default">
+                                        <i class="fa fa-edit"></i> Изменить
+                                    </router-link>
 
-                   <table class="table table-bordered ">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Название</th>
-                                    <th>Цена</th>
-                                    <th>Описание</th>
-                                    <th>Логотип</th>
-                                    <th>Действия</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="odd even" v-for="(item, index) in carriers.data">
-                                    <td>{{ item.id }}</td>
-                                    <td>{{ item.name }}</td>
-                                    <td>{{ item.price }}</td>
-                                    <td>{{ item.delivery_text }}</td>
-                                    <td>
-                                        <img class="img" v-if="item.logo" v-bind:src="item.logo ? '/uploads/carriers/' + item.logo : ''" width="70"/>
-                                    </td>
-                                    <td>
-                                        <router-link :to="{ path: '/carriers/edit/' + item.id}" class="btn btn-xs btn-default">
-                                            <i class="fa fa-edit"></i> Изменить
-                                        </router-link>
-
-                                        <a class="btn btn-xs btn-default" @click="carrierDelete(item, index)">
-                                            <i class="fa fa-remove"></i> Удалить
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Название</th>
-                                    <th>Цена</th>
-                                    <th>Описание</th>
-                                    <th>Логотип</th>
-                                    <th>Действия</th>
-                                </tr>
-                            </tfoot>
-                   </table>
-
+                                    <a class="btn btn-xs btn-default" @click="carrierDelete(item, index)">
+                                        <i class="fa fa-remove"></i> Удалить
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Название</th>
+                                <th>Цена</th>
+                                <th>Описание</th>
+                                <th>Логотип</th>
+                                <th>Действия</th>
+                            </tr>
+                        </tfoot>
+               </table>
+        </div>
         <div class="text-center">
             <paginate
                     v-if="carriers.last_page > 1"

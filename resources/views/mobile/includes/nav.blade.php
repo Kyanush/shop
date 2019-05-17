@@ -8,12 +8,14 @@
 
                     @auth
                         <i class="kaspi-menu__signin-icon icon icon_close"></i>
-                        <a style="color: #fff;text-decoration: none;" href="/logout">Выйти</a>
+                        <a href="/logout">Выйти</a>
+                        &nbsp;|&nbsp;
+                        <a href="/my-account">{{ Auth::user()->name }}</a>
                     @else
                         <i class="kaspi-menu__signin-icon icon icon_user"></i>
-                        <a style="color: #fff;text-decoration: none;" href="/login">Вход</a>
-                        /
-                        <a style="color: #fff;text-decoration: none;" href="/register">Регистрация</a>
+                        <a href="/login">Вход</a>
+                        &nbsp;|&nbsp;
+                        <a href="/register">Регистрация</a>
                     @endauth
 
                 </div>

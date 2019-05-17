@@ -114,10 +114,7 @@
 
                     <div style="color:#fff;text-decoration:underline;font-size:12px;margin-top:5px;">Позвоните нам:
                         <span class="wmi-callto">
-                            <a href="tel:+77782002000">+7 (778) 200 20 00</a>,
-                        </span>
-                        <span class="wmi-callto">
-                            <a href="tel:+77075511979">+7 (707) 551 1979</a>
+                            <a href="tel:+77075511979" style="color: #ffffff;">+7 (707) 551 1979</a>
                         </span>
                     </div>
                 </div>

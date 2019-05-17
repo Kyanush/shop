@@ -162,20 +162,46 @@ export default function(Vue){
             }
 
             if(dateArray){
+
                 if(type_format == 'date')
                     return dateArray[3] + '.' + dateArray[2] + '.' + dateArray[1];
+
                 else if(type_format == 'datetime')
                     return dateArray[3] + '.' + dateArray[2] + '.' + dateArray[1]
                         + ' ' +
                         dateArray[4] + ':' + dateArray[5];
+
                 else if(type_format == 'time')
                     return dateArray[4] + ':' + dateArray[5];
+
                 else if(type_format == 'fulltime')
                     return dateArray[4] + ':' + dateArray[5] + ':' + dateArray[6];
             }else{
                 return '';
             }
+        },
+
+        dateFormatTodayYesterday(dateString){
+            var date = this.dateFormat(dateString, 'date');
+
+            var today = new Date();
+            var month = today.getMonth() + 1;
+            var current_date = today.getDate() + '.' + (month < 10 ? ('0' + month) : month) + '.' + today.getFullYear();
+
+            var today = new Date(Date.now() - 86400000);
+            var month = today.getMonth() + 1;
+            var yesterday_date = today.getDate() + '.' + (month < 10 ? ('0' + month) : month) + '.' + today.getFullYear();
+
+            if(date == current_date)
+                return 'сегодня ' + this.dateFormat(dateString, 'time');
+
+            if(date == yesterday_date)
+                return 'вчера ' + this.dateFormat(dateString, 'time');
+
+            return this.dateFormat(dateString, 'datetime');
         }
+
+
     }
 
     Object.defineProperties(Vue.prototype,{

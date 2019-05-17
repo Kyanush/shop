@@ -1,58 +1,57 @@
 <template>
     <div class="box">
 
-                    <div class="box-header with-border">
+        <div class="box-header with-border">
+            <router-link :to="{ path: '/order-statuses/create'}" class="btn btn-primary ladda-button">
+                <span class="ladda-label">
+                    <i class="fa fa-plus"></i> Создать статус заказа
+                </span>
+            </router-link>
+            <input id="filter-search" type="search" class="form-control input-sm pull-right" placeholder="Поиск" v-model="filter.search">
+        </div>
 
-                        <router-link :to="{ path: '/order-statuses/create'}" class="btn btn-primary ladda-button">
-                            <span class="ladda-label">
-                                <i class="fa fa-plus"></i> Создать статус заказа
-                            </span>
-                        </router-link>
+        <div class="table-responsive">
+           <table class="table table-bordered ">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Название</th>
+                            <th>Иконка</th>
+                            <th width="500px">Описание</th>
+                            <th>Отправить уведомление</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="odd even" v-for="(item, index) in order_statuses.data">
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.name }}</td>
+                            <td><i v-bind:class="item.class"></i></td>
+                            <td>{{ item.description }}</td>
+                            <td>{{ item.notification == 1 ? 'Да' : 'Нет' }}</td>
+                            <td>
+                                <router-link :to="{ path: '/order-statuses/edit/' + item.id}" class="btn btn-xs btn-default">
+                                    <i class="fa fa-edit"></i> Изменить
+                                </router-link>
 
-                        <input id="filter-search" type="search" class="form-control input-sm pull-right" placeholder="Поиск" v-model="filter.search">
-                    </div>
-
-
-                   <table class="table table-bordered ">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Название</th>
-                                    <th>Иконка</th>
-                                    <th width="500px">Описание</th>
-                                    <th>Отправить уведомление</th>
-                                    <th>Действия</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="odd even" v-for="(item, index) in order_statuses.data">
-                                    <td>{{ item.id }}</td>
-                                    <td>{{ item.name }}</td>
-                                    <td><i v-bind:class="item.class"></i></td>
-                                    <td>{{ item.description }}</td>
-                                    <td>{{ item.notification == 1 ? 'Да' : 'Нет' }}</td>
-                                    <td>
-                                        <router-link :to="{ path: '/order-statuses/edit/' + item.id}" class="btn btn-xs btn-default">
-                                            <i class="fa fa-edit"></i> Изменить
-                                        </router-link>
-
-                                        <a class="btn btn-xs btn-default" @click="orderStatusDelete(item, index)">
-                                            <i class="fa fa-remove"></i> Удалить
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Название</th>
-                                    <th>Иконка</th>
-                                    <th>Описание</th>
-                                    <th>Отправить уведомление</th>
-                                    <th>Действия</th>
-                                </tr>
-                            </tfoot>
-                   </table>
+                                <a class="btn btn-xs btn-default" @click="orderStatusDelete(item, index)">
+                                    <i class="fa fa-remove"></i> Удалить
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>ID</th>
+                            <th>Название</th>
+                            <th>Иконка</th>
+                            <th>Описание</th>
+                            <th>Отправить уведомление</th>
+                            <th>Действия</th>
+                        </tr>
+                    </tfoot>
+           </table>
+        </div>
 
         <div class="text-center">
             <paginate

@@ -199,6 +199,10 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         //Обратный звонок
         Route::get('callbacks-list',             'CallbackController@list');
         Route::post('callback-delete/{id}',      'CallbackController@delete')->where(['id' => '[0-9]+']);
+        Route::post('callback-save',             'CallbackController@save');
+        Route::get('callback-view/{id}',         'CallbackController@view')->where(['id' => '[0-9]+']);
+        Route::get('new-callbacks-count',        'CallbackController@newCallbacksCount');
+
 
         //Заказы
         Route::get('orders-list',                'OrderController@list');

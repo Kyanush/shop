@@ -577,19 +577,19 @@
                         <div class="oneclick_show_text">
                             Имя:
                         </div>
-                        <input @auth disabled value="{{ Auth::user()->name }}" @endauth type="text" name="name" placeholder="Имя"/>
+                        <input @auth value="{{ Auth::user()->name }}" @endauth type="text" name="name" placeholder="Имя"/>
                     </div>
                     <div class="oneclick_show_input">
                         <div class="oneclick_show_text">
                             E-mail:
                         </div>
-                        <input @auth disabled value="{{ Auth::user()->email }}" @endauth type="email" name="email" placeholder="E-mail"/>
+                        <input @auth value="{{ Auth::user()->email }}" @endauth type="email" name="email" placeholder="E-mail"/>
                     </div>
                     <div class="oneclick_show_input">
                         <div class="oneclick_show_text">
                             Введите номер телефона:
                         </div>
-                        <input @auth disabled value="{{ Auth::user()->phone }}" @endauth type="text" name="phone" placeholder="+7 (___) ___-__-__" class="phone-mask"/>
+                        <input @auth value="{{ Auth::user()->phone }}" @endauth type="text" name="phone" placeholder="+7 (___) ___-__-__" class="phone-mask"/>
                     </div>
                 </div>
                 <div class="oneclick_button">

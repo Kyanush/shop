@@ -329,7 +329,8 @@
 
                                 <div class="col-md-12">
                                     <div id="group-products">
-                                        <table class="table table-striped">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
                                             <thead>
                                             <tr>
                                                 <th>ID</th>
@@ -363,6 +364,7 @@
                                             </tr>
                                             </tbody>
                                         </table>
+                                        </div>
                                     </div>
 
                                     <hr/>
@@ -382,7 +384,8 @@
                                 <div class="col-md-12">
 
                                     <div id="group-with_this_product_buy">
-                                        <table class="table table-striped">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped">
                                             <thead>
                                                 <tr>
                                                     <th>Товар ID</th>
@@ -409,6 +412,7 @@
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        </div>
                                     </div>
 
                                     <hr/>

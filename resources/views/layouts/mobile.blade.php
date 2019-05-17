@@ -35,7 +35,7 @@
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&amp;subset=cyrillic" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/mobile/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/mobile/css/style.css?r={{ rand() }}">
 
 
     <!-- swiper -->
@@ -71,6 +71,19 @@
 
 <body>
 
+    <input type="hidden"
+           id="user_info"
+               <?php
+                  $user = Auth::user();
+               ?>
+               value="{{ json_encode([ 'name'      => ($user->name  ?? ''),
+                                       'email'     => ($user->email ?? ''),
+                                       'phone'     => ($user->phone ?? ''),
+                                       'addresses' => ($user->addresses ?? [])
+                                    ]) }}"
+    />
+
+
 <span id="app">
     <div id="page" class="layout">
         <header class="header">
@@ -99,8 +112,8 @@
     </div>
 @endif
 
-<script src="/global/script.js"></script>
-<script type="text/javascript" src="/mobile/js/script.js"></script>
+<script src="/global/script.js?r={{ rand() }}"></script>
+<script type="text/javascript" src="/mobile/js/script.js?r={{ rand() }}"></script>
 
 @include('includes.analytics')
 

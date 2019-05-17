@@ -35,14 +35,7 @@ class OrderController extends AdminController
             'user',
             'status',
             'statusHistory' => function($query){
-                $query->with([
-                    'status' => function($query){
-                        $query->select(['id', 'name', 'class']);
-                    },
-                    'user' => function($query){
-                        $query->select(['id', 'name']);
-                    }
-                ]);
+                $query->with(['status', 'user']);
             },
             'shippingAddress',
             'carrier',
@@ -50,7 +43,10 @@ class OrderController extends AdminController
             'payment'
         ])->findOrFail($id);
 
-        return  $this->sendResponse($order);
+        return  $this->sendResponse([
+            'order'        => $order,
+            'whereOrdered' => $order->whereOrdered()
+        ]);
     }
 
 

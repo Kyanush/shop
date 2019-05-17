@@ -12,8 +12,8 @@
                         <input id="filter-search" type="search" class="form-control input-sm pull-right" placeholder="Поиск" v-model="filter.search">
                     </div>
 
-
-                   <table class="table table-bordered ">
+                    <div class="table-responsive">
+                        <table class="table table-bordered ">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -44,7 +44,7 @@
                                 </tr>
                             </tfoot>
                    </table>
-
+                    </div>
         <div class="text-center">
             <paginate
                     v-if="attributesSets.last_page > 1"

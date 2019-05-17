@@ -107,7 +107,8 @@
                                  <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('category.class')}" style="margin-top:20px;">
                                      <h4><b>Готовые фильтры по категорию</b></h4>
 
-                                     <table class="table table-bordered ">
+                                     <div class="table-responsive">
+                                          <table class="table table-bordered ">
                                          <thead>
                                          <tr>
                                              <th>Название</th>
@@ -160,6 +161,8 @@
                                          </tr>
                                          </tfoot>
                                      </table>
+                                     </div>
+
                                  </div>
                              </div>
                              <div v-bind:class="{'active' : tab_active == 'tab_seo'}" role="tabpanel" class="tab-pane" id="tab_seo">

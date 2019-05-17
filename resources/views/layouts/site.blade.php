@@ -32,11 +32,12 @@
 
     <script type="text/javascript" src="/site/js/jquery-3.3.1.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/site/css/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="/site/css/stylesheet_adaptive.css">
-    <link rel="stylesheet" type="text/css" href="/site/css/style.css">
-    <link rel="icon" type="image/png" href="/site/images/logo_firm.png" />
 
+    <link rel="stylesheet" type="text/css" href="/site/css/stylesheet.css?r={{ rand() }}">
+    <link rel="stylesheet" type="text/css" href="/site/css/stylesheet_adaptive.css?r={{ rand() }}">
+    <link rel="stylesheet" type="text/css" href="/site/css/style.css?r={{ rand() }}">
+
+    <link rel="icon" type="image/png" href="/mobile/img/logo.png" />
 
     @yield('end_styles')
     @yield('start_scripts')
@@ -123,7 +124,6 @@
                 <span class="address"><img src="/site/images/rumi_shops_link.png"/> г. Алматы, ул. Жибек жолы 115, оф. 113 (Рядом Аэровокзала)</span>
                 <span class="phone">
                     <img src="/site/images/callback_icon.png">
-                    <a href="tel:+77782002000">+7 (778) 200 20 00</a>,
                     <a href="tel:+77075511979">+7 (707) 551 1979</a>
                 </span>
             </div>
@@ -160,8 +160,13 @@
             </div>
             <div id="search_adaptive_icon"></div>
             <div id="header_phones">
-                <a href="tel:+77782002000"><span class="phone_top">+7 (778) <span>200 20 00</span></span></a>
-                <div class="everyday_text">Круглосуточно
+                <a href="tel:+77075511979">
+                    <span class="phone_top">
+                        +7 (707) <span>551 1979</span>
+                    </span>
+                </a>
+                <div class="everyday_text">
+                    Круглосуточно
                     <span class="callback_button"><span>Обратный звонок</span></span>
                 </div>
             </div>
@@ -447,7 +452,15 @@
                     Введите номер телефона <span class="required">*</span>:
                 </div>
                 <div class="callback_show_input">
-                    <input type="text" name="phone" class="phone-mask" placeholder="+7 (___) ___-__-__"/>
+
+                    <input type="text"
+                           name="phone"
+                           class="phone-mask"
+                           @auth
+                               value="{{ Auth::user()->phone }}"
+                           @endauth
+                           placeholder="+7 (___) ___-__-__"/>
+
                     <span class="callback_phone_error"></span>
                 </div>
             </div>
@@ -499,8 +512,8 @@
 <!-- Mask --->
 
 
-<script src="/global/script.js"></script>
-<script src="/site/js/script.js"></script>
+<script src="/global/script.js?r={{ rand() }}"></script>
+<script src="/site/js/script.js?r={{ rand() }}"></script>
 
 </body>
 </html>

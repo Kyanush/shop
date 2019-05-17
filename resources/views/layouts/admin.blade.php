@@ -12,7 +12,11 @@
 
     @yield('before_styles')
 
+    <!--
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    -->
+    <meta content="" name="viewport">
+
     <!-- Bootstrap 3.3.5 -->
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/') }}/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -86,7 +90,7 @@
 
 @yield('before_scripts')
 <!-- JavaScripts -->
-<script src="{{ mix('js/app.js') }}"></script>
+<script src="{{ mix('js/app.js') }}?r={{ rand() }}"></script>
 
 <script>window.jQuery || document.write('<script src="{{ asset('vendor/adminlte') }}/plugins/jQuery/jQuery-2.2.3.min.js"><\/script>')</script>
 <!-- Bootstrap 3.3.5 -->

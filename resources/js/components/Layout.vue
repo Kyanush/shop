@@ -101,7 +101,6 @@
                     <!-- ==== Recommended place for admin menu items ==== -->
                     <!-- ================================================ -->
 
-
                     <li class="treeview">
                         <a href="#">
                             <i class="fa fa-shopping-basket" aria-hidden="true"></i>
@@ -137,7 +136,6 @@
                         </ul>
                     </li>
 
-
                     <li class="treeview">
                         <a href="#">
                             <i class="fa fa-tag"></i>
@@ -164,7 +162,7 @@
                         <router-link :to="{ path: '/orders'}">
                             <i class="fa fa-cart-arrow-down" aria-hidden="true"></i>
                             <span>Заказы </span>
-                            <span v-if="new_orders_count > 0" class="badge badge-success new-orders-count">
+                            <span v-if="new_orders_count > 0" class="badge badge-success new-count">
                                 {{ new_orders_count }}
                             </span>
                         </router-link>
@@ -188,10 +186,11 @@
                         <router-link :to="{ path: '/callbacks'}">
                             <i class="fa fa-phone" aria-hidden="true"></i>
                             <span>Обратный звонок</span>
+                            <span v-if="new_callbacks_count > 0" class="badge badge-success new-count">
+                                {{ new_callbacks_count }}
+                            </span>
                         </router-link>
                     </li>
-
-
 
                     <li class="treeview">
                         <a href="#">
@@ -199,7 +198,6 @@
                             <span>Справочники</span>
                             <i class="fa fa-angle-left pull-right"></i>
                         </a>
-
                         <ul class="treeview-menu" style="display: none;">
                             <li v-bind:class="{'active' : menu_active('/categories/')}">
                                 <router-link :to="{ path: '/categories'}">
@@ -226,10 +224,15 @@
                                 </router-link>
                             </li>
                         </ul>
-
-
-
                     </li>
+
+                    <li v-bind:class="{'active' : menu_active('/main/')}">
+                        <router-link :to="{ path: '/main'}">
+                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                            <span>Календарь</span>
+                        </router-link>
+                    </li>
+
 <!--
 
                     <li><a href="http://estarter-ecommerce-for-laravel/admin/notification-templates"><i class="fa fa-list"></i> <span>Notification Templates</span></a></li>
@@ -292,7 +295,8 @@
         },
         data() {
             return {
-                new_orders_count: 0
+                new_orders_count: 0,
+                new_callbacks_count: 0
             }
         },
         props: ['user'],
@@ -302,6 +306,9 @@
         created(){
             axios.get('/admin/new-orders-count').then((res) => {
                 this.new_orders_count = res.data;
+            });
+            axios.get('/admin/new-callbacks-count').then((res) => {
+                this.new_callbacks_count = res.data;
             });
 
             this.SetUser(this.user);
@@ -328,10 +335,9 @@
 </script>
 
 <style>
-    #content {
-        height: auto;
-        display: table;
+    #content{
         width: 100%;
+        display: -webkit-box;
     }
     .role-desc{
         font-size: 10px;

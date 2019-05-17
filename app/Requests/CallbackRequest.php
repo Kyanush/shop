@@ -8,7 +8,7 @@ class CallbackRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'phone' => 'max:255|required'
+            'phone' => 'max:255|required|phone'
         ];
         return $rules;
     }

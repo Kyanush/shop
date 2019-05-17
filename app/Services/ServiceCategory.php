@@ -26,7 +26,7 @@ class ServiceCategory
                     'text'      => $item->name,
                     'parent_id' => $item->parent_id,
                     'icon'      => 'fa fa-folder icon-state-default',
-                    'opened'    => true
+                    'opened'    => false
                 ];
             }else if($type == 2){
                 return [

@@ -34,7 +34,8 @@ import order_statuses_save from  '../components/order-statuses/Save.vue';
 
 import specific_prices_list from  '../components/specific-prices/List.vue';
 
-import callbacks_list from  '../components/callbacks/List.vue';
+import callbacks_list   from  '../components/callbacks/List.vue';
+import callbacks_detail from  '../components/callbacks/Save.vue';
 
 import orders_list     from  '../components/orders/List.vue';
 import orders_detail   from  '../components/orders/Detail.vue';
@@ -432,7 +433,17 @@ export default new Router({
                 ]
             }
         },
-
+        {
+            path: '/callbacks/edit/:id',
+            name: 'Редактировать слайдер',
+            component: callbacks_detail,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Обратный звонок', link: '/callbacks' },
+                ]
+            }
+        },
 
 
 

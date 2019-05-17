@@ -26,7 +26,8 @@
                 <div class="panel-body" v-show="product_show_filter">
                     <div class="row">
                         <div class="col-md-6">
-                            <table class="table table-bordered ">
+                            <div class="table-responsive">
+                                <table class="table table-bordered ">
                                 <tbody class="filter">
                                 <tr class="odd even">
                                     <td><b>Название товара:</b></td>
@@ -99,19 +100,22 @@
 
                                 </tbody>
                             </table>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="scroll-catalog">
-                                <table>
-                                    <tbody class="filter">
-                                    <tr class="odd even">
-                                        <td colspan="2">
-                                            <v-jstree :data="catalogs_tree" @item-click="selectedCatalog"></v-jstree>
-                                            <!--  show-checkbox multiple allow-batch whole-row -->
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                                <div class="table-responsive">
+                                    <table>
+                                        <tbody class="filter">
+                                        <tr class="odd even">
+                                            <td colspan="2">
+                                                <v-jstree :data="catalogs_tree" @item-click="selectedCatalog"></v-jstree>
+                                                <!--  show-checkbox multiple allow-batch whole-row -->
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -132,7 +136,8 @@
                        v-bind:class="{'fa-eye green': !product_attribute_show_filter,  'fa-eye-slash red': product_attribute_show_filter}"></i>
                 </div>
                 <div class="panel-body" v-show="product_attribute_show_filter">
-                    <table class="table table-bordered ">
+                    <div class="table-responsive">
+                        <table class="table table-bordered ">
                         <tbody class="filter">
                         <tr class="odd even" v-for="item in products_attributes_filters">
                             <td colspan="2">
@@ -169,6 +174,7 @@
                         </tr>
                         </tbody>
                     </table>
+                    </div>
                 </div>
             </div>
 
@@ -176,7 +182,8 @@
 
         </div>
 
-        <table class="table table-bordered ">
+        <div class="table-responsive">
+            <table class="table table-bordered ">
             <thead>
             <tr>
                 <th>ID</th>
@@ -193,7 +200,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="odd even" v-for="(item, index) in products.data" v-bind:class="{ 'deleted': !item.active }">
+            <tr class="odd even" v-for="(item, index) in products.data" v-bind:class="{ 'deleted': !item.active || !item.stock }">
                 <td>{{ item.id }}</td>
                 <td>
                     <router-link :to="{ path: '/products/edit/' + item.id}">
@@ -219,7 +226,7 @@
                         {{ item.format_price }}
                     </span>
                 </td>
-                <td>{{ item.stock }}</td>
+                <td :class="{ 'red': !item.stock }">{{ item.stock }}</td>
                 <td>{{ item.view_count }}</td>
                 <td>
                     {{ dateFormat(item.created_at) }}
@@ -266,7 +273,7 @@
             </tr>
             </tfoot>
         </table>
-
+        </div>
         <div class="text-center">
             <paginate
                     v-if="products.last_page > 1"
