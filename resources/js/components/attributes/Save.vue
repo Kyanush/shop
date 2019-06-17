@@ -49,7 +49,7 @@
 
                     <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('attribute.use_in_filter')}">
                         <label>Показывать в фильтре <span class="red">*</span></label>
-                        <select class="form-control" v-model="attribute.use_in_filter" v-bind:disabled="attribute.type != 'dropdown' && attribute.type != 'multiple_select'">
+                        <select class="form-control" v-model="attribute.use_in_filter" v-bind:disabled="attribute.type != 'dropdown' && attribute.type != 'multiple_select'  && attribute.type != 'color'">
                             <option value="0">Нет</option>
                             <option value="1">Да</option>
                         </select>
@@ -136,41 +136,87 @@
                         </span>
                     </div>
 
-                    <div class="form-group attr-field attr-type-dropdown col-md-12"  v-if="attribute.type == 'multiple_select' || attribute.type == 'dropdown'">
-                        <label>{{ attribute.type == 'multiple_select' ? 'Множественный выбор' : 'Выбор' }}</label>
-                        <div class="well">
-                            <a @click="addOption" id="add_option">
-                                <i class="fa fa-plus"></i>
-                                Создать вариант
-                            </a>
-                            <hr>
-                            <div class="options">
+                    <div class="form-group attr-field attr-type-dropdown col-md-12" v-if="attribute.type == 'multiple_select' || attribute.type == 'dropdown' || attribute.type == 'color'">
 
-                                <div class="form-group option" v-for="(item, index) in attribute.values">
-                                    <label>вариант #{{ index + 1}}</label>
-                                    <div class="input-group">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <input  type="text" v-model="attribute.values[index].value" class="form-control" v-bind:disabled="item.is_delete == 1" placeholder="Значение">
+
+                        <div class="table-responsive1">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td colspan="2">
+
+                                            <button class="btn btn-primary" @click="addOption" type="button">
+                                                <i class="fa fa-plus"></i>
+                                                Создать вариант
+                                            </button>
+
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td width="30"><b>№</b></td>
+                                        <td><b>Значение</b></td>
+                                        <td><b>Код</b></td>
+                                        <td><b>Свойство</b></td>
+                                        <td width="30"><b>Удалить</b></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item, index) in attribute.values">
+                                        <td>
+                                            #{{ index + 1}}
+                                        </td>
+                                        <td>
+                                            <input  type="text" v-model="attribute.values[index].value" class="form-control" v-bind:disabled="item.is_delete == 1" placeholder="Значение">
+                                        </td>
+                                        <td>
+                                            <input  type="text" v-model="attribute.values[index].code"  class="form-control" v-bind:disabled="item.is_delete == 1" placeholder="Код">
+                                        </td>
+                                        <td>
+
+                                            <div class="input-group" v-if="attribute.type == 'color'">
+                                                <input v-model="attribute.values[index].props"
+                                                       type="text"
+                                                       placeholder="#f6f6f6"
+                                                       class="form-control">
+                                                <div class="input-group-addon">
+                                                    <swatches
+                                                            :trigger-style="{ width: '18px', height: '18px' }"
+                                                            v-model="attribute.values[index].props"
+                                                            colors="text-advanced"
+                                                            popover-to="left"></swatches>
+                                                </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <input  type="text" v-model="attribute.values[index].code"  class="form-control" v-bind:disabled="item.is_delete == 1" placeholder="Код">
-                                            </div>
-                                        </div>
-                                        <span class="input-group-addon">
-                                            <a @click="deleteOption(index)" class="remove-option">
+
+                                        </td>
+                                        <td class="text-center">
+                                            <a title="Удалить" class="btn btn-xs btn-default red" @click="deleteOption(index)">
                                                 <i class="fa fa-remove"></i>
                                             </a>
-                                        </span>
-                                    </div>
-                                    <span v-if="IsError('attribute.values.' + index + '.value')" class="help-block required" v-for="e in IsError('attribute.values.' + index + '.value')">
-                                            {{ e }}
-                                    </span>
-                                </div>
-
-                            </div>
-
+                                            <span v-if="IsError('attribute.values.' + index + '.value')" class="help-block required" v-for="e in IsError('attribute.values.' + index + '.value')">
+                                                    {{ e }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td width="30"><b>№</b></td>
+                                        <td><b>Значение</b></td>
+                                        <td><b>Код</b></td>
+                                        <td><b>Свойство</b></td>
+                                        <td width="30"><b>Удалить</b></td>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
+
+
+
+
+
                     </div>
 
 
@@ -231,8 +277,6 @@
             </div><!-- /.box -->
         </form>
 
-
-
     </div>
 </template>
 
@@ -242,9 +286,16 @@
     import { mapActions } from 'vuex';
     import Select2 from 'v-select2-component';
 
+    //https://saintplay.github.io/vue-swatches/#sub-material-colors
+    import Swatches from 'vue-swatches'
+    // Import the styles too, globally
+    import "vue-swatches/dist/vue-swatches.min.css"
+
+
+
     export default {
         components:{
-            Select2
+            Select2, Swatches
         },
         data () {
             return {
@@ -263,6 +314,7 @@
                         id: 0,
                         value: '',
                         code: '',
+                        props: '',
                         is_delete: 0
                     }]
                 },
@@ -294,6 +346,10 @@
                     {
                         value: 'media',
                         name: 'Картинка - Image'
+                    },
+                    {
+                        value: 'color',
+                        name: 'Цвет товара - Color'
                     }
                 ]
             }
@@ -324,6 +380,9 @@
             },
         },
         methods:{
+
+
+
             convertDataSelect2(values, column_id, column_text, disabled_column, default_option){
                 return this.$helper.convertDataSelect2(values, column_id, column_text, disabled_column, default_option);
             },
@@ -337,6 +396,7 @@
                         id: 0,
                         value: '',
                         code: '',
+                        props: '',
                         is_delete: 0
                     }];
 
@@ -350,6 +410,7 @@
                         id: 0,
                         value: '',
                         code: '',
+                        props: '',
                         is_delete: 0
                     }];
                 }
@@ -364,6 +425,7 @@
                     id: 0,
                     value: '',
                     code: '',
+                    props: '',
                     is_delete: false
                 });
             },
@@ -397,6 +459,7 @@
                     form_data.append('attribute[values]['+i+'][id]',        value.id);
                     form_data.append('attribute[values]['+i+'][value]',     value.value);
                     form_data.append('attribute[values]['+i+'][code]',      value.code);
+                    form_data.append('attribute[values]['+i+'][props]',     value.props);
                     form_data.append('attribute[values]['+i+'][is_delete]', value.is_delete);
                 });
 
@@ -431,6 +494,7 @@
                                         id: 0,
                                         value: '',
                                         code: '',
+                                        props: '',
                                         is_delete: 0
                                     }]
                             };
@@ -449,15 +513,11 @@
     }
 </script>
 
-<style>
+<style scoped>
     #add_option, .remove-option{
         cursor: pointer;
     }
     img {
         max-width: 100%;
-    }
-    .well{
-        height: 400px;
-        overflow-x: scroll;
     }
 </style>

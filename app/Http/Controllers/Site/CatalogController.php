@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
 use App\Services\ServiceCategory;
+use App\Services\ServiceCity;
 use App\Services\ServiceProduct;
 use App\Services\ServiceYouWatchedProduct;
 use App\Tools\Helpers;
+use App\Tools\Seo;
 
 class CatalogController extends Controller
 {
@@ -21,19 +23,36 @@ class CatalogController extends Controller
         $this->serviceProduct = $serviceProduct;
     }
 
-    public function c($category){
+    public function c($cCategory){
 
-        $category = Category::where('url', $category)->first();
+        //категория
+        $category = Category::where('url', $cCategory)->first();
+        //город
+        $currentCity = ServiceCity::getCurrentCity();
+        //seo
+        $seo = Seo::catalog($category);
 
         return view('mobile.c', [
-            'category' => $category
+            'category'    => $category,
+            'currentCity' => $currentCity,
+            'seo'         => $seo
         ]);
 
     }
 
-    public function catalog($category = ''){
+    public function catalogCity($city, $category){
+        return $this->catalogMain($city, $category);
+    }
 
-        $filters = Helpers::filtersProductsDecodeUrl($category);
+    public function catalog($category){
+        return $this->catalogMain('almaty', $category);
+    }
+
+    public function catalogMain($city, $category_code){
+        //категория
+        $category = Category::isActive()->where('url', $category_code)->firstOrFail();
+
+        $filters = Helpers::filtersProductsDecodeUrl($category_code);
 
         $filters['active'] = 1;
 
@@ -41,49 +60,50 @@ class CatalogController extends Controller
         $column  = $orderBy['sorting_product']['column'];
         $order   = $orderBy['sorting_product']['order'];
 
-        $priceMinMax = $this->serviceProduct->priceMinMax($filters);
+        $priceMinMax = $this->serviceProduct->priceMinMax(['category' => $filters['category'], 'active' => 1]);
         $productsAttributesFilters = $this->serviceProduct->productsAttributesFilters($filters);
 
 
 
 
         $products = Product::productInfoWith()
-                            ->where(function ($query){
-                                //скидки
-                                if(strpos(url()->current(), '/specials') !== false)
-                                {
-                                    $query->WhereHas('specificPrice', function ($query) {
-                                        $query->dateActive();
-                                    });
-                                }
-                            })
-                            ->filters($filters)
-                            ->filtersAttributes($filters)
-                            ->OrderBy($column, $order)
-                            ->paginate(16)->onEachSide(1);
+            ->where(function ($query){
+                //скидки
+                /*
+                if(strpos(url()->current(), '/specials') !== false)
+                {
+                    $query->WhereHas('specificPrice', function ($query) {
+                        $query->dateActive();
+                    });
+                }*/
+            })
+            ->filters($filters)
+            ->filtersAttributes($filters)
+            ->OrderBy($column, $order)
+            ->paginate(16)->onEachSide(1);
 
         $productsHitViewed = Product::productInfoWith()
-                                    ->filters($category ? ['category' => $category] : [])
-                                    ->OrderBy('viewed', 'DESC')
-                                    ->limit(10)
-                                    ->get();
+            ->filters($category_code ? ['category' => $category_code] : [])
+            ->OrderBy('viewed', 'DESC')
+            ->limit(10)
+            ->get();
 
 
         //Вы смотрели
         $serviceYouWatchedProduct = new ServiceYouWatchedProduct();
         $youWatchedProducts = $serviceYouWatchedProduct->listProducts();
 
+        //seo
+        $seo = Seo::catalog($category);
 
-        //категория
-        $category = Category::where('url', $category)->first();
+        //город
+        $currentCity = ServiceCity::getCurrentCity();
 
-        $listCategoryFilterLinks = null;
-        if($category)
-        {
-            $serviceCategory = new ServiceCategory();
-            $listCategoryFilterLinks = $serviceCategory->listCategoryFilterLinks($category->id);
-        }
+        //загловок
+        $title = $category->name  . ' в ' . $currentCity->name;
 
+        //Хлебная крошка
+        $breadcrumbs = ServiceCategory::breadcrumbCategories($category->parent_id, $title);
 
         return view(Helpers::isMobile() ? 'mobile.catalog' : 'site.catalog', [
             'products' => $products,
@@ -91,9 +111,12 @@ class CatalogController extends Controller
             'productsHitViewed' => $productsHitViewed,
             'filters' => $filters,
             'category' => $category,
-            'listCategoryFilterLinks' => $listCategoryFilterLinks,
             'priceMinMax' => $priceMinMax,
-            'productsAttributesFilters' => $productsAttributesFilters
+            'productsAttributesFilters' => $productsAttributesFilters,
+            'seo' => $seo,
+            'currentCity' => $currentCity,
+            'breadcrumbs' => $breadcrumbs,
+            'title' => $title
         ]);
     }
 

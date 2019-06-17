@@ -10,13 +10,10 @@
                     </span>
                     </a>
                 </div>
-                <div class="col-md-4">
-                    <div class="pull-right" v-if="!product_id">
-                        <Select2 style="width:400px" v-model="filter.product_id" :options="convertDataSelect2(products, 'id', 'text', false, true)"/>
+                <div class="col-md-8">
+                    <div class="pull-right">
+                        <input id="filter-search" type="search" class="form-control input-sm pull-right" placeholder="Поиск" v-model="filter.search">
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <input id="filter-search" type="search" class="form-control input-sm pull-right" placeholder="Поиск" v-model="filter.search">
                 </div>
             </div>
         </div>
@@ -133,8 +130,8 @@
 
                                 <div class="col-md-12">
                                     <div class="form-group" v-bind:class="{'has-error' : IsError('review.comment')}">
-                                        <label>Комментарий <span class="red">*</span></label>
-                                        <textarea  required v-model="review.comment" class="form-control" placeholder="Комментарий"></textarea>
+                                        <label>Комментарий</label>
+                                        <textarea   v-model="review.comment" class="form-control" placeholder="Комментарий"></textarea>
                                         <span v-if="IsError('review.comment')" class="help-block" v-for="e in IsError('review.comment')">
                                             {{ e }}
                                         </span>
@@ -205,7 +202,11 @@
                                     <div class="form-group" v-bind:class="{'has-error' : IsError('review.product_id')}">
                                         <label>Товар <span class="red">*</span></label>
 
-                                        <Select2 v-model="review.product_id" :options="convertDataSelect2(products, 'id', 'text')"/>
+                                        <Select2
+                                                @select="setReviewProductId($event)"
+                                                :settings="productsSearchSelect2.settings"
+                                                :options="productsSearchSelect2.options"
+                                        />
 
                                         <span v-if="IsError('review.product_id')" class="help-block" v-for="e in IsError('review.product_id')">
                                             {{ e }}
@@ -279,9 +280,36 @@
                 filter:{
                     page:   (this.$route.query.page       ? this.$route.query.page : 1),
                     search: (this.$route.query.search     ? this.$route.query.search : ''),
-                    product_id: (this.$route.query.product_id ? this.$route.query.product_id : (this.product_id > 0 ? this.product_id : 0))
                 },
-                products: []
+                productsSearchSelect2:{
+                    options:  [],
+                    settings: {
+                        placeholder: "Поиск",
+                        ajax: {
+                            url: '/admin/search-products',
+                            dataType: 'json',
+                            data: function (params) {
+                                var query = {
+                                    search: params.term,
+                                    perPage: 5
+                                }
+                                return query;
+                            },
+                            processResults: function (data) {
+                                var results = [];
+                                data.forEach(function (item, index){
+                                    results.push({
+                                        id:     item.id,
+                                        text:   item.name
+                                    });
+                                });
+                                return {
+                                    results: results
+                                };
+                            }
+                        }
+                    }
+                }
             }
         },
         watch: {
@@ -294,14 +322,14 @@
         },
         created() {
             this.getReviews();
-
-            axios.get('/admin/all-products-select2').then((res)=>{
-                this.products = res.data;
-            });
         },
         methods:{
             convertDataSelect2(values, column_id, column_text, disabled_column, default_option){
                 return this.$helper.convertDataSelect2(values, column_id, column_text, disabled_column, default_option);
+            },
+
+            setReviewProductId(item){
+                this.review.product_id = item.id;
             },
 
             saveReview(event){
@@ -334,8 +362,8 @@
                 if(this.filter.search)
                     params['search'] = this.filter.search;
 
-                if(this.filter.product_id > 0)
-                    params['product_id'] = this.filter.product_id;
+                if(this.product_id)
+                    params['product_id'] = this.product_id;
 
                 axios.get('/admin/reviews-list', {params:  params}).then(response => {
                     this.reviews = response.data;
@@ -388,12 +416,3 @@
         }
     }
 </script>
-
-<style>
-    #filter-search{
-        max-width: 300px;
-    }
-    .select2-container{
-        width: 100%!important;
-    }
-</style>

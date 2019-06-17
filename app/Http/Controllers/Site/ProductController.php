@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
-use App\Models\AttributeGroup;
+use App\Services\ServiceCategory;
+use App\Services\ServiceCity;
 use App\Services\ServiceYouWatchedProduct;
 use App\Tools\Helpers;
+use App\Tools\Seo;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -17,17 +19,22 @@ class ProductController extends Controller
     {
         $product = Product::find($product_id);
 
-        $products_interested = $product->productAccessories()->productInfoWith()->get();
-        if(count($products_interested) == 0 or empty($products_interested))
-            $products_interested = $product->groupProducts()->productInfoWith()->where('id', '<>', $product->id)->get();
-
         return view('includes.card_success_popup', [
-            'product'  => $product,
-            'products_interested' => $products_interested
+            'product'  => $product
         ]);
     }
 
-    public function productDetail($category_url, $product_url, $product_tab = '')
+    public function productDetailDefault($product_url, $product_tab = ''){
+        return $this->productDetailMain('', $product_url, '', $product_tab);
+    }
+    public function productDetailCity($city, $product_url, $product_tab = ''){
+        return $this->productDetailMain($city, $product_url, '', $product_tab);
+    }
+    public function productDetail($category_url, $product_url, $product_tab = ''){
+        return $this->productDetailMain('', $product_url, $category_url, $product_tab);
+    }
+
+    public function productDetailMain($city, $product_url, $category_url, $product_tab = '')
     {
 
         $product = Product::productInfoWith()
@@ -48,6 +55,8 @@ class ProductController extends Controller
                             ])
                             ->where('url', $product_url)
                             ->first();
+
+
         $group_products = $product->groupProducts()->productInfoWith()->where('id', '<>', $product->id)->get();
 
         $products_interested = $product->productAccessories()->productInfoWith()->get();
@@ -57,8 +66,34 @@ class ProductController extends Controller
         $serviceYouWatchedProduct->youWatchedProduct($product->id);
         $youWatchedProducts = $serviceYouWatchedProduct->listProducts($product->id);
 
+
+
         //Кол-во просмотров
         $product->increment('view_count');
+
+        //категория
+        $category = Category::where('url', $category_url)->first();
+        if(!$category)
+            $category = Category::find($product->categories[0]->id);
+
+        $tab_title = '';
+        switch ($product_tab){
+            case 'attributes':
+                $tab_title = 'характеристики и инструкция';
+                break;
+            case 'reviews':
+                $tab_title = 'отзывы и обзоры';
+                break;
+            case 'questions':
+                $tab_title = 'ответы на ваши вопросы';
+                break;
+        }
+
+        //Хлебная крошка
+        $breadcrumbs = ServiceCategory::breadcrumbCategories($category->id, $product->name . ($tab_title ? ': ' . $tab_title : ''));
+
+        //seo
+        $seo = Seo::productDetail($product, $category);
 
         return view(Helpers::isMobile() ? 'mobile.product.index' : 'site.product_detail', [
             'product'  => $product,
@@ -66,7 +101,10 @@ class ProductController extends Controller
             'group_products' => $group_products,
             'products_interested' => $products_interested,
             'youWatchedProducts' => $youWatchedProducts,
-            'category' => Category::where('url', $category_url)->first()
+            'category' => $category,
+            'seo' => $seo,
+            'breadcrumbs' => $breadcrumbs,
+            'tab_title' => $tab_title
         ]);
     }
 

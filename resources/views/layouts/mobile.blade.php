@@ -1,8 +1,10 @@
 {{ \App\Tools\Helpers::generateVisitNumber() }}
 
 <!DOCTYPE html>
-<html lang="ru" class="js" prefix="og: http://ogp.me/ns#"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="ru" class="js" prefix="og: https://ogp.me/ns#">
 
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
@@ -11,7 +13,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="yandex-verification" content="d9d1d901f0c53a09" />
     <meta name="google-site-verification" content="YOGU9Dh4gfT8os5uvRCSuQ_kwUhoUbXwqQFiNshBSHw" />
-    <link rel="icon" type="image/png" href="/mobile/img/logo.png" />
+    <link rel="icon" type="image/png" href="/mobile/img/logo-mini.png" />
 
 
     <title>@yield('title')</title>
@@ -35,7 +37,7 @@
 
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&amp;subset=cyrillic" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/mobile/css/style.css?r={{ rand() }}">
+    <link rel="stylesheet" type="text/css" href="/mobile/css/style.css">
 
 
     <!-- swiper -->
@@ -112,8 +114,8 @@
     </div>
 @endif
 
-<script src="/global/script.js?r={{ rand() }}"></script>
-<script type="text/javascript" src="/mobile/js/script.js?r={{ rand() }}"></script>
+<script src="/global/script.js"></script>
+<script type="text/javascript" src="/mobile/js/script.js"></script>
 
 @include('includes.analytics')
 

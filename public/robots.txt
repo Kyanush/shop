@@ -1,2 +1,3 @@
+Sitemap: https://shopx.kz/sitemap.xml
 User-agent: *
 Disallow:

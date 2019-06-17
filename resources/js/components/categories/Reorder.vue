@@ -35,7 +35,7 @@
                                                    <i class="glyphicon glyphicon-minus"></i>
                                              </button>
                                         </span>
-                                        <span class="category-name" v-bind:class="{'category-parent': (item['$foldClose'] && item.children && item.children.length)
+                                        <span class="category-name" v-bind:class="{'red': item.active == 0, 'category-parent': (item['$foldClose'] && item.children && item.children.length)
                                                                       ||
                                                                    (!item['$foldClose'] && item.children && item.children.length) }">
                                              {{ item.name }}

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\ServiceSlider;
 use App\Models\Product;
 use App\Tools\Helpers;
+use App\Tools\Seo;
 
 
 class MainController extends Controller
@@ -49,13 +50,16 @@ class MainController extends Controller
                     ->inRandomOrder()
                     ->get();
 
+        $seo = Seo::main();
+
         return view(Helpers::isMobile() ? 'mobile.main' : 'site.main',
             [
                 'listSlidersHomePage'          => $serviceSlider->listSlidersHomePage(),
                 'productsRecommend'            => $productsRecommend,
                 'productsDiscount'             => $productsDiscount,
                 'productsHit'                  => $productsHit,
-                'productsNew'                  => $productsNew
+                'productsNew'                  => $productsNew,
+                'seo'                          => $seo
             ]);
     }
 

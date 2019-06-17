@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AttributeGroup;
 use App\Services\ServiceProductFeaturesCompare;
 use App\Tools\Helpers;
+use App\Tools\Seo;
 use Redirect;
 
 class ProductFeaturesCompareController extends Controller
@@ -34,11 +35,12 @@ class ProductFeaturesCompareController extends Controller
 
         $attributeGroups = AttributeGroup::with('attributes')->OrderBy('sort')->get();
         $productFeaturesCompareList = $this->servicePFC->productFeaturesCompareList();
-
+        $seo = Seo::pageSeo('compare-products');
 
         return view(Helpers::isMobile() ? 'mobile.compare_products' : 'site.compare_products', [
             'attributeGroups' => $attributeGroups,
-            'productFeaturesCompareList' => $productFeaturesCompareList
+            'productFeaturesCompareList' => $productFeaturesCompareList,
+            'seo' => $seo
         ]);
     }
 

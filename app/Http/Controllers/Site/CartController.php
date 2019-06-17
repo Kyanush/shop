@@ -9,6 +9,7 @@ use App\Services\ServiceCart;
 use App\Services\ServiceOrder;
 use App\Services\ServiceUser;
 use App\Tools\Helpers;
+use App\Tools\Seo;
 use Illuminate\Http\Request;
 use App\Models\Order;
 
@@ -58,7 +59,10 @@ class CartController extends Controller
     }
 
     public function checkout(){
-        return view(Helpers::isMobile() ? 'mobile.checkout' : 'site.checkout');
+        $seo = Seo::pageSeo('checkout');
+        return view(Helpers::isMobile() ? 'mobile.checkout' : 'site.checkout',[
+            'seo' => $seo
+        ]);
     }
 
     public function listCart(){

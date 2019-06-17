@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Services\ServiceProductFeaturesWishlist;
 use App\Tools\Helpers;
+use App\Tools\Seo;
 use Redirect;
 
 class ProductFeaturesWishlistController extends Controller
@@ -29,8 +30,10 @@ class ProductFeaturesWishlistController extends Controller
     }
 
     public function wishlist(){
+        $seo = Seo::pageSeo('wishlist');
         return view(Helpers::isMobile() ? 'mobile.wishlist' : 'site.wishlist', [
-            'wishlist' => $this->servicePFW->list()
+            'wishlist' => $this->servicePFW->list(),
+            'seo' => $seo
         ]);
     }
 

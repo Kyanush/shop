@@ -1,4 +1,4 @@
-<div class="g-mb-gtn">
+<div class="g-mb-gtn" itemscope itemtype="http://schema.org/Product">
     <div class="item container g-pa0 g-bb0">
 
 
@@ -8,14 +8,14 @@
 
                     <div class="swiper-slide">
                         <div class="item__image-wrapper">
-                            <img alt="{{ $product->name }}" title="{{ $product->name }}" class="item__image" src="{{ $product->pathPhoto(true) }}"/>
+                            <img itemprop="image" alt="{{ $product->name }}" title="{{ $product->name }}" class="item__image" src="{{ $product->pathPhoto(true) }}"/>
                         </div>
                     </div>
 
                     @foreach($product->images as $image)
                         <div class="swiper-slide">
                             <div class="item__image-wrapper">
-                                <img alt="{{ $product->name }}" title="{{ $product->name }}" class="item__image" src="{{ $image->imagePath(true) }}"/>
+                                <img itemprop="image" alt="{{ $product->name }}" title="{{ $product->name }}" class="item__image" src="{{ $image->imagePath(true) }}"/>
                             </div>
                         </div>
                     @endforeach
@@ -80,7 +80,7 @@
         </div>
 
         <div class="item__info container">
-            <h1 class="item__name">
+            <h1 class="item__name" itemprop="name">
                 {{ $product->name }}
             </h1>
             <a class="item__rating">
@@ -99,24 +99,30 @@
             </button>
         </div>
 
-        <div class="item__prices">
-            <div class="item__debet">
-                <span class="item__prices-price">
-                    @if($product->specificPrice)
-                        <span class="price-old">
-                             {{ \App\Tools\Helpers::priceFormat($product->price) }}
+        <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+            <div class="item__prices">
+                <div class="item__debet">
+                    <span class="item__prices-price">
+                        @if($product->specificPrice)
+                            <span class="price-old">
+                                 {{ \App\Tools\Helpers::priceFormat($product->price) }}
+                            </span>
+                            &nbsp;
+                        @endif
+                        <span itemprop="price">
+                            {{ \App\Tools\Helpers::priceFormat($product->getReducedPrice()) }}
                         </span>
-                        &nbsp;
-                    @endif
-                    {{ \App\Tools\Helpers::priceFormat($product->getReducedPrice()) }}
-                </span>
+                        <span itemprop="priceCurrency" content="KZT"></span>
+                        <link itemprop="availability" href="http://schema.org/InStock">
+                    </span>
+                </div>
+                <!--
+                <div class="item__instalment">
+                    <span class="item__prices-title">В кредит</span>
+                    <span class="item__prices-price">19 654 ₸</span>
+                    <span class="item__add-info">х24 мес</span>
+                </div>-->
             </div>
-            <!--
-            <div class="item__instalment">
-                <span class="item__prices-title">В кредит</span>
-                <span class="item__prices-price">19 654 ₸</span>
-                <span class="item__add-info">х24 мес</span>
-            </div>-->
         </div>
 
 
@@ -124,7 +130,7 @@
 
     </div>
 
-    <h2 class="container-title">Поховые товары</h2>
+    <div class="container-title">Поховые товары</div>
     <div class="mount-sellers-offers _short-list" id="sellers">
         <div class="sellers-offers _short-list">
 
@@ -138,7 +144,10 @@
                                 @foreach($group_product->attributes as $attribute)
                                     @if($attribute->id == 50 and $attribute->pivot->value)
                                         <a title="{{ $attribute->pivot->value . '-' . $group_product->name }}" class="loan-selector__el" href="{{ $group_product->detailUrlProduct() }}">
-                                            <div style="background: {{ \App\Tools\Helpers::colorProduct($attribute->pivot->value) }}"></div>
+
+                                            <?php $attributeValue = $attribute->values()->where('value', $attribute->pivot->value)->first();?>
+
+                                            <div style="background: {{ $attributeValue->props ?? '#fff' }}"></div>
                                         </a>
                                     @endif
                                 @endforeach
@@ -147,7 +156,10 @@
                             @foreach($product->attributes as $attribute)
                                 @if($attribute->id == 50 and $attribute->pivot->value)
                                         <a title="{{ $attribute->pivot->value . '-' . $product->name }}" class="loan-selector__el _active">
-                                            <div style="background: {{ \App\Tools\Helpers::colorProduct($attribute->pivot->value) }}"></div>
+
+                                            <?php $attributeValue = $attribute->values()->where('value', $attribute->pivot->value)->first();?>
+
+                                            <div style="background: {{ $attributeValue->props ?? '#fff' }}"></div>
                                         </a>
                                 @endif
                             @endforeach
@@ -161,7 +173,7 @@
 
 
 
-            <h2 class="container-title">Характеристики</h2>
+            <div class="container-title">Характеристики</div>
             <div class="short-specifications container">
                 <ul class="short-specifications__list">
                     @foreach($product->attributes as $k => $attribute)
@@ -189,7 +201,7 @@
 
 
 
-            <h2 class="container-title">Отзывы</h2>
+            <div class="container-title">Отзывы</div>
             <div class="reviews__rating container ">
                 <div class="reviews__rating-heading">Рейтинг товара</div>
                 <a href="{{ $product->detailUrlProduct() }}/reviews" class="reviews__rating-link">
@@ -216,9 +228,9 @@
             </div>
 
 
-            <h2 class="container-title">Описание</h2>
+            <div class="container-title">Описание</div>
             <div class="container">
-                <div class="short-description">
+                <div class="short-description" itemprop="description">
                     {!! strip_tags(\App\Tools\Helpers::closeTags(\App\Tools\Helpers::limitWords($product->description, 30))) !!}
                 </div>
             </div>

@@ -6,65 +6,107 @@ Route::post('ckeditor-upload-image',   'UploadImageController@CkeditorUploadImag
 Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 
-Route::group(['namespace'  => 'Site'], function () {
-    Route::get('product-search', 'ProductController@productSearch');
+Route::get('/clear-cache', function() {
+    Artisan::call('cache:clear');
+    return "Cache is cleared";
+});
 
-    Route::get('/',          'MainController@main');
-    Route::post('product-features-compare/{product_id}', 'ProductFeaturesCompareController@addAndDelete')->where(['product_id' => '[0-9]+']);
+Route::group(['namespace'  => 'Site'], function () {
+    //главная страница
+    Route::get('/',          'MainController@main')->name('index');
+
+    //поиск товара
+    Route::get('product-search', 'ProductController@productSearch');
 
     //Корзина
     Route::post('cart-save',                'CartController@cartSave');
     Route::post('cart-delete/{product_id}', 'CartController@cartDelete')->where(['product_id' => '[0-9]+']);
-    Route::get('cart-total/{carrier_id?}', 'CartController@cartTotal')->where(['carrier_id' => '[0-9]+']);;
+    Route::get('cart-total/{carrier_id?}',  'CartController@cartTotal')->where(['carrier_id' => '[0-9]+']);;
     Route::get('header-cart-info',          'CartController@header_cart_info');
 
-    Route::get('checkout',   'CartController@checkout');
+    //Оформление заказа
+    Route::get('checkout',   'CartController@checkout')->name('checkout');
     Route::post('checkout',  'CartController@saveCheckout');
     Route::post('one-click-order',  'CartController@oneClickOrder');
 
+    //Оформление заказа ajax
     Route::post('list-cart',                'CartController@listCart');
-
     Route::post('list-carriers',            'CarrierController@listCarriers');
     Route::post('list-payments',            'PaymentController@listPayments');
 
+    //попап в корзину
     Route::get('card-success-popup/{product_id}', 'ProductController@cardSuccessPopup')->where(['product_id' => '[0-9]+']);
 
-    Route::get('product-features-compare-count',   'ProductFeaturesCompareController@count');
+    //количество - Сравнение товаров
+    Route::get('product-features-compare-count',         'ProductFeaturesCompareController@count');
+    //Добавление - Сравнение товаров
+    Route::post('product-features-compare/{product_id}', 'ProductFeaturesCompareController@addAndDelete')->where(['product_id' => '[0-9]+']);
+    //Сравнение товаров
+    Route::get('compare-products',                       'ProductFeaturesCompareController@compareProducts')->name('compare_products');
+    Route::get('compare-product-delete/{product_id}',    'ProductFeaturesCompareController@compareProductDelete')->where(['product_id' => '[0-9]+'])->name('compare_product_delete');
+
+    //Мои закладки
+    Route::get('wishlist',                         'ProductFeaturesWishlistController@wishlist')->name('wishlist');
+    //количество - Мои закладки
     Route::get('product-features-wishlist-count',  'ProductFeaturesWishlistController@count');
 
-    Route::get('compare-products',                      'ProductFeaturesCompareController@compareProducts');
-    Route::get('compare-product-delete/{product_id}',   'ProductFeaturesCompareController@compareProductDelete')->where(['product_id' => '[0-9]+']);
-
+    //Обратный звонок
     Route::post('callback',  'CallbackController@callback');
+    //Написать руководителю
     Route::post('contact',  'CallbackController@contact');
-
+    //подписка
     Route::post('subscribe', 'SubscribeController@subscribe');
 
 
     $params = '';
-    for ($i = 0; $i <= 100; $i++){
+    for ($i = 0; $i <= 50; $i++)
         $params .= "/{param$i?}";
-    }
 
-    Route::get('c/{category}',                   'CatalogController@c')->where(['category']);
-    Route::get('catalog/{category?}' . $params,  'CatalogController@catalog')->where(['category']);
-    Route::get('specials/{category?}' . $params, 'CatalogController@catalog')->where(['category']);
+    //каталог иобильный
+    Route::get('c/{cCategory}',                          'CatalogController@c')->where(['cCategory']);
 
-    Route::post('product-images/{product_id}',   'ProductController@productImages')->where(['product_id' => '[0-9]+']);
+    //каталог
+    Route::get('{city}/catalog/{category}'   . $params,  'CatalogController@catalogCity')
+        ->where(['city'])
+        ->where(['category'])
+        ->name('catalogCity');
 
+    Route::get('catalog/{category}'          . $params,  'CatalogController@catalog')
+        ->where(['category'])
+        ->name('catalog');
+
+    //товар детально
+    Route::get('p/{product_url}/{product_tab?}',         'ProductController@productDetailDefault')
+        ->where(['product_url'])
+        ->where(['product_tab'])
+        ->name('productDetailDefault');
+    Route::get('{city}/p/{product_url}/{product_tab?}',  'ProductController@productDetailCity')
+        ->where(['city'])
+        ->where(['product_url'])
+        ->where(['product_tab'])
+        ->name('productDetailCity');
+
+    //удалить потом
     Route::get('product/{category_url}/{product_url}/{product_tab?}',  'ProductController@productDetail')->where(['category_url'])
         ->where(['product_url'])
         ->where(['product_tab']);
 
+    //мобильный получить картинки
+    Route::post('product-images/{product_id}',   'ProductController@productImages')->where(['product_id' => '[0-9]+']);
+
+    //лайк Отзывы
     Route::post('product-review-set-like', 'ReviewController@setLike');
-
+    //отправка - Отзывы
     Route::post('write-review',            'ReviewController@writeReview');
+    //отправка - Вопрос-ответ
     Route::post('write-question',          'QuestionAnswerController@writeQuestion');
-
-    Route::get('delivery-payment',          'PageController@deliveryPayment');
-    Route::get('guaranty',          'PageController@guaranty');
-    Route::get('contact',          'PageController@contact');
-    Route::get('about',          'PageController@about');
+    //страницы
+    Route::get('delivery-payment',         'PageController@deliveryPayment')->name('delivery_payment');
+    Route::get('guaranty',                 'PageController@guaranty')->name('guaranty');
+    Route::get('contact',                  'PageController@contact')->name('contact');
+    Route::get('about',                    'PageController@about')->name('about');
+    //выбор города
+    Route::post('set-city/{city_code}',    'CityController@setCity');
 
 });
 
@@ -72,6 +114,12 @@ Route::group(['namespace'  => 'Site'], function () {
 //sitemap
 Route::group(['namespace'  => 'Sitemap'], function () {
     Route::get('sitemap.xml', 'SitemapController@sitemap');
+    Route::get('pages.xml',   'SitemapController@pages');
+
+    $cities     = \App\Services\ServiceCity::listActiveSort();
+    foreach ($cities as $city)
+        Route::get($city->code . '.xml',   'SitemapController@city');
+
 });
 
 
@@ -79,18 +127,17 @@ Route::group(['middleware' => 'auth', 'namespace'  => 'Site'], function () {
 
     Route::post('product-features-wishlist/{product_id}', 'ProductFeaturesWishlistController@addAndDelete')->where(['product_id' => '[0-9]+']);
 
-    Route::get('my-account',    'UserController@myAccount');
+    Route::get('my-account',    'UserController@myAccount')->name('my_account');
     Route::get('account-edit',  'UserController@accountEdit');
     Route::post('account-edit', 'UserController@accountEditSave');
 
-    Route::get('change-password',  'UserController@changePassword');
+    Route::get('change-password',  'UserController@changePassword')->name('change_password');
     Route::post('change-password', 'UserController@changePasswordSave');
 
-    Route::get('order-history',             'OrderController@orderHistory');
+    Route::get('order-history',             'OrderController@orderHistory')->name('order_history');
     Route::get('order-history/{order_id}',  'OrderController@orderHistoryDetail')->where(['order_id' => '[0-9]+']);;
 
-    Route::get('wishlist',               'ProductFeaturesWishlistController@wishlist');
-    Route::get('wishlist-delete/{product_id}',  'ProductFeaturesWishlistController@delete')->where(['product_id' => '[0-9]+']);
+    Route::get('wishlist-delete/{product_id}',  'ProductFeaturesWishlistController@delete')->where(['product_id' => '[0-9]+'])->name('wishlist_delete');
 
 });
 
@@ -122,6 +169,7 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::get('category-view/{id}',       'CategoryController@view')->where(['id' => '[0-9]+']);
         Route::get('catalogs-tree/{type}',     'CategoryController@catalogsTree')->where(['type' => '[0-9]+']);
 
+
         Route::post('category-save',          'CategoryController@save');
         Route::post('category-delete/{id}',    'CategoryController@delete')->where(['id' => '[0-9]+']);
         Route::post('reorder-save',            'CategoryController@reorderSave');
@@ -136,22 +184,21 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::get('attribute-set-view/{id}',    'AttributeSetController@view')->where(['id' => '[0-9]+']);
         Route::post('attribute-set-delete/{id}', 'AttributeSetController@delete')->where(['id' => '[0-9]+']);
 
-        Route::any('products-list',              'ProductController@list');
-        Route::get('attribute-sets-more-info',   'ProductController@AttributeSetsMoreInfo');
-        Route::post('product-save',              'ProductController@save');
-        Route::get('product-view/{id}',          'ProductController@view')->where(['id' => '[0-9]+']);
-        Route::post('product-delete/{id}',       'ProductController@delete')->where(['id' => '[0-9]+']);
-        Route::post('product-price-min-max',     'ProductController@priceMinMax');
+        Route::any('products-list',                  'ProductController@list');
+        Route::get('attribute-sets-more-info',       'ProductController@AttributeSetsMoreInfo');
+        Route::post('product-save',                  'ProductController@save');
+        Route::get('product-view/{id}',              'ProductController@view')->where(['id' => '[0-9]+']);
+        Route::post('product-delete/{id}',           'ProductController@delete')->where(['id' => '[0-9]+']);
+        Route::post('product-price-min-max',         'ProductController@priceMinMax');
         Route::post('products-attributes-filters',   'ProductController@productsAttributesFilters');
-        Route::get('group-products/{group_id}',  'ProductController@groupProducts')->where(['group_id' => '[0-9]+']);
-        Route::post('clone-product',             'ProductController@cloneProduct');
-        Route::get('all-products-select2',       'ProductController@allProductsSelect2');
+        Route::get('group-products/{group_id}',      'ProductController@groupProducts')->where(['group_id' => '[0-9]+']);
+        Route::post('clone-product',                 'ProductController@cloneProduct');
+        Route::any('search-products',                'ProductController@searchProducts');
 
         //отзывы
         Route::get('reviews-list',                'ReviewController@list');
         Route::post('review-delete/{review_id}',  'ReviewController@delete')->where(['review_id' => '[0-9]+']);
         Route::post('review-save',                'ReviewController@save');
-
 
         //Вопросы-ответы
         Route::get('questions-answers-list',               'QuestionAnswerController@list');
@@ -191,7 +238,6 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::get('order-status-view/{id}',          'OrderStatusController@view')->where(['id' => '[0-9]+']);
         Route::post('order-status-delete/{id}',       'OrderStatusController@delete')->where(['id' => '[0-9]+']);
 
-
         //Скидки
         Route::get('specific-prices-list',             'SpecificPriceController@list');
         Route::post('specific-price-delete/{id}',      'SpecificPriceController@delete')->where(['id' => '[0-9]+']);
@@ -202,7 +248,6 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::post('callback-save',             'CallbackController@save');
         Route::get('callback-view/{id}',         'CallbackController@view')->where(['id' => '[0-9]+']);
         Route::get('new-callbacks-count',        'CallbackController@newCallbacksCount');
-
 
         //Заказы
         Route::get('orders-list',                'OrderController@list');
@@ -218,6 +263,19 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
 
         //Группа атрибутов
         Route::get('attribute-groups-list',        'AttributeGroupController@list');
+
+        //город
+        Route::get('cities-list',             'CityController@list');
+        Route::post('city-save',              'CityController@save');
+        Route::get('city-view/{id}',          'CityController@view')->where(['id' => '[0-9]+']);
+        Route::post('city-delete/{id}',       'CityController@delete')->where(['id' => '[0-9]+']);
+
+        //баннеры
+        Route::get('banners-list',             'BannerController@list');
+        Route::post('banner-save',             'BannerController@save');
+        Route::get('banner-view/{id}',         'BannerController@view')->where(['id' => '[0-9]+']);
+        Route::post('banner-delete/{id}',      'BannerController@delete')->where(['id' => '[0-9]+']);
+
     }
 });
 

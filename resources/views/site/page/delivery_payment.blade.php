@@ -1,25 +1,24 @@
 @extends('layouts.site')
 
-<?php $title = 'Доставка, оплата';?>
-@section('title', $title)
-@section('description', $title)
-@section('keywords', $title)
+@section('title',       $seo['title'])
+@section('description', $seo['description'])
+@section('keywords',    $seo['keywords'])
 
 @section('content')
 
    <div class="container">
 
-       <?php $breadcrumb = [
+       <?php $breadcrumbs = [
            [
                'title' => 'Главная',
                'link'  => '/'
            ],
            [
-               'title' => $title,
+               'title' => $seo['title'],
                'link'  => ''
            ]
        ];?>
-      @include('includes.breadcrumb', ['breadcrumb' => $breadcrumb])
+      @include('includes.breadcrumb', ['breadcrumbs' => $breadcrumbs])
 
       <div id="content" style="overflow: visible;font-size: 14px;">
           @include('includes.delivery_payment_text')

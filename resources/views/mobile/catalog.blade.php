@@ -1,26 +1,17 @@
 @extends('layouts.mobile')
 
-<?php
-$default_title = 'Каталог товаров';
-$catalog_url = 'catalog';
-
-if(strpos(url()->current(), '/specials') !== false)
-{
-    $catalog_url = 'specials';
-    $default_title = 'Скидки';
-}
-?>
-
-@section('title',    	 $category ? $category->name : $default_title)
-@section('description', $category ? ($category->seo_description ? $category->seo_description : $category->name) : $default_title)
-@section('keywords',    $category ? ($category->seo_keywords    ? $category->seo_keywords    : $category->name) : $default_title)
+@section('title',    	 $seo['title'])
+@section('description',  $seo['description'])
+@section('keywords',     $seo['keywords'])
 
 @section('content')
 
         @include('mobile.includes.topbar', [
             'class'       => '_fixed',
             'title'       => $category->name ?? 'Каталог',
-            'search_show' => true
+            'search_show' => true,
+            'menu_link'   => '',
+            'menu_class'  => 'icon_menu'
         ])
 
         @include('mobile.includes.space', ['style' => ''])

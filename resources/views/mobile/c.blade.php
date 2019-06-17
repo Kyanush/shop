@@ -1,15 +1,17 @@
 @extends('layouts.mobile')
 
-@section('title', 'Onepoint.kz - главная страница')
-@section('description', 'Onepoint.kz - главная страница')
-@section('keywords', 'Onepoint.kz - главная страница')
+@section('title',       $seo['title'])
+@section('description', $seo['description'])
+@section('keywords',    $seo['keywords'])
 
 @section('content')
 
     @include('mobile.includes.topbar', [
         'class'       => '',
         'title'       => $category->name,
-        'search_show' => true
+        'search_show' => true,
+        'menu_link'   => '',
+        'menu_class'  => 'icon_menu'
     ])
 
     <div class="categories">
@@ -22,7 +24,7 @@
             <ul class="catalog-sub-items__list">
                 @foreach($category->children()->orderBy('sort')->get() as $item)
                     <li class="catalog-sub-items__el">
-                        <a href="/catalog/{{ $item->url }}" class="catalog-sub-item catalog-main">
+                        <a href="{{ $item->catalogUrl($currentCity->code) }}" class="catalog-sub-item catalog-main">
                             <span class="catalog-sub-item__title">{{ $item->name }}</span>
 
                             @php
@@ -39,7 +41,7 @@
                             <ul class="catalog-sub-items__list">
                                 @foreach($items as $item2)
                                     <li class="catalog-sub-items__el">
-                                        <a href="/catalog/{{ $item2->url }}" class="catalog-sub-item">
+                                        <a href="{{ $item2->catalogUrl($currentCity->code) }}" class="catalog-sub-item">
                                             <span class="catalog-sub-item__title">{{ $item2->name }}</span>
                                             <span class="catalog-sub-item__icon icon icon_chevron"></span>
                                         </a>

@@ -113,7 +113,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="table-responsive">
+                            <div class="table-responsive1">
                                 <table class="table table-striped">
                                     <thead>
                                     <tr>
@@ -149,7 +149,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="table-responsive">
+                            <div class="table-responsive1">
                                 <table class="table table-striped">
                                     <thead>
                                     <tr>

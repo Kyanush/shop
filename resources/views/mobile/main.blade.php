@@ -1,8 +1,8 @@
 @extends('layouts.mobile')
 
-@section('title', 'Onepoint.kz - главная страница')
-@section('description', 'Onepoint.kz - главная страница')
-@section('keywords', 'Onepoint.kz - главная страница')
+@section('title',       $seo['title'])
+@section('description', $seo['description'])
+@section('keywords',    $seo['keywords'])
 
 @section('content')
 
@@ -11,7 +11,7 @@
         <h1 class="topbar__heading ">
             <a href="/" class="topbar__heading-link">
                 <i class="topbar__heading-logo _icon"></i>
-                OnePoint.kz
+                {{ env('APP_NO_URL') }}
             </a>
         </h1>
         <a href="/login" class="topbar__icon icon icon_user"></a>
@@ -25,12 +25,12 @@
         <?php $categories = \App\Models\Category::orderBy('sort')->where('parent_id', 0)->get();?>
         @foreach($categories as $category)
             <a href="/c/{{ $category->url }}" class="catalog-item container">
-                            <span class="catalog-item__img">
-                                <img width="24" src="{{ $category->pathImage(true) }}">
-                            </span>
+                <span class="catalog-item__img">
+                    <img width="24" src="{{ $category->pathImage(true) }}">
+                </span>
                 <span class="catalog-item__title">
-                            {{ $category->name }}
-                        </span>
+                   {{ $category->name }}
+                </span>
                 <span class="catalog-item__icon icon icon_chevron"></span>
             </a>
         @endforeach

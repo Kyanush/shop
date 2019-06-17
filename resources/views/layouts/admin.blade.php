@@ -7,7 +7,7 @@
 
     {{-- Encrypted CSRF token for Laravel, in order for Ajax requests to work --}}
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-
+    <link rel="icon" type="image/png" href="/mobile/img/logo-mini.png" />
     <title></title>
 
     @yield('before_styles')
@@ -49,9 +49,9 @@
 
 
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/darkness/jquery-ui.css" />
-    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/darkness/jquery-ui.css" />
+    <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
 
     <!--
     <link rel="stylesheet" href="{{ asset('vendor/backpack/nestedSortable/nestedSortable.css') }}">

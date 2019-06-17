@@ -33,17 +33,12 @@
         </div>
     </div>
     <div class="product_show_buttons">
-        <a href="#" class="products_also">Продолжить покупки</a>
-        <a href="/checkout" class="button" style="color: #fff;">
+        <a class="products_also" onclick="es_close_temp_window()">
+            Продолжить покупки
+        </a>
+        <a href="/checkout" class="button">
             <span>Оформить заказ</span>
         </a>
         <div class="cl_b"></div>
     </div>
-
-    <span class="you-may-be-interested">
-        @include('includes.product_slider', ['products' => $products_interested, 'title' => 'Вас может заинтересовать'])
-    </span>
-
-
-
 </div>

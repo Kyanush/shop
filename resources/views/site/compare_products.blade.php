@@ -1,28 +1,27 @@
 @extends('layouts.site')
 
-<?php $title = 'Сравнение товаров';?>
-@section('title', $title)
-@section('description', $title)
-@section('keywords', $title)
+@section('title',       $seo['title'])
+@section('description', $seo['description'])
+@section('keywords',    $seo['keywords'])
 
 @section('content')
 
    <div class="container">
 
-       <?php $breadcrumb = [
+       <?php $breadcrumbs = [
            [
                'title' => 'Главная',
                'link'  => '/'
            ],
            [
-               'title' => $title,
+               'title' => $seo['title'],
                'link'  => ''
            ]
        ];?>
-      @include('includes.breadcrumb', ['breadcrumb' => $breadcrumb])
+      @include('includes.breadcrumb', ['breadcrumbs' => $breadcrumbs])
 
       <div id="content">
-            <h1>{{ $title }}</h1>
+            <h1>{{ $seo['title'] }}</h1>
             @include('includes.compare-products', ['productFeaturesCompareList' => $productFeaturesCompareList])
             <div class="buttons">
                 <div class="right">

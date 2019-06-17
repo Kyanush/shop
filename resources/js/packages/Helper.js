@@ -35,6 +35,7 @@ export default function(Vue){
                     id:   item[column_id   ? column_id   : 'id'],
                     text: text,
                     disabled: disabled,
+                    color: 'red'
                 });
             });
 
@@ -199,7 +200,9 @@ export default function(Vue){
                 return 'вчера ' + this.dateFormat(dateString, 'time');
 
             return this.dateFormat(dateString, 'datetime');
-        }
+        },
+
+
 
 
     }

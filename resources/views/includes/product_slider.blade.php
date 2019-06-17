@@ -48,7 +48,9 @@
                             </div>
                             <a class="item-info" href="{{ $product->detailUrlProduct() }}">
                                 <div class="item-image">
-                                    <img src="{{ $product->pathPhoto(true) }}">
+                                    <img title="{{ $product->name }}"
+                                         alt="{{ $product->name }}"
+                                         src="{{ $product->pathPhoto(true) }}">
                                 </div>
                                 <div class="item-title">{{ $product->name }}</div>
                             </a>

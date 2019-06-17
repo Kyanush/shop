@@ -29,11 +29,12 @@
                             <th>Класс</th>
                             <th>Сортировка</th>
                             <th>Тип</th>
+                            <th>Статус</th>
                             <th>Действия</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="odd even" v-for="(item, index) in categories.data">
+                        <tr class="odd even" v-for="(item, index) in categories.data" v-bind:class="{ 'deleted': !item.active }">
                             <td>{{ item.id }}</td>
                             <td>{{ item.parent ? item.parent.name : '' }}</td>
                             <td>{{ item.name }}</td>
@@ -41,6 +42,9 @@
                             <td>{{ item.class }}</td>
                             <td>{{ item.sort }}</td>
                             <td>{{ item.type }}</td>
+                            <td>
+                                <i class="fa fa-times-circle" aria-hidden="true" v-bind:class="{ 'fa-times-circle red': !item.active, 'fa-check-circle green': item.active }"></i>
+                            </td>
                             <td>
                                 <router-link :to="{ path: '/categories/edit/' + item.id}" class="btn btn-xs btn-default">
                                     <i class="fa fa-edit"></i> Изменить
@@ -61,6 +65,7 @@
                             <th>Класс</th>
                             <th>Сортировка</th>
                             <th>Тип</th>
+                            <th>Статус</th>
                             <th>Действия</th>
                         </tr>
                     </tfoot>
@@ -152,10 +157,3 @@
 
     }
 </script>
-
-
-<style scoped>
-    #filter-search{
-        max-width: 300px;
-    }
-</style>

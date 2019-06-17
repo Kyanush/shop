@@ -77,6 +77,9 @@ class QuestionAnswer extends Model
             $query->OrWhere( DB::raw('LOWER(email)'),    'like', "%"  . $search . "%");
             $query->OrWhere( DB::raw('LOWER(question)'), 'like', "%"  . $search . "%");
             $query->OrWhere( DB::raw('LOWER(answer)'),   'like', "%"  . $search . "%");
+            $query->orWhereHas('product', function($query) use ($search){
+                 $query->filters(['name' => $search]);
+            });
         }
         return $query;
     }

@@ -17,9 +17,6 @@ function urlParamsGenerate(){
     if(filter.page > 1)
         params += 'page-' + filter.page + '/';
 
-    console.log(filter);
-
-    var self = this;
     Object.keys(filter).forEach(function (column) {
         if(filter[column] && column != 'page' && column != 'category')
         {
@@ -47,7 +44,6 @@ function urlParamsGenerate(){
         params = params.slice(0,-1);
 
     var base_url = baseUrl();
-
     location.href = base_url + (params ? '/filters/' + params : '');
 }
 
@@ -58,13 +54,27 @@ function filtersClear() {
 function baseUrl() {
     var url = window.location.origin + window.location.pathname;;
     url =  url.split('/');
-    url = url[0] + '//' + url[2] + '/' + url[3] + (url[4] ? '/' + url[4] : '')
+    var catalog = '/';
 
-    return url;
+    var f = true;
+
+    url.forEach(function (value, index) {
+        if(index > 2 && f)
+        {
+            if(value == 'filters'){
+                f = false;
+            }else
+                catalog += value + '/';
+        }
+    });
+
+    catalog = catalog.substring(0, catalog.length - 1);
+
+    return url[0] + '//' + url[2] + catalog;
 }
 
 $(document).ready(function() {
-    $('.sort_select').on('change', function () {
+    $('.sort_select, #min_price, #max_price').on('change', function () {
         urlParamsGenerate();
     });
 });
@@ -252,6 +262,14 @@ function swalErrors(errors_array, title, type) {
     });
 }
 
+function setCity(city_code){
+    axios.post('/set-city/' + city_code, {
+        _token: getCsrfToken()
+    }).then(function (response) {
+        console.log(response);
+        location.href = '/';
+    });
+}
 
 $(document).ready(function() {
     if($(".phone-mask").length > 0)

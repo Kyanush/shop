@@ -1,25 +1,29 @@
 @extends('layouts.site')
 
-<?php $title = 'Контакты';?>
-@section('title', $title)
-@section('description', $title)
-@section('keywords', $title)
+@section('title',       $seo['title'])
+@section('description', $seo['description'])
+@section('keywords',    $seo['keywords'])
 
 @section('content')
 
    <div class="container">
 
-       <?php $breadcrumb = [
+       <?php $breadcrumbs = [
            [
                'title' => 'Главная',
                'link'  => '/'
            ],
            [
-               'title' => $title,
+               'title' => $seo['title'],
                'link'  => ''
            ]
        ];?>
-      @include('includes.breadcrumb', ['breadcrumb' => $breadcrumb])
+      @include('includes.breadcrumb', ['breadcrumbs' => $breadcrumbs])
+
+      @php
+           $address = config('shop.address');
+           $number_phones = config('shop.number_phones');
+      @endphp
 
            <div class="contact_page">
                <div class="contact_page_left">
@@ -27,36 +31,45 @@
 
                    <div style="padding: 20px;font-size: 14px;line-height: 22px;">
                        Обсудить с нами возникшие вопросы или проконсультироваться звоните к нам по номеру:
-                       <a style="font-size: 14px;text-decoration: none;" href="tel:+77075511979">+7 (707) 551 1979</a>
+                       <a style="font-size: 14px;text-decoration: none;" href="tel:{{ $number_phones[0]['number'] }}">
+                           {{ $number_phones[0]['format'] }}
+                       </a>
                        (ежедневно с 11-00 до 19-00).
-                       Кроме того, Вы можете отправить любые запросы или вопросы нам на электронную почту <a style="font-size: 14px;text-decoration: none;" href="mailto:info@onepoint.kz">info@onepoint.kz</a> ,
+                       Кроме того, Вы можете отправить любые запросы или вопросы нам на электронную почту
+                       <a style="font-size: 14px;text-decoration: none;" href="mailto:{{ config('shop.site_email') }}">
+                           {{ config('shop.site_email') }}
+                       </a> ,
                        не забудьте указать Ваше имя и контактные номера телефонов. Если Вас не устраивают какие-либо наши товары или услуги,
                        мы с удовольствием выслушаем Вас. Мы всегда готовы решить проблему.
                    </div>
 
-                   <div class="contact_page_blocks">
+                   <div class="contact_page_blocks" itemscope itemtype="http://schema.org/Organization">
                        <div class="contact_page_block">
                            <div class="contact_page_block_header">Телефоны</div>
                            <div class="contact_page_block_list">
                                <div class="contact_page_block_list_top">Ежедневно, круглосуточно(телефон или WhatsApp)</div>
                                <div class="contact_page_block_list_bottom">
-                                   <a href="tel:+77075511979">+7 (707) 551 1979</a>
+                                   <a href="tel:{{ $number_phones[0]['number'] }}">{{ $number_phones[0]['format'] }}</a>
                                </div>
                            </div>
                            <div class="contact_page_block_list">
                                <div class="contact_page_block_list_top">Время работы</div>
-                               <div class="contact_page_block_list_bottom">c 10:00 до 19:00 Без выходных!</div>
+                               <div class="contact_page_block_list_bottom">{{ $address[0]['working_hours'] }}</div>
                            </div>
                            <div class="contact_page_block_list">
                                <div class="contact_page_block_list_top">Адрес</div>
-                               <div class="contact_page_block_list_bottom">г. Алматы, ул. Жибек жолы 115, оф. 113 (Рядом Аэровокзала)</div>
+                               <div class="contact_page_block_list_bottom">{{ $address[0]['addressLocality'] }}, {{ $address[0]['streetAddress'] }}</div>
                            </div>
                        </div>
                        <div class="contact_page_block">
                            <div class="contact_page_block_header">E-mail</div>
                            <div class="contact_page_block_list">
                                <div class="contact_page_block_list_top">Вопросы по розничным продажам и.д.</div>
-                               <div class="contact_page_block_list_bottom"><a href="mailto:info@onepoint.kz">info@onepoint.kz</a></div>
+                               <div class="contact_page_block_list_bottom">
+                                   <a href="mailto:{{ config('shop.site_email') }}">
+                                       {{ config('shop.site_email') }}
+                                   </a>
+                               </div>
                            </div>
                            <!--
                            <div class="contact_page_block_list">
@@ -77,7 +90,9 @@
                        <div class="contact_page_block">
                            <div class="contact_page_block_header">Мы в соцсетях</div>
                            <div class="contact_block_social">
-                               <a href="https://www.instagram.com/onepoint.kz" class="contact_in"  title="Вы в Instagram" target="_blank"></a>
+                               <a href="{{ config('shop.social_network.instagram') }}" class="contact_in1"  title="Вы в Instagram" target="_blank">
+                                   <img src="/site/images/insta.png" width="30">
+                               </a>
                            </div>
                            <div>
                                <?if(false):?>

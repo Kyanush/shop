@@ -9,12 +9,12 @@ class WriteReviewRequest extends FormRequest
     {
         $rules = [
             'product_id' => 'exists:products,id',
-            'minus'      => 'max:1000',
-            'plus'       => 'max:1000',
+            'minus'      => '',
+            'plus'       => '',
             'email'      => 'nullable|email',
-            'comment'    => 'required|max:1000',
-            'name'       => 'required|max:255',
-            'rating'     => 'required|integer|max:5|min:1',
+            'comment'    => '',
+            'name'       => 'max:255',
+            'rating'     => 'integer|max:5|min:1',
             'created_at' => 'date_format:"Y-m-d H:i:s"'
         ];
         return $rules;

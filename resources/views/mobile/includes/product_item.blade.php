@@ -22,6 +22,11 @@
         <div class="item-card__prices">
             <div class="item-card__debet">
                 <span class="item-card__prices-title">Цена</span>
+                @if($product->specificPrice)
+                    <span class="item-card__prices-price price-old">
+                        {{ \App\Tools\Helpers::priceFormat($product->price) }}
+                    </span>
+                @endif
                 <span class="item-card__prices-price">
                     {{ \App\Tools\Helpers::priceFormat($product->getReducedPrice()) }}
                 </span>

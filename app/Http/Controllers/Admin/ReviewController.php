@@ -13,12 +13,13 @@ class ReviewController extends AdminController
 
     public function list(Request $request)
     {
-        $product_id = $request->input('product_id', 0);
+        $search = $request->input('search');
+        $product_id = $request->input('product_id');
 
-        $reviews = Review::search($request->input('search'))
+        $reviews = Review::search($search)
             ->with(['product'])
             ->where(function ($query) use ($product_id){
-                if($product_id > 0)
+                if($product_id)
                     $query->where('product_id', $product_id);
             })
             ->OrderBy('id', 'DESC')

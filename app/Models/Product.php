@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use App\Services\ServiceCategory;
+use App\Services\ServiceCity;
 use Illuminate\Database\Eloquent\Model;
 use File;
 use App\Tools\Upload;
@@ -23,6 +24,7 @@ class Product extends Model
     	'name',
         'url',
     	'description',
+        'description_mini',
         'photo',
     	'price',
     	'sku',
@@ -77,13 +79,14 @@ class Product extends Model
         if(isset($filters['active']))
             $query->where('active', $filters['active']);
 
-        if(isset($filters['category']))
+        if(!empty($filters['category']))
         {
-            $serviceCategory = new ServiceCategory();
+
 
             $category = Category::where('url', $filters['category'])->first();
             if($category)
             {
+                $serviceCategory = new ServiceCategory();
                 $categories_ids = $serviceCategory->categoryChildIds($category->id);
 
                 $query->whereHas('categories', function($query) use ($categories_ids){
@@ -200,13 +203,13 @@ class Product extends Model
                 if(!empty($product->id)){
                     self::find($product->id)->deletePhoto();
                 }else{
-                    $statement = DB::select("show table status like '" . env('DB_TABLE_PREFIX') . "products'");
-                    $product_id = $statement[0]->Auto_increment;
+                    $product_id = Helpers::tableNextId('products');
                 }
 
                 $upload = new Upload();
-                $upload->setWidth(460);
-                $upload->setHeight(350);
+                $upload->fileName = str_slug($product->name);
+                $upload->setWidth(300);
+                $upload->setHeight(600);
                 $upload->setPath($product->productFileFolder(false, $product_id ?? 0));
                 $upload->setFile($product->photo);
                 $product->photo = $upload->save();
@@ -229,7 +232,7 @@ class Product extends Model
 	public function attributes()
 	{
 		return $this->belongsToMany('App\Models\Attribute', 'attribute_product_value', 'product_id', 'attribute_id')
-                    ->withPivot('value');
+                    ->withPivot(['value']);
 	}
 
     //Картинка
@@ -391,8 +394,23 @@ class Product extends Model
 
 
 
-    public function detailUrlProduct(){
-        return '/product/' . $this->categories[0]->url . '/' . $this->url;
+    public function detailUrlProduct($city_code = ''){
+
+        if(!$city_code)
+        {
+            $city = ServiceCity::getCurrentCity();
+            $city_code = $city->code;
+        }
+
+        if($city_code == 'almaty')
+            $city_code = '';
+
+        if($city_code)
+        {
+            return route('productDetailCity',    ['product_url' => $this->url, 'city' => $city_code]);
+        }else{
+            return route('productDetailDefault', ['product_url' => $this->url]);
+        }
     }
 
     public function detailUrlProductAdmin(){

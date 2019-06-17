@@ -1,17 +1,27 @@
+@php
+    $address = config('shop.address');
+    $number_phones = config('shop.number_phones');
+@endphp
+
 <div class="footer">
     <div class="footer__contacts">
         <div class="footer__contacts-call">
             <span class="icon icon_phone"></span>
-            <a class="footer__contacts-number" href="tel:+77075511979">+7 (707) 551 1979</a>
+            <a class="footer__contacts-number" href="tel:{{ $number_phones[0]['number'] }}">
+                {{ $number_phones[0]['format'] }}
+            </a>
         </div>
         <div class="footer__contacts-text">
-            <b>Адрес:</b> г. Алматы, ул. Жибек жолы 115, оф. 113 (Рядом Аэровокзала)
+            <b>Адрес:</b>
+            {{ $address[0]['addressLocality'] }}, {{ $address[0]['streetAddress'] }}
         </div>
         <div class="footer__contacts-text">
-            <b>Время работы:</b> c 10:00 до 19:00 Без выходных!
+            <b>Время работы:</b>
+            {{ $address[0]['working_hours'] }}
         </div>
         <div class="footer__contacts-text">
-            <b>E-mail:</b> <a href="mailto:info@onepoint.kz">info@onepoint.kz</a>
+            <b>E-mail:</b>
+            <a href="mailto:{{ config('shop.site_email') }}">{{ config('shop.site_email') }}</a>
         </div>
     </div>
     <div class="footer__links">

@@ -43,6 +43,12 @@ import orders_detail   from  '../components/orders/Detail.vue';
 import sliders_list from  '../components/sliders/List.vue';
 import sliders_save from  '../components/sliders/Save.vue';
 
+import cities_list from  '../components/cities/List.vue';
+import cities_save from  '../components/cities/Save.vue';
+
+import banners_list from  '../components/banners/List.vue';
+import banners_save from  '../components/banners/Save.vue';
+
 
 import layout from  '../components/Layout.vue';
 import checkout from  '../components/checkout/Checkout.vue';
@@ -519,5 +525,84 @@ export default new Router({
             }
         },
 
-    ]
+
+
+
+        //Город
+        {
+            path: '/cities',
+            name: 'Тип оплаты',
+            component: cities_list,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                ]
+            }
+        },
+        {
+            path: '/cities/create',
+            name: 'Создать город',
+            component: cities_save,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Тип оплаты', link: '/cities' },
+                ]
+            }
+        },
+        {
+            path: '/cities/edit/:id',
+            name: 'Редактировать город',
+            component: cities_save,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Тип оплаты', link: '/cities' },
+                ]
+            }
+        },
+
+
+
+
+        //Баннеры
+        {
+            path: '/banners',
+            name: 'Баннеры',
+            component: banners_list,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                ]
+            }
+        },
+        {
+            path: '/banners/create',
+            name: 'Создать город',
+            component: banners_save,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Баннеры', link: '/banners' },
+                ]
+            }
+        },
+        {
+            path: '/banners/edit/:id',
+            name: 'Редактировать город',
+            component: banners_save,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Баннеры', link: '/banners' },
+                ]
+            }
+        },
+
+
+
+
+
+
+]
 });

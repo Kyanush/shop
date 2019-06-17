@@ -157,10 +157,3 @@
 
     }
 </script>
-
-
-<style scoped>
-    #filter-search{
-        max-width: 300px;
-    }
-</style>

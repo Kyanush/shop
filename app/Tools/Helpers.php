@@ -9,6 +9,7 @@
 namespace App\Tools;
 
 use Mobile_Detect;
+use DB;
 
 class Helpers
 {
@@ -189,37 +190,6 @@ class Helpers
         }
     }
 
-    public static function colorProduct($value){
-        $colors = [
-            'Gold'=>		'#EC8902',
-            'Золотой'=>		'#EC8902',
-            'Красный'=>		'#D81D16',
-            'Розовое золото'=>		'#E6BEB6',
-            'Бамбук'=>		'#74C002',
-            'Белый'=>		'#fff',
-            'Бирюзовый'=>		'#41E7D5',
-            'Голубой'=>		'#00AAEE',
-            'Желтый'=>		'#F2BC2C',
-            'Зеленый'=>		'#027C02',
-            'Розовый'=>		'#C72396',
-            'Серебристый'=>		'#E5E6E8',
-            'Серый'=>		'#7C7C7C',
-            'Синий'=>		'#1F19BC',
-            'Тёмно-серый'=>		'#29292B',
-            'Фиолетовый'=>		'#6D068F',
-            'Черный'=>		'#000',
-
-            'Gray' => '#CDD0D0',
-            'Silver' => '#88898B',
-            'Black' => '#000000',
-            'имеется все цвета' => '#FFFFFF',
-            'Red' => '#D90803',
-            'Blue' => '#3D7EF1',
-            'Sap Blue' => '#013F81',
-        ];
-        return $colors[$value] ?? '#fff';
-    }
-
     public static function ruDateFormat($date)
     {
         $date = date('d.m.Y', strtotime($date));
@@ -271,5 +241,9 @@ class Helpers
             return false;
     }
 
+    public static function tableNextId($tableName){
+        $statement = DB::select("show table status like '" . env('DB_TABLE_PREFIX') . $tableName . "'");
+        return $statement[0]->Auto_increment;
+    }
 
 }

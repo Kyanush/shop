@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Services\ServiceCity;
+use App\Tools\Helpers;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use File;
@@ -22,7 +24,8 @@ class Category extends Model
          'type',
          'description',
          'seo_keywords',
-         'seo_description'
+         'seo_description',
+         'active'
  	];
 
     public function scopeSearch($query, $search){
@@ -34,6 +37,14 @@ class Category extends Model
             $query->OrWhere( DB::raw('LOWER(description)'), 'like', "%"  . $search . "%");
         }
         return $query;
+    }
+
+    public function scopeIsActive($query){
+        $query->where("active", 1);
+    }
+
+    public function scopeIsNotActive($query){
+        $query->where("active", 0);
     }
 
     public function parent()
@@ -90,6 +101,24 @@ class Category extends Model
 
     public function deleteImage(){
         return File::delete($this->pathImage());
+    }
+
+    public function catalogUrl($city_code = ''){
+
+        if(!$city_code)
+        {
+            $city = ServiceCity::getCurrentCity();
+            $city_code = $city->code;
+        }
+
+        if($city_code == 'almaty')
+            $city_code = '';
+
+        if($city_code){
+            return route('catalogCity', ['category' => $this->url, 'city' => $city_code]);
+        }else{
+            return route('catalog', ['category' => $this->url]);
+        }
     }
 
     public function typeValueDescription(){

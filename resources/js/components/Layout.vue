@@ -223,6 +223,12 @@
                                     <span>Тип оплаты</span>
                                 </router-link>
                             </li>
+                            <li v-bind:class="{'active' : menu_active('/cities/')}">
+                                <router-link :to="{ path: '/cities'}">
+                                    <i class="fa fa-home" aria-hidden="true"></i>
+                                    <span>Город</span>
+                                </router-link>
+                            </li>
                         </ul>
                     </li>
 
@@ -230,6 +236,13 @@
                         <router-link :to="{ path: '/main'}">
                             <i class="fa fa-calendar" aria-hidden="true"></i>
                             <span>Календарь</span>
+                        </router-link>
+                    </li>
+
+                    <li v-bind:class="{'active' : menu_active('/banners/')}">
+                        <router-link :to="{ path: '/banners'}">
+                            <i class="fa fa-clipboard" aria-hidden="true"></i>
+                            <span>Баннеры</span>
                         </router-link>
                     </li>
 
@@ -334,10 +347,10 @@
     }
 </script>
 
-<style>
+<style scoped>
     #content{
         width: 100%;
-        display: -webkit-box;
+        display: flex;
     }
     .role-desc{
         font-size: 10px;

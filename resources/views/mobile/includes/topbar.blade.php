@@ -1,6 +1,7 @@
 <div class="topbar container {{ $class }}">
 
-    <a class="topbar__icon icon icon_menu">
+    <a @if($menu_link) href="{{ $menu_link }}" @endif
+       class="topbar__icon icon {{ $menu_class }}">
         <span></span>
     </a>
 

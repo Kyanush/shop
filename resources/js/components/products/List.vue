@@ -7,6 +7,12 @@
                     <i class="fa fa-plus"></i> Добавить товар
                 </span>
             </router-link>
+
+            <button type="button" class="btn btn-danger pull-right" @click="clearFilters">
+                <i class="fa fa-times" aria-hidden="true"></i>
+                Очистить все фильтры
+            </button>
+
         </div>
 
         <div class="box-header with-border">
@@ -26,7 +32,7 @@
                 <div class="panel-body" v-show="product_show_filter">
                     <div class="row">
                         <div class="col-md-6">
-                            <div class="table-responsive">
+                            <div class="table-responsive1">
                                 <table class="table table-bordered ">
                                 <tbody class="filter">
                                 <tr class="odd even">
@@ -104,18 +110,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="scroll-catalog">
-                                <div class="table-responsive">
-                                    <table>
-                                        <tbody class="filter">
-                                        <tr class="odd even">
-                                            <td colspan="2">
-                                                <v-jstree :data="catalogs_tree" @item-click="selectedCatalog"></v-jstree>
-                                                <!--  show-checkbox multiple allow-batch whole-row -->
-                                            </td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <Categories @back="selectedCatalog" :set_selected_keys="filter.category" :returnKey="'url'" :multiple="false"></Categories>
                             </div>
                         </div>
                     </div>
@@ -136,7 +131,7 @@
                        v-bind:class="{'fa-eye green': !product_attribute_show_filter,  'fa-eye-slash red': product_attribute_show_filter}"></i>
                 </div>
                 <div class="panel-body" v-show="product_attribute_show_filter">
-                    <div class="table-responsive">
+                    <div class="table-responsive1">
                         <table class="table table-bordered ">
                         <tbody class="filter">
                         <tr class="odd even" v-for="item in products_attributes_filters">
@@ -163,20 +158,13 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr class="odd even">
-                            <td></td>
-                            <td>
-                                <button type="button" class="btn btn-danger pull-right" @click="clearFilters">
-                                    <i class="fa fa-times" aria-hidden="true"></i>
-                                    Очистить все фильтры
-                                </button>
-                            </td>
-                        </tr>
                         </tbody>
                     </table>
                     </div>
                 </div>
             </div>
+
+
 
 
 
@@ -399,17 +387,16 @@
     import Paginate from 'vuejs-paginate';
     import datePicker from 'vue-bootstrap-datetimepicker';
 
-    //https://www.npmjs.com/package/vue-jstree
-    import VJstree from 'vue-jstree';
 
 
     import { mapGetters } from 'vuex';
     import { mapActions } from 'vuex';
 
+    import Categories from '../plugins/Categories';
 
     export default {
         components:{
-            Paginate, datePicker, VJstree
+            Paginate, datePicker, Categories
         },
         data () {
             return {
@@ -425,8 +412,10 @@
                 wait: true,
 
                 products_price: [],
-                catalogs_tree: [],
+
                 products_attributes_filters: [],
+
+
 
                 products: [],
                 filter:{
@@ -485,9 +474,7 @@
                 this.productsList();
             }.bind(this), 500)
 
-            axios.get('/admin/catalogs-tree/1').then((res)=>{
-                this.catalogs_tree = res.data;
-            });
+
 
         },
 
@@ -500,6 +487,8 @@
             }
         },
         methods:{
+
+
             setProductShowFilter(){
                 this.product_show_filter = !this.product_show_filter;
                 localStorage.setItem('product_show_filter', this.product_show_filter);
@@ -566,9 +555,9 @@
                 });
                 this.$router.push({path: '/products'});
             },
-            selectedCatalog (node) {
-                this.filter.category = node.model.url;
-                $('.tree-anchor').removeClass('tree-selected');
+            selectedCatalog(values) {
+                this.filter.category = values;
+                //$('.tree-anchor').removeClass('tree-selected');
             },
             dateFormat(date, type_format){
                 return this.$helper.dateFormat(date, type_format);
@@ -627,8 +616,6 @@
                         var data = res.data;
                         this.products_attributes_filters = data;
                     });
-
-                    console.log(this.filter);
 
                     axios.post('/admin/products-list', this.filter).then((res)=>{
                         this.products = res.data;

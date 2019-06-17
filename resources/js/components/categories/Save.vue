@@ -22,6 +22,12 @@
                                      <li v-bind:class="{'active' : tab_active == 'tab_main'}" @click="setTab('tab_main')">
                                          <a>Главная</a>
                                      </li>
+                                     <li v-bind:class="{'active' : tab_active == 'tab_parent'}" @click="setTab('tab_parent')">
+                                         <a>Родительская категория</a>
+                                     </li>
+                                     <li v-bind:class="{'active' : tab_active == 'tab_desc'}" @click="setTab('tab_desc')">
+                                         <a>Описание</a>
+                                     </li>
                                      <li v-bind:class="{'active' : tab_active == 'tab_link_filters'}" @click="setTab('tab_link_filters')">
                                          <a>Готовые фильтры по категорию</a>
                                      </li>
@@ -33,80 +39,157 @@
                          </div>
 
                          <div class="tab-content col-md-12">
+
+
                              <div v-bind:class="{'active' : tab_active == 'tab_main'}" role="tabpanel" class="tab-pane" id="tab_main">
-                                         <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('category.name')}">
-                                             <label>Название <span class="red">*</span></label>
-                                             <input v-model="category.name" type="text" class="form-control">
-                                             <span v-if="IsError('category.name')" class="help-block" v-for="e in IsError('category.name')">
-                                                 {{ e }}
-                                             </span>
-                                         </div>
-
-                                         <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('category.description')}">
-                                             <label>Описание</label>
-
-                                             <VueCkeditor v-model="category.description" :config="ckeditor_config"></VueCkeditor>
-
-                                             <span v-if="IsError('category.description')" class="help-block" v-for="e in IsError('category.description')">
-                                                 {{ e }}
-                                             </span>
-                                         </div>
-
-                                         <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('category.sort')}">
-                                             <label>Сортировка <span class="red">*</span></label>
-                                             <input v-model="category.sort" type="number" class="form-control">
-                                             <span v-if="IsError('category.sort')" class="help-block" v-for="e in IsError('category.sort')">
-                                                 {{ e }}
-                                             </span>
-                                         </div>
-
-                                         <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('category.type')}">
-                                             <label>Тип</label>
-                                             <select v-model="category.type" class="form-control">
-                                                 <option value=""></option>
-                                                 <option value="hit">Hit</option>
-                                                 <option value="new">New</option>
-                                                 <option value="skor">Скоро</option>
-                                             </select>
-                                             <span v-if="IsError('category.type')" class="help-block" v-for="e in IsError('category.type')">
-                                                 {{ e }}
-                                             </span>
-                                         </div>
-
-                                         <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('category.image')}">
-                                             <label>Фото <span class="red" v-if="!category.id">*</span></label>
-                                             <p>
-                                                 <img v-bind:src="category.path_image ? category.path_image : ''" class="img" id="image-img" width="100"/>
-                                             </p>
-                                             <label class="btn btn-primary btn-file">
-                                                 <i class="fa fa-file-image-o" aria-hidden="true"></i>  Фото товара
-                                                 <input type="file" accept="image/*"  @change="setImage($event)"/>
-                                             </label>
-                                             <span v-if="IsError('category.image')" class="help-block" v-for="e in IsError('category.image')">
-                                                   {{ e }}
-                                             </span>
-                                         </div>
-
-                                         <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('category.url')}">
-                                             <label>Url</label>
-                                             <input v-model="category.url" type="text" class="form-control">
-                                             <span v-if="IsError('category.url')" class="help-block" v-for="e in IsError('category.url')">
-                                                 {{ e }}
-                                             </span>
-                                         </div>
-
-                                         <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('category.class')}">
-                                             <label>Класс</label>
-                                             <input v-model="category.class" type="text" class="form-control">
-                                             <span v-if="IsError('category.class')" class="help-block" v-for="e in IsError('category.class')">
-                                                 {{ e }}
-                                             </span>
-                                         </div>
+                                 <table class="table table-bordered ">
+                                     <tbody>
+                                         <tr>
+                                             <td width="25%" class="text-right">
+                                                 <label>Название <span class="red">*</span></label>
+                                             </td>
+                                             <td width="75%">
+                                                 <div class="form-group col-md-8" v-bind:class="{'has-error' : IsError('category.name')}">
+                                                     <input v-model="category.name" type="text" class="form-control">
+                                                     <span v-if="IsError('category.name')" class="help-block" v-for="e in IsError('category.name')">
+                                                         {{ e }}
+                                                     </span>
+                                                 </div>
+                                             </td>
+                                         </tr>
+                                         <tr>
+                                             <td width="25%" class="text-right">
+                                                 <label>Url</label>
+                                             </td>
+                                             <td width="75%">
+                                                 <div class="form-group col-md-8" v-bind:class="{'has-error' : IsError('category.url')}">
+                                                     <input v-model="category.url" type="text" class="form-control">
+                                                     <span v-if="IsError('category.url')" class="help-block" v-for="e in IsError('category.url')">
+                                                         {{ e }}
+                                                     </span>
+                                                 </div>
+                                             </td>
+                                         </tr>
+                                         <tr>
+                                             <td width="25%" class="text-right">
+                                                 <label>Сортировка <span class="red">*</span></label>
+                                             </td>
+                                             <td width="75%">
+                                                 <div class="form-group col-md-8" v-bind:class="{'has-error' : IsError('category.sort')}">
+                                                     <input v-model="category.sort" type="number" class="form-control">
+                                                     <span v-if="IsError('category.sort')" class="help-block" v-for="e in IsError('category.sort')">
+                                                         {{ e }}
+                                                     </span>
+                                                 </div>
+                                             </td>
+                                         </tr>
+                                         <tr>
+                                             <td width="25%" class="text-right">
+                                                 <label>Тип</label>
+                                             </td>
+                                             <td width="75%">
+                                                 <div class="form-group col-md-8" v-bind:class="{'has-error' : IsError('category.type')}">
+                                                     <select v-model="category.type" class="form-control">
+                                                         <option value=""></option>
+                                                         <option value="hit">Hit</option>
+                                                         <option value="new">New</option>
+                                                         <option value="skor">Скоро</option>
+                                                     </select>
+                                                     <span v-if="IsError('category.type')" class="help-block" v-for="e in IsError('category.type')">
+                                                         {{ e }}
+                                                     </span>
+                                                 </div>
+                                             </td>
+                                         </tr>
+                                         <tr>
+                                             <td width="25%" class="text-right">
+                                                 <label>Фото <span class="red" v-if="!category.id">*</span></label>
+                                             </td>
+                                             <td width="75%">
+                                                 <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('category.image')}">
+                                                     <p v-if="category.path_image">
+                                                         <img v-bind:src="category.path_image" class="img" id="image-img" width="100"/>
+                                                     </p>
+                                                     <label class="btn btn-primary btn-file">
+                                                         <i class="fa fa-file-image-o" aria-hidden="true"></i>  Фото товара
+                                                         <input type="file" accept="image/*"  @change="setImage($event)"/>
+                                                     </label>
+                                                     <span v-if="IsError('category.image')" class="help-block" v-for="e in IsError('category.image')">
+                                                           {{ e }}
+                                                     </span>
+                                                 </div>
+                                             </td>
+                                         </tr>
+                                         <tr>
+                                             <td width="25%" class="text-right">
+                                                 <label>Класс</label>
+                                             </td>
+                                             <td width="75%">
+                                                 <div class="form-group col-md-8" v-bind:class="{'has-error' : IsError('category.class')}">
+                                                     <input v-model="category.class" type="text" class="form-control">
+                                                     <span v-if="IsError('category.class')" class="help-block" v-for="e in IsError('category.class')">
+                                                         {{ e }}
+                                                     </span>
+                                                 </div>
+                                             </td>
+                                         </tr>
+                                         <tr>
+                                             <td width="25%" class="text-right">
+                                                 <label>
+                                                     Статус:
+                                                 </label>
+                                             </td>
+                                             <td width="75%">
+                                                 <div class="col-md-4" v-bind:class="{'has-error' : IsError('category.active')}">
+                                                     <select v-model="category.active" class="form-control">
+                                                         <option value="1">Активный</option>
+                                                         <option value="0">Неактивный</option>
+                                                     </select>
+                                                     <span v-if="IsError('category.active')" class="help-block" v-for="e in IsError('category.active')">
+                                                         {{ e }}
+                                                    </span>
+                                                 </div>
+                                             </td>
+                                         </tr>
+                                     </tbody>
+                                 </table>
                              </div>
+
+
+                             <div v-bind:class="{'active' : tab_active == 'tab_parent'}" role="tabpanel" class="tab-pane" id="tab_parent">
+                                 <table class="table table-bordered ">
+                                     <tbody>
+                                         <tr>
+                                             <td width="100%" colspan="2">
+                                                 <Categories @back="setParentId" :set_selected_keys="[category.parent_id]" :returnKey="'id'" :multiple="false"></Categories>
+                                             </td>
+                                         </tr>
+                                     </tbody>
+                                 </table>
+                             </div>
+
+
+                             <div v-bind:class="{'active' : tab_active == 'tab_desc'}" role="tabpanel" class="tab-pane" id="tab_desc">
+                                 <table class="table table-bordered ">
+                                     <tbody>
+                                         <tr>
+                                             <td width="100%" colspan="2">
+                                                 <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('category.description')}">
+                                                     <Ckeditor @new_value="setDescription" :set_value="category.description"></Ckeditor>
+                                                     <span v-if="IsError('category.description')" class="help-block" v-for="e in IsError('category.description')">
+                                                             {{ e }}
+                                                         </span>
+                                                 </div>
+                                             </td>
+                                         </tr>
+                                     </tbody>
+                                 </table>
+                             </div>
+
+
                              <div v-bind:class="{'active' : tab_active == 'tab_link_filters'}" role="tabpanel" class="tab-pane" id="tab_link_filters">
                                  <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('category.class')}" style="margin-top:20px;">
                                      <h4><b>Готовые фильтры по категорию</b></h4>
-
                                      <div class="table-responsive">
                                           <table class="table table-bordered ">
                                          <thead>
@@ -165,22 +248,42 @@
 
                                  </div>
                              </div>
+
+
                              <div v-bind:class="{'active' : tab_active == 'tab_seo'}" role="tabpanel" class="tab-pane" id="tab_seo">
-                                 <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('category.seo_keywords')}">
-                                     <label>Keywords</label>
-                                     <textarea v-model="category.seo_keywords" class="form-control"></textarea>
-                                     <span v-if="IsError('category.seo_keywords')" class="help-block" v-for="e in IsError('category.seo_keywords')">
-                                         {{ e }}
-                                     </span>
-                                 </div>
-                                 <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('category.seo_description')}">
-                                     <label>Description</label>
-                                     <textarea v-model="category.seo_description" class="form-control"></textarea>
-                                     <span v-if="IsError('category.seo_description')" class="help-block" v-for="e in IsError('category.seo_description')">
-                                         {{ e }}
-                                     </span>
-                                 </div>
+                                 <table class="table table-bordered ">
+                                     <tbody>
+                                         <tr>
+                                             <td width="25%" class="text-right">
+                                                 <label>Keywords</label>
+                                             </td>
+                                             <td width="75%">
+                                                 <div class="form-group col-md-8" v-bind:class="{'has-error' : IsError('category.seo_keywords')}">
+                                                     <textarea v-model="category.seo_keywords" class="form-control"></textarea>
+                                                     <span v-if="IsError('category.seo_keywords')" class="help-block" v-for="e in IsError('category.seo_keywords')">
+                                                         {{ e }}
+                                                     </span>
+                                                 </div>
+                                             </td>
+                                         </tr>
+                                         <tr>
+                                             <td width="25%" class="text-right">
+                                                 <label>Description</label>
+                                             </td>
+                                             <td width="75%">
+                                                 <div class="form-group col-md-8" v-bind:class="{'has-error' : IsError('category.seo_description')}">
+                                                     <textarea v-model="category.seo_description" class="form-control"></textarea>
+                                                     <span v-if="IsError('category.seo_description')" class="help-block" v-for="e in IsError('category.seo_description')">
+                                                         {{ e }}
+                                                     </span>
+                                                 </div>
+                                             </td>
+                                         </tr>
+                                     </tbody>
+                                 </table>
                              </div>
+
+
                          </div>
 
 
@@ -230,19 +333,20 @@
 <script>
     import { mapGetters } from 'vuex';
     import { mapActions } from 'vuex';
-    //https://www.npmjs.com/package/vue-ckeditor2#npm
-    import VueCkeditor from 'vue-ckeditor2';
+    import Ckeditor from  '../plugins/Ckeditor';
+    import Categories from '../plugins/Categories';
 
     export default {
         components:{
-            VueCkeditor
+            Ckeditor,
+            Categories
         },
         data () {
-
             return {
                 method_redirect: 'save_and_back',
                 category:{
                     id: this.$route.params.id ? this.$route.params.id : 0,
+                    parent_id: 0,
                     name: '',
                     url: '',
                     image: '',
@@ -252,6 +356,7 @@
                     description: '',
                     seo_keywords: '',
                     seo_description: '',
+                    active: 1,
                     category_filter_links: []
                 },
                 category_filter_link:{
@@ -261,41 +366,7 @@
                     sort: 0
                 },
                 tab_active: 'tab_main',
-                ckeditor_config: {
-                    name: 'ckeditor',
-                    toolbar: [
-                        { name: 'document', items: [ 'Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates' ] },
-                        { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
-                        { name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] },
-                        { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
-                        '/',
-                        { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'CopyFormatting', 'RemoveFormat' ] },
-                        { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ] },
-                        { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
-                        { name: 'insert', items: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe' ] },
-                        '/',
-                        { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
-                        { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
-                        { name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] },
-                        { name: 'about', items: [ 'About' ] }
-                    ],
-                    height: 300,
-
-                    filebrowserUploadUrl: '/ckeditor-upload-image?path=uploads/products/' + this.$route.params.id + '/',
-                    filebrowserUploadMethod: 'form',
-
-                    //allowedContent: 'p{text-align}(*); strong(*); em(*); b(*); i(*); u(*); sup(*); sub(*); ul(*); ol(*); li(*); a[!href](*); br(*); hr(*); img{*}[*](*); iframe(*)',
-                    //disallowedContent: '*[on*]',
-
-                    allowedContent: true,
-                    extraAllowedContent: '*(*);*{*}',
-                    extraAllowedContent: 'span;ul;li;table;td;style;*[id];*(*);*{*}'
-
-                },
             }
-        },
-        mounted() {
-            console.log('Component mounted.')
         },
         created(){
             if(this.category.id > 0)
@@ -304,6 +375,7 @@
                     var res = res.data;
                     console.log(res);
 
+                    this.category.parent_id = res.parent_id;
                     this.category.name = res.name;
                     this.category.url = res.url;
                     this.category.image = res.image;
@@ -312,12 +384,19 @@
                     this.category.description = res.description;
                     this.category.seo_keywords = res.seo_keywords;
                     this.category.seo_description = res.seo_description;
+                    this.category.active = res.active;
                     this.category.path_image = res.path_image;
                     this.category.category_filter_links = res.category_filter_links;
                 });
             }
         },
         methods:{
+            setDescription(desc){
+                this.category.description = desc;
+            },
+            setParentId(parent_id){
+                this.category.parent_id = parent_id;
+            },
             editCategoryFilterLink(item, index){
                 this.category_filter_link.index = index;
                 this.category_filter_link.name  = item.name;
@@ -399,6 +478,7 @@
                             this.$router.push('/categories/create');
 
                             this.category.id    = 0;
+                            this.category.parent_id  = 0;
                             this.category.name  = '';
                             this.category.url  = '';
                             this.category.image = '';
@@ -407,6 +487,7 @@
                             this.category.description = '';
                             this.category.seo_keywords = '';
                             this.category.seo_description = '';
+                            this.category.active = 1;
                             this.category.category_filter_links = [];
                         }
 
@@ -424,7 +505,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     table thead, table tfoot {
         background-color: #f6f6f6;
     }

@@ -8,11 +8,11 @@ class SaveCategoryRequest extends FormRequest
     public function rules()
     {
         $data = $this->request->all();
-        $id   = $data['category']['id'] ?? 0;
+        $category_id   = $data['category']['id'] ?? 0;
 
         return [
-            'category.name' => ['required', 'unique:categories,name' . ($id ? (',' . $id . ',id') : '')],
-            'category.url' => ['nullable', 'unique:categories,url' . ($id ? (',' . $id . ',id') : '')]
+            'category.name' => ['required', 'unique:categories,name' . ($category_id ? (',' . $category_id . ',id') : '')],
+            'category.url'  => ['nullable', 'unique:categories,url'  . ($category_id ? (',' . $category_id . ',id') : '')]
         ];
     }
 

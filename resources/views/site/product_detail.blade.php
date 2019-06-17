@@ -1,36 +1,21 @@
 @extends('layouts.site')
 
-@section('title',    	 $product->name)
-@section('description', $product->seo_description ? $product->seo_description : $product->name)
-@section('keywords',    $product->seo_keywords    ? $product->seo_keywords    : $product->name)
 
-@section('og_title',    	 $product->name)
-@section('og_description',  $product->seo_description ? $product->seo_description : strip_tags(\App\Tools\Helpers::closeTags(\App\Tools\Helpers::limitWords($product->description, 100))))
-@section('og_image',    	 env('APP_URL') . $product->pathPhoto(true))
+@section('title',    	 $seo['title']       .($tab_title  ? ' - '. $tab_title : ''))
+@section('description', $seo['description'] . ($tab_title ? ' '. $tab_title  : ''))
+@section('keywords',    $seo['keywords']    . ($tab_title ? ',' . $tab_title : ''))
+
+@section('og_title',    	  $seo['title']        . ($tab_title ? ' - '. $tab_title : ''))
+@section('og_description',   $seo['description']  . ($tab_title ? ' '. $tab_title    : ''))
+@section('og_image',    	  env('APP_URL') . $product->pathPhoto(true))
 
 @section('content')
 
 
 
-
-
     <div class="container" style="position:static;">
 
-        <?php $breadcrumb = [
-            [
-                'title' => 'Главная',
-                'link'  => '/'
-            ],
-            [
-                'title' => $category->name,
-                'link'  => '/catalog/' . $category->url
-            ],
-            [
-                'title' => $product->name,
-                'link'  => ''
-            ]
-        ];?>
-        @include('includes.breadcrumb', ['breadcrumb' => $breadcrumb])
+        @include('includes.breadcrumb', ['breadcrumbs' => $breadcrumbs])
 
         <div id="product-info-parent">
             <div id="content" style="margin-bottom: 0;">
@@ -39,6 +24,8 @@
 
                 <div class="product-info">
                     <div class="left">
+
+
 
                         <div class="stickers">
                             @if($product->specificPrice)
@@ -63,14 +50,13 @@
                         <div class="left_image">
 
                             <div class="product-images-main">
-                                <div class="item" style="background-image: url('{{ $product->pathPhoto(true) }}')"
-                                     title="{{ $product->name }}"
-                                     alt="{{ $product->name }}">
+                                <div class="item">
+                                    <img src="{{ $product->pathPhoto(true) }}" title="{{ $seo['title'] }}" alt="{{ $seo['title'] }}"/>
                                 </div>
+
                                 @foreach($product->images as $image)
-                                    <div class="item" style="background-image: url('{{ $image->imagePath(true) }}')"
-                                         title="{{ $product->name }}"
-                                         alt="{{ $product->name }}">
+                                    <div class="item">
+                                        <img src="{{ $image->imagePath(true) }}" title="{{ $seo['title'] }}" alt="{{ $seo['title'] }}"/>
                                     </div>
                                 @endforeach
                             </div>
@@ -79,20 +65,40 @@
                                 <div class="product-images-nav">
                                     <div class="item">
                                         <img src="{{ $product->pathPhoto(true) }}"
-                                             title="{{ $product->name }}"
-                                             alt="{{ $product->name }}">
+                                             title="{{ $seo['title'] }}"
+                                             alt="{{ $seo['title'] }}">
                                     </div>
                                     @foreach($product->images as $image)
                                         <div class="item">
                                             <img src="{{ $image->imagePath(true) }}"
-                                                 title="{{ $product->name }}"
-                                                 alt="{{ $product->name }}">
+                                                 title="{{ $seo['title'] }}"
+                                                 alt="{{ $seo['title'] }}">
                                         </div>
                                     @endforeach
                                 </div>
                             @endif
 
                         </div>
+
+                        <script>
+                            /** Слайдер товара **/
+                            $('.product-images-main').slick({
+                                slidesToShow: 1,
+                                slidesToScroll: 1,
+                                arrows: false,
+                                fade: true,
+                                asNavFor: '.product-images-nav'
+                            });
+                            $('.product-images-nav').slick({
+                                slidesToShow: window.screen.availWidth > 830 ? 4 : 3,
+                                slidesToScroll: 1,
+                                asNavFor: '.product-images-main',
+                                dots: false,
+                                centerMode: true,
+                                focusOnSelect: true
+                            });
+                            /** Слайдер товара **/
+                        </script>
 
 
                     </div>
@@ -120,10 +126,10 @@
 
                         </div>
 
-                        <h2>{{ $product->name }}</h2>
+                        <h1>{{ $product->name . ($tab_title ? ': ' . $tab_title : '')}}</h1>
 
                         <div class="under_h1">
-                            <div class="left_info_product_last_review_rating" itemprop="aggregateRating" itemscope="" itemtype="http://schema.org/AggregateRating">
+                            <div class="left_info_product_last_review_rating">
                                 <a class="rating_text" href="#reviews">
                                     {{ $product->reviews_count }} Отзыв
                                 </a>
@@ -135,10 +141,6 @@
                         </div>
 
 
-
-                        <div class="pseudo_h1">
-                            {{ $product->name }}
-                        </div>
 
                         <span class="stock">
                              @if($product->stock > 0)
@@ -153,28 +155,44 @@
 					    </span>
 
                         <div class="product_right_sku_container">
-                            <div class="product_right_sku">Артикул: <span>{{ $product->sku }}</span>
+                            <div class="product_right_sku">
+                                Артикул: <span>{{ $product->sku }}</span>
                             </div>
                         </div>
+
+                        <br/>
 
                         <div class="left_info_product">
                             <div class="left_info_product_series">
 
-                                @foreach($product->attributes as $attribute)
-                                    @if($attribute->id == 50 and $attribute->pivot->value)
-                                        <div class="left_info_product_series_header">Цвет: <span>{{ $attribute->pivot->value }}</span></div>
-                                    @endif
-                                @endforeach
-
                                 <div class="left_info_product_series_colors">
+
+                                    @foreach($product->attributes as $attribute)
+                                        @if($attribute->id == 50 and $attribute->pivot->value)
+
+                                            <?php $attributeValue = $attribute->values()->where('value', $attribute->pivot->value)->first(); ?>
+
+                                            <a class="left_info_product_series_color">
+                                                <div class="left_info_product_series_color_middle"
+                                                     style="background: {{ $attributeValue->props ?? '#fff' }}">
+                                                </div>
+                                            </a>
+
+                                        @endif
+                                    @endforeach
+
                                     @foreach($group_products as $group_product)
                                         @foreach($group_product->attributes as $attribute)
                                             @if($attribute->id == 50 and $attribute->pivot->value)
+
+                                                <?php $attributeValue = $attribute->values()->where('value', $attribute->pivot->value)->first(); ?>
+
                                                 <a title="{{ $attribute->pivot->value }} - {{ $group_product->name }}" class="left_info_product_series_color left_info_product_series_color_active" href="{{ $group_product->detailUrlProduct() }}">
                                                     <div class="left_info_product_series_color_middle"
-                                                         style="background: {{ \App\Tools\Helpers::colorProduct($attribute->pivot->value) }}">
+                                                         style="background: {{ $attributeValue->props ?? '#fff' }}">
                                                     </div>
                                                 </a>
+
                                             @endif
                                         @endforeach
                                     @endforeach
@@ -203,7 +221,9 @@
 
                         <div class="some_right">
                             <div class="all_right_block">
-                                <div class="all_right_top" itemprop="offers" itemscope="" itemtype="http://schema.org/Offer">
+                                <div class="all_right_top">
+
+                                    @php $price = $product->getReducedPrice(); @endphp
 
                                     @if($product->stock > 0)
                                         <div class="price">
@@ -212,13 +232,11 @@
                                                     {{ \App\Tools\Helpers::priceFormat($product->price) }}
                                                 </span>
                                             @endif
-                                            <span class="price-new">
-                                                {{ \App\Tools\Helpers::priceFormat($product->getReducedPrice()) }}
-                                            </span>
+                                            <span class="price-new">{{ \App\Tools\Helpers::priceFormat($price) }}</span>
                                         </div>
                                     @else
                                         <div class="price_empty">
-                                            {{ \App\Tools\Helpers::priceFormat($product->getReducedPrice()) }}
+                                            {{ \App\Tools\Helpers::priceFormat($price) }}
                                             <div class="some_empty_bottom">При поступлении товара,<br>цена может отличаться</div>
                                         </div>
                                     @endif
@@ -266,12 +284,43 @@
                                 </a>
                                 <div class="product_delivery_container">
                                     <div><a href="/delivery-payment">Доставка по всему казахстану:</a> от 1000 тг до 3000 тг</div>
+                                    <div>
+                                        По городам <a href="/delivery-payment">Казахстана</a>,работаем с курьерской компанией "Алем-Тат",
+                                        <br/>
+                                        срок доставки 3-4 рабочих дня.
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="go_to_description">
-                                <a>Перейти к описанию товара</a>
+
+                                <?php
+                                ob_start();
+                                ?>
+                                    <ul>
+                                        @foreach($product->attributes as $attribute)
+                                            @if(!in_array($attribute->id, [49, 61, 62]) and $attribute->pivot->value)
+                                                <li>{{ $attribute->name }}: {{ $attribute->pivot->value }}</li>
+                                            @endif
+                                        @endforeach
+                                    </ul>
+                                    @if($product->description_mini)
+                                        <p>
+                                            {!! $product->description_mini  !!}
+                                        </p>
+                                    @endif
+                                <?php
+                                $description_mini = ob_get_clean();
+                                ?>
+                                {!! $description_mini !!}
                             </div>
+
+                            @include('schemas.product', [
+                                'product'          => $product,
+                                'description_mini' => htmlentities($description_mini),
+                                'group_products'   => $group_products,
+                                'category'         => $category
+                            ])
 
                         </div>
                     </div>
@@ -292,10 +341,15 @@
                     <div class="product_skladis_shop">
                         <div class="product_skladis_shop_left">
                             <a href="/contact">
-                                г. Алматы, ул. Жибек жолы 115, оф. 113 (Рядом Аэровокзала)
+                                @php
+                                    $address = config('shop.address');
+                                @endphp
+                                {{ $address[0]['addressLocality'] }}, {{ $address[0]['streetAddress'] }}
                             </a>
                         </div>
-                        <div class="product_skladis_shop_metro product_skladis_shop_metro_1">г.Алматы</div>
+                        <div class="product_skladis_shop_metro product_skladis_shop_metro_1">
+                            <b>г.Алматы</b>
+                        </div>
 
                         @if($product->stock > 0)
                             <div class="product_skladis_shop_right product_skladis_shop_active">
@@ -363,7 +417,7 @@
 
                     </div>
                     <div class="product_tabs_content">
-                        <div @if($product_tab == 'descriptions' or !$product_tab) class="active"  @endif id="tab-descriptions">
+                        <div  @if($product_tab == 'descriptions' or !$product_tab) class="active"  @endif id="tab-descriptions">
                             {!! $product->description  !!}
                         </div>
                         <div @if($product_tab == 'attributes')   class="active"  @endif id="tab-attributes">
@@ -436,19 +490,19 @@
                                     <p>Нет отзывы</p>
                                 @else
                                     @foreach($product->reviews as $review)
-                                            <div class="one-review" itemprop="review" itemscope="" itemtype="http://schema.org/Review">
+                                            <div class="one-review">
                                                 <div class="one-review-left">
-                                                    <div class="one-review-left-author" itemprop="author">
+                                                    <div class="one-review-left-author">
                                                         {{ $review->name }}
                                                     </div>
-                                                    <div class="one-review-left-date" content="2017-08-09" itemprop="datePublished">
+                                                    <div class="one-review-left-date">
                                                         {{ \App\Tools\Helpers::ruDateFormat($review->created_at) }}
                                                     </div>
-                                                    <div class="rating_stars" itemprop="reviewRating" itemscope="" itemtype="http://schema.org/Rating">
+                                                    <div class="rating_stars">
                                                         <div class="rating_full" style="width: {{ $review->rating * 20 }}%"></div>
                                                     </div>
                                                 </div>
-                                                <div class="one-review-right" itemprop="reviewBody">
+                                                <div class="one-review-right">
                                                     <div class="one-review-right-text-plus">
                                                         <span class="review-head">Достоинства</span>
                                                         <span class="review-text">

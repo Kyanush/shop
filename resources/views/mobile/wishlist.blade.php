@@ -1,16 +1,17 @@
 @extends('layouts.mobile')
 
-<?php $title = 'Мои закладки';?>
-@section('title', $title)
-@section('description', $title)
-@section('keywords', $title)
+@section('title',       $seo['title'])
+@section('description', $seo['description'])
+@section('keywords',    $seo['keywords'])
 
 @section('content')
 
         @include('mobile.includes.topbar', [
             'class'       => '_fixed',
-            'title'       => '<a class="topbar__heading-link"><i class="topbar__heading-logo _icon"></i>' . $title . '</a>',
-            'search_show' => false
+            'title'       => '<a class="topbar__heading-link"><i class="topbar__heading-logo _icon"></i>' . $seo['title'] . '</a>',
+            'search_show' => false,
+            'menu_link'   => '',
+            'menu_class'  => 'icon_menu'
             ])
         @include('mobile.includes.space', ['style' => 'height: 3.073vw;'])
 
@@ -55,7 +56,7 @@
                    </div>
 
                    <div class="container text-center">
-                      <a class="button" href="/wishlist-delete/{{ $item->product_id }}">
+                      <a class="button" href="{{ route('wishlist_delete', ['product_id' => $item->product_id]) }}">
                          Удалить
                       </a>
                    </div>

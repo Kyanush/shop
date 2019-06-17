@@ -96,6 +96,10 @@ class Review extends Model
             $query->OrWhere( DB::raw('LOWER(comment)'), 'like', "%"  . $search . "%");
             $query->OrWhere( DB::raw('LOWER(plus)'),    'like', "%"  . $search . "%");
             $query->OrWhere( DB::raw('LOWER(minus)'),   'like', "%"  . $search . "%");
+            $query->orWhereHas('product', function($query) use ($search){
+                 $query->filters(['name' => $search]);
+            });
+
         }
         return $query;
     }

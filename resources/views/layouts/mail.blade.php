@@ -4,12 +4,12 @@
             <div style="margin-left:30px;float:left;"></div>
 
             <div style="float:right;margin-right:30px;">
-                <a href="{{ env('APP_URL') }}/catalog" style="display:inline-block;margin:0 0 0 9px;color:#fe8c2c;font-size:12px;" class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
+                <a href="{{ env('APP_URL') }}/catalog/smartfony" style="display:inline-block;margin:0 0 0 9px;color:#fe8c2c;font-size:12px;" class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
                     <span style="border-right:1px solid #484848;padding-right:9px;">
                        Каталог товаров
                     </span>
                 </a>
-                <a href="{{ env('APP_URL') }}/my-account" style="display:inline-block;margin:0 9px;color:#fff;font-size:12px;" class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
+                <a href="{{ route('my_account') }}" style="display:inline-block;margin:0 9px;color:#fff;font-size:12px;" class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
                     Личный кабинет
                 </a>
             </div>
@@ -17,8 +17,8 @@
 
         <div style="padding:30px;">
             <div style="margin-bottom:60px;">
-                <a href="{{ env('APP_URL') }}" class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
-                    <img width="150" src="{{ env('APP_URL') }}/site/images/logo_firm.png">
+                <a href="{{ route('index') }}" class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
+                    <img width="150" src="{{ env('APP_URL') }}/site/images/logo.png">
                 </a>
                 <div style="float:right;padding-top:10px;padding-right:5px;color:#cbcbcb;">
                     {{ env('APP_NAME') }}
@@ -41,24 +41,24 @@
             <div style="overflow:hidden;">
                 <div style="width:200px;float:left;">
                     <div style="margin-top:5px;">
-                        <a href="{{ env('APP_URL') }}/catalog" style="color:#fe7a0b;"  class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
+                        <a href="{{ env('APP_URL') }}/catalog/smartfony" style="color:#fe7a0b;"  class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
                             Каталог товаров
                         </a>
                     </div>
                     <div style="margin-top:5px;">
-                        <a href="{{ env('APP_URL') }}/contact" style="color:#fe7a0b;"  class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
+                        <a href="{{ route('contact') }}" style="color:#fe7a0b;"  class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
                             Контакты
                         </a>
                     </div>
                 </div>
                 <div style="width:200px;float:left;">
                     <div style="margin-top:5px;">
-                        <a href="{{ env('APP_URL') }}/guaranty" style="color:#fe7a0b;"  class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
+                        <a href="{{ route('guaranty') }}" style="color:#fe7a0b;"  class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
                             Гарантия
                         </a>
                     </div>
                     <div style="margin-top:5px;">
-                        <a href="{{ env('APP_URL') }}/delivery-payment" style="color:#fe7a0b;"  class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
+                        <a href="{{ route('delivery_payment') }}/" style="color:#fe7a0b;"  class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
                             Доставка, оплата
                         </a>
                     </div>
@@ -73,7 +73,7 @@
 
             <div style="float:right;margin-right:50px;overflow:hidden;">
                 <div style="float:left;margin-right:5px;">
-                    <a href="https://instagram.com/onepoint.kz"  title="Мы в Instagram" class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
+                    <a href="{{ config('shop.social_network.instagram') }}"  title="Мы в Instagram" class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
                         <img width="29" src="https://cdn0.iconfinder.com/data/icons/social-media-circle-6/1024/instagram-512.png">
                     </a>
                 </div>
@@ -92,17 +92,22 @@
                     </div>
 
                     <div style="float:left;padding-top:2px;">
-                        <a href="{{ env('APP_URL') }}/contact" style="color:#dc7846;font-size:12px;" class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
+                        <a href="{{ route('contact') }}" style="color:#dc7846;font-size:12px;" class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
                             Обратная связь</a>
                     </div>
                 </div>
             </div>
 
+            @php
+                $address = config('shop.address');
+                $number_phones = config('shop.number_phones');
+            @endphp
+
             <div style="float:left;width:215px;">
                 <div style="font-weight:bold;color:#fff;">Наши контакты</div>
 
                 <div style="color:#afafaf;margin-top:8px;font-size:12px;">
-                    Жибек Жолы проспект, 115
+                    {{ $address[0]['addressLocality'] }}, {{ $address[0]['streetAddress'] }}
                 </div>
 
                 <div style="color:#afafaf;margin-top:8px;font-size:12px;margin-top:15px;">
@@ -114,7 +119,9 @@
 
                     <div style="color:#fff;text-decoration:underline;font-size:12px;margin-top:5px;">Позвоните нам:
                         <span class="wmi-callto">
-                            <a href="tel:+77075511979" style="color: #ffffff;">+7 (707) 551 1979</a>
+                            <a href="tel: {{ $number_phones[0]['number'] }}" style="color: #ffffff;">
+                                {{ $number_phones[0]['format'] }}
+                            </a>
                         </span>
                     </div>
                 </div>
@@ -123,11 +130,11 @@
 
         <div style="background:#fff;height:60px;line-height:60px;padding-left:30px;">
             <div style="display:inline-block;height:60px;padding-top:10px;margin-right:15px;vertical-align:top;">
-               <img src="{{ env('APP_URL') }}/site/images/logo_firm.png" width="100px"/>
+               <img src="{{ env('APP_URL') }}/site/images/logo.png" width="100px"/>
             </div>
 
             <div style="display:inline-block;text-decoration:underline;vertical-align:top;">
-                <a href="{{ env('APP_URL') }}" style="color:#333333;font-size:12px;"  class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
+                <a href="{{ route('index') }}" style="color:#333333;font-size:12px;"  class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
                     Фирменный интернет магазин {{ env('APP_NAME') }}
                 </a>
             </div>

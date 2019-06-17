@@ -31,18 +31,12 @@ class ProductController extends AdminController
         $this->serviceCategory = $serviceCategory;
     }
 
+    public function searchProducts(Request $request){
+        $products = Product::filters(['name' => $request->input('search')])
+                        ->limit(5)
+                        ->get();
 
-    public function allProductsSelect2(){
-        $products = Product::all();
-
-        $data = $products->map(function ($item) {
-            return [
-                'id'   => $item->id,
-                'text' => $item->name
-            ];
-        });
-
-        return $this->sendResponse($data);
+        return $this->sendResponse($products);
     }
 
     public function list(Request $request)

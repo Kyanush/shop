@@ -9,7 +9,7 @@
 
    <div class="container">
 
-       <?php $breadcrumb = [
+       <?php $breadcrumbs = [
            [
                'title' => 'Главная',
                'link'  => '/'
@@ -23,7 +23,7 @@
                'link'  => ''
            ]
        ];?>
-      @include('includes.breadcrumb', ['breadcrumb' => $breadcrumb])
+      @include('includes.breadcrumb', ['breadcrumbs' => $breadcrumbs])
 
 
       @include('includes.menu_left_my_account')

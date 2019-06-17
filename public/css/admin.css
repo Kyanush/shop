@@ -103,3 +103,9 @@ del{
     margin-left: -3px;
     margin-top: -8px;
 }
+#filter-search{
+    max-width: 300px;
+}
+.select2{
+    width: 100%!important;
+}

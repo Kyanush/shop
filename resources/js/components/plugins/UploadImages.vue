@@ -100,7 +100,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .dropzone {
         min-height: 150px;
         border: 2px solid rgba(0, 0, 0, 0.3);

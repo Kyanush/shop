@@ -10,7 +10,7 @@
                         <i class="kaspi-menu__signin-icon icon icon_close"></i>
                         <a href="/logout">Выйти</a>
                         &nbsp;|&nbsp;
-                        <a href="/my-account">{{ Auth::user()->name }}</a>
+                        <a href="{{ route('my_account') }}">{{ Auth::user()->name }}</a>
                     @else
                         <i class="kaspi-menu__signin-icon icon icon_user"></i>
                         <a href="/login">Вход</a>
@@ -32,44 +32,39 @@
                $menu = [
                    [
                        'title' => 'Главная',
-                       'link'  => '/'
+                       'link'  => route('index')
                    ],
-                   [
-                       'title' => 'Акции',
-                       'link'  => '/specials'
-                   ],
-
                    [
                        'title' => 'Мои заказы',
-                       'link'  => '/order-history'
+                       'link'  => route('order_history')
                    ],
                    [
                        'title' => 'Корзина',
-                       'link'  => '/checkout',
+                       'link'  => route('checkout'),
                    ],
                    [
                        'title' => 'Мои закладки',
-                       'link'  => '/wishlist',
+                       'link'  => route('wishlist'),
                    ],
                    [
                        'title' => 'Сравнение товаров',
-                       'link'  => '/compare-products',
+                       'link'  => route('compare_products'),
                    ],
                    [
                        'title' => 'Гарантия',
-                       'link'  => '/guaranty'
+                       'link'  => route('guaranty')
                    ],
                    [
                        'title' => 'Доставка, оплата',
-                       'link'  => '/delivery-payment'
+                       'link'  => route('delivery_payment')
                    ],
                    [
                        'title' => 'Контакты',
-                       'link'  => '/contact'
+                       'link'  => route('contact')
                    ],
                    [
                        'title' => 'О нас',
-                       'link' => '/about',
+                       'link' => route('about')
                    ]
                ];
 
@@ -77,17 +72,17 @@
                {
                    $menu[] = [
                        'title' => 'Личный кабинет',
-                       'link' => '/my-account',
+                       'link' => route('my_account'),
                    ];
                    $menu[] = [
                        'title' => 'Изменить пароль',
-                       'link' => '/change-password',
+                       'link' => route('change_password'),
                    ];
                }
             ?>
 
             @foreach($menu as $item)
-                <li class="kaspi-menu__item @if(strpos($_SERVER['REQUEST_URI'], $item['link']) !== false && $item['link'] != '/') _active @endif">
+                <li class="kaspi-menu__item @if(strpos(url()->current(), $item['link']) !== false and $item['link'] != env('APP_URL')) _active @endif">
                     <a class="kaspi-menu__itemLink" href="{{ $item['link'] }}">
                         {{ $item['title'] }}
                     </a>

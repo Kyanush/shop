@@ -115,7 +115,7 @@
             <td></td>
             @foreach($productFeaturesCompareList as $item)
                 <td class="remove">
-                    <a href="/compare-product-delete/{{ $item->product_id }}" class="button">
+                    <a href="{{ route('compare_product_delete', ['product_id' => $item->product_id]) }}" class="button">
                         <span>Удалить</span>
                     </a>
                 </td>

@@ -1,7 +1,9 @@
 @include('mobile.includes.topbar', [
     'class'       => '_fixed',
     'title'       => '<a class="topbar__heading-link"><i class="topbar__heading-logo _icon"></i>Забыли пароль?</a>',
-    'search_show' => false
+    'search_show' => false,
+    'menu_link'   => '',
+    'menu_class'  => 'icon_menu'
 ])
 
 <div class="container g-pa0 g-bb-fat g-bg-c0">

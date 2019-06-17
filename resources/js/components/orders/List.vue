@@ -18,7 +18,7 @@
         <div class="box-header with-border" v-show="order_show_filter">
             <div class="row">
                 <div class="col-md-6">
-                    <div class="table-responsive">
+                    <div class="table-responsive1">
                         <table class="table table-bordered ">
                         <tbody class="filter">
                         <tr class="odd even">
@@ -83,7 +83,7 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div class="table-responsive">
+                    <div class="table-responsive1">
                         <table class="table table-bordered ">
                         <tbody class="filter">
                         <tr class="odd even">
@@ -307,7 +307,6 @@
             this.ordersList();
 
             axios.get('/admin/order/users').then((res)=>{
-                console.log(res.data);
                 this.users = res.data;
             });
 
@@ -403,11 +402,7 @@
     }
 </script>
 
-
-<style>
-    #filter-search{
-        max-width: 300px;
-    }
+<style scoped>
     .filter{
         font-size: 12px;
     }
@@ -416,10 +411,11 @@
         padding: 3px 12px;
         font-size: 12px;
     }
-    .filter .select2-selection--multiple {
-        height: 25px!important;
-        min-height: 25px!important;
+    .filter td{
+        border:0!important;
     }
+</style>
+<style>
     .select2-container--default .select2-selection--multiple .select2-selection__choice {
         margin-top: 2px;
     }
@@ -427,7 +423,8 @@
         padding: 3px 6px;
         font-size: 12px;
     }
-    .filter td{
-        border:0!important;
+    .filter .select2-selection--multiple {
+        height: 25px!important;
+        min-height: 25px!important;
     }
 </style>

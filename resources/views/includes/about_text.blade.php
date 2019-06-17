@@ -1,8 +1,13 @@
-<h2 style="text-align: center;    font-size: 30px;">Про интернет-магазин «OnePoint»</h2>
-<h3 style="text-align: center;">OnePoint.kz – интернет-магазин мобильной и цифровой техники в Казахстане.</h3>
+@php
+    $address = config('shop.address');
+    $number_phones = config('shop.number_phones');
+@endphp
+
+<h2 style="text-align: center;    font-size: 30px;">Про интернет-магазин «{{env('APP_NO_URL')}}»</h2>
+<h3 style="text-align: center;">{{env('APP_NO_URL')}} – интернет-магазин мобильной и цифровой техники в Казахстане.</h3>
 
 <div>&nbsp;</div>
-<div><strong>Что можно приобрести в интернет-магазине «OnePoint»:&nbsp;</strong></div>
+<div><strong>Что можно приобрести в интернет-магазине «{{env('APP_NO_URL')}}»:&nbsp;</strong></div>
 <div>&nbsp;</div>
 <div>
     <ul>
@@ -19,7 +24,7 @@
     </ul>
 </div>
 <div>&nbsp;</div>
-<div>Интернет-магазин «OnePoint» – это удобство оплаты и доставки.&nbsp;</div>
+<div>Интернет-магазин «{{env('APP_NO_URL')}}» – это удобство оплаты и доставки.&nbsp;</div>
 <div>&nbsp;</div>
 <div>&nbsp;</div>
 <div><strong>Оплатить заказ можно:&nbsp;</strong></div>
@@ -33,7 +38,7 @@
     </ul>
 </div>
 <div>&nbsp;</div>
-<div>Заказанный товар будет доставлен в кратчайшие сроки и в удобное время. Мы ценим скорость – например, телефон из Алматы в Актау «OnePoint» доставляет всего за 2 дня!&nbsp;</div>
+<div>Заказанный товар будет доставлен в кратчайшие сроки и в удобное время. Мы ценим скорость – например, телефон из Алматы в Актау «{{env('APP_NAME')}}» доставляет всего за 2 дня!&nbsp;</div>
 <div>&nbsp;</div>
 <div>&nbsp;</div>
 <div><strong>Варианты доставки:&nbsp;</strong></div>
@@ -46,17 +51,17 @@
     </ul>
 </div>
 <div>&nbsp;</div>
-<div>Интернет-магазин «OnePoint» – любимые товары по удивительным ценам!&nbsp;</div>
+<div>Интернет-магазин «{{env('APP_NO_URL')}}» – любимые товары по удивительным ценам!&nbsp;</div>
 <div>&nbsp;</div>
 <div>
     <ul>
         <li style="margin-bottom: 1rem;">Консультация по любому товару при заказе по телефону.&nbsp;</li>
         <li style="margin-bottom: 1rem;">Скидки и акции каждый день – покупай тысячи товаров по лучшим ценам!</li>
-        <li style="margin-bottom: 1rem;">Заказ любым удобным способом: на сайте, по номеру 8 (707) 551-19-79 .</li>
+        <li style="margin-bottom: 1rem;">Заказ любым удобным способом: на сайте, по номеру {{ $number_phones[0]['format'] }} .</li>
     </ul>
 </div>
 <div>&nbsp;</div>
-<div><strong>Чем еще интересен сайт <a href="http://www.gomarket.kz">www.onepoint.kz:&nbsp;</a></strong></div>
+<div><strong>Чем еще интересен сайт <a href="{{env('APP_URL')}}">{{env('APP_NO_URL')}}:&nbsp;</a></strong></div>
 <div>&nbsp;</div>
 <div>
     <ul>
@@ -64,6 +69,6 @@
         <li style="margin-bottom: 1rem;">скидки для постоянных покупателей;</li>
         <li style="margin-bottom: 1rem;">полезные видео- и текстовые обзоры устройств, аксессуаров и услуг от наших экспертов;</li>
         <li style="margin-bottom: 1rem;">сервис «Вопрос-ответ». При сомнениях в выборе продукта всегда помогут наши консультанты – можно задать свой вопрос прямо на странице товара;</li>
-        <li style="margin-bottom: 1rem;">единый номер 8 (707) 551-19-79 . Звони, чтобы оформить заказ, уточнить наличие товара, выяснить все характеристики нужного устройства или узнать о наших акциях!</li>
+        <li style="margin-bottom: 1rem;">единый номер {{ $number_phones[0]['format'] }} . Звони, чтобы оформить заказ, уточнить наличие товара, выяснить все характеристики нужного устройства или узнать о наших акциях!</li>
     </ul>
 </div>

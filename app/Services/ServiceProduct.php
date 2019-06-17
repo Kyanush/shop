@@ -5,6 +5,7 @@ use App\Contracts\ProductInterface;
 use App\Models\Attribute;
 use App\Models\AttributeProductValue;
 use App\Models\Order;
+use App\Tools\Helpers;
 use File;
 use App\Models\ProductGroup;
 use App\Models\Product;
@@ -179,8 +180,8 @@ class ServiceProduct implements ProductInterface
         //С этим товаром покупают
         if($product_accessories)
         {
-           foreach ($product->productAccessories as $item)
-               $clone->productAccessories()->attach([$item->pivot->accessory_product_id]);
+            foreach ($product->productAccessories as $item)
+                $clone->productAccessories()->attach([$item->pivot->accessory_product_id]);
         }
 
         //Отзывы
@@ -214,27 +215,27 @@ class ServiceProduct implements ProductInterface
         if(!is_array($product_ids) or count($product_ids) == 0)
             return false;
 
-            $products = $this->model::select('id')->where('group_id', $product_group_id)->whereNotIn('id', $product_ids)->get();
-            foreach ($products as $item)
-            {
-                if($item->id == $product_id) continue;
+        $products = $this->model::select('id')->where('group_id', $product_group_id)->whereNotIn('id', $product_ids)->get();
+        foreach ($products as $item)
+        {
+            if($item->id == $product_id) continue;
 
-                $productGroup = ProductGroup::create();
-                $this->model::where('id', $item->id)->update(['group_id' => $productGroup->id]);
-            }
+            $productGroup = ProductGroup::create();
+            $this->model::where('id', $item->id)->update(['group_id' => $productGroup->id]);
+        }
 
-            foreach ($product_ids as $item_product_id)
-            {
-                if($item_product_id == $product_id) continue;
+        foreach ($product_ids as $item_product_id)
+        {
+            if($item_product_id == $product_id) continue;
 
-                $productGroupId     = $this->model::find($item_product_id)->group_id;
-                $countGroupProducts = $this->model::where('group_id', $productGroupId)->count();
+            $productGroupId     = $this->model::find($item_product_id)->group_id;
+            $countGroupProducts = $this->model::where('group_id', $productGroupId)->count();
 
-                $this->model::where('id', $item_product_id)->update(['group_id' => $product_group_id]);
+            $this->model::where('id', $item_product_id)->update(['group_id' => $product_group_id]);
 
-                if($countGroupProducts == 1)
-                    ProductGroup::destroy($productGroupId);
-            }
+            if($countGroupProducts == 1)
+                ProductGroup::destroy($productGroupId);
+        }
 
         return true;
     }
@@ -259,6 +260,7 @@ class ServiceProduct implements ProductInterface
                 if(is_uploaded_file($item['value'])){
 
                     $upload = new Upload();
+                    $upload->fileName = str_slug($product->name) . '-' . Helpers::tableNextId('product_images');
                     $upload->setWidth(460);
                     $upload->setHeight(350);
                     $upload->setPath($product->productFileFolder());
@@ -351,7 +353,7 @@ class ServiceProduct implements ProductInterface
 
     public function productsAttributesFilters($filters, $useInFilter = true)
     {
-       $attributeProductValue = AttributeProductValue::select(['attribute_id', 'value'])
+        $attributeProductValue = AttributeProductValue::select(['attribute_id', 'value'])
             ->whereHas('product', function($query) use ($filters){
                 $query->filters($filters);
                 $query->filtersAttributes($filters);
@@ -381,9 +383,9 @@ class ServiceProduct implements ProductInterface
         return Attribute::whereIn('id', $attribute_ids)->with(['values' => function($query) use ($values){
             $query->whereIn('value', $values);
         }])
-        ->whereHas('values', function ($query) use ($values){
-            $query->whereIn('value', $values);
-        })->get();
+            ->whereHas('values', function ($query) use ($values){
+                $query->whereIn('value', $values);
+            })->get();
     }
 
 }

@@ -9,7 +9,7 @@ class Upload
 {
 
     private $width = 0, $height = 0, $file = null, $path = '';
-
+    public $fileName = '';
 
     public function getWidth()
     {
@@ -64,7 +64,10 @@ class Upload
 
         if(is_uploaded_file($file))
         {
-            $fileName = md5(uniqid('', true)) . '.' . $file->extension();
+
+            $fileName = ($this->fileName ? $this->fileName : md5(uniqid('', true)));
+            $fileName.= '.' . $file->extension();
+
             if($file->move($path, $fileName)){
 
                 if($this->getWidth() > 0 or $this->getHeight() > 0)

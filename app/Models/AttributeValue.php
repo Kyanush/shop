@@ -13,7 +13,8 @@ class AttributeValue extends Model
     protected $fillable = [
     	'attribute_id',
     	'value',
-        'code'
+        'code',
+        'props'
 	];
 
     protected static function boot()

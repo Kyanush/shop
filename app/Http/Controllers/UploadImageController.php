@@ -33,7 +33,7 @@ class UploadImageController extends Controller
         $file = $request->file('upload');
         $path = $request->input('path');
         if(empty($path))
-            return false;
+            $path = 'uploads/ckeditor/';
 
         $upload = new Upload();
         $upload->setWidth(500);
