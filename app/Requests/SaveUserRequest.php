@@ -18,7 +18,7 @@ class SaveUserRequest extends FormRequest
             'user.role_id' => 'required|exists:roles,id',
         ];
 
-        if(!$data['id'] or !empty($data['password']))
+        if(empty($data['id']) or $data['password'])
         {
             $rules['user.password']              = 'required|confirmed|min:6|confirmed';
             $rules['user.password_confirmation'] = 'required|string|min:6';

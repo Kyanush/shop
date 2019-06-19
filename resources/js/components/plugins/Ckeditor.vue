@@ -1,7 +1,6 @@
 <template>
     <div>
-        <VueCkeditor v-model="value" :config="ckeditor_config"></VueCkeditor>
-
+        <VueCkeditor v-model="self_value" :config="ckeditor_config"></VueCkeditor>
     </div>
 </template>
 
@@ -10,14 +9,14 @@
     import VueCkeditor from 'vue-ckeditor2';
 
     export default {
-        props:['set_value', 'uploadFilePath'],
+        props:['value', 'uploadFilePath'],
         components:{
             VueCkeditor
         },
         name: 'Ckeditor',
         data () {
             return {
-                value: '',
+                self_value: '',
                 ckeditor_config: {
                     name: 'ckeditor',
                     toolbar: [
@@ -56,14 +55,13 @@
         },
         created(){
             setInterval(function () {
-                if(this.set_value && !this.value)
-                    this.value = this.set_value;
-            }.bind(this), 500);
+                this.self_value = this.value;
+            }.bind(this), 100);
         },
         watch: {
-            value: {
+            self_value: {
                 handler: function (val, oldVal) {
-                    this.$emit('new_value', this.value);
+                    this.$emit('input', val);
                 },
                 deep: true
             }

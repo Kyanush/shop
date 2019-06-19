@@ -118,7 +118,7 @@ Route::group(['namespace'  => 'Sitemap'], function () {
 
     $cities     = \App\Services\ServiceCity::listActiveSort();
     foreach ($cities as $city)
-        Route::get($city->code . '.xml',   'SitemapController@city');
+        Route::get($city->code . '.xml',   'SitemapController@city')->name($city->code);
 
 });
 

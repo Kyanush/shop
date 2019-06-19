@@ -110,7 +110,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="scroll-catalog">
-                                <Categories @back="selectedCatalog" :set_selected_keys="filter.category" :returnKey="'url'" :multiple="false"></Categories>
+                                <Categories v-model="filter.category" :returnKey="'url'" :multiple="false"></Categories>
                             </div>
                         </div>
                     </div>
@@ -554,10 +554,6 @@
                     }
                 });
                 this.$router.push({path: '/products'});
-            },
-            selectedCatalog(values) {
-                this.filter.category = values;
-                //$('.tree-anchor').removeClass('tree-selected');
             },
             dateFormat(date, type_format){
                 return this.$helper.dateFormat(date, type_format);

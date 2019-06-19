@@ -7,7 +7,6 @@ use App\Models\Category;
 use App\Models\City;
 use App\Models\Product;
 use App\Services\ServiceCity;
-use function GuzzleHttp\Psr7\str;
 
 class SitemapController extends Controller
 {
@@ -24,8 +23,7 @@ class SitemapController extends Controller
     }
 
     public function city(){
-        $city_code = str_replace([env('APP_URL'),'.xml'], '', url()->current());
-        $city_code = str_replace('/', '', $city_code);
+        $city_code = \Route::currentRouteName();
 
         $city = City::where('code', $city_code)->first();
         $products   = Product::with('categories')->filters(['active' => 1])->get();

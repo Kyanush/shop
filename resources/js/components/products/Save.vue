@@ -235,7 +235,7 @@
                                                 <p class="help-block" style="padding-left: 50px;font-weight: bold;color: #da0303;">Вы можете выбрать одну или несколько категорий, где будет отображаться товар</p>
                                             </td>
                                             <td width="75%">
-                                                <Categories @back="setCategoriesIds" :set_selected_keys="categories" :returnKey="'id'" :multiple="true"></Categories>
+                                                <Categories v-model="categories" :returnKey="'id'" :multiple="true"></Categories>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -276,7 +276,7 @@
                                         <tr>
                                             <td width="100%" colspan="2">
                                                 <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('product.description')}">
-                                                    <Ckeditor @new_value="setDescription" :set_value="product.description" :uploadFilePath="uploadFilePath"></Ckeditor>
+                                                    <Ckeditor v-model="product.description" :uploadFilePath="uploadFilePath"></Ckeditor>
                                                     <span v-if="IsError('product.description')" class="help-block" v-for="e in IsError('product.description')">
                                                          {{ e }}
                                                     </span>
@@ -288,7 +288,7 @@
                                                 <label>Краткое описание(Максумум 500 слов):</label>
                                             </td>
                                             <td width="75%">
-                                                <Ckeditor @new_value="setDescriptionMini" :set_value="product.description_mini"></Ckeditor>
+                                                <Ckeditor v-model="product.description_mini"></Ckeditor>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -422,7 +422,8 @@
                                     <tbody>
                                         <tr>
                                             <td width="100%" colspan="2">
-                                                <upload-images @return_images="setImages" :images="product_images" :error_variable="'product_images'"></upload-images>
+                                                <upload-images v-model="product_images"
+                                                               :error_variable="'product_images'"></upload-images>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -855,12 +856,6 @@
                 });
                 return data;
             },
-            setDescription(desc){
-                this.product.description = desc;
-            },
-            setDescriptionMini(desc){
-                this.product.description_mini = desc;
-            },
             deleteProductAccessory(index){
                  this.$delete(this.product_accessories, index);
             },
@@ -928,9 +923,6 @@
             },
             setImages(files){
                 this.product_images = files;
-            },
-            setCategoriesIds(categories_ids){
-                this.categories = categories_ids;
             },
             setTab(tab){
                 this.tab_active = tab;

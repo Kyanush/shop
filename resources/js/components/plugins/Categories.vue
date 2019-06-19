@@ -6,7 +6,7 @@
     import 'jstree/jstree.js';
 
     export default {
-        props: ['set_selected_keys', 'returnKey', 'multiple'],
+        props: ['value', 'returnKey', 'multiple'],
         name: 'categories',
         data () {
             return {
@@ -15,9 +15,6 @@
             }
         },
         methods:{
-            back(){
-                this.$emit('back', this.selected_keys ? this.selected_keys : '');
-            },
             convertData(){
 
                 var data = [{
@@ -37,8 +34,8 @@
                         'icon'   : item.active == 0 ? 'fa fa-remove red' : ''
                     };
 
-                    if(self.set_selected_keys)
-                        if(self.set_selected_keys.indexOf(item[ self.returnKey ]) >= 0)
+                    if(self.value)
+                        if(self.value.indexOf(item[ self.returnKey ]) >= 0)
                             i['state'] = { 'selected' : true, opened: false};
 
                     data.push(i);
@@ -87,7 +84,6 @@
                                 self.selected_keys = item.original[ self.returnKey ];
                         });
 
-                        self.back();
 
                     });
 
@@ -101,6 +97,14 @@
                     this.init();
                 }.bind(this), 2000);
             });
+        },
+        watch: {
+            selected_keys: {
+                handler: function (val, oldVal) {
+                    this.$emit('input', val ? val : '');
+                },
+                deep: true
+            }
         },
     }
 </script>

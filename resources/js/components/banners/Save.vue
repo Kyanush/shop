@@ -34,7 +34,7 @@
 
                          <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('banner.body')}">
                              <label>Тело <span class="red">*</span></label>
-                             <Ckeditor @new_value="setBody" :set_value="banner.body" :uploadFilePath="'uploads/banners/'"></Ckeditor>
+                             <Ckeditor v-model="banner.body" :uploadFilePath="'uploads/banners/'"></Ckeditor>
                              <span v-if="IsError('banner.body')" class="help-block" v-for="e in IsError('banner.body')">
                                  {{ e }}
                              </span>
@@ -120,9 +120,6 @@
             }
         },
         methods:{
-            setBody(body){
-                this.banner.body = body;
-            },
             setLogo(event){
                 this.banner.logo = event.target.files[0];
                 this.$helper.setImgSrc(event.target.files[0], '#logo-view');

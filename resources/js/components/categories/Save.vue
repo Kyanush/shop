@@ -161,7 +161,7 @@
                                      <tbody>
                                          <tr>
                                              <td width="100%" colspan="2">
-                                                 <Categories @back="setParentId" :set_selected_keys="[category.parent_id]" :returnKey="'id'" :multiple="false"></Categories>
+                                                 <Categories v-model="category.parent_id" :returnKey="'id'" :multiple="false"></Categories>
                                              </td>
                                          </tr>
                                      </tbody>
@@ -175,10 +175,11 @@
                                          <tr>
                                              <td width="100%" colspan="2">
                                                  <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('category.description')}">
-                                                     <Ckeditor @new_value="setDescription" :set_value="category.description"></Ckeditor>
+                                                     <Ckeditor v-model="category.description"></Ckeditor>
+
                                                      <span v-if="IsError('category.description')" class="help-block" v-for="e in IsError('category.description')">
-                                                             {{ e }}
-                                                         </span>
+                                                        {{ e }}
+                                                     </span>
                                                  </div>
                                              </td>
                                          </tr>
@@ -326,6 +327,8 @@
                      </div><!-- /.box-footer-->
                  </div><!-- /.box -->
              </form>
+
+
          </div>
 </template>
 
@@ -391,12 +394,6 @@
             }
         },
         methods:{
-            setDescription(desc){
-                this.category.description = desc;
-            },
-            setParentId(parent_id){
-                this.category.parent_id = parent_id;
-            },
             editCategoryFilterLink(item, index){
                 this.category_filter_link.index = index;
                 this.category_filter_link.name  = item.name;
