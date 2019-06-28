@@ -15,11 +15,12 @@ class Seo
 
     public static function main(){
         $city     = ServiceCity::getCurrentCity();
+
         $siteName = env('APP_NAME');
 
         $title       = "{$siteName} в {$city->name} - Электроника, Бытовая Техника, Смартфоны";
-        $description = "{$siteName} — покупка бытовой техники и электроники. Удобная процедура оформления, простой процесс покупки и большой ассортимент товаров. Описания товаров, отзывы и лучшие цены в Казахстане.";
-        $keywords    = "товары, кредит, {$siteName}, купить, бытовая техника, электроника, покупка";
+        $description = "{$siteName} — покупка бытовой техники и электроники ✅. Удобная процедура оформления ⭐, простой процесс покупки и большой ассортимент товаров ⚡. Описания товаров, отзывы и лучшие цены в Казахстане ☝.";
+        $keywords    = "товары, НИЗКАЯ ЦЕНА, Скидки, Акции, {$siteName}, купить, бытовая техника, электроника, покупка";
 
         return [
             'title'       => $title,
@@ -32,17 +33,18 @@ class Seo
     public static function productDetail($product, $category){
 
         $city     = ServiceCity::getCurrentCity();
+
         $siteName = env('APP_NAME');
 
         if($product->seo_keywords)
             $keywords = $product->seo_keywords;
         else
-            $keywords =  "{$category->name}, {$product->name} , купить, кредит, {$siteName}, характеристики, описание, отзывы, рейтинг, цена";
+            $keywords =  "{$category->name}, {$product->name} , купить, НИЗКАЯ ЦЕНА, Скидки, Акции, {$siteName}, характеристики, описание, отзывы, рейтинг, цена";
 
         if($product->seo_description)
             $description = $product->seo_description;
         else
-            $description = "{$siteName} – {$category->name}, {$product->name} в {$city->name}, Казахстан. Сравнивайте цены всех продавцов, читайте характеристики и отзывы покупаталей, покупайте по самым выгодным условиям, заказывайте доставку в любой город Казахстана.";
+            $description = "{$siteName} – {$category->name}, {$product->name} в {$city->name}, Казахстан. Сравнивайте цены всех продавцов ✅, читайте характеристики и отзывы покупаталей ⭐, покупайте по самым выгодным условиям ⚡, заказывайте доставку в любой город Казахстана ☝.";
 
         return [
             'title'       => "Купить, цена {$product->name} в {$city->name}, Казахстан",
@@ -50,6 +52,7 @@ class Seo
             'description' => $description
         ];
     }
+
 
     public static function catalog($category){
 
@@ -68,7 +71,7 @@ class Seo
             if($category->seo_description)
                 $description = $category->seo_description;
             else
-                $description = "Купить {$category->name} в {$city->name} в интернет-магазине {$siteName}. Цены, характеристики, отзывы, доставка.";
+                $description = "Купить {$category->name} в {$city->name} в интернет-магазине {$siteName} ✅. Цены ⭐, характеристики ⚡, отзывы, доставка ☝.";
 
             $title = "Купить {$category->name} в {$city->name}, Казахстан - купить, цена в {$siteName}";
         }
@@ -82,7 +85,7 @@ class Seo
 
     public static function pageSeo($page = ''){
 
-        $keywords = 'товары, кредит, ' . env('APP_NO_URL') . ' магазин электроники, купить, бытовая техника, электроника, покупка';
+        $keywords = 'товары, НИЗКАЯ ЦЕНА, Скидки, Акции, ' . env('APP_NO_URL') . ' магазин электроники, купить, бытовая техника, электроника, покупка';
 
         $page_date = [
             'compare-products' => [

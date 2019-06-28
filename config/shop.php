@@ -8,6 +8,7 @@ if(env('APP_NO_URL') == 'ShopX.kz')
         'payments_path_file' => 'uploads/payments/',
         'categories_path_file' => 'uploads/categories/',
         'sliders_path_file' => 'uploads/sliders/',
+        'news_path_file'    => 'uploads/news/',
 
         'social_network' => [
             'instagram' => 'https://www.instagram.com/shopx.kz'
@@ -15,8 +16,10 @@ if(env('APP_NO_URL') == 'ShopX.kz')
 
         'number_phones' => [
             [
-                'format' => '+7 (708) 961-92-25',
-                'number' => '+77089619225',
+                //'format' => '+7 (708) 961-92-25',
+                //'number' => '+77089619225',
+                'format'      => '+7 (707) 551-19-79',
+                'number'      => '+77075511979',
                 'contactType' => 'Менеджер'
             ]
         ],
@@ -36,8 +39,8 @@ if(env('APP_NO_URL') == 'ShopX.kz')
         ],
 
         'site_email' => 'shopx.kz@gmail.com',
-        'logo' => env('APP_URL') . '/site/images/logo.png'
-
+        'logo'    => env('APP_URL') . '/site/images/shopx-logo.png',
+        'favicon' => env('APP_URL') . '/site/images/shopx-favicon.png'
     ];
 }
 
@@ -50,6 +53,7 @@ if(env('APP_NO_URL') == 'OnePoint.kz')
         'payments_path_file'   => 'uploads/payments/',
         'categories_path_file' => 'uploads/categories/',
         'sliders_path_file'    => 'uploads/sliders/',
+        'news_path_file'       => 'uploads/news/',
 
         'social_network' => [
             'instagram' => 'https://www.instagram.com/onepoint.kz'
@@ -78,7 +82,7 @@ if(env('APP_NO_URL') == 'OnePoint.kz')
         ],
 
         'site_email' => 'info@onepoint.kz',
-        'logo'       =>  env('APP_URL') . '/site/images/logo.png'
-
+        'logo'    => env('APP_URL') . '/site/images/onepoint-logo.png',
+        'favicon' => env('APP_URL') . '/site/images/onepoint-favicon.png'
     ];
 }

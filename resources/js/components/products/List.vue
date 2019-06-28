@@ -386,12 +386,8 @@
 <script>
     import Paginate from 'vuejs-paginate';
     import datePicker from 'vue-bootstrap-datetimepicker';
-
-
-
     import { mapGetters } from 'vuex';
     import { mapActions } from 'vuex';
-
     import Categories from '../plugins/Categories';
 
     export default {
@@ -400,6 +396,8 @@
         },
         data () {
             return {
+
+
                 product_show_filter: false,
                 product_attribute_show_filter: false,
                 

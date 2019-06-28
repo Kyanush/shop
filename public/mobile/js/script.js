@@ -690,11 +690,6 @@ Vue.component('filters', {
                                                     <label :for="'filter' + value.id" class="label-block">
                                                         <a class="filter-dialog__description">
                                                            <div class="filter-dialog__title">
-                                                           
-                                                            <span v-if="attribute.type == 'color'" 
-                                                                  class="color" 
-                                                                  :style="{'background-color' : value.props }"></span>
-                                                           
                                                                  {{ value.value }}
                                                                 <span class="filter-dialog__couter" v-if="false"> (94) </span>
                                                            </div>

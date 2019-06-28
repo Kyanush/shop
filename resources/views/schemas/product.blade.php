@@ -91,14 +91,16 @@ if($group_products)
 
 @endphp
 
+@section('schemas_product')
+    <script type="application/ld+json">
+        <?php echo json_encode($schema);?>
+    </script>
+@stop
 
-<script type="application/ld+json">
-    <?php echo json_encode($schema);?>
-</script>
 
-
+@if(false)
 <div style="display:none">
-    <div itemtype="http://schema.org/Product" itemscope>
+    <div itemtype="https://schema.org/Product" itemscope>
         <meta itemprop="name"        content="{{ $product->name }}"/>
         <meta itemprop="sku"         content="{{ $product->sku }}"/>
         <meta itemprop="url"         content="{{ env('APP_URL') . $product->detailUrlProduct() }}" />
@@ -113,7 +115,7 @@ if($group_products)
         @endforeach
 
 
-        <div itemprop="offers" itemtype="http://schema.org/Offer" itemscope>
+        <div itemprop="offers" itemtype="https://schema.org/Offer" itemscope>
             <link itemprop="url" href="{{ env('APP_URL') . $product->detailUrlProduct() }}" />
             @if($product->stock > 0)
                <meta itemprop="availability" content="https://schema.org/InStock" />
@@ -124,14 +126,14 @@ if($group_products)
             @if(false)
                 <meta itemprop="itemCondition" content="https://schema.org/UsedCondition" />
                 <meta itemprop="priceValidUntil" content="2020-11-05" />
-                <div itemprop="seller" itemtype="http://schema.org/Organization" itemscope>
+                <div itemprop="seller" itemtype="https://schema.org/Organization" itemscope>
                     <meta itemprop="name" content="Executive Objects" />
                 </div>
             @endif
         </div>
 
         @if(intval($product->avgRating->avg_rating ?? 0) > 0 and $product->reviews_count > 0)
-            <div itemprop="aggregateRating" itemtype="http://schema.org/AggregateRating" itemscope>
+            <div itemprop="aggregateRating" itemtype="https://schema.org/AggregateRating" itemscope>
                 <meta itemprop="reviewCount" content="{{ intval($product->avgRating->avg_rating ?? 0) }}" />
                 <meta itemprop="ratingValue" content="{{ $product->reviews_count }}" />
             </div>
@@ -143,13 +145,13 @@ if($group_products)
         {
             foreach($reviews as $key => $review)
             {?>
-                <div itemprop="review" itemtype="http://schema.org/Review" itemscope>
-                    <div itemprop="author" itemtype="http://schema.org/Person" itemscope>
+                <div itemprop="review" itemtype="https://schema.org/Review" itemscope>
+                    <div itemprop="author" itemtype="https://schema.org/Person" itemscope>
                         <meta itemprop="name" content="{{ $review->name }}"/>
                     </div>
                     <meta itemprop="datePublished" content="{{ date('Y-m-d', strtotime($review->created_at)) }}"/>
                     <meta itemprop="description"   content="{{ $review->comment }}"/>
-                    <div itemprop="reviewRating" itemtype="http://schema.org/Rating" itemscope>
+                    <div itemprop="reviewRating" itemtype="https://schema.org/Rating" itemscope>
                         <meta itemprop="bestRating"  content="5" />
                         <meta itemprop="worstRating" content="1" />
                         <meta itemprop="ratingValue" content="{{ $review->rating}}" />
@@ -180,3 +182,4 @@ if($group_products)
 
     </div>
 </div>
+@endif

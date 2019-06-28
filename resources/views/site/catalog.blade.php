@@ -6,13 +6,10 @@
 
 @section('content')
 
-@section('end_styles')
+@section('add_in_head')
     <link rel="stylesheet" type="text/css" href="/site/css/filterpro.css">
     <!-- Slider -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" type="text/css" media="all">
-@stop
-
-@section('start_scripts')
     <!-- Slider -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
 @stop

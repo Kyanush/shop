@@ -7,7 +7,7 @@ $address = config('shop.address');
 $number_phones = config('shop.number_phones');
 
 $schema = [
-   "@context"    => "http://schema.org",
+   "@context"    => "https://schema.org",
 	"@type"      => "Store",
 	"name"       => $seoMain['title'],
 	"image"      => config('shop.logo'),
@@ -58,21 +58,22 @@ $schema = [
     <?php echo json_encode($schema);?>
 </script>
 
+@if(false):
 <div style="display: none">
-    <div itemscope itemtype="http://schema.org/Store">
+    <div itemscope itemtype="https://schema.org/Store">
         <meta itemprop="name"        content="{{ $seoMain['title'] }}"/>
         <meta itemprop="image"       content="{{ config('shop.logo') }}"/>
         <meta itemprop="email"       content="{{ config('shop.site_email') }}"/>
         <meta itemprop="telePhone"   content="{{ $number_phones[0]['format'] }}"/>
         <link itemprop="url"         href="{{ env('APP_URL') }}" />
         <meta itemprop="priceRange"  content="$"/>
-        <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+        <div itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
             <meta itemprop="streetAddress"   content="{{ $address[0]['streetAddress'] }}"/>
             <meta itemprop="addressLocality" content="{{ $address[0]['addressLocality'] }}"/>
             <meta itemprop="addressRegion"   content="KZT"/>
             <meta itemprop="postalCode"      content="{{ $address[0]['postalCode'] }}"/>
         </div>
-        <div itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
+        <div itemprop="geo" itemscope itemtype="https://schema.org/GeoCoordinates">
             <meta itemprop="latitude"   content="{{ $address[0]['geo']['latitude'] }}"/>
             <meta itemprop="longitude"  content="{{ $address[0]['geo']['longitude'] }}"/>
         </div>
@@ -80,7 +81,7 @@ $schema = [
         <meta itemprop="paymentAccepted"       content="credit card"/>
         <meta itemprop="paymentAccepted"       content="invoice"/>
         <meta itemprop="openingHours"          content="Mo,Tu,We,Th,Fr,Sa,Su 10:00-19:00"/>
-        <div itemprop="openingHoursSpecification" itemscope itemtype="http://schema.org/OpeningHoursSpecification">
+        <div itemprop="openingHoursSpecification" itemscope itemtype="https://schema.org/OpeningHoursSpecification">
             <meta itemprop="dayOfWeek"       content="Monday"/>
             <meta itemprop="dayOfWeek"       content="Tuesday"/>
             <meta itemprop="dayOfWeek"       content="Wednesday"/>
@@ -93,3 +94,4 @@ $schema = [
         </div>
     </div>
 </div>
+@endif

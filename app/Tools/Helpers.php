@@ -227,8 +227,8 @@ class Helpers
     }
 
 
-    public static function priceFormat($price){
-        return number_format($price, 0, ',', ' ') . ' ₸';
+    public static function priceFormat($price, $show_currency = true){
+        return number_format($price, 0, ',', ' ') . ($show_currency ? ' ₸' : '');
     }
 
     public static function isMobile(){

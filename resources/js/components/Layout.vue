@@ -162,8 +162,10 @@
                         <router-link :to="{ path: '/orders'}">
                             <i class="fa fa-cart-arrow-down" aria-hidden="true"></i>
                             <span>Заказы </span>
-                            <span v-if="new_orders_count > 0" class="badge badge-success new-count">
-                                {{ new_orders_count }}
+                            <span class="pull-right-container" v-if="new_orders_count > 0">
+                                  <small class="label pull-right bg-red">
+                                      {{ new_orders_count }}
+                                  </small>
                             </span>
                         </router-link>
                     </li>
@@ -186,8 +188,10 @@
                         <router-link :to="{ path: '/callbacks'}">
                             <i class="fa fa-phone" aria-hidden="true"></i>
                             <span>Обратный звонок</span>
-                            <span v-if="new_callbacks_count > 0" class="badge badge-success new-count">
-                                {{ new_callbacks_count }}
+                            <span class="pull-right-container" v-if="new_callbacks_count > 0">
+                                  <small class="label pull-right bg-red">
+                                      {{ new_callbacks_count }}
+                                  </small>
                             </span>
                         </router-link>
                     </li>
@@ -243,6 +247,13 @@
                         <router-link :to="{ path: '/banners'}">
                             <i class="fa fa-clipboard" aria-hidden="true"></i>
                             <span>Баннеры</span>
+                        </router-link>
+                    </li>
+
+                    <li v-bind:class="{'active' : menu_active('/news/')}">
+                        <router-link :to="{ path: '/news'}">
+                            <i class="fa fa-newspaper-o" aria-hidden="true"></i>
+                            <span>Новости</span>
                         </router-link>
                     </li>
 

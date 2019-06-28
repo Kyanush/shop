@@ -3,7 +3,7 @@
     <div class="container">
         <div class="footer_column footer_column_1">
             <div id="footer_logo">
-                <img class="footer_normal_logo"   src="/site/images/logo.png" title="{{ env('APP_NAME') }}" alt="{{ env('APP_NAME') }}">
+                <img class="footer_normal_logo"   src="{{ config('shop.logo') }}" title="{{ env('APP_NAME') }}" alt="{{ env('APP_NAME') }}">
             </div>
         </div>
         <div class="footer_column footer_column_2">

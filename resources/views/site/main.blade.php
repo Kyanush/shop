@@ -46,6 +46,8 @@
         @include('includes.product_slider', ['products' => $productsHit, 'title' => 'Хиты продаж'])
         @include('includes.product_slider', ['products' => $productsNew, 'title' => 'Новинки'])
 
+        <br/><br/>
+        @include('site.news.slider')
 
         <div class="welcome">
             <div class="welcome_left">

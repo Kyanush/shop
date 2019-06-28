@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\AdminController;
 
 use App\Models\Callback;
+use App\Models\Status;
 use Illuminate\Http\Request;
 
 class CallbackController extends AdminController
@@ -12,6 +13,7 @@ class CallbackController extends AdminController
     {
         $list =  Callback::search($request->input('search'))
             ->OrderBy('id', 'DESC')
+            ->with('status')
             ->paginate($request->input('perPage', 10));
 
         return  $this->sendResponse($list);
@@ -42,7 +44,10 @@ class CallbackController extends AdminController
     }
 
     public function newCallbacksCount(){
-        return  $this->sendResponse(intval(Callback::where('status', 0)->count()));
+
+        $default_id = Status::whereUse(1)->defaultValue()->first()->id;
+
+        return  $this->sendResponse(intval(Callback::where('status_id', $default_id)->count()));
     }
 
 }

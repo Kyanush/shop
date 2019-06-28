@@ -14,6 +14,7 @@ use DB;
 
 class OrderController extends AdminController
 {
+
     public function list(Request $request)
     {
         $list =  Order::with([
@@ -116,7 +117,7 @@ class OrderController extends AdminController
             ];
         }
 
-        $callbacks = Callback::whereDate('created_at', '>=', $start)->whereDate('created_at', '<=', $end)->get();
+        $callbacks = Callback::with('status')->whereDate('created_at', '>=', $start)->whereDate('created_at', '<=', $end)->get();
         foreach ($callbacks as $item)
         {
             $data[] = [
@@ -127,8 +128,8 @@ class OrderController extends AdminController
                 'color' => '#ffb45f',
                 'textColor'  =>  '#222D32',
                 'allDay' => false,
-                'url'   => '/admin/callbacks',
-                'icon_class'  => 'fa fa-phone',
+                'url'   => '/admin/callbacks/edit/' . $item->id,
+                'icon_class'  => $item->status->class,
                 'icon_title'  => $item->type
             ];
         }

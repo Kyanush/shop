@@ -13,7 +13,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="yandex-verification" content="d9d1d901f0c53a09" />
     <meta name="google-site-verification" content="YOGU9Dh4gfT8os5uvRCSuQ_kwUhoUbXwqQFiNshBSHw" />
-    <link rel="icon" type="image/png" href="/mobile/img/logo-mini.png" />
+    <link rel="icon" type="image/png" href="{{ config('shop.favicon') }}" />
 
 
     <title>@yield('title')</title>

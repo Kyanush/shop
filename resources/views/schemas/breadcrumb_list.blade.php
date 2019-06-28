@@ -1,6 +1,6 @@
 @php
     $schema = [
-          "@context" => "http://schema.org",
+          "@context" => "https://schema.org",
           "@type"    => "BreadcrumbList"
     ];
 
@@ -20,6 +20,10 @@
     }
 @endphp
 
-<script type="application/ld+json">
-    <?php echo json_encode($schema);?>
-</script>
+
+
+@section('schemas_breadcrumb')
+    <script type="application/ld+json">
+        <?php echo json_encode($schema);?>
+    </script>
+@stop

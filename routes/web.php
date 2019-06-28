@@ -108,13 +108,19 @@ Route::group(['namespace'  => 'Site'], function () {
     //выбор города
     Route::post('set-city/{city_code}',    'CityController@setCity');
 
+    //новости
+    Route::get('news',                    'NewsController@newsList')->name('news_list');
+    Route::get('news/{code}',             'NewsController@newsDetail')->name('news_detail');
+
 });
 
 
 //sitemap
-Route::group(['namespace'  => 'Sitemap'], function () {
+Route::group(['namespace'  => 'Sitemap', 'as' => 'sitemap.'], function () {
+
     Route::get('sitemap.xml', 'SitemapController@sitemap');
-    Route::get('pages.xml',   'SitemapController@pages');
+    Route::get('pages.xml',   'SitemapController@pages')->name('pages');
+    Route::get('news.xml',    'SitemapController@news')->name('news');
 
     $cities     = \App\Services\ServiceCity::listActiveSort();
     foreach ($cities as $city)
@@ -155,6 +161,7 @@ Route::group(['middleware' => 'auth', 'namespace'  => 'Site'], function () {
 // Admin Interface
 Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespace'  => 'Admin'], function () {
 
+    Route::get('report-goods/{format}',          'ReportController@goods');
 
     if (!request()->ajax()){
         Route::get('/{any}', 'AdminController@index')->where('any', '.*');
@@ -275,6 +282,15 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::post('banner-save',             'BannerController@save');
         Route::get('banner-view/{id}',         'BannerController@view')->where(['id' => '[0-9]+']);
         Route::post('banner-delete/{id}',      'BannerController@delete')->where(['id' => '[0-9]+']);
+
+        //Статусы
+        Route::post('statuses/{where_use}',    'StatusController@list')->where(['where_use' => '[0-9]+']);
+
+        //Новости
+        Route::get('news-list',               'NewsController@list');
+        Route::post('news-save',              'NewsController@save');
+        Route::get('news-view/{id}',          'NewsController@view')->where(['id' => '[0-9]+']);
+        Route::post('news-delete/{id}',       'NewsController@delete')->where(['id' => '[0-9]+']);
 
     }
 });

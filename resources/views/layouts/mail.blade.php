@@ -18,7 +18,7 @@
         <div style="padding:30px;">
             <div style="margin-bottom:60px;">
                 <a href="{{ route('index') }}" class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
-                    <img width="150" src="{{ env('APP_URL') }}/site/images/logo.png">
+                    <img width="150" src="{{ config('shop.logo') }}">
                 </a>
                 <div style="float:right;padding-top:10px;padding-right:5px;color:#cbcbcb;">
                     {{ env('APP_NAME') }}
@@ -130,7 +130,7 @@
 
         <div style="background:#fff;height:60px;line-height:60px;padding-left:30px;">
             <div style="display:inline-block;height:60px;padding-top:10px;margin-right:15px;vertical-align:top;">
-               <img src="{{ env('APP_URL') }}/site/images/logo.png" width="100px"/>
+               <img src="{{ config('shop.logo') }}" width="100px"/>
             </div>
 
             <div style="display:inline-block;text-decoration:underline;vertical-align:top;">

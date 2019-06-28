@@ -26,7 +26,7 @@
 }
 .garanty_step_number {
     font-size: 25px;
-    color: #28BAA6;
+    color: #F86201;
     float: left;
     text-align: right;
     width: 20%;
@@ -55,7 +55,7 @@
 }
 .garanty_srok {
     margin-top: 36px;
-    background: #28BAA6;
+    background: #F86201;
 }
 .garanty_srok_header {
     font-size: 25px;
@@ -82,7 +82,7 @@
 }
 .garanty_srok_one_block_header {
     font-size: 25px;
-    color: #28BAA6;
+    color: #F86201;
     font-weight: bold;
     margin-bottom: 10px;
 }

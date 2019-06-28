@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Mail;
 use DB;
+use App\Models\Status;
 
 class Callback extends Model
 {
@@ -15,7 +16,7 @@ class Callback extends Model
         'type',
         'message',
         'email',
-        'status',
+        'status_id',
         'comment'
 	];
 
@@ -31,9 +32,21 @@ class Callback extends Model
         return $query;
     }
 
+    public function status()
+    {
+        return $this->hasOne('App\Models\Status', 'id', 'status_id');
+    }
+
     protected static function boot()
     {
         parent::boot();
+
+        static::creating(function ($modal) {
+            if(!$modal->status_id)
+            {
+                $modal->status_id = Status::whereUse(1)->defaultValue()->first()->id;
+            }
+        });
 
         //Событие после
         static::Created(function ($modal) {
@@ -48,6 +61,5 @@ class Callback extends Model
         });
 
     }
-
 
 }

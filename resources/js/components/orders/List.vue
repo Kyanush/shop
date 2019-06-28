@@ -13,6 +13,10 @@
                    aria-hidden="true"></i>
                 {{ order_show_filter ? 'Скрыть фильтр' : 'Показать фильтр'}}
             </div>
+            <div class="btn btn-primary pull-right" @click="showReport" style="margin-right: 5px;">
+                <i class="fa fa-print" aria-hidden="true"></i>
+                Отчеты
+            </div>
         </div>
 
         <div class="box-header with-border" v-show="order_show_filter">
@@ -86,81 +90,83 @@
                     <div class="table-responsive1">
                         <table class="table table-bordered ">
                         <tbody class="filter">
-                        <tr class="odd even">
-                            <td><b>Дата доставки:</b></td>
-                            <td>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <date-picker :config="datetimepicker" v-model="filter.delivery_date_start"></date-picker>
+                            <tr class="odd even">
+                                <td><b>Дата доставки:</b></td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <date-picker :config="datetimepicker" v-model="filter.delivery_date_start"></date-picker>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <date-picker :config="datetimepicker" v-model="filter.delivery_date_end"></date-picker>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <date-picker :config="datetimepicker" v-model="filter.delivery_date_end"></date-picker>
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td><b>Итого:</b></td>
+                                <td>
+                                    <input type="number" class="form-control" v-model="filter.total"/>
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td><b>Тип оплаты:</b></td>
+                                <td>
+                                    <Select2 :settings="{multiple: true}" v-model="filter.payment_id" :options="convertDataSelect2(payments)"/>
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td><b>Оплачен:</b></td>
+                                <td>
+                                    <select class="selectpicker form-control" v-model="filter.paid">
+                                        <option value="">Все</option>
+                                        <option value="1" data-icon="fa fa-check-circle status-completed">Да</option>
+                                        <option value="0" data-icon="fa fa-check-circle status-canceled">Нет</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td><b>Дата оплаты:</b></td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <date-picker :config="datetimepicker" v-model="filter.payment_date_start"></date-picker>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <date-picker :config="datetimepicker" v-model="filter.payment_date_end"></date-picker>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="odd even">
-                            <td><b>Итого:</b></td>
-                            <td>
-                                <input type="number" class="form-control" v-model="filter.total"/>
-                            </td>
-                        </tr>
-                        <tr class="odd even">
-                            <td><b>Тип оплаты:</b></td>
-                            <td>
-                                <Select2 :settings="{multiple: true}" v-model="filter.payment_id" :options="convertDataSelect2(payments)"/>
-                            </td>
-                        </tr>
-                        <tr class="odd even">
-                            <td><b>Оплачен:</b></td>
-                            <td>
-                                <select class="selectpicker form-control" v-model="filter.paid">
-                                    <option value="">Все</option>
-                                    <option value="1" data-icon="fa fa-check-circle status-completed">Да</option>
-                                    <option value="0" data-icon="fa fa-check-circle status-canceled">Нет</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr class="odd even">
-                            <td><b>Дата оплаты:</b></td>
-                            <td>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <date-picker :config="datetimepicker" v-model="filter.payment_date_start"></date-picker>
+                                </td>
+                            </tr>
+                            <tr class="odd even">
+                                <td><b>Дата заказа:</b></td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <date-picker :config="datetimepicker" v-model="filter.created_at_start"></date-picker>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <date-picker :config="datetimepicker" v-model="filter.created_at_end"></date-picker>
+                                        </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <date-picker :config="datetimepicker" v-model="filter.payment_date_end"></date-picker>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="odd even">
-                            <td><b>Дата заказа:</b></td>
-                            <td>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <date-picker :config="datetimepicker" v-model="filter.created_at_start"></date-picker>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <date-picker :config="datetimepicker" v-model="filter.created_at_end"></date-picker>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="odd even">
-                            <td></td>
-                            <td>
-                                <button type="button" class="btn btn-danger pull-right" @click="clearFilters">
-                                    <i class="fa fa-times" aria-hidden="true"></i>
-                                    Очистить все фильтры
-                                </button>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
+
+
+
+                            <tr class="odd even">
+                                <td></td>
+                                <td>
+                                    <button type="button" class="btn btn-danger pull-right" @click="clearFilters">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                        Очистить все фильтры
+                                    </button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     </div>
                 </div>
-
             </div>
         </div>
 
@@ -241,6 +247,7 @@
                     :page-class="'page-item'"></paginate>
         </div>
 
+        <report :report_types="report_types"></report>
 
     </div>
 </template>
@@ -250,14 +257,22 @@
     import Paginate from 'vuejs-paginate';
     import Select2 from 'v-select2-component';
     import datePicker from 'vue-bootstrap-datetimepicker';
+    import report from '../plugins/Report';
 
     export default {
          props: ['filter_user_id', 'no_show_order_id'],
         components:{
-            Paginate, Select2, datePicker
+            Paginate, Select2, datePicker, report
         },
         data () {
             return {
+                report_types:[
+                    {
+                        id: 'report-goods',
+                        text: 'Список товаров'
+                    }
+                ],
+
                 order_show_filter: false,
 
                 datetimepicker: {
@@ -335,6 +350,9 @@
             $('.selectpicker').selectpicker('refresh');
         },
         methods:{
+            showReport(){
+                $('#popup-peport').modal('show');
+            },
             dateFormatTodayYesterday(dateString){
                 return this.$helper.dateFormatTodayYesterday(dateString);
             },

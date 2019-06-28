@@ -26,14 +26,8 @@
                         <td>{{ item.id }}</td>
                         <td>{{ item.type }}</td>
                         <td>
-                            <span v-if="item.status == 0" class="red">
-                                <i class="fa fa-spinner" aria-hidden="true"></i>
-                                Новый
-                            </span>
-                            <span v-if="item.status == 1" class="green">
-                                <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                                Отработан
-                            </span>
+                            <i :class="item.status.class" aria-hidden="true"></i>
+                            {{ item.status.name }}
                         </td>
                         <td>{{ item.phone }}</td>
                         <td width="200">{{ item.message }}</td>

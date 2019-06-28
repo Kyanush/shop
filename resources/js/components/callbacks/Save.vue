@@ -17,22 +17,25 @@
 
                     <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('callback.type')}">
                         <label>Тип <span class="red">*</span></label>
-                        <select disabled v-model="callback.type" class="form-control">
-                            <option value="Написать руководителю">Написать руководителю</option>
-                            <option value="Обратный звонок">Обратный звонок</option>
-                        </select>
+                        <input disabled type="text" v-model="callback.type" class="form-control"/>
                         <span v-if="IsError('callback.type')" class="help-block" v-for="e in IsError('callback.type')">
                               {{ e }}
                         </span>
                     </div>
 
-                    <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('callback.status')}">
+                    <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('callback.status_id')}">
                         <label>Статус <span class="red">*</span></label>
-                        <select v-model="callback.status" class="form-control">
-                            <option value="0">Новый</option>
-                            <option value="1">Отработан</option>
+                        <select v-model="callback.status_id" class="selectpicker form-control">
+                            <option v-for="status in statuses"
+                                    :data-icon="status.class"
+                                    :value="status.id">
+                                {{ status.name }}
+                            </option>
                         </select>
-                        <span v-if="IsError('callback.status')" class="help-block" v-for="e in IsError('callback.status')">
+
+
+
+                        <span v-if="IsError('callback.status_id')" class="help-block" v-for="e in IsError('callback.status_id')">
                               {{ e }}
                         </span>
                     </div>
@@ -123,7 +126,8 @@
                     message: '',
                     email:   '',
                     comment: ''
-                }
+                },
+                statuses: []
             }
         },
         created(){
@@ -133,13 +137,17 @@
                     var res = res.data;
                     this.callback.id      = res.id;
                     this.callback.type    = res.type;
-                    this.callback.status  = res.status;
+                    this.callback.status_id  = res.status_id;
                     this.callback.phone   = res.phone;
                     this.callback.message = res.message;
                     this.callback.email   = res.email;
                     this.callback.comment = res.comment;
                 });
             }
+
+            axios.post('/admin/statuses/1').then((res)=>{
+                this.statuses = res.data;
+            });
         },
         methods:{
             setMethodRedirect(value){
@@ -172,6 +180,7 @@
         },
         updated(){
             $(".phone-mask").mask("+7(999) 999-9999");
+            $('.selectpicker').selectpicker('refresh');
         },
         computed:{
             ...mapGetters([

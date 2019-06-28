@@ -172,10 +172,7 @@
 
                                             <?php $attributeValue = $attribute->values()->where('value', $attribute->pivot->value)->first(); ?>
 
-                                            <a class="left_info_product_series_color">
-                                                <div class="left_info_product_series_color_middle"
-                                                     style="background: {{ $attributeValue->props ?? '#fff' }}">
-                                                </div>
+                                            <a class="left_info_product_series_color" style="background-color: {{ $attributeValue->props ?? '#fff' }}">
                                             </a>
 
                                         @endif
@@ -187,10 +184,7 @@
 
                                                 <?php $attributeValue = $attribute->values()->where('value', $attribute->pivot->value)->first(); ?>
 
-                                                <a title="{{ $attribute->pivot->value }} - {{ $group_product->name }}" class="left_info_product_series_color left_info_product_series_color_active" href="{{ $group_product->detailUrlProduct() }}">
-                                                    <div class="left_info_product_series_color_middle"
-                                                         style="background: {{ $attributeValue->props ?? '#fff' }}">
-                                                    </div>
+                                                <a style="background-color: {{ $attributeValue->props ?? '#fff' }}" title="{{ $attribute->pivot->value }} - {{ $group_product->name }}" class="left_info_product_series_color left_info_product_series_color_active" href="{{ $group_product->detailUrlProduct() }}">
                                                 </a>
 
                                             @endif
@@ -315,12 +309,13 @@
                                 {!! $description_mini !!}
                             </div>
 
-                            @include('schemas.product', [
-                                'product'          => $product,
-                                'description_mini' => htmlentities($description_mini),
-                                'group_products'   => $group_products,
-                                'category'         => $category
-                            ])
+
+                                @include('schemas.product', [
+                                    'product'          => $product,
+                                    'description_mini' => htmlentities($description_mini),
+                                    'group_products'   => $group_products,
+                                    'category'         => $category
+                                ])
 
                         </div>
                     </div>

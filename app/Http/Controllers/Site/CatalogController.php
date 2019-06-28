@@ -95,9 +95,13 @@ class CatalogController extends Controller
 
         //seo
         $seo = Seo::catalog($category);
+        if(!$seo)
+            return abort(404);
 
         //город
         $currentCity = ServiceCity::getCurrentCity();
+        if(!$currentCity)
+            return abort(404);
 
         //загловок
         $title = $category->name  . ' в ' . $currentCity->name;

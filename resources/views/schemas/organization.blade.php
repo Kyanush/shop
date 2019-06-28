@@ -40,13 +40,13 @@
 
 
     $schema = [
-       "@context"     => "http://schema.org",
+       "@context"     => "https://schema.org",
        "@type"        => "Organization",
        "name"         => $seo["title"],
        "description"  => $seo["description"],
        "url"          => env('APP_URL'),
-       "logo"         => env('APP_URL') . "/site/images/logo.png",
-       "image"        => env('APP_URL') . "/site/images/logo.png",
+       "logo"         => config('shop.logo'),
+       "image"        => config('shop.logo'),
        "telephone"    => $number_phones[0]['format'],
        "contactPoint" => $contactPoint,
        "sameAs"       => $sameAs,
@@ -59,17 +59,18 @@
     <?php echo json_encode($schema);?>
 </script>
 
+@if(false)
 <div style="display: none;">
-    <div itemscope itemtype="http://schema.org/Organization">
+    <div itemscope itemtype="https://schema.org/Organization">
         <meta itemprop="name"        content="{{ $seo["title"] }}"/>
         <meta itemprop="description" content="{{ $seo["description"] }}"/>
         <link itemprop="url"         href="{{ env('APP_URL') }}"/>
-        <link itemprop="logo"        href="{{ env('APP_URL') . "/site/images/logo.png" }}" />
-        <link itemprop="image"       href="{{ env('APP_URL') . "/site/images/logo.png" }}" />
+        <link itemprop="logo"        href="{{ config('shop.logo') }}" />
+        <link itemprop="image"       href="{{ config('shop.logo') }}" />
         <meta itemprop="telephone"   content="{{ $number_phones[0]['format'] }}"/>
 
         @foreach ($number_phones as $k => $v)
-            <div itemprop="contactPoint" itemtype="http://schema.org/ContactPoint" itemscope>
+            <div itemprop="contactPoint" itemtype="https://schema.org/ContactPoint" itemscope>
                 <meta itemprop="contactType" content="customer service" />
                 <meta itemprop="telephone"   content="{{ $v['format'] }}" />
             </div>
@@ -80,7 +81,7 @@
         @endforeach
 
         @foreach ($address as $k => $v)
-            <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+            <div itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
                 <meta itemprop="streetAddress"   content="{{ $v["streetAddress"] }}"/>
                 <meta itemprop="addressLocality" content="{{ $v["addressLocality"] }}"/>
                 <meta itemprop="postalCode"      content="{{ $v["postalCode"] }}"/>
@@ -90,3 +91,4 @@
 
     </div>
 </div>
+@endif

@@ -1,6 +1,5 @@
 {{ \App\Tools\Helpers::generateVisitNumber() }}
 
-
 @php
     $currentCity = \App\Services\ServiceCity::getCurrentCity();
 @endphp
@@ -14,7 +13,7 @@
     <meta name="description" content="@yield('description')">
     <meta name="keywords"    content="@yield('keywords')">
 
-    @yield('start_styles')
+
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="initial-scale=1.0,width=device-width">
@@ -34,10 +33,7 @@
 
     <link rel="stylesheet" type="text/css" href="/site/css/stylesheet.css">
     <link rel="stylesheet" type="text/css" href="/site/css/style.css">
-    <link rel="icon" type="image/png" href="/mobile/img/logo-mini.png" />
-
-    @yield('end_styles')
-    @yield('start_scripts')
+    <link rel="icon" type="image/png" href="{{ config('shop.favicon') }}" />
 
     <!---- es  ----->
     <script type="text/javascript" src="/site/js/es.js"></script>
@@ -70,20 +66,29 @@
     <!-- axios -->
 
     @if(env('APP_NO_URL') == 'ShopX.kz')
+        <meta name="msvalidate.01" content="FA2FCEE563AF49653FFF42334E7092CC" />
+        <meta name='wmail-verification' content='c74818c22574ac605627147e0e2b3938' />
         <meta name="yandex-verification" content="c53e2b353e1786fd" />
         <meta name="google-site-verification" content="lIuokO3B8NA53x6eSCa44i-eQSaIeWhj99_76Dl-OyM" />
     @endif
 
     @if(env('APP_NO_URL') == 'OnePoint.kz')
+        <meta name="msvalidate.01" content="F55DDAE4472BFCE0E1078D1AD1189395" />
+        <meta name='wmail-verification' content='07844bf5bc650958f491165a1819df8b' />
         <meta name="yandex-verification" content="d9d1d901f0c53a09" />
         <meta name="google-site-verification" content="YOGU9Dh4gfT8os5uvRCSuQ_kwUhoUbXwqQFiNshBSHw" />
     @endif
 
+    @yield('add_in_head')
+
+    @include('schemas.business')
+    @include('schemas.organization')
+    @yield('schemas_breadcrumb')
+    @yield('schemas_product')
+
 </head>
 <body>
 
-@include('schemas.organization')
-@include('schemas.business')
 
 <!-- не удалить меню --->
 <div class="grey_bg" style="display: none;"></div>
@@ -103,7 +108,7 @@
 <script type="text/javascript" src="/site/product_slider/script.js"></script>
 <!-- product slider --->
 
-@yield('end_scripts')
+@yield('add_in_end')
 
 <!-- jquery-ui --->
 <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>

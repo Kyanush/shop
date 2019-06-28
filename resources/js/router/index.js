@@ -49,6 +49,9 @@ import cities_save from  '../components/cities/Save.vue';
 import banners_list from  '../components/banners/List.vue';
 import banners_save from  '../components/banners/Save.vue';
 
+import news_list from  '../components/news/List.vue';
+import news_save from  '../components/news/Save.vue';
+
 
 import layout from  '../components/Layout.vue';
 import checkout from  '../components/checkout/Checkout.vue';
@@ -595,6 +598,42 @@ export default new Router({
                 breadcrumb: [
                     { name: 'Главная страница', link: '/main' },
                     { name: 'Баннеры', link: '/banners' },
+                ]
+            }
+        },
+
+
+
+        //Новостей
+        {
+            path: '/news',
+            name: 'Новости',
+            component: news_list,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                ]
+            }
+        },
+        {
+            path: '/news/create',
+            name: 'Создать',
+            component: news_save,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Новости', link: '/news' },
+                ]
+            }
+        },
+        {
+            path: '/news/edit/:id',
+            name: 'Редактировать',
+            component: news_save,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Новости', link: '/news' },
                 ]
             }
         },

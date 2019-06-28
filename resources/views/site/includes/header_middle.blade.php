@@ -1,7 +1,7 @@
 <div id="header_middle">
     <div class="container">
         <a id="logo" href="/">
-            <img src="/site/images/logo.png" title="{{ env('APP_NAME') }}" alt="{{ env('APP_NAME') }}">
+            <img src="{{ config('shop.logo') }}" title="{{ env('APP_NAME') }}" alt="{{ env('APP_NAME') }}">
         </a>
         <a class="rumi_shops_link" href="/contact">
             <span>Магазины</span>

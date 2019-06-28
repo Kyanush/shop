@@ -50,7 +50,16 @@ class ServiceAttribute
 
                                 $item['value'] = $upload->save();
                             }
+                        }else{
+                            if(empty($item['value']))
+                                continue;
                         }
+
+                        if($attribute->type != 'color')
+                        {
+                            unset($item['props']);
+                        }
+
 
                         $value->fill($item);
                         $value->save();

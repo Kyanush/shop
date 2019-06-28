@@ -31,20 +31,18 @@ class ServiceCity
 
     public static function getCurrentCity(){
 
-        $parameters = \Route::current()->parameters();
-        if(isset($parameters['city']))
-        {
-            $city_code = $parameters['city'];
-        }else{
-            $city_code = Cookie::get('city_code');
+        $city_code = request()->city;
+        if(empty($city_code))
+            $city_code = Cookie::get('city_code', 'almaty');
 
-            if(empty($city_code) or isset($parameters['category']))
-                $city_code = 'almaty';
+        $city = City::isActive()->where('code', $city_code)->first();
+        if($city)
+        {
+            self::setCityCookie($city_code);
+            return $city;
         }
 
-        self::setCityCookie($city_code);
-
-        return City::where('code', $city_code)->first();
+        return false;
     }
 
     public static function setCityCookie($set_city_code)
