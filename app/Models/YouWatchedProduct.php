@@ -16,7 +16,7 @@ class YouWatchedProduct extends Model
 
     public function product()
     {
-        return $this->hasOne('App\Models\Product', 'id', 'product_id');
+        return $this->belongsTo('App\Models\Product', 'product_id', 'id');
     }
 
     public function scopeSearchVisitNumber($query, $visit_number = '')

@@ -18,12 +18,15 @@ $(document).ready(function() {
     });
 
     $('.catalog-sub-item.catalog-main').click(function(e) {
-        e.preventDefault();
 
-        if($(this).parent('.catalog-sub-items__el').hasClass('_active')){
-            $(this).parent('.catalog-sub-items__el').removeClass('_active');
-        }else{
-            $(this).parent('.catalog-sub-items__el').addClass('_active');
+        if($(this).parent('.catalog-sub-items__el').find('.catalog-sub-items__list').length > 0)
+        {
+            e.preventDefault();
+            if ($(this).parent('.catalog-sub-items__el').hasClass('_active')) {
+                $(this).parent('.catalog-sub-items__el').removeClass('_active');
+            } else {
+                $(this).parent('.catalog-sub-items__el').addClass('_active');
+            }
         }
 
     });

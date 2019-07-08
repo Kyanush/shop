@@ -169,12 +169,17 @@
 
                                     @foreach($product->attributes as $attribute)
                                         @if($attribute->id == 50 and $attribute->pivot->value)
-
-                                            <?php $attributeValue = $attribute->values()->where('value', $attribute->pivot->value)->first(); ?>
-
-                                            <a class="left_info_product_series_color" style="background-color: {{ $attributeValue->props ?? '#fff' }}">
-                                            </a>
-
+                                            @php
+                                                $attributeValue = $attribute->values()->where(function ($query) use ($attribute){
+                                                    $query->where('value', $attribute->pivot->value);
+                                                    $query->orWhere('id',  $attribute->pivot->value);
+                                                })->first();
+                                            @endphp
+                                            @if($attributeValue)
+                                                <a title="{{ $attributeValue->value }}"
+                                                   class="left_info_product_series_color"
+                                                   style="background-color: {{ $attributeValue->props ?? '#fff' }}"></a>
+                                            @endif
                                         @endif
                                     @endforeach
 
@@ -182,9 +187,17 @@
                                         @foreach($group_product->attributes as $attribute)
                                             @if($attribute->id == 50 and $attribute->pivot->value)
 
-                                                <?php $attributeValue = $attribute->values()->where('value', $attribute->pivot->value)->first(); ?>
+                                                @php
+                                                    $attributeValue = $attribute->values()->where(function ($query) use ($attribute){
+                                                        $query->where('value', $attribute->pivot->value);
+                                                        $query->orWhere('id',  $attribute->pivot->value);
+                                                    })->first();
+                                                @endphp
 
-                                                <a style="background-color: {{ $attributeValue->props ?? '#fff' }}" title="{{ $attribute->pivot->value }} - {{ $group_product->name }}" class="left_info_product_series_color left_info_product_series_color_active" href="{{ $group_product->detailUrlProduct() }}">
+                                                <a style="background-color: {{ $attributeValue->props ?? '#fff' }}"
+                                                   title="{{ $attribute->pivot->value }} - {{ $group_product->name }}"
+                                                   class="left_info_product_series_color left_info_product_series_color_active"
+                                                   href="{{ $group_product->detailUrlProduct() }}">
                                                 </a>
 
                                             @endif

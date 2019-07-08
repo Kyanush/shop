@@ -17,12 +17,12 @@ class OrderStatusHistory extends Model
 
 	public function status()
 	{
-		return $this->hasOne('App\Models\OrderStatus', 'id', 'status_id');
+		return $this->belongsTo('App\Models\OrderStatus', 'status_id', 'id');
 	}
 
     public function user()
     {
-        return $this->hasOne('App\User', 'id', 'user_id');
+        return $this->belongsTo('App\User', 'user_id', 'id');
     }
 
     public function getCreatedAtAttribute($value)

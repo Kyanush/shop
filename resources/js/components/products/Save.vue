@@ -849,7 +849,7 @@
                 var data = [];
                 values.forEach(function (item, index) {
                     data.push({
-                        id:   item.id,
+                        id:   item.value,
                         hex:  item.props,
                         name: item.value
                     });

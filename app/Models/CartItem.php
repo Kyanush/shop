@@ -10,16 +10,17 @@ class CartItem extends Model
     protected $table = 'cart_items';
     protected $fillable = [
         'product_id',
-        'quantity'
+        'quantity',
+        'cart_id'
     ];
 
     public function cart(){
-        return $this->hasOne('App\Models\Cart', 'id', 'cart_id');
+        return $this->belongsTo('App\Models\Cart', 'cart_id', 'id');
     }
 
     public function product()
     {
-        return $this->hasOne('App\Models\Product', 'id', 'product_id');
+        return $this->belongsTo('App\Models\Product', 'product_id', 'id');
     }
 
 }

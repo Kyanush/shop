@@ -145,7 +145,12 @@
                                     @if($attribute->id == 50 and $attribute->pivot->value)
                                         <a title="{{ $attribute->pivot->value . '-' . $group_product->name }}" class="loan-selector__el" href="{{ $group_product->detailUrlProduct() }}">
 
-                                            <?php $attributeValue = $attribute->values()->where('value', $attribute->pivot->value)->first();?>
+                                            @php
+                                                $attributeValue = $attribute->values()->where(function ($query) use ($attribute){
+                                                    $query->where('value', $attribute->pivot->value);
+                                                    $query->orWhere('id',  $attribute->pivot->value);
+                                                })->first();
+                                            @endphp
 
                                             <div style="background: {{ $attributeValue->props ?? '#fff' }}"></div>
                                         </a>
@@ -157,7 +162,12 @@
                                 @if($attribute->id == 50 and $attribute->pivot->value)
                                         <a title="{{ $attribute->pivot->value . '-' . $product->name }}" class="loan-selector__el _active">
 
-                                            <?php $attributeValue = $attribute->values()->where('value', $attribute->pivot->value)->first();?>
+                                            @php
+                                                $attributeValue = $attribute->values()->where(function ($query) use ($attribute){
+                                                    $query->where('value', $attribute->pivot->value);
+                                                    $query->orWhere('id',  $attribute->pivot->value);
+                                                })->first();
+                                            @endphp
 
                                             <div style="background: {{ $attributeValue->props ?? '#fff' }}"></div>
                                         </a>

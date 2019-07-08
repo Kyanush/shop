@@ -53,7 +53,7 @@ class AttributeValue extends Model
 
     public function attribute()
     {
-        return $this->hasOne('App\Models\Attribute', 'id', 'attribute_id');
+        return $this->belongsTo('App\Models\Attribute', 'attribute_id', 'id');
     }
 
 }

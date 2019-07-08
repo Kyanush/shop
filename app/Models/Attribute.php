@@ -83,7 +83,7 @@ class Attribute extends Model
 
     public function attributeGroup()
     {
-        return $this->hasOne('App\Models\AttributeGroup', 'id', 'attribute_group_id');
+        return $this->belongsTo('App\Models\AttributeGroup', 'attribute_group_id', 'id');
     }
 
 }

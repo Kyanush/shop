@@ -109,12 +109,12 @@ class Order extends Model
 
     public function user()
     {
-        return $this->hasOne('App\User', 'id', 'user_id');
+        return $this->belongsTo('App\User', 'user_id', 'id');
     }
 
     public function status()
     {
-        return $this->hasOne('App\Models\OrderStatus', 'id', 'status_id');
+        return $this->belongsTo('App\Models\OrderStatus', 'status_id', 'id');
     }
 
     public function statusHistory()
@@ -124,17 +124,17 @@ class Order extends Model
 
     public function carrier()
     {
-        return $this->hasOne('App\Models\Carrier', 'id', 'carrier_id');
+        return $this->belongsTo('App\Models\Carrier', 'carrier_id', 'id');
     }
 
     public function shippingAddress()
     {
-        return $this->hasOne('App\Models\Address', 'id', 'shipping_address_id');
+        return $this->belongsTo('App\Models\Address', 'shipping_address_id', 'id');
     }
 
     public function payment()
     {
-        return $this->hasOne('App\Models\Payment', 'id', 'payment_id');
+        return $this->belongsTo('App\Models\Payment', 'payment_id', 'id');
     }
 
     public function products()

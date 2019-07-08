@@ -15,7 +15,7 @@ class ProductAccessory extends Model
 
     public function product()
     {
-        return $this->hasOne('App\Models\Product', 'id', 'accessory_product_id');
+        return $this->belongsTo('App\Models\Product', 'accessory_product_id', 'id');
     }
 
 }

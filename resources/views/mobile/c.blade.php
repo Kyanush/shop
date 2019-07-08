@@ -28,16 +28,16 @@
                             <span class="catalog-sub-item__title">{{ $item->name }}</span>
 
                             @php
-                                $items = $item->children()->orderBy('sort')->get()
+                                $items = $item->children()->orderBy('sort')->get();
                             @endphp
 
-                            @if($items)
+                            @if(count($items) > 0)
                                 <span class="catalog-sub-item__icon catalog-sub-item__close icon icon_plus"></span>
                             @else
                                 <span class="catalog-sub-item__icon icon icon_chevron"></span>
                             @endif
                         </a>
-                        @if($items)
+                        @if(count($items) > 0)
                             <ul class="catalog-sub-items__list">
                                 @foreach($items as $item2)
                                     <li class="catalog-sub-items__el">
