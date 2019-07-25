@@ -22,9 +22,12 @@
 
                             foreach($category->children()->isActive()->orderBy('sort')->get() as $category_children){
                                 $categories[] = $category_children;
-                                $serviceCategory = new \App\Services\ServiceCategory();
 
-                                $childrens_all = \App\Models\Category::orderBy('sort')->isActive()->whereIn('id', $serviceCategory->categoryChildIds($category_children->id, false, true))->get();
+                                $childrens_all = \App\Models\Category::orderBy('sort')
+                                                ->isActive()
+                                                ->whereIn('id', \App\Services\ServiceCategory::categoryChildIds($category_children->id, false, true))
+                                                ->get();
+
                                 foreach ($childrens_all as $item)
                                     $categories[] = $item;
                             }
@@ -83,15 +86,12 @@
             <a href="{{ route('contact') }}">Контакты</a>
         </div>
 
-        <?php
-        $servicePFC  = new \App\Services\ServiceProductFeaturesCompare();
-        $servicePFW  = new \App\Services\ServiceProductFeaturesWishlist();
-        $serviceCart = new \App\Services\ServiceCart();
+        @php
+            $servicePFCCount  = \App\Services\ServiceProductFeaturesCompare::count();
+            $servicePFWCount  = \App\Services\ServiceProductFeaturesWishlist::count();
+            $serviceCartTotal = \App\Services\ServiceCart::cartTotal();
+        @endphp
 
-        $servicePFCCount  = $servicePFC->count();
-        $servicePFWCount  = $servicePFW->count();
-        $serviceCartTotal = $serviceCart->cartTotal();
-        ?>
         <a title="Мои закладки" class="header_wishlist <?=$servicePFWCount == 0 ? 'non_active' : ''?>" href="/wishlist">
             <span>{{ $servicePFWCount }}</span>
         </a>

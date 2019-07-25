@@ -16,16 +16,8 @@ use App\Tools\CopyFile;
 class ServiceProduct implements ProductInterface
 {
 
-    private $serviceAttrProductVal, $model;
 
-    public function __construct(ServiceAttributeProductValue $serviceAttrProductVal)
-    {
-        $this->serviceAttrProductVal = $serviceAttrProductVal;
-        $this->model = new Product();
-    }
-
-
-    public function productDelete($product_id)
+    public static function productDelete($product_id)
     {
         if(Order::whereHas('products', function ($query) use ($product_id){
             $query->where('product_id', $product_id);
@@ -35,7 +27,7 @@ class ServiceProduct implements ProductInterface
                 'success' => false
             ];
 
-        $product = $this->model::find($product_id);
+        $product = Product::find($product_id);
 
         //папка товара
         File::deleteDirectory($product->productFileFolder());
@@ -48,7 +40,7 @@ class ServiceProduct implements ProductInterface
         {
             foreach ($product->attributes as $item)
                 if($item->type == 'media')
-                    $this->serviceAttrProductVal->deleteImage($item->pivot->attribute_id, $item->pivot->value);
+                    ServiceAttributeProductValue::deleteImage($item->pivot->attribute_id, $item->pivot->value);
             $product->attributes()->detach();
         }
 
@@ -88,7 +80,7 @@ class ServiceProduct implements ProductInterface
         if($product->delete())
         {
             //Группа товаров
-            $countGroupProducts = $this->model::where('group_id', $group_id)->count();
+            $countGroupProducts = Product::where('group_id', $group_id)->count();
             if(!$countGroupProducts)
                 ProductGroup::destroy($group_id);
 
@@ -104,9 +96,9 @@ class ServiceProduct implements ProductInterface
         ];
     }
 
-    public function productClone($product_id, array $data, array $copy = [])
+    public static function productClone($product_id, array $data, array $copy = [])
     {
-        $product = $this->model::find($product_id);
+        $product = Product::find($product_id);
 
         $group               = $copy['group']               ?? false;
         $photo               = $copy['photo']               ?? false;
@@ -137,8 +129,9 @@ class ServiceProduct implements ProductInterface
             $copyFile = new CopyFile();
             $copyFile->setNewPath($clone->productFileFolder());
             $copyFile->setOldPath($product->pathPhoto());
+            $photo = $copyFile->copy();
 
-            $clone->photo = $copyFile->copy();
+            $clone->photo = $photo;
             $clone->save();
         }
 
@@ -171,7 +164,13 @@ class ServiceProduct implements ProductInterface
                 {
                     $productImages = $image->toArray();
                     $productImages['product_id'] = $product->id;
-                    $productImages['name'] = $this->copyFile($image->imagePath(), $clone->productFileFolder());
+
+                    $copyFile = new CopyFile();
+                    $copyFile->setNewPath($clone->productFileFolder());
+                    $copyFile->setOldPath($image->imagePath());
+                    $name = $copyFile->copy();
+
+                    $productImages['name'] = $name;
                     $clone->images()->create($productImages);
                 }
             }
@@ -210,28 +209,28 @@ class ServiceProduct implements ProductInterface
     }
 
     //Группа товаров
-    public function productGroupSave(int $product_id, int $product_group_id, array $product_ids)
+    public static function productGroupSave(int $product_id, int $product_group_id, array $product_ids)
     {
         if(!is_array($product_ids) or count($product_ids) == 0)
             return false;
 
-        $products = $this->model::select('id')->where('group_id', $product_group_id)->whereNotIn('id', $product_ids)->get();
+        $products = Product::select('id')->where('group_id', $product_group_id)->whereNotIn('id', $product_ids)->get();
         foreach ($products as $item)
         {
             if($item->id == $product_id) continue;
 
             $productGroup = ProductGroup::create();
-            $this->model::where('id', $item->id)->update(['group_id' => $productGroup->id]);
+            Product::where('id', $item->id)->update(['group_id' => $productGroup->id]);
         }
 
         foreach ($product_ids as $item_product_id)
         {
             if($item_product_id == $product_id) continue;
 
-            $productGroupId     = $this->model::find($item_product_id)->group_id;
-            $countGroupProducts = $this->model::where('group_id', $productGroupId)->count();
+            $productGroupId     = Product::find($item_product_id)->group_id;
+            $countGroupProducts = Product::where('group_id', $productGroupId)->count();
 
-            $this->model::where('id', $item_product_id)->update(['group_id' => $product_group_id]);
+            Product::where('id', $item_product_id)->update(['group_id' => $product_group_id]);
 
             if($countGroupProducts == 1)
                 ProductGroup::destroy($productGroupId);
@@ -241,7 +240,7 @@ class ServiceProduct implements ProductInterface
     }
 
     //Картинки
-    public function productImagesSave(array $images, $product_id)
+    public static function productImagesSave(array $images, $product_id)
     {
         //id
         //value
@@ -250,7 +249,7 @@ class ServiceProduct implements ProductInterface
         if (empty($images))
             return false;
 
-        $product = $this->model::find($product_id);
+        $product = Product::find($product_id);
 
         foreach ($images as $key => $item)
         {
@@ -285,12 +284,12 @@ class ServiceProduct implements ProductInterface
         return true;
     }
 
-    public function productAttributesSave(int $product_id, array $attributes, bool $new_attributes)
+    public static function productAttributesSave(int $product_id, array $attributes, bool $new_attributes)
     {
         if(empty($product_id) or count($attributes) == 0)
             return false;
 
-        $product = $this->model::find($product_id);
+        $product = Product::find($product_id);
         //Атрибуты
 
         //старые атрибуты
@@ -303,7 +302,7 @@ class ServiceProduct implements ProductInterface
         {
             foreach ($oldAttributes as $oldAttr)
             {
-                $this->serviceAttrProductVal->deleteImage($oldAttr->pivot->attribute_id, $oldAttr->pivot->value);
+                ServiceAttributeProductValue::deleteImage($oldAttr->pivot->attribute_id, $oldAttr->pivot->value);
             }
         }
 
@@ -329,7 +328,7 @@ class ServiceProduct implements ProductInterface
                         {
                             if($oldAttr->pivot->attribute_id == $item['attribute_id'])
                             {
-                                $this->serviceAttrProductVal->deleteImage($oldAttr->pivot->attribute_id, $oldAttr->pivot->value);
+                                ServiceAttributeProductValue::deleteImage($oldAttr->pivot->attribute_id, $oldAttr->pivot->value);
                             }
                         }
                     }
@@ -343,15 +342,15 @@ class ServiceProduct implements ProductInterface
         return true;
     }
 
-    public function priceMinMax($filters)
+    public static function priceMinMax($filters)
     {
         return [
-            'max' => $this->model::filters($filters)->filtersAttributes($filters)->max('price'),
-            'min' => $this->model::filters($filters)->filtersAttributes($filters)->min('price')
+            'max' => Product::filters($filters)->filtersAttributes($filters)->max('price'),
+            'min' => Product::filters($filters)->filtersAttributes($filters)->min('price')
         ];
     }
 
-    public function productsAttributesFilters($filters, $useInFilter = true)
+    public static function productsAttributesFilters($filters, $useInFilter = true)
     {
         $attributeProductValue = AttributeProductValue::select(['attribute_id', 'value'])
             ->whereHas('product', function($query) use ($filters){

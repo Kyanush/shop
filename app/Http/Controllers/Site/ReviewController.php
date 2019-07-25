@@ -16,8 +16,7 @@ class ReviewController extends Controller
         $review_id = $request->input('review_id');
         $like = $request->input('like');
 
-        $serviceReview = new ServiceReview();
-        $serviceReview->setLike($review_id, $like);
+        ServiceReview::setLike($review_id, $like);
 
         $review = Review::withCount(['likes', 'disLikes'])->find($review_id);
 

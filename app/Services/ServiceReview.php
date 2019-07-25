@@ -7,25 +7,20 @@ use App\Tools\Helpers;
 class ServiceReview
 {
 
-    private $model;
-    public function __construct()
-    {
-        $this->model = new Review();
-    }
 
-    public function setLike(int $review_id, int $like)
+    public static function setLike(int $review_id, int $like)
     {
-        $review = $this->model::find($review_id);
+        $review = Review::find($review_id);
         if($review)
         {
             $reviewLike = $review->reviewLikes()->searchVisitNumber()->first();
 
-            if(!$reviewLike)
+            if(!$reviewLike){
                 $review->reviewLikes()->create([
                     'like' =>  $like,
-                    'visit_number' => Helpers::getVisitNumber()
+                    'visit_number' => Helpers::visitNumber()
                 ]);
-            else{
+            }else{
                 if($reviewLike->like != $like)
                 {
                     $reviewLike->like = $like;

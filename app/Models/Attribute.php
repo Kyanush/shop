@@ -8,6 +8,7 @@ use DB;
 
 class Attribute extends Model
 {
+
     protected $table = 'attributes';
     protected $fillable = [
         'name',
@@ -19,22 +20,20 @@ class Attribute extends Model
         'attribute_group_id'
  	];
 
+
     public function scopeSearch($query, $search){
-        $search = trim(mb_strtolower($search));
         if($search)
-        {
-            $query->Where(   DB::raw('LOWER(name)'), 'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(type)'), 'like', "%"  . $search . "%");
-        }
+            $query->whereLike(['name', 'type'],   $search);
+
         return $query;
     }
 
-    public static function  scopeIsRequired($query)
+    public function scopeIsRequired($query)
     {
         return $query->where('required', 1);
     }
 
-    public static function  scopeNoRequired($query)
+    public function scopeNoRequired($query)
     {
         return $query->where('required', 0);
     }

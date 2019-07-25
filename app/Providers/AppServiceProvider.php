@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Builder;
+use DB;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +24,32 @@ class AppServiceProvider extends ServiceProvider
             return 'Неверный формат номера телефона.';
             //return str_replace(':attribute',$attribute, ':attribute is invalid phone number');
         });
+
+        Builder::macro('whereLike', function ($attributes, string $searchTerm) {
+
+            $searchTerm = trim(mb_strtolower($searchTerm));
+
+            $this->where(function (Builder $query) use ($attributes, $searchTerm) {
+                foreach (array_wrap($attributes) as $attribute) {
+                    $query->when(
+                        str_contains($attribute, '.'),
+                        function (Builder $query) use ($attribute, $searchTerm) {
+                            [$relationName, $relationAttribute] = explode('.', $attribute);
+
+                            $query->orWhereHas($relationName, function (Builder $query) use ($relationAttribute, $searchTerm) {
+                                $query->where(DB::raw("LOWER($relationAttribute)"), 'LIKE', "%{$searchTerm}%");
+                            });
+                        },
+                        function (Builder $query) use ($attribute, $searchTerm) {
+                            $query->orWhere(DB::raw("LOWER($attribute)"), 'LIKE', "%{$searchTerm}%");
+                        }
+                    );
+                }
+            });
+
+            return $this;
+        });
+
     }
 
     /**

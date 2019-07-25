@@ -21,14 +21,9 @@ class Callback extends Model
 	];
 
     public function scopeSearch($query, $search){
-        $search = trim(mb_strtolower($search));
         if($search)
-        {
-            $query->Where(   DB::raw('LOWER(phone)'), 'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(type)'),  'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(message)'),  'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(email)'),  'like', "%"  . $search . "%");
-        }
+            $query->whereLike(['phone', 'type', 'message', 'email'],   $search);
+
         return $query;
     }
 

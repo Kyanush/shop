@@ -12,12 +12,6 @@ use File;
 class AttributeController extends AdminController
 {
 
-    private $serviceAttribute;
-
-    public function __construct(ServiceAttribute $serviceAttribute)
-    {
-        $this->serviceAttribute = $serviceAttribute;
-    }
 
     public function list(Request $request)
     {
@@ -32,7 +26,7 @@ class AttributeController extends AdminController
     {
          $data = $request->all();
          $data = $data['attribute'];
-         $attribute = $this->serviceAttribute->attributeSave($data);
+         $attribute = ServiceAttribute::attributeSave($data);
          return  $this->sendResponse($attribute ? $attribute->id : false);
     }
 

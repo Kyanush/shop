@@ -17,7 +17,7 @@ class ProductFeaturesCompare extends Model
     public function scopeSearchVisitNumber($query, $visit_number = '')
     {
         if(empty($visit_number))
-            $visit_number = Helpers::getVisitNumber();
+            $visit_number = Helpers::visitNumber();
 
         $query->where('visit_number', $visit_number);
         return $query;

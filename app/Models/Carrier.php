@@ -20,13 +20,9 @@ class Carrier extends Model
 	];
 
     public function scopeSearch($query, $search){
-        $search = trim(mb_strtolower($search));
         if($search)
-        {
-            $query->Where(   DB::raw('LOWER(name)'),          'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(price)'),         'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(delivery_text)'), 'like', "%"  . $search . "%");
-        }
+            $query->whereLike(['name', 'price', 'delivery_text'],   $search);
+
         return $query;
     }
 

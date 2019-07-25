@@ -20,11 +20,8 @@ class AttributeSet extends Model
     }
 
     public function scopeSearch($query, $search){
-        $search = trim(mb_strtolower($search));
         if($search)
-        {
-            $query->Where(   DB::raw('LOWER(name)'), 'like', "%"  . $search . "%");
-        }
+            $query->whereLike('name',   $search);
         return $query;
     }
 

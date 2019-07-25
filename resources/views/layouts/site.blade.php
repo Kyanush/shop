@@ -1,5 +1,3 @@
-{{ \App\Tools\Helpers::generateVisitNumber() }}
-
 @php
     $currentCity = \App\Services\ServiceCity::getCurrentCity();
 @endphp

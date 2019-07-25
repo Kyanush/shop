@@ -12,12 +12,6 @@ use DB;
 class CategoryController extends AdminController
 {
 
-    private $serviceCategory;
-    public function __construct(ServiceCategory $serviceCategory)
-    {
-        $this->serviceCategory = $serviceCategory;
-    }
-
     public function list(Request $request)
     {
         $list =  Category::with(['parent' => function($query){
@@ -84,7 +78,7 @@ class CategoryController extends AdminController
     public function catalogsTree($type = 1)
     {
         return  $this->sendResponse(
-            $this->serviceCategory->catalogsTree($type)
+            ServiceCategory::catalogsTree($type)
         );
     }
 

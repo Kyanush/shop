@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Services\ServiceCity;
-use App\Tools\Helpers;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use File;
@@ -31,11 +30,8 @@ class Category extends Model
     public function scopeSearch($query, $search){
         $search = trim(mb_strtolower($search));
         if($search)
-        {
-            $query->Where(   DB::raw('LOWER(name)'), 'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(url)'), 'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(description)'), 'like', "%"  . $search . "%");
-        }
+            $query->whereLike(['name', 'url', 'description'],   $search);
+
         return $query;
     }
 

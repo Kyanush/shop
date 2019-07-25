@@ -72,8 +72,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        $serviceUser = new ServiceUser();
-        return $serviceUser->createUser(
+        return ServiceUser::createUser(
             $data['email'],
             $data['password'],
             $data['name'],

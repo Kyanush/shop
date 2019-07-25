@@ -18,7 +18,7 @@ class ReviewLike extends Model
 
     public function scopeSearchVisitNumber($query)
     {
-        $query->where('visit_number', Helpers::getVisitNumber());
+        $query->where('visit_number', Helpers::visitNumber());
         return $query;
     }
 

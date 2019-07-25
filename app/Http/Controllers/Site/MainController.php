@@ -14,7 +14,6 @@ class MainController extends Controller
 
     public function main(){
 
-        $serviceSlider = new ServiceSlider();
 
         $productsRecommend = Product::productInfoWith()
             ->filtersAttributes(['rekomenduemoe_dlya_vas' => 'da'])
@@ -54,7 +53,7 @@ class MainController extends Controller
 
         return view(Helpers::isMobile() ? 'mobile.main' : 'site.main',
             [
-                'listSlidersHomePage'          => $serviceSlider->listSlidersHomePage(),
+                'listSlidersHomePage'          => ServiceSlider::listSlidersHomePage(),
                 'productsRecommend'            => $productsRecommend,
                 'productsDiscount'             => $productsDiscount,
                 'productsHit'                  => $productsHit,

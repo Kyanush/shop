@@ -12,29 +12,22 @@ use Redirect;
 class ProductFeaturesCompareController extends Controller
 {
 
-    private $servicePFC;
-
-    public function __construct(ServiceProductFeaturesCompare $servicePFC)
-    {
-        $this->servicePFC = $servicePFC;
-    }
-
     public function addAndDelete($product_id){
         return $this->sendResponse(
-            $this->servicePFC->addOrDelete($product_id)
+            ServiceProductFeaturesCompare::addOrDelete($product_id)
         );
     }
 
     public function count(){
         return $this->sendResponse(
-            $this->servicePFC->count()
+            ServiceProductFeaturesCompare::count()
         );
     }
 
     public function compareProducts(){
 
         $attributeGroups = AttributeGroup::with('attributes')->OrderBy('sort')->get();
-        $productFeaturesCompareList = $this->servicePFC->productFeaturesCompareList();
+        $productFeaturesCompareList = ServiceProductFeaturesCompare::productFeaturesCompareList();
         $seo = Seo::pageSeo('compare-products');
 
         return view(Helpers::isMobile() ? 'mobile.compare_products' : 'site.compare_products', [
@@ -45,7 +38,7 @@ class ProductFeaturesCompareController extends Controller
     }
 
     public function compareProductDelete(int $product_id){
-        if($this->servicePFC->delete($product_id))
+        if(ServiceProductFeaturesCompare::delete($product_id))
             return Redirect::back()->with('success', 'Ваш список сравнения изменен!');
         else
             return Redirect::back()->with('attention', 'Ошибка 404!');

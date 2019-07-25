@@ -17,12 +17,9 @@ class City extends Model
 	];
 
     public function scopeSearch($query, $search){
-        $search = trim(mb_strtolower($search));
         if($search)
-        {
-            $query->Where(   DB::raw('LOWER(name)'),         'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(code)'),         'like', "%"  . $search . "%");
-        }
+            $query->whereLike(['name', 'code'],   $search);
+
         return $query;
     }
 

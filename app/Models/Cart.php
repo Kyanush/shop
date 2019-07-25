@@ -22,7 +22,7 @@ class Cart extends Model
 
     public function scopeCurrentUser($query){
         $query->where(function ($query){
-            $query->where('visit_number', Helpers::getVisitNumber())
+            $query->where('visit_number', Helpers::visitNumber())
                   ->orWhere('user_id',    Auth::user()->id ?? 0);
         });
         return $query;

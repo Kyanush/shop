@@ -8,30 +8,23 @@ use App\Tools\Helpers;
 class ServiceYouWatchedProduct
 {
 
-    private $model;
-
-    public function __construct()
+    public static function youWatchedProduct(int $product_id)
     {
-        $this->model = new YouWatchedProduct();
-    }
-
-    public function youWatchedProduct(int $product_id)
-    {
-        if(!$this->model::where('product_id', $product_id)->searchVisitNumber()->first())
+        if(!YouWatchedProduct::where('product_id', $product_id)->searchVisitNumber()->first())
         {
-            $this->model::create([
+            YouWatchedProduct::create([
                 'product_id'   => $product_id,
-                'visit_number' => Helpers::getVisitNumber()
+                'visit_number' => Helpers::visitNumber()
             ]);
             return true;
         }
         return false;
     }
 
-    public function listProducts($product_id = false)
+    public static function listProducts($product_id = false)
     {
         $products = [];
-        $youWatchedProducts = $this->model::searchVisitNumber()->with(['product' => function($query) use ($product_id){
+        $youWatchedProducts = YouWatchedProduct::searchVisitNumber()->with(['product' => function($query) use ($product_id){
                                     $query->productInfoWith();
 
                                     if($product_id)

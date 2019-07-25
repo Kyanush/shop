@@ -30,14 +30,9 @@ class News extends Model
     }
 
     public function scopeSearch($query, $search){
-        $search = trim(mb_strtolower($search));
         if($search)
-        {
-            $query->Where(   DB::raw('LOWER(title)'), 'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(code)'), 'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(preview_text)'), 'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(detail_text)'), 'like', "%"  . $search . "%");
-        }
+            $query->whereLike(['title', 'code', 'preview_text', 'detail_text'],   $search);
+
         return $query;
     }
 

@@ -6,12 +6,6 @@ use App\Models\Banner;
 class ServiceBanner
 {
 
-    private $model;
-
-    public function __construct()
-    {
-        $this->model = new Banner();
-    }
 
     public static function getBanner($banner_id)
     {

@@ -7,11 +7,10 @@ use Auth;
 use DB;
 use Mail;
 use Mobile_Detect;
+use App\Models\OrderStatusHistory;
 
 class Order extends Model
 {
-
-
 
     protected $table = 'orders';
     protected $fillable = [
@@ -168,8 +167,7 @@ class Order extends Model
             $query->WhereIn('shipping_address_id', $this->convertArr($filter['shipping_address_id']));
 
         if(isset($filter['comment']))
-            $query->Where(   DB::raw('LOWER(comment)'), 'like', "%"  . $filter['comment'] . "%");
-
+            $query->whereLike('comment',   $filter['comment']);
 
         if(isset($filter['delivery_date_start']))
             $query->whereDate('delivery_date', '>=', $filter['delivery_date_start']);
@@ -177,7 +175,7 @@ class Order extends Model
             $query->whereDate('delivery_date', '<=', $filter['delivery_date_end']);
 
         if(isset($filter['total']))
-            $query->Where(   DB::raw('LOWER(total)'), 'like', "%"  . $filter['total'] . "%");
+            $query->whereLike('total',   $filter['total']);
 
         if(isset($filter['payment_id']))
             $query->WhereIn('payment_id', $this->convertArr($filter['payment_id']));

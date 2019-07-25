@@ -57,7 +57,7 @@ class Product extends Model
 
 
         if(isset($filters['name']))
-            $query->Where(   DB::raw('LOWER(name)'), 'like', "%"  . $filters['name'] . "%");
+            $query->whereLike('name',   $filters['name']);
 
 
         if(isset($filters['price_start']))
@@ -66,7 +66,7 @@ class Product extends Model
             $query->where('price', '<=', $filters['price_end']);
 
         if(isset($filters['sku']))
-            $query->Where(   DB::raw('LOWER(sku)'), 'like', "%"  . $filters['sku'] . "%");
+            $query->whereLike('sku',   $filters['sku']);
 
         if(isset($filters['stock_end']))
             $query->where('stock', '>=', $filters['stock_end']);
@@ -74,7 +74,7 @@ class Product extends Model
             $query->where('stock', '<=', $filters['stock_start']);
 
         if(isset($filters['url']))
-            $query->Where(   DB::raw('LOWER(url)'), 'like', "%"  . $filters['url'] . "%");
+            $query->whereLike('url',   $filters['url']);
 
         if(isset($filters['active']))
             $query->where('active', $filters['active']);
@@ -86,8 +86,7 @@ class Product extends Model
             $category = Category::where('url', $filters['category'])->first();
             if($category)
             {
-                $serviceCategory = new ServiceCategory();
-                $categories_ids = $serviceCategory->categoryChildIds($category->id);
+                $categories_ids = ServiceCategory::categoryChildIds($category->id);
 
                 $query->whereHas('categories', function($query) use ($categories_ids){
                     $query->whereIn('category_id', $categories_ids);
@@ -197,14 +196,14 @@ class Product extends Model
             //чпу
             $product->url = str_slug(empty($product->url) ? $product->name : $product->url);
 
+            if(empty($product->id))
+                $product_id = Helpers::tableNextId('products');
+
             //фото
             if(is_uploaded_file($product->photo))
             {
-                if(!empty($product->id)){
+                if(!empty($product->id))
                     self::find($product->id)->deletePhoto();
-                }else{
-                    $product_id = Helpers::tableNextId('products');
-                }
 
                 $upload = new Upload();
                 $upload->fileName = str_slug($product->name);
@@ -268,7 +267,7 @@ class Product extends Model
     //Скидки
     public function specificPrice()
     {
-        return $this->belongsTo('App\Models\SpecificPrice', 'id', 'product_id');
+        return $this->hasOne('App\Models\SpecificPrice', 'product_id', 'id');
     }
 
 
@@ -318,7 +317,7 @@ class Product extends Model
     public function oneProductFeaturesCompare()
     {
         return $this->hasOne('App\Models\ProductFeaturesCompare', 'product_id', 'id')
-                    ->where('visit_number', Helpers::getVisitNumber());
+                    ->where('visit_number', Helpers::visitNumber());
     }
 
     public function oneProductFeaturesWishlist()

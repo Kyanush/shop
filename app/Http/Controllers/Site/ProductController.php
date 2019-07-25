@@ -62,9 +62,8 @@ class ProductController extends Controller
         $products_interested = $product->productAccessories()->productInfoWith()->get();
 
         //Вы смотрели
-        $serviceYouWatchedProduct = new ServiceYouWatchedProduct();
-        $serviceYouWatchedProduct->youWatchedProduct($product->id);
-        $youWatchedProducts = $serviceYouWatchedProduct->listProducts($product->id);
+        ServiceYouWatchedProduct::youWatchedProduct($product->id);
+        $youWatchedProducts = ServiceYouWatchedProduct::listProducts($product->id);
 
 
 

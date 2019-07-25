@@ -7,12 +7,6 @@ use Illuminate\Support\Facades\Cookie;
 class ServiceCity
 {
 
-    private $model;
-    public function __construct()
-    {
-        $this->model = new City();
-    }
-
     public static function listActiveSort(){
         $cities = City::isActive()->OrderBy('sort', 'ASC')->get();
         return $cities;

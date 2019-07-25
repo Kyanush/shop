@@ -34,18 +34,18 @@ class Helpers
         return $filters;
     }
 
-    public static function generateVisitNumber ()
+    public static function visitNumber()
     {
-        if(empty($_COOKIE["visit_number"]))
+        $visit_number = $_COOKIE["visit_number"] ?? false;
+
+        if(!$visit_number)
         {
             $visit_number = sha1(md5(date('Y-m-d H:i:s') . rand(1, 100000000000)));
             setcookie("visit_number", $visit_number, time() + 5000000);
+            return $visit_number;
         }
-    }
 
-    public static function getVisitNumber()
-    {
-        return $_COOKIE["visit_number"] ?? '';
+        return $visit_number;
     }
 
     public static function limitWords($string, $word_limit = 10)
@@ -192,26 +192,29 @@ class Helpers
 
     public static function ruDateFormat($date)
     {
-        $date = date('d.m.Y', strtotime($date));
-        $date = explode(".", $date);
+        if(empty($date))
+            return 'Дата пусто';
 
-            switch ($date[1]){
-                case 1: $m='января'; break;
-                case 2: $m='февраля'; break;
-                case 3: $m='марта'; break;
-                case 4: $m='апреля'; break;
-                case 5: $m='мая'; break;
-                case 6: $m='июня'; break;
-                case 7: $m='июля'; break;
-                case 8: $m='августа'; break;
-                case 9: $m='сентября'; break;
-                case 10: $m='октября'; break;
-                case 11: $m='ноября'; break;
-                case 12: $m='декабря'; break;
-            }
-            return $date[0] . ' ' . $m . ' ' . $date[2];
+        $day   = date('d', strtotime($date));
+        $month = date('m', strtotime($date));
+        $year  = date('Y', strtotime($date));
+        $months = [
+            '01' => 'января',
+            '02' => 'февраля',
+            '03' => 'марта',
+            '04' => 'апреля',
+            '05' => 'мая',
+            '06' => 'июня',
+            '07' => 'июля',
+            '08' => 'августа',
+            '09' => 'сентября',
+            '10' => 'октября',
+            '11' => 'ноября',
+            '12' => 'декабря'
+        ];
+
+        return $day . ' ' . ($months[ $month ] ?? $month) . ' ' . $year;
     }
-
 
     public static function createTree(&$list, $parentId = null)
     {
@@ -225,7 +228,6 @@ class Helpers
         }
         return $tree;
     }
-
 
     public static function priceFormat($price, $show_currency = true){
         return number_format($price, 0, ',', ' ') . ($show_currency ? ' ₸' : '');

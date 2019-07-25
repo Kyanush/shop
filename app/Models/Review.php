@@ -85,19 +85,9 @@ class Review extends Model
     }
 
     public function scopeSearch($query, $search){
-        $search = trim(mb_strtolower($search));
         if($search)
-        {
-            $query->Where(   DB::raw('LOWER(name)'),    'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(email)'),   'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(comment)'), 'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(plus)'),    'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(minus)'),   'like', "%"  . $search . "%");
-            $query->orWhereHas('product', function($query) use ($search){
-                 $query->filters(['name' => $search]);
-            });
+            $query->whereLike(['name', 'email', 'comment', 'plus', 'minus', 'product.name'],   $search);
 
-        }
         return $query;
     }
 

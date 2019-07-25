@@ -12,22 +12,16 @@ use Auth;
 class ServiceCart implements CartInterface
 {
 
-    private $model;
-    public function __construct()
+    public static function cartSave(int $product_id, int $quantity = 0)
     {
-        $this->model = new Cart();
-    }
-
-    public function cartSave(int $product_id, int $quantity = 0)
-    {
-        $cart = $this->model::currentUser()->first();
+        $cart = Cart::currentUser()->first();
         if(!$cart)
         {
-            $data = ['visit_number' => Helpers::getVisitNumber()];
+            $data = ['visit_number' => Helpers::visitNumber()];
             if(Auth::check())
                 $data['user_id'] = Auth::user()->id;
 
-            $cart = $this->model::create($data);
+            $cart = Cart::create($data);
         }
 
         $cartItem = $cart->cartItems->where('product_id', $product_id)->first();
@@ -45,9 +39,9 @@ class ServiceCart implements CartInterface
         }
     }
 
-    public function cartDelete(int $product_id)
+    public static function cartDelete(int $product_id)
     {
-        $cart = $this->model::currentUser()->first();
+        $cart = Cart::currentUser()->first();
         $cartItem = $cart->cartItems()->where('product_id', $product_id)->first();
         if($cartItem)
         {
@@ -64,11 +58,11 @@ class ServiceCart implements CartInterface
         return false;
     }
 
-    public function cartTotal($carrier_id = 0)
+    public static function cartTotal($carrier_id = 0)
     {
         $quantity = $sum = 0;
 
-        $cartProductsList = $this->cartProductsList();
+        $cartProductsList = self::cartProductsList();
 
         foreach ($cartProductsList as $item)
         {
@@ -85,8 +79,8 @@ class ServiceCart implements CartInterface
         ];
     }
 
-    public function cartProductsList(){
-        $cart = $this->model::currentUser()->first();
+    public static function cartProductsList(){
+        $cart = Cart::currentUser()->first();
         if($cart){
             $cartItems = $cart->cartItems()->with(['product' => function($query){
                 $query->with(['specificPrice' => function($query){
@@ -100,8 +94,8 @@ class ServiceCart implements CartInterface
         return [];
     }
 
-    public function cartDeleteAll(){
-        $cart = $this->model::currentUser()->first();
+    public static function cartDeleteAll(){
+        $cart = Cart::currentUser()->first();
         if($cart){
             $cart->cartItems()->delete();
             $cart->delete();
@@ -109,12 +103,5 @@ class ServiceCart implements CartInterface
         }
         return false;
     }
-
-
-
-
-
-
-
 
 }

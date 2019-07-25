@@ -9,23 +9,16 @@ use Mail;
 class ServiceOrder implements OrderInterface
 {
 
-    private $model;
-    public function __construct()
+
+    public static function productDelete($product_id, $order_id)
     {
-        $this->model = new Order();
-    }
-
-
-
-    public function productDelete($product_id, $order_id)
-    {
-        $order = $this->model::find($order_id);
+        $order = Order::find($order_id);
         $order->products()->detach($product_id);
-        $this->totalOrder($order_id);
+        self::totalOrder($order_id);
         return true;
     }
 
-    public function productAdd($product_id, $order_id, $quantity = 1, $price = 0)
+    public static function productAdd($product_id, $order_id, $quantity = 1, $price = 0)
     {
         $product = Product::with(['specificPrice' => function($query){
             $query->DateActive();
@@ -42,7 +35,7 @@ class ServiceOrder implements OrderInterface
             }
 
             //findOrNew
-            $order = $this->model::find($order_id);
+            $order = Order::find($order_id);
 
             $order->products()->syncWithoutDetaching([$product_id =>
                 [
@@ -53,23 +46,23 @@ class ServiceOrder implements OrderInterface
                 ]
             ]);
 
-            $this->totalOrder($order_id);
+            self::totalOrder($order_id);
         }else{
             return false;
         }
     }
 
-    public function totalOrder($order_id)
+    public static function totalOrder($order_id)
     {
-        $order = $this->model::find($order_id);
+        $order = Order::find($order_id);
         $order->total = $order->total();
         return $order->save();
     }
 
-    public function orderSendMessage($order_id){
+    public static function orderSendMessage($order_id){
         if(env('APP_TEST') == 0)
         {
-            $order = $this->model::find($order_id);
+            $order = Order::find($order_id);
             if (!$order)
                 return false;
 

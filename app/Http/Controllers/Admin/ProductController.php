@@ -5,13 +5,10 @@ use App\Http\Controllers\Admin\AdminController;
 
 use App\Models\Product;
 use App\Models\AttributeSet;
-
 use App\Models\SpecificPrice;
 use App\Requests\CloneProductRequest;
 use App\Requests\SaveProductRequest;
-use App\Services\ServiceAttributeProductValue;
 use App\Services\ServiceProduct;
-use App\Services\ServiceCategory;
 use App\Tools\Helpers;
 use Illuminate\Http\Request;
 use DB;
@@ -19,16 +16,9 @@ use DB;
 class ProductController extends AdminController
 {
 
-    private $serviceAttrProductVal, $serviceProduct, $serviceCategory;
-
-    public function __construct(ServiceAttributeProductValue $serviceAttrProductVal,
-                                ServiceProduct $serviceProduct,
-                                ServiceCategory $serviceCategory)
+    public function __construct()
     {
         parent::__construct();
-        $this->serviceAttrProductVal = $serviceAttrProductVal;
-        $this->serviceProduct = $serviceProduct;
-        $this->serviceCategory = $serviceCategory;
     }
 
     public function searchProducts(Request $request){
@@ -99,17 +89,17 @@ class ProductController extends AdminController
             }
 
             //Атрибуты
-            $this->serviceProduct->productAttributesSave(
+            ServiceProduct::productAttributesSave(
                 $product->id,
                 $request['attributes'],
                 $old_attribute_set_id == $reqProduct['attribute_set_id'] ? false : true
             );
 
             //Картинки
-            $this->serviceProduct->productImagesSave($request['product_images'] ?? [], $product->id);
+            ServiceProduct::productImagesSave($request['product_images'] ?? [], $product->id);
 
             //Группа товаров
-            $this->serviceProduct->productGroupSave($product->id, $product->group_id, $request['products_ids_group'] ?? []);
+            ServiceProduct::productGroupSave($product->id, $product->group_id, $request['products_ids_group'] ?? []);
 
             //С этим товаром покупают
             if(isset($request['accessories_product_ids']))
@@ -190,7 +180,7 @@ class ProductController extends AdminController
 
     public function delete($product_id)
     {
-        $data = $this->serviceProduct->productDelete($product_id);
+        $data = ServiceProduct::productDelete($product_id);
         if($data['success'])
         {
             return $this->sendResponse(true);
@@ -203,7 +193,7 @@ class ProductController extends AdminController
     {
         $req = $req->input('clone_product');
         return  $this->sendResponse(
-                    $this->serviceProduct->productClone(
+                    ServiceProduct::productClone(
                         $req['product_id'],
                         ['sku' => $req['sku'], 'name' => $req['name']],
                         [
@@ -223,13 +213,13 @@ class ProductController extends AdminController
     public function priceMinMax(Request $request)
     {
         return $this->sendResponse(
-            $this->serviceProduct->priceMinMax($request->all())
+            ServiceProduct::priceMinMax($request->all())
         );
     }
 
     public function productsAttributesFilters(Request $request){
         return $this->sendResponse(
-            $this->serviceProduct->productsAttributesFilters($request->all(), false)
+            ServiceProduct::productsAttributesFilters($request->all(), false)
         );
     }
 

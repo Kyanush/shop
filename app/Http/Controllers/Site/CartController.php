@@ -17,40 +17,35 @@ use App\Models\Order;
 class CartController extends Controller
 {
 
-    private $serviceCart;
-    public function __construct(ServiceCart $serviceCart)
-    {
-        $this->serviceCart = $serviceCart;
-    }
 
     public function cartSave(Request $request){
         $product_id = $request->input('product_id');
         $quantity   = $request->input('quantity', 0);
 
         return $this->sendResponse(
-            $this->serviceCart->cartSave($product_id, $quantity)
+            ServiceCart::cartSave($product_id, $quantity)
         );
     }
 
     public function cartDelete($product_id){
         return $this->sendResponse(
-            $this->serviceCart->cartDelete($product_id)
+            ServiceCart::cartDelete($product_id)
         );
     }
 
     public function cartTotal($carrier_id = 0){
 
-        $cartTotal = $this->serviceCart->cartTotal($carrier_id);
+        $cartTotal = ServiceCart::cartTotal($carrier_id);
         $cartTotal['sum'] = Helpers::priceFormat($cartTotal['sum']);
 
         return $this->sendResponse($cartTotal);
     }
 
     public function header_cart_info(){
-        $total = $this->serviceCart->cartTotal();
+        $total = ServiceCart::cartTotal();
         $total['sum'] = Helpers::priceFormat($total['sum']);
 
-        $cartProductsList = $this->serviceCart->cartProductsList();
+        $cartProductsList = ServiceCart::cartProductsList();
 
         return view('site.header_cart_info', [
             'total' => $total,
@@ -66,7 +61,7 @@ class CartController extends Controller
     }
 
     public function listCart(){
-        $cartProductsList = $this->serviceCart->cartProductsList();
+        $cartProductsList = ServiceCart::cartProductsList();
 
 
         $data = [];
@@ -92,8 +87,7 @@ class CartController extends Controller
     public function saveCheckout(CheckoutRequest $request)
     {
         //Пользователь
-        $serviceUser = new ServiceUser();
-        $user = $serviceUser->findOrNewUserCart(
+        $user = ServiceUser::findOrNewUserCart(
             $request->input('user.email'),
             $request->input('user.name'),
             $request->input('user.phone')
@@ -107,7 +101,6 @@ class CartController extends Controller
             $address_id = $address->id;
         }
 
-        $serviceOrder = new ServiceOrder();
 
         //заказ
         $order = new Order();
@@ -121,13 +114,13 @@ class CartController extends Controller
         if($order->save())
         {
             //товара заказа
-            foreach ($this->serviceCart->cartProductsList() as $item)
-                $serviceOrder->productAdd($item->product_id, $order->id, $item->quantity);
+            foreach (ServiceCart::cartProductsList() as $item)
+                ServiceOrder::productAdd($item->product_id, $order->id, $item->quantity);
 
             //удалить корзину
-            $this->serviceCart->cartDeleteAll();
+            ServiceCart::cartDeleteAll();
 
-            $serviceOrder->orderSendMessage($order->id);
+            ServiceOrder::orderSendMessage($order->id);
 
             return $this->sendResponse(['order_id' => $order->id]);
         }
@@ -140,8 +133,7 @@ class CartController extends Controller
     public function oneClickOrder(OneClickOrderRequest $request)
     {
         //Пользователь
-        $serviceUser = new ServiceUser();
-        $user = $serviceUser->findOrNewUserCart(
+        $user = ServiceUser::findOrNewUserCart(
             $request->input('email'),
             $request->input('name'),
             $request->input('phone')
@@ -154,10 +146,8 @@ class CartController extends Controller
         $order->status_id           = 1;//новый
         if($order->save())
         {
-            $serviceOrder = new ServiceOrder();
-            $serviceOrder->productAdd($request->input('product_id'), $order->id);
-
-            $serviceOrder->orderSendMessage($order->id);
+            ServiceOrder::productAdd($request->input('product_id'), $order->id);
+            ServiceOrder::orderSendMessage($order->id);
 
             return $this->sendResponse(['order_id' => $order->id]);
         }

@@ -55,8 +55,6 @@ class OrderController extends AdminController
     {
         $data = $request->input('order');
 
-        $serviceOrder = new ServiceOrder();
-
         $order = Order::findOrNew($data["id"]);
         $order->fill($data);
         if($order->save())
@@ -66,9 +64,9 @@ class OrderController extends AdminController
                 $pivot = $product['pivot'];
                 if(isset($pivot['is_delete']))
                 {
-                    $serviceOrder->productDelete($pivot['product_id'], $order->id);
+                    ServiceOrder::productDelete($pivot['product_id'], $order->id);
                 }else{
-                    $serviceOrder->productAdd($pivot['product_id'], $order->id, $pivot['quantity'], $pivot['price']);
+                    ServiceOrder::productAdd($pivot['product_id'], $order->id, $pivot['quantity'], $pivot['price']);
                 }
             }
         }

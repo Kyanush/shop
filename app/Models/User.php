@@ -43,14 +43,9 @@ class User extends Authenticatable
 
     public function scopeSearch($query, $search)
     {
-        $search = trim(mb_strtolower($search));
         if($search)
-        {
-            $query->Where(   DB::raw('LOWER(name)'),    'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(email)'),   'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(surname)'), 'like', "%"  . $search . "%");
-            $query->OrWhere( DB::raw('LOWER(phone)'),   'like', "%"  . $search . "%");
-        }
+            $query->whereLike(['name', 'email', 'surname', 'phone'],   $search);
+
         return $query;
     }
 

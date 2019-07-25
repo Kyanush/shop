@@ -8,32 +8,26 @@ use Illuminate\Support\Facades\Hash;
 class ServiceUser
 {
 
-    private $model;
-    private $role_id = 2;
+    private static $role_id = 2;
 
-    public function __construct()
-    {
-        $this->model = new User();
-    }
-
-    public function createUser($email, $password, $name, $phone, $role_id = 0)
+    public static function createUser($email, $password, $name, $phone, $role_id = 0)
     {
         $data = [
             'name'     => $name,
             'email'    => $email,
             'phone'    => $phone,
-            'role_id'  => $role_id > 0 ? $role_id : $this->role_id];
+            'role_id'  => $role_id > 0 ? $role_id : self::$role_id];
 
         if($password)
             $data['password'] = Hash::make($password);
 
-        return $this->model::create($data);
+        return User::create($data);
     }
 
-    public function findOrNewUserCart($email, $name, $phone){
-        $user = $this->model::where('email', $email)->first();
+    public static function findOrNewUserCart($email, $name, $phone){
+        $user = User::where('email', $email)->first();
         if(!$user){
-            $user = $this->createUser(
+            $user = self::createUser(
                 $email,
                 null,
                 $name,

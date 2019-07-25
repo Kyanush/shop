@@ -1,5 +1,3 @@
-{{ \App\Tools\Helpers::generateVisitNumber() }}
-
 <!DOCTYPE html>
 <html lang="ru" class="js" prefix="og: https://ogp.me/ns#">
 

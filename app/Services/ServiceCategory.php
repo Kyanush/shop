@@ -7,15 +7,11 @@ use App\Tools\Helpers;
 
 class ServiceCategory
 {
-    private $model;
-    public function __construct()
-    {
-        $this->model = new Category();
-    }
 
-    public function catalogsTree($type = 1)
+
+    public static function catalogsTree($type = 1)
     {
-        $list = $this->model::OrderBy('sort')->get();
+        $list = Category::OrderBy('sort')->get();
         $data = $list->map(function ($item) use ($type) {
 
             if($type == 1)
@@ -42,14 +38,15 @@ class ServiceCategory
         return Helpers::createTree($data);
     }
 
-    public function categoryChildIds($parent_id, $self_id_add = true, $active = null)
+    //все дочерние ид
+    public static function categoryChildIds($parent_id, $self_id_add = true, $active = null)
     {
         $categories_ids = [];
 
         if($self_id_add)
             $categories_ids[] = $parent_id;
 
-        $category = $this->model::OrderBy('sort')->where(function ($query) use ($active){
+        $category = Category::OrderBy('sort')->where(function ($query) use ($active){
             if($active === true)
                 $query->isActive();
             if($active === false)
@@ -59,7 +56,7 @@ class ServiceCategory
         foreach ($category as $item)
         {
             $categories_ids[] = $item['id'];
-            $childCategories = $this->categoryChildIds($item['id'], false, $active);
+            $childCategories = self::categoryChildIds($item['id'], false, $active);
             if(count($childCategories) > 0)
             {
                 $categories_ids = array_merge($categories_ids, $childCategories);

@@ -15,11 +15,9 @@ class Subscribe extends Model
 	];
 
     public function scopeSearch($query, $search){
-        $search = trim(mb_strtolower($search));
         if($search)
-        {
-            $query->Where(   DB::raw('LOWER(email)'), 'like', "%"  . $search . "%");
-        }
+            $query->whereLike('email',   $search);
+
         return $query;
     }
 

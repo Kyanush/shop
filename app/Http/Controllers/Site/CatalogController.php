@@ -15,12 +15,8 @@ use App\Tools\Seo;
 class CatalogController extends Controller
 {
 
-    private $serviceProduct;
-
-    public function __construct(ServiceProduct $serviceProduct)
+    public function __construct()
     {
-
-        $this->serviceProduct = $serviceProduct;
     }
 
     public function c($cCategory){
@@ -60,8 +56,8 @@ class CatalogController extends Controller
         $column  = $orderBy['sorting_product']['column'];
         $order   = $orderBy['sorting_product']['order'];
 
-        $priceMinMax = $this->serviceProduct->priceMinMax(['category' => $filters['category'], 'active' => 1]);
-        $productsAttributesFilters = $this->serviceProduct->productsAttributesFilters($filters);
+        $priceMinMax = ServiceProduct::priceMinMax(['category' => $filters['category'], 'active' => 1]);
+        $productsAttributesFilters = ServiceProduct::productsAttributesFilters($filters);
 
 
 
@@ -90,8 +86,7 @@ class CatalogController extends Controller
 
 
         //Вы смотрели
-        $serviceYouWatchedProduct = new ServiceYouWatchedProduct();
-        $youWatchedProducts = $serviceYouWatchedProduct->listProducts();
+        $youWatchedProducts = ServiceYouWatchedProduct::listProducts();
 
         //seo
         $seo = Seo::catalog($category);
