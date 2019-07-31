@@ -3,6 +3,7 @@
 $productDay =  \App\Models\Product::productInfoWith()
                 ->filtersAttributes(['product_day' => 'da'])
                 ->limit(1)
+                ->where('stock', '>', 0)
                 ->inRandomOrder()
                 ->first();
 ?>

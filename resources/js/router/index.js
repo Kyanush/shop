@@ -55,9 +55,11 @@ import news_save from  '../components/news/Save.vue';
 
 import layout from  '../components/Layout.vue';
 import checkout from  '../components/checkout/Checkout.vue';
-Vue.component('layout',                   layout);
-Vue.component('checkout',                    checkout);
+import HistoryBack from  '../components/plugins/HistoryBack.vue';
 
+Vue.component('layout',       layout);
+Vue.component('checkout',     checkout);
+Vue.component('history_back', HistoryBack);
 
 Vue.use(Router);
 

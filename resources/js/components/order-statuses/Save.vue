@@ -1,12 +1,7 @@
 <template>
          <div class="col-md-8 col-md-offset-2">
 
-             <router-link :to="{path: '/order-statuses'}">
-                 <i class="fa fa-angle-double-left"></i>
-                 Статусы заказов
-             </router-link>
-
-             <br><br>
+             <history_back></history_back>
 
              <form v-on:submit="orderStatusSave">
                  <div class="box">
@@ -137,7 +132,7 @@
                         this.$helper.swalSuccess(this.order_status.id ? 'Успешно изменено' : 'Успешно создано');
 
                         if(this.method_redirect == 'save_and_back'){
-                            this.$router.push('/order-statuses');
+                            history.back();
 
                         }else if(this.method_redirect == 'save_and_continue'){
                             if(!this.order_status.id)
@@ -146,7 +141,7 @@
                                 this.$router.push('/order-statuses/edit/' + this.order_status.id);
                             }
                         }else if(this.method_redirect == 'save_and_new'){
-                            this.$router.push('/order-statuses/create');
+                            window.location = '/admin/order-statuses/create';
 
                             this.order_status.id      = 0;
                             this.order_status.name    = '';

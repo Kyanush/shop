@@ -144,7 +144,7 @@
 				@include('includes.product_day')
             </div>
             <div class="team_banners">
-                {!! \App\Services\ServiceBanner::getBanner(6) !!}
+                {!! \App\Services\ServiceBanner::getBanner(9) !!}
             </div>
         </div>
 

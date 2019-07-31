@@ -31,6 +31,17 @@ class ProductController extends AdminController
 
     public function list(Request $request)
     {
+        $filters = $request->all();
+
+        $column = 'id';
+        $order = 'DESC';
+        if(isset($filters['sort']))
+        {
+            $sort = explode('-', $filters['sort']);
+            $column = $sort[0];
+            $order  = $sort[1];
+            unset($filters['sort']);
+        }
 
         $list =  Product::with([
                 'categories',
@@ -38,9 +49,9 @@ class ProductController extends AdminController
                     $query->dateActive();
                 }
             ])
-            ->filters($request->all())
-            ->filtersAttributes($request->all())
-            ->OrderBy('id', 'DESC')
+            ->filters($filters)
+            ->filtersAttributes($filters)
+            ->OrderBy($column, $order)
             ->paginate($request->input('perPage', 10));
 
         foreach ($list as $key => $item)

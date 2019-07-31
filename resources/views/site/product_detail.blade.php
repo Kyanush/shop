@@ -299,11 +299,9 @@
                                 </div>
                             </div>
 
-                            <div class="go_to_description">
 
-                                <?php
-                                ob_start();
-                                ?>
+
+                            <div class="go_to_description">
                                     <ul>
                                         @foreach($product->attributes as $attribute)
                                             @if(!in_array($attribute->id, [49, 61, 62]) and $attribute->pivot->value)
@@ -316,19 +314,13 @@
                                             {!! $product->description_mini  !!}
                                         </p>
                                     @endif
-                                <?php
-                                $description_mini = ob_get_clean();
-                                ?>
-                                {!! $description_mini !!}
                             </div>
 
-
-                                @include('schemas.product', [
-                                    'product'          => $product,
-                                    'description_mini' => htmlentities($description_mini),
-                                    'group_products'   => $group_products,
-                                    'category'         => $category
-                                ])
+                            @include('schemas.product', [
+                                'product'          => $product,
+                                'group_products'   => $group_products,
+                                'category'         => $category
+                            ])
 
                         </div>
                     </div>

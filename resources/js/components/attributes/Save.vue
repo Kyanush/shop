@@ -2,15 +2,7 @@
     <div class="col-md-8 col-md-offset-2">
         <!-- Default box -->
 
-
-        <router-link :to="{path: '/attributes'}">
-            <i class="fa fa-angle-double-left"></i>
-            Атрибуты
-        </router-link>
-
-
-        <br><br>
-
+        <history_back></history_back>
 
         <form v-on:submit="attributeSave">
             <div class="box">
@@ -380,9 +372,6 @@
             },
         },
         methods:{
-
-
-
             convertDataSelect2(values, column_id, column_text, disabled_column, default_option){
                 return this.$helper.convertDataSelect2(values, column_id, column_text, disabled_column, default_option);
             },
@@ -470,7 +459,7 @@
                         this.$helper.swalSuccess(this.attribute.id ? 'Успешно изменено' : 'Успешно создано');
 
                         if(this.method_redirect == 'save_and_back'){
-                            this.$router.push('/attributes');
+                            history.back();
 
                         }else if(this.method_redirect == 'save_and_continue'){
                             if(!this.attribute.id)
@@ -479,7 +468,7 @@
                                 this.$router.push('/attributes/edit/' + this.attribute.id);
                             }
                         }else if(this.method_redirect == 'save_and_new'){
-                            this.$router.push('/attributes/create');
+                            window.location = '/admin/attributes/create';
 
                             this.attribute = {
                                 id: 0,

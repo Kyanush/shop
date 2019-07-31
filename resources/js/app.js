@@ -46,7 +46,21 @@ axios.interceptors.response.use(function (response) {
     console.log(status);
     console.log(res);
 
-    if(status == 404 || status == 403 || status == 401){
+
+
+    if(status == 401){
+        Vue.swal.fire({
+            text: "Время авторизации истекло. Пожалуйста, авторизуйтесь заново.",
+            type: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: '#72BF44',
+            confirmButtonText: 'Авторизоваться'
+        }).then((result) => {
+            if (result.value)
+                location.href = '/login';
+        });
+    }
+    else if(status == 404 || status == 403){
         Vue.helper.swalError(res.data, status);
 
     }else if(status == 422){

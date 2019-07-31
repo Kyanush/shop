@@ -1,12 +1,7 @@
 <template>
     <div class="col-md-8 col-md-offset-2">
 
-        <router-link :to="{path: '/callbacks'}">
-            <i class="fa fa-angle-double-left"></i>
-            Обратный звонок
-        </router-link>
-
-        <br><br>
+        <history_back></history_back>
 
         <form v-on:submit="callbackSave">
             <div class="box">
@@ -163,7 +158,7 @@
                         this.$helper.swalSuccess(this.callback.id ? 'Успешно изменено' : 'Успешно создано');
 
                         if(this.method_redirect == 'save_and_back'){
-                            this.$router.push('/callbacks');
+                            history.back();
 
                         }else if(this.method_redirect == 'save_and_continue'){
                             if(!this.callback.id)

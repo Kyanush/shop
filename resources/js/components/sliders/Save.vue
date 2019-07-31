@@ -1,12 +1,7 @@
 <template>
          <div class="col-md-8 col-md-offset-2">
 
-             <router-link :to="{path: '/sliders'}">
-                 <i class="fa fa-angle-double-left"></i>
-                 Слайдеры
-             </router-link>
-
-             <br><br>
+             <history_back></history_back>
 
              <form v-on:submit="sliderSave">
                  <div class="box">
@@ -166,7 +161,7 @@
                         this.$helper.swalSuccess(this.slider.id ? 'Успешно изменено' : 'Успешно создано');
 
                         if(this.method_redirect == 'save_and_back'){
-                            this.$router.push('/sliders');
+                            history.back();
 
                         }else if(this.method_redirect == 'save_and_continue'){
                             if(!this.slider.id)
@@ -175,7 +170,7 @@
                                 this.$router.push('/sliders/edit/' + this.slider.id);
                             }
                         }else if(this.method_redirect == 'save_and_new'){
-                            this.$router.push('/sliders/create');
+                            window.location = '/admin/sliders/create';
 
                             this.slider = {
                                 id:  0,

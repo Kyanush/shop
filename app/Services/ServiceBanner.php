@@ -11,7 +11,7 @@ class ServiceBanner
     {
         $banner = Banner::find($banner_id);
         if($banner)
-            return "<a href='{$banner->link}' title='{$banner->name}' alt='{$banner->name}'>{$banner->body}</a>";
+            return "<a target='_blank' href='{$banner->link}' title='{$banner->name}' alt='{$banner->name}'>{$banner->body}</a>";
         else
             return 'Баннет не найден';
     }

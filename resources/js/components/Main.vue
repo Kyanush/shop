@@ -1,6 +1,65 @@
 <template>
-    <div class="box">
-        <full-calendar :config="config" :events="events"/>
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        <i class="fa fa-cart-arrow-down"></i>
+                        Заказ за месяц
+                    </h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th>Статус</th>
+                                <th>Кол-во</th>
+                                <th>Сумма</th>
+                            </tr>
+                            <tr v-for="(item, status_id) in total_status">
+                                <td><i :class="item.class"></i> {{ item.title }}</td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.total }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        <i class="fa fa-phone"></i>
+                        Обратный звонок за месяц
+                    </h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <th>Статус</th>
+                            <th>Кол-во</th>
+                        </tr>
+                        <tr v-for="(item, status_id) in total_callbacks">
+                            <td><i :class="item.class"></i> {{ item.title }}</td>
+                            <td>{{ item.quantity }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="box">
+                <full-calendar :config="config" :events="events"/>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -17,18 +76,8 @@
         },
         data() {
             return {
-                events: function(start, end, timezone, callback) {
-
-                    var params = {
-                        start: start.format("YYYY-MM-DD"),
-                        end: end.format("YYYY-MM-DD"),
-                    };
-
-                    axios.get('/admin/calendar-orders', {params:  params}).then((res)=>{
-                        callback(res.data);
-                    });
-
-                },
+                total_status: [],
+                total_callbacks: [],
                 config: {
                     firstDay: 1,
                     firstDaymonthNames: ['Январь','Февраль','Март','Апрель','Май','οюнь','οюль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
@@ -63,6 +112,25 @@
                     }
                 }
             }
+        },
+        methods:{
+            events(start, end, timezone, callback) {
+
+                var params = {
+                    start: start.format("YYYY-MM-DD"),
+                    end: end.format("YYYY-MM-DD"),
+                }
+
+                axios.get('/admin/calendar-orders', {params:  params}).then((res)=>{
+                    var data = res.data;
+
+                    this.total_status = data.total_status;
+                    this.total_callbacks = data.total_callbacks;
+
+                    callback(data.calendar);
+                });
+
+            },
         },
         updated(){
 

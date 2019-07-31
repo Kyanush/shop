@@ -83,6 +83,7 @@
         <div id="header_middle_menu">
             <a href="{{ route('delivery_payment') }}">Доставка, оплата</a>
             <a href="{{ route('guaranty') }}">Гарантия</a>
+            <a href="{{ route('checkout') }}">Корзина</a>
             <a href="{{ route('contact') }}">Контакты</a>
         </div>
 

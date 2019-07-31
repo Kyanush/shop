@@ -1,13 +1,7 @@
 <template>
          <div class="col-md-8 col-md-offset-2">
 
-             <router-link :to="{path: '/categories'}">
-                 <i class="fa fa-angle-double-left"></i>
-                 Категории
-             </router-link>
-
-             <br><br>
-
+             <history_back></history_back>
 
              <form v-on:submit="categorySave">
                  <div class="box">
@@ -463,7 +457,7 @@
                         this.$helper.swalSuccess(this.category.id ? 'Успешно изменено' : 'Успешно создано');
 
                         if(this.method_redirect == 'save_and_back'){
-                            this.$router.push('/categories');
+                            history.back();
 
                         }else if(this.method_redirect == 'save_and_continue'){
                             if(!this.category.id)
@@ -472,7 +466,7 @@
                                 this.$router.push('/categories/edit/' + this.category.id);
                             }
                         }else if(this.method_redirect == 'save_and_new'){
-                            this.$router.push('/categories/create');
+                            window.location = '/admin/categories/create';
 
                             this.category.id    = 0;
                             this.category.parent_id  = 0;

@@ -174,16 +174,42 @@
             <table class="table table-bordered ">
             <thead>
             <tr>
-                <th>ID</th>
-                <th width="200">Название</th>
+                <th>
+                    ID
+                    <i @click="setSort('id-asc')"  v-bind:class="{ 'red': filter.sort == 'id-asc' }"  title="по возрастанию" class="asc fa fa-sort-asc pull-right cursor-pointer"></i>
+                    <i @click="setSort('id-desc')" v-bind:class="{ 'red': filter.sort == 'id-desc' }" title="по убыванию" class="desc fa fa-sort-desc pull-right cursor-pointer"></i>
+                </th>
+                <th width="200">
+                    Название
+                    <i @click="setSort('name-asc')"  v-bind:class="{ 'red': filter.sort =='name-asc' }"  title="по возрастанию" class="asc fa fa-sort-asc pull-right cursor-pointer"></i>
+                    <i @click="setSort('name-desc')" v-bind:class="{ 'red': filter.sort =='name-desc' }" title="по убыванию" class="desc fa fa-sort-desc pull-right cursor-pointer"></i>
+                </th>
                 <th>Фото товара</th>
                 <th>Категории</th>
                 <th>SKU</th>
-                <th>Цена</th>
-                <th>Кол-во на<br/> складе</th>
-                <th>Кол-во <br/>просмотров</th>
-                <th>Дата создания<br/>Дата изменения</th>
-                <th>Статус</th>
+                <th>
+                    Цена
+                    <i @click="setSort('price-asc')"  v-bind:class="{ 'red': filter.sort =='price-asc' }"  title="по возрастанию" class="asc fa fa-sort-asc pull-right cursor-pointer"></i>
+                    <i @click="setSort('price-desc')" v-bind:class="{ 'red': filter.sort =='price-desc' }" title="по убыванию" class="desc fa fa-sort-desc pull-right cursor-pointer"></i>
+                </th>
+                <th>Кол-во на<br/> складе
+                    <i @click="setSort('stock-asc')"  v-bind:class="{ 'red': filter.sort =='stock-asc' }"  title="по возрастанию" class="asc fa fa-sort-asc pull-right cursor-pointer"></i>
+                    <i @click="setSort('stock-desc')" v-bind:class="{ 'red': filter.sort =='stock-desc' }" title="по убыванию" class="desc fa fa-sort-desc pull-right cursor-pointer"></i>
+                </th>
+                <th>Кол-во <br/>просмотров
+                    <i @click="setSort('view_count-asc')"  v-bind:class="{ 'red': filter.sort =='view_count-asc' }"  title="по возрастанию" class="asc fa fa-sort-asc pull-right cursor-pointer"></i>
+                    <i @click="setSort('view_count-desc')" v-bind:class="{ 'red': filter.sort =='view_count-desc' }" title="по убыванию" class="desc fa fa-sort-desc pull-right cursor-pointer"></i>
+                </th>
+                <th>
+                    Дата создания<br/>Дата изменения
+                    <i @click="setSort('created_at-asc')"  v-bind:class="{ 'red': filter.sort =='created_at-asc' }"  title="по возрастанию" class="asc fa fa-sort-asc pull-right cursor-pointer"></i>
+                    <i @click="setSort('created_at-desc')" v-bind:class="{ 'red': filter.sort =='created_at-desc' }" title="по убыванию" class="desc fa fa-sort-desc pull-right cursor-pointer"></i>
+                </th>
+                <th>
+                    Статус
+                    <i @click="setSort('active-asc')"  v-bind:class="{ 'red': filter.sort =='active-asc' }"  title="по возрастанию" class="asc fa fa-sort-asc pull-right cursor-pointer"></i>
+                    <i @click="setSort('active-desc')" v-bind:class="{ 'red': filter.sort =='active-desc' }" title="по убыванию" class="desc fa fa-sort-desc pull-right cursor-pointer"></i>
+                </th>
                 <th>Действия</th>
             </tr>
             </thead>
@@ -428,7 +454,8 @@
                     stock_end:          this.urlParamsGet('stock_end'),
                     created_at_start:   this.urlParamsGet('created_at_start'),
                     created_at_end:     this.urlParamsGet('created_at_end'),
-                    category:           this.urlParamsGet('category')
+                    category:           this.urlParamsGet('category'),
+                    sort:               this.urlParamsGet('sort')
                 },
                 clone_product:{
                     product_id: 0,
@@ -485,7 +512,11 @@
             }
         },
         methods:{
-
+            setSort(value){
+                if(value == this.filter.sort)
+                    value = '';
+                this.filter.sort = value;
+            },
 
             setProductShowFilter(){
                 this.product_show_filter = !this.product_show_filter;
@@ -641,5 +672,20 @@
     }
     #products-attributes-filters ul li label{
         cursor: pointer;
+    }
+    .asc{
+        top: 22px;
+    }
+    .desc{
+        bottom: 7px;
+    }
+    .asc, .desc{
+        right: 3px;
+        position: absolute;
+        color: #3c8dbc;
+        font-size: 17px;
+    }
+    th{
+        position: relative;
     }
 </style>

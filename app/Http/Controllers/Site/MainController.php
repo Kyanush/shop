@@ -18,6 +18,7 @@ class MainController extends Controller
         $productsRecommend = Product::productInfoWith()
             ->filtersAttributes(['rekomenduemoe_dlya_vas' => 'da'])
             ->limit(10)
+            ->where('stock', '>', 0)
             //->OrderBy('id', 'DESC')
             ->inRandomOrder()
             ->get();
@@ -29,6 +30,7 @@ class MainController extends Controller
                 })
                 ->withCount('reviews')
                 ->limit(10)
+                ->where('stock', '>', 0)
                 //->OrderBy('id', 'DESC')
                 ->inRandomOrder()
                 ->get();
@@ -37,6 +39,7 @@ class MainController extends Controller
         $productsHit = Product::productInfoWith()
                 ->filtersAttributes(['tipy_tovarov' => 'hit'])
                 ->limit(10)
+                ->where('stock', '>', 0)
                 //->OrderBy('id', 'DESC')
                 ->inRandomOrder()
                 ->get();
@@ -45,6 +48,7 @@ class MainController extends Controller
         $productsNew = Product::productInfoWith()
                     ->filtersAttributes(['tipy_tovarov' => 'new'])
                     ->limit(10)
+                    ->where('stock', '>', 0)
                     //->OrderBy('id', 'DESC')
                     ->inRandomOrder()
                     ->get();

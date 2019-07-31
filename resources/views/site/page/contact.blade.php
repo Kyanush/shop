@@ -26,7 +26,7 @@
       @endphp
 
            <div class="contact_page">
-               <div class="contact_page_left">
+
                    <div class="contact_page_left_header">Связаться с нами</div>
 
                    <div style="padding: 20px;font-size: 14px;line-height: 22px;">
@@ -117,52 +117,6 @@
                            </div>
                        </div>
                    </div>
-               </div>
-               <div class="contact_page_right">
-                   <div class="contact_info_main_form">
-                       <form action="/contact" method="post" enctype="multipart/form-data" role="form">
-                           @csrf
-                           <h3>Написать руководителю</h3>
-                           <div class="rumi-contact-undertext">Если у вас есть предложение по улучшению работы магазина, то напишите, пожалуйста</div>
-
-                           <div class="rumi-contact" style="padding: 0px;">
-
-                               <div class="rumi-contact-text">Номер телефона *</div>
-                               <input
-                                       @auth
-                                            value="{{ Auth::user()->phone }}"
-                                       @else
-                                            value="{{ old('phone') }}"
-                                       @endauth
-                                       type="text"
-                                       name="phone"
-                                       class="form-control phone-mask"
-                                       placeholder="+7 (___) ___-__-__"/>
-
-                               <div class="rumi-contact-text">Введите свой e-mail *</div>
-                               <input
-                                       @auth
-                                            value="{{ Auth::user()->email }}"
-                                       @else
-                                            value="{{ old('email') }}"
-                                       @endauth
-                                       type="text"
-                                       name="email"
-                                       class="form-control"
-                                       placeholder="E-mail"/>
-
-                               <div class="rumi-contact-text">Сообщение *</div>
-                               <textarea name="message" cols="50" rows="4" class="form-control" placeholder="Введите текст сообщения">{{ old('message') }}</textarea>
-
-                               <div class="rumi-contact-text">Введите код подтверждения *</div>
-                               <p><?=captcha_img();?></p>
-                               <p><input type="text" name="captcha"></p>
-
-                               <div><input type="submit" value="Отправить" class="rumi-submit"></div>
-                           </div>
-                       </form>
-                   </div>
-               </div>
 
 
                <div style="width: 100%;height: 300px;display: table">

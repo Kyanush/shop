@@ -2,13 +2,7 @@
 
      <div class="col-md-8 col-md-offset-2">
 
-          <router-link :to="{path: '/categories'}">
-               <i class="fa fa-angle-double-left"></i>
-               Категории
-          </router-link>
-
-
-          <br><br>
+          <history_back></history_back>
 
           <!-- Default box -->
           <div class="box">

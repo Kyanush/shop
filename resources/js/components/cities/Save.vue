@@ -1,12 +1,7 @@
 <template>
          <div class="col-md-8 col-md-offset-2">
 
-             <router-link :to="{path: '/cities'}">
-                 <i class="fa fa-angle-double-left"></i>
-                 Список
-             </router-link>
-
-             <br><br>
+             <history_back></history_back>
 
              <form v-on:submit="orderStatusSave">
                  <div class="box">
@@ -141,7 +136,7 @@
                         this.$helper.swalSuccess(this.city.id ? 'Успешно изменено' : 'Успешно создано');
 
                         if(this.method_redirect == 'save_and_back'){
-                            this.$router.push('/cities');
+                            history.back();
 
                         }else if(this.method_redirect == 'save_and_continue'){
                             if(!this.city.id)
@@ -150,7 +145,7 @@
                                 this.$router.push('/cities/edit/' + this.city.id);
                             }
                         }else if(this.method_redirect == 'save_and_new'){
-                            this.$router.push('/cities/create');
+                            window.location = '/admin/cities/create';
 
                             this.city.id      = 0;
                             this.city.name    = '';

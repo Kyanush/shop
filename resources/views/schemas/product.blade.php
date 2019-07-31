@@ -1,185 +1,115 @@
 @php
 
-$images[] = env('APP_URL') . $product->pathPhoto(true);
+    $images = '';
+    $images.= '"' . env('APP_URL') . $product->pathPhoto(true) . '",';
 
-if($product->images)
-    foreach($product->images as $image)
-        $images[] = env('APP_URL') . $image->imagePath(true);
-
-
-$schema = [
-    "@context"    =>  "https://schema.org",
-    "@type"       =>  "Product",
-    "description" =>  $description_mini,
-    "name"        =>  $product->name,
-    "sku"         =>  $product->sku,
-    "url"         =>  env('APP_URL') . $product->detailUrlProduct(),
-    "category"    =>  $category->name,
-    "brand"       =>  $category->name,
-    "image"       =>  $images,
-    //"manufacturer": "HTC",
-    //"model":        "Товар 1",
-    //"gtin12":       "upc",
-    //"gtin8":        "ean",
-    "productID"   => $product->id,
-];
+    if($product->images)
+        foreach($product->images as $image)
+            $images.= '"' . env('APP_URL') . $image->imagePath(true) . '",';
+    $images = mb_substr($images, 0, -1);
 
 
 
+    $description_mini = '';
 
-if(intval($product->avgRating->avg_rating ?? 0) > 0 and $product->reviews_count > 0)
-{
-    $schema['aggregateRating'] = [
-        "@type"       => "AggregateRating",
-        "ratingValue" => intval($product->avgRating->avg_rating ?? 0),
-        "reviewCount" => $product->reviews_count
-    ];
-}
+    foreach($product->attributes as $attribute)
+        if(!in_array($attribute->id, [49, 61, 62]) and $attribute->pivot->value)
+                $description_mini.= $attribute->name . ': ' . $attribute->pivot->value . ',';
 
-
-
-$schema['offers'] = [
-    "@type"         => "Offer",
-    "url"           => env('APP_URL') . $product->detailUrlProduct(),
-    "price"         => $product->getReducedPrice(),
-    "priceCurrency" => "KZT"
-];
-if($product->stock > 0)
-    $schema['offers']['availability'] = "https://schema.org/InStock";
-
-
-
-$reviews = $product->reviews;
-if($reviews)
-{
-    foreach($reviews as $key => $review)
-    {
-        $schema['review'][] = [
-            "@type"          => "Review",
-            "author"         => $review->name,
-            "datePublished"  => date('Y-m-d', strtotime($review->created_at)),
-            "description"    => $review->comment,
-            "reviewRating"   => [
-                "@type"       => "Rating",
-                "bestRating"  => 5,
-                "worstRating" => 1,
-                "ratingValue" => $review->rating
-            ]
-        ];
-    }
-}
-
-
-if($group_products)
-{
-    foreach($group_products as $gp_key => $group_product)
-    {
-        $schema['isRelatedTo'][] = [
-            "@type"       => "Product",
-            "image"       => env('APP_URL') . $group_product->pathPhoto(true),
-            "url"         => env('APP_URL') . $group_product->detailUrlProduct(),
-            "name"        => $group_product->name,
-            "description" => $group_product->description_mini,
-            "offers"      => [
-                "@type"         => "Offer",
-                "price"         => $group_product->getReducedPrice(),
-                "priceCurrency" => "KZT"
-            ]
-        ];
-    }
-}
+    if($product->description_mini)
+         $description_mini.= $product->description_mini;
+    else
+         $description_mini = mb_substr($description_mini, 0, -1);
 
 @endphp
 
 @section('schemas_product')
-    <script type="application/ld+json">
-        <?php echo json_encode($schema);?>
-    </script>
-@stop
+<script type="application/ld+json">
+{
+    "@context"    :  "https://schema.org",
+    "@type"       :  "Product",
+    "description" :  "{{ strip_tags($description_mini) }}",
+    "name"        :  "{{ $product->name }}",
+    "sku"         :  "{{ $product->sku }}",
+    "url"         :  "{{ $product->detailUrlProduct() }}",
+    "category"    :  "{{ $category->name }}",
+    "brand"       :  "{{ $category->name }}",
+    "productID"   :  "{{ $product->id }}",
+    "image"       :  [ {!! $images !!} ],
 
+    @if(intval($product->avgRating->avg_rating ?? 0) > 0 and $product->reviews_count > 0)
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "{{ intval($product->avgRating->avg_rating ?? 0) }}",
+        "reviewCount": "{{ $product->reviews_count }}"
+    },
+    @endif
 
-@if(false)
-<div style="display:none">
-    <div itemtype="https://schema.org/Product" itemscope>
-        <meta itemprop="name"        content="{{ $product->name }}"/>
-        <meta itemprop="sku"         content="{{ $product->sku }}"/>
-        <meta itemprop="url"         content="{{ env('APP_URL') . $product->detailUrlProduct() }}" />
-        <meta itemprop="category"    content="{{ $category->name }}"/>
-        <meta itemprop="brand"       content="{{ $category->name }}"/>
-        <meta itemprop="description" content="{{ $description_mini }}"/>
-        <meta itemprop="productID"   content="{{ $product->id }}"/>
+    "offers": {
+        "@type"         : "Offer",
+        "url"           : "{{ $product->detailUrlProduct() }}",
+        "price"         : "{{ $product->getReducedPrice() }}",
+        "priceCurrency" : "KZT",
 
-        <link itemprop="image" href="{{ env('APP_URL') . $product->pathPhoto(true) }}" />
-        @foreach($product->images as $image)
-            <link itemprop="image" href="{{ env('APP_URL') . $image->imagePath(true) }}" />
-        @endforeach
-
-
-        <div itemprop="offers" itemtype="https://schema.org/Offer" itemscope>
-            <link itemprop="url" href="{{ env('APP_URL') . $product->detailUrlProduct() }}" />
-            @if($product->stock > 0)
-               <meta itemprop="availability" content="https://schema.org/InStock" />
+        @php
+        $specificPrice = $product->specificPrice(function ($query){
+                                      $query->DateActive();
+                                 })
+                                 ->first();
+        @endphp
+        @if($specificPrice)
+            @if($specificPrice->expiration_date)
+                "priceValidUntil": "{{ date('Y-m-d', strtotime($specificPrice->expiration_date)) }}",
             @endif
-            <meta itemprop="priceCurrency" content="KZT" />
-            <meta itemprop="price" content="{{ $product->getReducedPrice() }}" />
-
-            @if(false)
-                <meta itemprop="itemCondition" content="https://schema.org/UsedCondition" />
-                <meta itemprop="priceValidUntil" content="2020-11-05" />
-                <div itemprop="seller" itemtype="https://schema.org/Organization" itemscope>
-                    <meta itemprop="name" content="Executive Objects" />
-                </div>
-            @endif
-        </div>
-
-        @if(intval($product->avgRating->avg_rating ?? 0) > 0 and $product->reviews_count > 0)
-            <div itemprop="aggregateRating" itemtype="https://schema.org/AggregateRating" itemscope>
-                <meta itemprop="reviewCount" content="{{ intval($product->avgRating->avg_rating ?? 0) }}" />
-                <meta itemprop="ratingValue" content="{{ $product->reviews_count }}" />
-            </div>
         @endif
 
-        <?php
-        $reviews = $product->reviews;
-        if($reviews)
-        {
-            foreach($reviews as $key => $review)
-            {?>
-                <div itemprop="review" itemtype="https://schema.org/Review" itemscope>
-                    <div itemprop="author" itemtype="https://schema.org/Person" itemscope>
-                        <meta itemprop="name" content="{{ $review->name }}"/>
-                    </div>
-                    <meta itemprop="datePublished" content="{{ date('Y-m-d', strtotime($review->created_at)) }}"/>
-                    <meta itemprop="description"   content="{{ $review->comment }}"/>
-                    <div itemprop="reviewRating" itemtype="https://schema.org/Rating" itemscope>
-                        <meta itemprop="bestRating"  content="5" />
-                        <meta itemprop="worstRating" content="1" />
-                        <meta itemprop="ratingValue" content="{{ $review->rating}}" />
-                    </div>
-                </div>
-            <?}
-        }
-        ?>
+        @if($product->stock > 0)
+            "availability" : "https://schema.org/InStock",
+            "itemCondition": "http://schema.org/NewCondition"
+        @else
+            "availability" : "https://schema.org/OutOfStock"
+        @endif
+   },
 
-        <?php
-        if($group_products)
-        {
-            foreach($group_products as $gp_key => $group_product)
-            {?>
-                <div itemprop="isRelatedTo" itemscope itemtype="https://schema.org/Product">
-                    <meta itemprop="name"        content="{{ $group_product->name }}"/>
-                    <meta itemprop="description" content="{{ $group_product->description_mini }}"/>
-                    <link itemprop="url"         href="{{ env('APP_URL') . $group_product->detailUrlProduct() }}"/>
-                    <link itemprop="image"       href="{{ env('APP_URL') . $group_product->pathPhoto(true) }}"/>
-                    <div itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-                        <meta itemprop="priceCurrency" content="{{ $group_product->getReducedPrice() }}"/>
-                        <meta itemprop="price" content="122.00"/>
-                    </div>
-                </div>
-            <?}
-        }
-        ?>
+@php $reviews = $product->reviews; @endphp
+    @if($reviews)
+        "review": [
+            @foreach($reviews as $key => $review)
+            {
+                "@type": "Review",
+                "author": "{{ $review->name }}",
+                "datePublished": "{{ date('Y-m-d', strtotime($review->created_at)) }}",
+                "description": "{{ strip_tags($review->comment) }}",
+                "reviewRating": {
+                    "@type": "Rating",
+                    "bestRating": "5",
+                    "worstRating": "1",
+                    "ratingValue": "{{ $review->rating }}"
+                }
+            }<?=(count($reviews) > $key + 1) ? ',' : '';?>
+            @endforeach
+        ],
+    @endif
 
-    </div>
-</div>
-@endif
+    @if($group_products)
+        "isRelatedTo": [
+            @foreach($group_products as $gp_key => $group_product)
+                {
+                       "@type"        : "Product",
+                        "image"       : "{{ env('APP_URL') . $group_product->pathPhoto(true) }}",
+                        "url"         : "{{ $group_product->detailUrlProduct() }}",
+                        "name"        : "{{ $group_product->name }}",
+                        "description" : "{{ strip_tags($group_product->description_mini) }}",
+                        "offers"      : {
+                            "@type": "Offer",
+                            "price": "{{ $group_product->getReducedPrice() }}",
+                            "priceCurrency": "KZT"
+                        }
+                }<?=(count($group_products) > $gp_key + 1) ? ',' : '';?>
+            @endforeach
+        ]
+    @endif
+
+}
+</script>
+@stop

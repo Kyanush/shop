@@ -26,8 +26,8 @@ class AttributeController extends AdminController
     {
          $data = $request->all();
          $data = $data['attribute'];
-         $attribute = ServiceAttribute::attributeSave($data);
-         return  $this->sendResponse($attribute ? $attribute->id : false);
+         $result = ServiceAttribute::attributeSave($data);
+         return  $this->sendResponse($result);
     }
 
     public function view($id)

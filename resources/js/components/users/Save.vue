@@ -1,12 +1,7 @@
 <template>
     <div class="col-md-8 col-md-offset-2">
 
-        <router-link :to="{path: '/users'}">
-            <i class="fa fa-angle-double-left"></i>
-            Клиенты и пользователи
-        </router-link>
-
-        <br><br>
+        <history_back></history_back>
 
         <form v-on:submit="userSave">
             <div class="box">
@@ -541,7 +536,7 @@
                         this.$helper.swalSuccess(this.user.id ? 'Успешно изменено' : 'Успешно создано');
 
                         if(this.method_redirect == 'save_and_back'){
-                            this.$router.push('/users');
+                            history.back();
 
                         }else if(this.method_redirect == 'save_and_continue'){
                             if(!this.user.id)
@@ -550,7 +545,7 @@
                                 this.$router.push('/users/edit/' + this.user.id);
                             }
                         }else if(this.method_redirect == 'save_and_new'){
-                            this.$router.push('/users/create');
+                            window.location = '/admin/users/create';
                             this.user = this.userDefaultValues();
                         }
                     }

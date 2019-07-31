@@ -186,7 +186,7 @@ class Helpers
                     break;
                 }
             }
-            return $result ? $result : self::sortingProducts('sort_viewed-asc');
+            return $result ? $result : self::listSortingProducts('sort_viewed-asc');
         }
     }
 

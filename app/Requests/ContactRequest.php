@@ -12,8 +12,7 @@ class ContactRequest extends FormRequest
         $rules = [
             'phone'   => 'max:255|required|phone',
             'email'   => 'max:255|required',
-            'message' => 'max:1000|required',
-            'captcha' => 'required|captcha'
+            'message' => 'max:1000|required'
         ];
         return $rules;
     }
@@ -24,7 +23,6 @@ class ContactRequest extends FormRequest
             'phone'   => "'Телефон'",
             'email'   => "'E-mail'",
             'message' => "'Сообщение'",
-            'captcha' => "'Введите код подтверждения'"
         ];
     }
 

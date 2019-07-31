@@ -30,11 +30,12 @@ class ServiceCity
             $city_code = Cookie::get('city_code', 'almaty');
 
         $city = City::isActive()->where('code', $city_code)->first();
-        if($city)
-        {
-            self::setCityCookie($city_code);
-            return $city;
-        }
+
+        if(!$city)
+            $city = City::isActive()->where('code', 'almaty')->first();
+
+        self::setCityCookie($city_code);
+        return $city;
 
         return false;
     }

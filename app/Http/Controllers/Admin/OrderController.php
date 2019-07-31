@@ -11,6 +11,7 @@ use App\User;
 use App\Services\ServiceOrder;
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Arr;
 
 class OrderController extends AdminController
 {
@@ -92,7 +93,7 @@ class OrderController extends AdminController
 
     public function calendarOrders(Request $request)
     {
-        $data  = [];
+        $calendar = $total_status = $total_callbacks = [];
 
         $start = $request->input('start');
         $end   = $request->input('end');
@@ -101,7 +102,7 @@ class OrderController extends AdminController
 
         foreach ($orders as $item)
         {
-            $data[] = [
+            $calendar[] = [
                 'id'    => $item->id,
                 'title' => ' №' . $item->id . ', ' . Helpers::priceFormat($item->total),
                 'start' => date('Y-m-d H:i:s', strtotime($item->created_at)),
@@ -113,12 +114,34 @@ class OrderController extends AdminController
                 'icon_class'  => $item->status->class,
                 'icon_title'  => $item->status->name
             ];
+
+            if(!isset($total_status[ $item->status_id ]))
+                $total_status[ $item->status_id ] = [
+                    'total'    => ($item->total),
+                    'class'    => $item->status->class,
+                    'title'    => $item->status->name,
+                    'quantity' => 1
+                ];
+            else{
+                $total_status[ $item->status_id ]['total'] += $item->total;
+                $total_status[ $item->status_id ]['quantity']++;
+            }
         }
+
+        $total_status = array_values(array_sort($total_status, function($value){
+            return $value['total'];
+        }));
+
+
+        foreach ($total_status as $k => $v)
+            $total_status[$k]['total'] = Helpers::priceFormat($total_status[$k]['total']);
+
+
 
         $callbacks = Callback::with('status')->whereDate('created_at', '>=', $start)->whereDate('created_at', '<=', $end)->get();
         foreach ($callbacks as $item)
         {
-            $data[] = [
+            $calendar[] = [
                 'id'    => $item->id,
                 'title' => ' №' . $item->id . ', ' . $item->phone,
                 'start' => date('Y-m-d H:i:s', strtotime($item->created_at)),
@@ -130,10 +153,24 @@ class OrderController extends AdminController
                 'icon_class'  => $item->status->class,
                 'icon_title'  => $item->type
             ];
+
+            if(!isset($total_callbacks[ $item->status_id ]))
+                $total_callbacks[ $item->status_id ] = [
+                    'class'    => $item->status->class,
+                    'title'    => $item->status->name,
+                    'quantity' => 1
+                ];
+            else{
+                $total_callbacks[ $item->status_id ]['quantity']++;
+            }
         }
 
 
-        return  $this->sendResponse($data);
+        return  $this->sendResponse([
+            'calendar'     => $calendar,
+            'total_status' => $total_status,
+            'total_callbacks' => $total_callbacks
+        ]);
     }
 
     public function orderDelete($order_id){

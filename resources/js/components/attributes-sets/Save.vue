@@ -1,13 +1,7 @@
 <template>
          <div class="col-md-8 col-md-offset-2">
 
-             <router-link :to="{path: '/attributes-sets'}">
-                 <i class="fa fa-angle-double-left"></i>
-                 Наборы атрибутов
-             </router-link>
-
-             <br><br>
-
+             <history_back></history_back>
 
              <form v-on:submit="attributeSetSave">
                  <div class="box">
@@ -141,7 +135,7 @@
                         this.$helper.swalSuccess(this.attribute_set.id ? 'Успешно изменено' : 'Успешно создано');
 
                         if(this.method_redirect == 'save_and_back'){
-                            this.$router.push('/attributes-sets');
+                            history.back();
 
                         }else if(this.method_redirect == 'save_and_continue'){
                             if(!this.attribute_set.id)
@@ -150,7 +144,7 @@
                                 this.$router.push('/attributes-sets/edit/' + this.attribute_set.id);
                             }
                         }else if(this.method_redirect == 'save_and_new'){
-                            this.$router.push('/attributes-sets/create');
+                            window.location = '/admin/attributes-sets/create';
 
                             this.attribute_set.id = 0;
                             this.attribute_set.name = '';

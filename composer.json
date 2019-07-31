@@ -11,7 +11,6 @@
         "laravel/framework": "5.7.*",
         "laravel/scout": "^7.1",
         "laravel/tinker": "^1.0",
-        "mews/captcha": "^2.2",
         "mpdf/mpdf": "^8.0",
         "riverskies/laravel-mobile-detect": "^1.3"
     },

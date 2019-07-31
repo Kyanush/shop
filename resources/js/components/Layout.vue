@@ -300,9 +300,10 @@
 
         <footer class="main-footer">
             <div class="pull-right hidden-xs">
-                Powered by <a target="_blank" href="http://backpackforlaravel.com?ref=panel_footer_link">Backpack for Laravel</a>
+                Version 1.0.0
             </div>
-            Handcrafted by <a target="_blank" href="http://updivision.com">updivision</a>.
+            <strong>Copyright © 2018-{{ current_year }} <a target="_blank" href="https://www.instagram.com/zheksenkulov_kuanysh/">Жексенкулов К.Е.</a></strong>
+            All rights reserved.
         </footer>
     </div>
 </template>
@@ -320,7 +321,8 @@
         data() {
             return {
                 new_orders_count: 0,
-                new_callbacks_count: 0
+                new_callbacks_count: 0,
+                current_year: 2019
             }
         },
         props: ['user'],

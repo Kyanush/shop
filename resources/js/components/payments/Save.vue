@@ -1,12 +1,7 @@
 <template>
          <div class="col-md-8 col-md-offset-2">
 
-             <router-link :to="{path: '/payments'}">
-                 <i class="fa fa-angle-double-left"></i>
-                 Тип оплаты
-             </router-link>
-             <br><br>
-
+             <history_back></history_back>
 
              <form v-on:submit="paymentSave">
                  <div class="box">
@@ -129,7 +124,7 @@
                         this.$helper.swalSuccess(this.payment.id ? 'Успешно изменено' : 'Успешно создано');
 
                         if(this.method_redirect == 'save_and_back'){
-                            this.$router.push('/payments');
+                            history.back();
 
                         }else if(this.method_redirect == 'save_and_continue'){
                             if(!this.payment.id)
@@ -138,7 +133,7 @@
                                 this.$router.push('/payments/edit/' + this.payment.id);
                             }
                         }else if(this.method_redirect == 'save_and_new'){
-                            this.$router.push('/payments/create');
+                            window.location = '/admin/payments/create';
 
                             this.payment = {
                                 id: 0,

@@ -164,10 +164,6 @@ return [
 
         //image resize
         Intervention\Image\ImageServiceProvider::class,
-
-        //form Captcha
-        //https://github.com/mewebstudio/captcha
-        Mews\Captcha\CaptchaServiceProvider::class,
     ],
 
     /*
@@ -223,10 +219,6 @@ return [
 
         //image resize
         'Image' => Intervention\Image\Facades\Image::class,
-
-        //form Captcha
-        //https://github.com/mewebstudio/captcha
-        'Captcha' => Mews\Captcha\Facades\Captcha::class,
     ],
 
 ];

@@ -1,12 +1,7 @@
 <template>
          <div class="col-md-8 col-md-offset-2">
 
-             <router-link :to="{path: '/news'}">
-                 <i class="fa fa-angle-double-left"></i>
-                 Новости
-             </router-link>
-
-             <br><br>
+             <history_back></history_back>
 
              <form v-on:submit="newsave">
                  <div class="box">
@@ -191,7 +186,7 @@
                         this.$helper.swalSuccess(this.news.id ? 'Успешно изменено' : 'Успешно создано');
 
                         if(this.method_redirect == 'save_and_back'){
-                            this.$router.push('/news');
+                            history.back();
 
                         }else if(this.method_redirect == 'save_and_continue'){
                             if(!this.news.id)
@@ -200,7 +195,7 @@
                                 this.$router.push('/news/edit/' + this.news.id);
                             }
                         }else if(this.method_redirect == 'save_and_new'){
-                            this.$router.push('/news/create');
+                            window.location = '/admin/news/create';
 
                             this.news = {
                                 id:    0,

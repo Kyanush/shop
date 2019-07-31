@@ -1,12 +1,7 @@
 <template>
          <div class="col-md-8 col-md-offset-2">
 
-             <router-link :to="{path: '/carriers'}">
-                 <i class="fa fa-angle-double-left"></i>
-                 Курьеры
-             </router-link>
-             <br><br>
-
+             <history_back></history_back>
 
              <form v-on:submit="carrierSave">
                  <div class="box">
@@ -147,7 +142,7 @@
                         this.$helper.swalSuccess(this.carrier.id ? 'Успешно изменено' : 'Успешно создано');
 
                         if(this.method_redirect == 'save_and_back'){
-                            this.$router.push('/carriers');
+                            history.back();
 
                         }else if(this.method_redirect == 'save_and_continue'){
                             if(!this.carrier.id)
@@ -156,7 +151,7 @@
                                 this.$router.push('/carriers/edit/' + this.carrier.id);
                             }
                         }else if(this.method_redirect == 'save_and_new'){
-                            this.$router.push('/carriers/create');
+                            window.location = '/admin/carriers/create';
 
                             this.carrier = {
                                 id: 0,

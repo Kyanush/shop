@@ -6,10 +6,7 @@
             <div class="row">
                 <div class="col-md-12 well">
                     <h2>
-                        <router-link :to="{path: '/orders'}">
-                            <i class="fa fa-angle-double-left"></i>
-                            Заказы
-                        </router-link>
+                        <history_back></history_back>
 
                         Заказ #{{ order.id }}
 

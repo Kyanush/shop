@@ -9439,6 +9439,10 @@ h3.newyear_h3 {
     text-align: center;
     margin-top: 20px;
 }
+.team_banners img{
+    max-width: 100%!important;
+    height: auto!important;
+}
 .instagram_bg {
     position: fixed;
     z-index: 100;

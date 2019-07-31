@@ -2,13 +2,7 @@
     <div class="row">
         <div class="col-md-12">
 
-
-            <router-link :to="{path: '/products'}">
-                <i class="fa fa-angle-double-left"></i>
-                Вернуться к списку всех <span>товаров</span>
-            </router-link>
-
-            <br><br>
+            <history_back></history_back>
 
             <form v-on:submit="productSave">
 
@@ -321,7 +315,10 @@
 
 
 
-                                <table class="table table-bordered " v-for="item in attributes_sets_more_info" v-if="item.id == product.attribute_set_id && attributes.length > 0">
+                                <table class="table table-bordered "
+                                       v-for="item in attributes_sets_more_info"
+                                       v-if="item.id == product.attribute_set_id && attributes.length > 0"
+                                >
                                     <tbody>
                                         <tr v-for="(attribute, index) in item.attributes">
                                             <td width="25%" class="text-right">
@@ -664,44 +661,26 @@
                         </div>
 
                     </div><!-- /.box-body -->
+
                     <div class="box-footer">
-
-                        <div id="saveActions" class="form-group">
-
-                            <input type="hidden" name="save_action" value="save_and_back">
-
-                            <div class="btn-group">
-
-                                <button type="submit" class="btn btn-success" @click="setMethodRedirect('save_and_continue')">
-                                    <span class="fa fa-save" role="presentation" aria-hidden="true"></span> &nbsp;
-                                    <span data-value="save_and_back">Сохранить и продолжить</span>
-                                </button>
-
-                                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aira-expanded="false">
-                                    <span class="caret"></span>
-                                    <span class="sr-only">▼</span>
-                                </button>
-
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a @click="setMethodRedirect('save_and_back')">
-                                            <button type="submit" class="btn-transparent">Сохранить и назад</button>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a @click="setMethodRedirect('save_and_new')">
-                                            <button type="submit" class="btn-transparent">Сохранить и новый</button>
-                                        </a>
-                                    </li>
-                                </ul>
-
-                            </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success" @click="setMethodRedirect('save_and_continue')">
+                                <span class="fa fa-save" role="presentation" aria-hidden="true"></span> &nbsp;
+                                <span data-value="save_and_back">Сохранить и продолжить</span>
+                            </button>
+                            <button type="submit" class="btn btn-primary" @click="setMethodRedirect('save_and_back')">
+                                <span class="fa fa-mail-reply" role="presentation" aria-hidden="true"></span> &nbsp;
+                                <span data-value="save_and_back">Сохранить и назад</span>
+                            </button>
+                            <button type="submit" class="btn btn-info" @click="setMethodRedirect('save_and_new')">
+                                <span class="fa fa-plus-square" role="presentation" aria-hidden="true"></span> &nbsp;
+                                <span data-value="save_and_back">Сохранить и новый</span>
+                            </button>
 
                             <router-link :to="{path: '/products'}" class="btn btn-default">
                                 <span class="fa fa-ban"></span> &nbsp;
                                 Отменить
                             </router-link>
-
                         </div>
                     </div><!-- /.box-footer-->
 
@@ -1008,7 +987,7 @@
                         this.$helper.swalSuccess(this.product.id ? 'Успешно изменено' : 'Успешно создано');
 
                         if(this.method_redirect == 'save_and_back'){
-                            this.$router.push('/products');
+                            history.back();
 
                         }else if(this.method_redirect == 'save_and_continue'){
                             var product_id = res.data;
@@ -1017,70 +996,73 @@
 
                             this.getProduct(product_id);
                         }else if(this.method_redirect == 'save_and_new'){
-                            this.$router.push('/product/create');
+                            window.location = '/admin/product/create';
                         }
                     }
                 });
             },
             getProduct(product_id){
-                setTimeout(function () {
-                        axios.get('/admin/product-view/' + product_id).then((res)=>{
-                            document.querySelector('input[type=file]').value = '';
+                if(product_id > 0)
+                {
+                    setTimeout(function () {
+                            axios.get('/admin/product-view/' + product_id).then((res)=>{
+                                document.querySelector('input[type=file]').value = '';
 
-                            var data    = res.data;
-                            var product = data.product;
+                                var data    = res.data;
+                                var product = data.product;
 
-                            this.product.id               = product.id;
-                            this.product.attribute_set_id = product.attribute_set_id;
-                            this.product.name             = product.name;
-                            this.product.url              = product.url;
-                            this.product.description      = product.description;
-                            this.product.description_mini = product.description_mini;
-                            this.product.seo_keywords     = product.seo_keywords;
-                            this.product.seo_description  = product.seo_description;
-                            this.product.photo            = product.photo;
-                            this.product.pathPhoto        = product.pathPhoto;
-                            this.product.price            = parseInt(product.price);
-                            this.product.sku              = product.sku;
-                            this.product.stock            = product.stock;
-                            this.product.active           = product.active;
-                            this.product.youtube          = product.youtube;
-                            this.product.view_count       = product.view_count;
-
-
-
-                            this.selectAttributeSetId(product.attribute_set_id);
-                            this.groupProducts(product.group_id);
+                                this.product.id               = product.id;
+                                this.product.attribute_set_id = product.attribute_set_id;
+                                this.product.name             = product.name;
+                                this.product.url              = product.url;
+                                this.product.description      = product.description;
+                                this.product.description_mini = product.description_mini;
+                                this.product.seo_keywords     = product.seo_keywords;
+                                this.product.seo_description  = product.seo_description;
+                                this.product.photo            = product.photo;
+                                this.product.pathPhoto        = product.pathPhoto;
+                                this.product.price            = parseInt(product.price);
+                                this.product.sku              = product.sku;
+                                this.product.stock            = product.stock;
+                                this.product.active           = product.active;
+                                this.product.youtube          = product.youtube;
+                                this.product.view_count       = product.view_count;
 
 
-                            this.categories     = data.categories;
-                            this.product_images = data.images;
 
-                            var self = this;
-                            $.each(data.attributes, function(attribute_id, value) {
+                                this.selectAttributeSetId(product.attribute_set_id);
+                                this.groupProducts(product.group_id);
 
-                                    self.attributes.forEach(function (item, index) {
-                                        if(attribute_id == item.attribute_id)
-                                        {
-                                            self.$set(self.attributes[index], 'value' , value);
-                                        }
-                                    });
+
+                                this.categories     = data.categories;
+                                this.product_images = data.images;
+
+                                var self = this;
+                                $.each(data.attributes, function(attribute_id, value) {
+
+                                        self.attributes.forEach(function (item, index) {
+                                            if(attribute_id == item.attribute_id)
+                                            {
+                                                self.$set(self.attributes[index], 'value' , value);
+                                            }
+                                        });
+
+                                });
+
+                                this.product_accessories = data.product_accessories;
+
+
+                                if(data.specific_price)
+                                {
+                                    this.specific_price.reduction       = data.specific_price.reduction;
+                                    this.specific_price.discount_type   = data.specific_price.discount_type;
+                                    this.specific_price.start_date      = data.specific_price.start_date;
+                                    this.specific_price.expiration_date = data.specific_price.expiration_date;
+                                }
 
                             });
-
-                            this.product_accessories = data.product_accessories;
-
-
-                            if(data.specific_price)
-                            {
-                                this.specific_price.reduction       = data.specific_price.reduction;
-                                this.specific_price.discount_type   = data.specific_price.discount_type;
-                                this.specific_price.start_date      = data.specific_price.start_date;
-                                this.specific_price.expiration_date = data.specific_price.expiration_date;
-                            }
-
-                        });
-                }.bind(this), 250);
+                    }.bind(this), 250);
+                }
             },
             groupProducts(group_id){
                 axios.get('/admin/group-products/' + group_id).then((res)=>{
