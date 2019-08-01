@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
@@ -7,7 +6,6 @@ use App\Services\ServiceSlider;
 use App\Models\Product;
 use App\Tools\Helpers;
 use App\Tools\Seo;
-
 
 class MainController extends Controller
 {

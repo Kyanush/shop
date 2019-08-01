@@ -1,53 +1,58 @@
 <template>
     <div class="row">
 
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">
                         <i class="fa fa-cart-arrow-down"></i>
-                        Заказ за месяц
+                        Заказы за месяц
                     </h3>
                 </div>
-                <!-- /.box-header -->
                 <div class="box-body">
                     <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th v-for="item in total_orders"><i :class="item.class"></i> {{ item.title }}</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             <tr>
-                                <th>Статус</th>
-                                <th>Кол-во</th>
-                                <th>Сумма</th>
-                            </tr>
-                            <tr v-for="(item, status_id) in total_status">
-                                <td><i :class="item.class"></i> {{ item.title }}</td>
-                                <td>{{ item.quantity }}</td>
-                                <td>{{ item.total }}</td>
+                                <td v-for="(item, status_id) in total_orders">
+                                    <span class="quantity">{{ item.quantity }}</span> шт.
+                                    на
+                                    <span class="quantity">{{ item.total }}</span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+
+        <div class="col-md-6">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">
                         <i class="fa fa-phone"></i>
-                        Обратный звонок за месяц
+                        Обратные звонки за месяц
                     </h3>
                 </div>
-                <!-- /.box-header -->
                 <div class="box-body">
                     <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th v-for="item in total_callbacks">
+                                    <i :class="item.class"></i> {{ item.title }}
+                                </th>
+                            </tr>
+                        </thead>
                         <tbody>
-                        <tr>
-                            <th>Статус</th>
-                            <th>Кол-во</th>
-                        </tr>
-                        <tr v-for="(item, status_id) in total_callbacks">
-                            <td><i :class="item.class"></i> {{ item.title }}</td>
-                            <td>{{ item.quantity }}</td>
-                        </tr>
+                            <tr>
+                                <td v-for="(item, status_id) in total_callbacks">
+                                    {{ item.quantity }} шт.
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -60,8 +65,15 @@
             </div>
         </div>
 
+        <div class="col-md-12">
+            <div class="box">
+                <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div>
+        </div>
+
     </div>
 </template>
+
 
 <script>
     import { FullCalendar } from "vue-full-calendar";
@@ -70,15 +82,18 @@
     import "fullcalendar-scheduler/dist/scheduler.min.css";
     import 'fullcalendar/dist/locale/ru';
 
+
     export default {
         components:{
             FullCalendar
         },
         data() {
             return {
-                total_status: [],
+
+                total_orders: [],
                 total_callbacks: [],
                 config: {
+                    showNonCurrentDates: false,
                     firstDay: 1,
                     firstDaymonthNames: ['Январь','Февраль','Март','Апрель','Май','οюнь','οюль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
                     monthNamesShort: ['Янв.','Фев.','Март','Апр.','Май','οюнь','οюль','Авг.','Сент.','Окт.','Ноя.','Дек.'],
@@ -94,15 +109,12 @@
                         week: "Неделя",
                         day: "День"
                     },
-
-
                     lang: 'ru',
                     schedulerLicenseKey: "GPL-My-Project-Is-Open-Source",
                     eventRender: function(event, element) {
                              element.find(".fc-title").prepend("<i title='" + event.icon_title + "' class='" + event.icon_class + "'></i>&nbsp;");
                     },
                     defaultView: 'month',
-
                     eventLimit: true, // If you set a number it will hide the itens
                     eventLimitText: "еще", // Default is `more` (or "more" in the lang you pick in the option)
                     views: {
@@ -115,57 +127,43 @@
         },
         methods:{
             events(start, end, timezone, callback) {
-
                 var params = {
                     start: start.format("YYYY-MM-DD"),
                     end: end.format("YYYY-MM-DD"),
-                }
-
-                axios.get('/admin/calendar-orders', {params:  params}).then((res)=>{
+                };
+                axios.get('/admin/full-calendar', {params:  params}).then((res)=>{
                     var data = res.data;
 
-                    this.total_status = data.total_status;
+                    this.total_orders = data.total_orders;
                     this.total_callbacks = data.total_callbacks;
 
                     callback(data.calendar);
                 });
-
-            },
+            }
         },
-        updated(){
-
-            /*
-            $('#calendar').fullCalendar({
-                firstDay: 1,
-                height: 200,
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
-                },
-                monthNames: ['Январь','Февраль','Март','Апрель','Май','οюнь','οюль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
-                monthNamesShort: ['Янв.','Фев.','Март','Апр.','Май','οюнь','οюль','Авг.','Сент.','Окт.','Ноя.','Дек.'],
-                dayNames: ["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"],
-                dayNamesShort: ["ВС","ПН","ВТ","СР","ЧТ","ПТ","СБ"],
-                buttonText: {
-                    prev: "&nbsp;&#9668;&nbsp;",
-                    next: "&nbsp;&#9658;&nbsp;",
-                    prevYear: "&nbsp;&lt;&lt;&nbsp;",
-                    nextYear: "&nbsp;&gt;&gt;&nbsp;",
-                    today: "Сегодня",
-                    month: "Месяц",
-                    week: "Неделя",
-                    day: "День"
-                }
-            });*/
-
+        created(){
+            axios.get('/admin/highcharts-monthly-amount').then((res)=>{
+                var data = res.data;
+                setTimeout(function() {
+                    highchartsMonthlyAmount(data.categories, data.series);
+                }, 1000);
+            });
         }
     }
+
+
 </script>
 
 <style>
   .fc-today {
       background:#CDDC39 !important;
       font-weight: bold;
+  }
+  th{
+      text-transform: uppercase;
+  }
+  .quantity{
+      font-weight: 500;
+      font-size: 20px;
   }
 </style>

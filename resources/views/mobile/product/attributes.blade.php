@@ -1,6 +1,7 @@
 <?php $attributes = [];?>
+
 @foreach($product->attributes as $attribute)
-    @if(empty($attribute->attribute_group_id))
+    @if(empty($attribute->attribute_group_id) or empty($attribute->pivot->value))
         @continue
     @endif
     <?php $attributes[$attribute->attribute_group_id][] = $attribute;?>
@@ -14,9 +15,16 @@
         @continue
     @endif
     <div class="container specifications-list">
-        <h4 class="specifications-list__heading">{{ $attributeGroup->name }}</h4>
+        <h4 class="specifications-list__heading">
+            {{ $attributeGroup->name }}
+        </h4>
         <dl class="specifications-list__specs">
             @foreach($attributes[$attributeGroup->id] as $attribute)
+
+                @if(empty($attribute->pivot->value))
+                    @continue
+                @endif
+
                 <dt class="specifications-list__term">
                     {{ $attribute->name }}
                 </dt>

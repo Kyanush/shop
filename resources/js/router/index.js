@@ -71,7 +71,7 @@ export default new Router({
 
         {
             path: '/main',
-            name: 'Главная страница',
+            name: 'Статистика',
             component: main
         },
 

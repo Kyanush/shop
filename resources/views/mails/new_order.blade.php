@@ -3,7 +3,7 @@
 
             <div style="font-size:13px;color:#272727;">Ваш заказ принят в обработку, № заказа
 
-                <a href="{{ env('APP_URL') }}/order-history/{{ $order->id }}" style="color:#ff7835;"  class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
+                <a href="{{ route('order_history_detail', ['order_id' => $order->id]) }}" style="color:#ff7835;"  class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
                     {{ $order->id }}
                 </a>
 
@@ -15,7 +15,7 @@
                         <thead>
                         <tr>
                             <td style="font-size:12px;background-color:#f1f1f1;text-align:left;padding:7px 7px 7px 15px;color:#545454;line-height:29px;border-radius:21px 0 0 21px;">Артикул</td>
-                            <td style="font-size:12px;background-color:#f1f1f1;text-align:left;padding:7px;color:#545454;line-height:29px;width: 250px;">Наименование</td>
+                            <td style="font-size:12px;background-color:#f1f1f1;text-align:left;padding:7px;color:#545454;line-height:29px;width: 250px;">Товар</td>
                             <td style="font-size:12px;background-color:#f1f1f1;text-align:left;padding:7px;color:#545454;line-height:29px;">Количество</td>
                             <td style="font-size:12px;background-color:#f1f1f1;text-align:left;padding:7px;color:#545454;line-height:29px;">Цена</td>
                             <td style="font-size:12px;background-color:#f1f1f1;text-align:left;padding:7px;color:#545454;line-height:29px;border-radius:0 21px 21px 0;">Стоимость</td>
@@ -26,8 +26,11 @@
                                     <tr>
                                         <td style="font-size:12px;text-align:left;padding:20px 7px 20px 15px;border-bottom:1px solid #ececec;color:#aeaeae;">{{ $product->pivot->sku }}</td>
                                         <td style="width: 250px;font-size:12px;text-align:left;padding:20px 7px;border-bottom:1px solid #ececec;">
-                                            <a href="{{ env('APP_URL') }}{{ $product->detailUrlProduct() }}" target="_blank" class="daria-goto-anchor" rel="noopener noreferrer">
-                                                {{ $product->pivot->name }}
+                                            <a href="{{ $product->detailUrlProduct() }}" target="_blank" class="daria-goto-anchor" rel="noopener noreferrer">
+                                                <img style="float: left;" width="40" src="{{ env('APP_URL') . $product->pathPhoto(true) }}"/>
+                                                <div style="float: left;margin-left: 10px;margin-top: 16px;">
+                                                    {{ $product->pivot->name }}
+                                                </div>
                                             </a>
                                         </td>
                                         <td style="font-size:12px;text-align:left;padding:20px 7px;border-bottom:1px solid #ececec;">

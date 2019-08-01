@@ -141,7 +141,7 @@ Route::group(['middleware' => 'auth', 'namespace'  => 'Site'], function () {
     Route::post('change-password', 'UserController@changePasswordSave');
 
     Route::get('order-history',             'OrderController@orderHistory')->name('order_history');
-    Route::get('order-history/{order_id}',  'OrderController@orderHistoryDetail')->where(['order_id' => '[0-9]+']);;
+    Route::get('order-history/{order_id}',  'OrderController@orderHistoryDetail')->where(['order_id' => '[0-9]+'])->name('order_history_detail');
 
     Route::get('wishlist-delete/{product_id}',  'ProductFeaturesWishlistController@delete')->where(['product_id' => '[0-9]+'])->name('wishlist_delete');
 
@@ -261,9 +261,12 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::get('order/{id}',                 'OrderController@view')->where(['id' => '[0-9]+']);
         Route::get('order/users',                'OrderController@users');
         Route::post('order-save',                'OrderController@orderSave');
-        Route::get('calendar-orders',            'OrderController@calendarOrders');
         Route::post('order-delete/{order_id}',   'OrderController@orderDelete')->where(['order_id' => '[0-9]+']);
         Route::get('new-orders-count',           'OrderController@newOrdersCount');
+
+        //статистика
+        Route::get('full-calendar',              'StatisticsController@fullCalendar');
+        Route::get('highcharts-monthly-amount',  'StatisticsController@highchartsMonthlyAmount');
 
         //компания
         Route::get('addresses-list',        'AddressController@list');

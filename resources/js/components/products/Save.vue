@@ -125,7 +125,7 @@
                                         </tr>
                                         <tr>
                                             <td width="25%" class="text-right">
-                                                <label for="stock">Количество на складе:</label>
+                                                <label for="stock">Количество на складе(шт.):</label>
                                             </td>
                                             <td width="75%">
                                                 <div class="col-md-6" v-bind:class="{'has-error' : IsError('product.stock')}">

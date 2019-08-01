@@ -198,6 +198,15 @@ class Helpers
         $day   = date('d', strtotime($date));
         $month = date('m', strtotime($date));
         $year  = date('Y', strtotime($date));
+
+        return $day . ' ' . self::monthName($month) . ' ' . $year;
+    }
+
+    public static function monthName($monthNumber){
+
+        if(strlen($monthNumber) == 1)
+            $monthNumber = '0' . $monthNumber;
+
         $months = [
             '01' => 'января',
             '02' => 'февраля',
@@ -212,8 +221,7 @@ class Helpers
             '11' => 'ноября',
             '12' => 'декабря'
         ];
-
-        return $day . ' ' . ($months[ $month ] ?? $month) . ' ' . $year;
+        return $months[ $monthNumber ] ?? '';
     }
 
     public static function createTree(&$list, $parentId = null)

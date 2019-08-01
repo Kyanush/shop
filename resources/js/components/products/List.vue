@@ -240,7 +240,7 @@
                         {{ item.format_price }}
                     </span>
                 </td>
-                <td :class="{ 'red': !item.stock }">{{ item.stock }}</td>
+                <td :class="{ 'red': !item.stock }">{{ item.stock }} шт.</td>
                 <td>{{ item.view_count }}</td>
                 <td>
                     {{ dateFormat(item.created_at) }}

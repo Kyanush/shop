@@ -430,7 +430,7 @@
                                         <?php $attributes = [];?>
 
                                         @foreach($product->attributes as $attribute)
-                                            @if(empty($attribute->attribute_group_id))
+                                            @if(empty($attribute->attribute_group_id) or empty($attribute->pivot->value))
                                                 @continue
                                             @endif
                                             <?php $attributes[$attribute->attribute_group_id][] = $attribute;?>
@@ -459,6 +459,9 @@
                                             <div class="tab_attribute_group_right_top" tab_attribute_content="{{ $attributeGroup->id }}">{{ $attributeGroup->name }}</div>
                                             <div class="tab_attribute_group_right_attributes">
                                                     @foreach($attributes[$attributeGroup->id] as $attribute)
+                                                        @if(empty($attribute->pivot->value))
+                                                            @continue
+                                                        @endif
                                                         <div class="tab_attribute_group_right_attributes_obolochka">
                                                             <div class="tab_attribute_group_right_attributes_left">
                                                                 <span>{{ $attribute->name }}</span>

@@ -136,7 +136,7 @@
 
             <div class="_sellers-offers">
                 <div class="container loan-selector g-bb-fat">
-                    <div class="loan-selector__text-before">Цвета</div>
+                    <div class="loan-selector__text-before">Цвет</div>
                     <div class="loan-selector__els g-fl-r ">
                         <div class="loan-selector__els-row">
 
@@ -186,16 +186,18 @@
             <div class="container-title">Характеристики</div>
             <div class="short-specifications container">
                 <ul class="short-specifications__list">
+                    @php $i = 1; @endphp
                     @foreach($product->attributes as $k => $attribute)
 
-                        @if(empty($attribute->attribute_group_id))
+                        @if(empty($attribute->attribute_group_id) or empty($attribute->pivot->value))
                             @continue
                         @endif
 
                         <li class="short-specifications__list-el">{{ $attribute->name }}: {{ $attribute->pivot->value }};</li>
-                        @if($k == 5)
+                        @if($i == 5)
                             @php break; @endphp
                         @endif
+                        @php $i++; @endphp
                     @endforeach
                 </ul>
             </div>

@@ -337,7 +337,12 @@ class ServiceProduct implements ProductInterface
             $item['value'] = is_array($item['value']) ? $item['value'] : [$item['value']];
 
             foreach ($item['value'] as $value)
+            {
+                if($value == 'null' or $value === null)
+                    $value = '';
                 $product->attributes()->attach([$item['attribute_id'] => ['value' => $value]]);
+            }
+
         }
         return true;
     }

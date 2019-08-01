@@ -74,7 +74,7 @@
             <div style="float:right;margin-right:50px;overflow:hidden;">
                 <div style="float:left;margin-right:5px;">
                     <a href="{{ config('shop.social_network.instagram') }}"  title="Мы в Instagram" class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
-                        <img width="29" src="https://cdn0.iconfinder.com/data/icons/social-media-circle-6/1024/instagram-512.png">
+                        <img width="29" src="{{ env('APP_URL') }}/site/images/insta.png">
                     </a>
                 </div>
             </div>
@@ -84,7 +84,11 @@
             <div style="float:left;width:370px;padding-right:30px;">
                 <div style="font-weight:bold;color:#fff;">О компании</div>
 
-                <div style="color:#636363;margin-top:8px;font-size:12px;">Мы профессионалы и сможем ответить на все вопросы, касающиеся продукции компании Xiaomi. Вы сможете купить оригинальную продукцию компании.</div>
+                <div style="color:#636363;margin-top:8px;font-size:12px;">
+                    Вы предпочитаете покупать исключительно качественную электронную технику, имеющую все необходимые сертификаты? Значит,
+                    магазин «{{env('APP_NO_URL')}}» – то, что вам нужно! Мы рады приветствовать на этом сайте каждого покупателя и готовы
+                    предложить вам только подлинные устройства популярных брендов.
+                </div>
 
                 <div style="margin-top:20px;overflow:hidden;">
                     <div style="float:left;">
@@ -135,7 +139,7 @@
 
             <div style="display:inline-block;text-decoration:underline;vertical-align:top;">
                 <a href="{{ route('index') }}" style="color:#333333;font-size:12px;"  class="daria-goto-anchor" target="_blank" rel="noopener noreferrer">
-                    Фирменный интернет магазин {{ env('APP_NAME') }}
+                    {{ env('APP_NAME') }}
                 </a>
             </div>
         </div>

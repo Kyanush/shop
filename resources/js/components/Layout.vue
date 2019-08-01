@@ -238,8 +238,8 @@
 
                     <li v-bind:class="{'active' : menu_active('/main/')}">
                         <router-link :to="{ path: '/main'}">
-                            <i class="fa fa-calendar" aria-hidden="true"></i>
-                            <span>Календарь</span>
+                            <i class="fa fa-area-chart" aria-hidden="true"></i>
+                            <span>Статистика</span>
                         </router-link>
                     </li>
 

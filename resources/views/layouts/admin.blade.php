@@ -70,8 +70,47 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.print.css">
 -->
 
+
 </head>
 <body class="skin-blue sidebar-mini">
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+
+<script>
+    function highchartsMonthlyAmount(categories, series){
+        Highcharts.chart('container', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Сумма по месяцам'
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: categories
+            },
+            yAxis: {
+                title: {
+                    text: 'Сумма(тг)'
+                }
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: series
+        });
+    }
+</script>
 <script type="text/javascript">
     /* Recover sidebar state */
     (function () {
