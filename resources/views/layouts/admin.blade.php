@@ -80,13 +80,15 @@
 
 
 <script>
-    function highchartsMonthlyAmount(categories, series){
-        Highcharts.chart('container', {
+    function highchartsMonthlyAmount(categories, series, element_id, title_text, yAxis_title_text){
+
+
+        Highcharts.chart(element_id, {
             chart: {
                 type: 'line'
             },
             title: {
-                text: 'Сумма по месяцам'
+                text: title_text
             },
             subtitle: {
                 text: ''
@@ -96,7 +98,7 @@
             },
             yAxis: {
                 title: {
-                    text: 'Сумма(тг)'
+                    text: yAxis_title_text
                 }
             },
             plotOptions: {

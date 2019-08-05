@@ -11,7 +11,6 @@ use App\Models\ProductGroup;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Tools\Upload;
-use App\Tools\CopyFile;
 
 class ServiceProduct implements ProductInterface
 {
@@ -96,117 +95,7 @@ class ServiceProduct implements ProductInterface
         ];
     }
 
-    public static function productClone($product_id, array $data, array $copy = [])
-    {
-        $product = Product::find($product_id);
 
-        $group               = $copy['group']               ?? false;
-        $photo               = $copy['photo']               ?? false;
-        $attributes          = $copy['attributes']          ?? false;
-        $specific_price      = $copy['specific_price']      ?? false;
-        $product_images      = $copy['product_images']      ?? false;
-        $reviews             = $copy['reviews']             ?? false;
-        $product_accessories = $copy['product_accessories'] ?? false;
-        $questions_answers   = $copy['questions_answers']   ?? false;
-
-
-        // Create clone object
-        $clone = $product->replicate();
-
-        //Группа товаров
-        if(!$group)
-            $clone->group_id = ProductGroup::create()->id;
-
-        $data['url'] = '';
-        $clone->fill($data);
-
-        //Save cloned product
-        $clone->push();
-
-        //Фото товара
-        if($photo and $product->pathPhoto())
-        {
-            $copyFile = new CopyFile();
-            $copyFile->setNewPath($clone->productFileFolder());
-            $copyFile->setOldPath($product->pathPhoto());
-            $photo = $copyFile->copy();
-
-            $clone->photo = $photo;
-            $clone->save();
-        }
-
-        //категория
-        foreach ($product->categories as $item)
-            $clone->categories()->attach([$item->id]);
-
-        //атрибуты
-        if($attributes)
-        {
-            foreach ($product->attributes as $item)
-                $clone->attributes()->attach([$item->pivot->attribute_id => ['value' =>  $item->pivot->value]]);
-        }
-
-        //Скидки
-        if($specific_price and $product->specificPrice)
-        {
-            $specificPrice = $product->specificPrice->replicate();
-            $specificPrice->product_id = $clone->id;
-            $specificPrice->push();
-        }
-
-        //Картинки
-        if($product_images)
-        {
-            $images = $product->images;
-            if($images)
-            {
-                foreach ($images as $image)
-                {
-                    $productImages = $image->toArray();
-                    $productImages['product_id'] = $product->id;
-
-                    $copyFile = new CopyFile();
-                    $copyFile->setNewPath($clone->productFileFolder());
-                    $copyFile->setOldPath($image->imagePath());
-                    $name = $copyFile->copy();
-
-                    $productImages['name'] = $name;
-                    $clone->images()->create($productImages);
-                }
-            }
-        }
-
-        //С этим товаром покупают
-        if($product_accessories)
-        {
-            foreach ($product->productAccessories as $item)
-                $clone->productAccessories()->attach([$item->pivot->accessory_product_id]);
-        }
-
-        //Отзывы
-        if($reviews)
-        {
-            foreach($product->reviews()->get() as $item)
-            {
-                $data = $item->toArray();
-                unset($data['id']);
-                $clone->reviews()->create($data);
-            }
-        }
-
-        //Вопросы-ответы
-        if($questions_answers)
-        {
-            foreach($product->questionsAnswers()->get() as $item)
-            {
-                $data = $item->toArray();
-                unset($data['id']);
-                $clone->questionsAnswers()->create($data);
-            }
-        }
-
-        return true;
-    }
 
     //Группа товаров
     public static function productGroupSave(int $product_id, int $product_group_id, array $product_ids)

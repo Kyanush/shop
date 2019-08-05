@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminController;
 
 use App\Models\Order;
 use App\Requests\SaveOrderRequest;
+use App\Tools\Helpers;
 use App\User;
 use App\Services\ServiceOrder;
 use Illuminate\Http\Request;
@@ -14,14 +15,20 @@ class OrderController extends AdminController
 
     public function list(Request $request)
     {
+        $filters = $request->all();
+
+        $sort = Helpers::sortConvert($filters['sort'] ?? false);
+        $column = $sort['column'];
+        $order  = $sort['order'];
+
         $list =  Order::with([
             'user' => function($query){
                 $query->select(['id', 'name']);
             },
             'status',
         ])
-        ->Filters($request->all())
-        ->OrderBy('id', 'DESC')
+        ->Filters($filters)
+        ->OrderBy($column, $order)
         ->paginate($request->input('perPage', 10));
 
         return  $this->sendResponse($list);

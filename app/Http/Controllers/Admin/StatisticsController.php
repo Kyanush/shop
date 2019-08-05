@@ -15,6 +15,11 @@ class StatisticsController extends AdminController
         return $this->sendResponse($monthlyAmount);
     }
 
+    public function highchartsMonthlyAmountCallbacks(){
+        $monthlyAmount = ServiceStatistics::highchartsMonthlyAmountCallbacks();
+        return $this->sendResponse($monthlyAmount);
+    }
+
     public function fullCalendar(Request $request)
     {
         $start = $request->input('start');

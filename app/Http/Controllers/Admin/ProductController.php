@@ -9,6 +9,7 @@ use App\Models\SpecificPrice;
 use App\Requests\CloneProductRequest;
 use App\Requests\SaveProductRequest;
 use App\Services\ServiceProduct;
+use App\Services\ServiceProductClone;
 use App\Tools\Helpers;
 use Illuminate\Http\Request;
 use DB;
@@ -33,15 +34,9 @@ class ProductController extends AdminController
     {
         $filters = $request->all();
 
-        $column = 'id';
-        $order = 'DESC';
-        if(isset($filters['sort']))
-        {
-            $sort = explode('-', $filters['sort']);
-            $column = $sort[0];
-            $order  = $sort[1];
-            unset($filters['sort']);
-        }
+        $sort = Helpers::sortConvert($filters['sort'] ?? false);
+        $column = $sort['column'];
+        $order  = $sort['order'];
 
         $list =  Product::with([
                 'categories',
@@ -203,22 +198,20 @@ class ProductController extends AdminController
     public function cloneProduct(CloneProductRequest $req)
     {
         $req = $req->input('clone_product');
-        return  $this->sendResponse(
-                    ServiceProduct::productClone(
-                        $req['product_id'],
-                        ['sku' => $req['sku'], 'name' => $req['name']],
-                        [
-                            'group'               => $req['group'],
-                            'photo'               => $req['photo'],
-                            'attributes'          => $req['attributes'],
-                            'specific_price'      => $req['specific_price'],
-                            'product_images'      => $req['product_images'],
-                            'reviews'             => $req['reviews'],
-                            'product_accessories' => $req['product_accessories'],
-                            'questions_answers'   => $req['questions_answers']
-                        ]
-                    )
-        );
+
+        $clone = new ServiceProductClone($req['product_id']);
+        $clone->data = ['sku' => $req['sku'], 'name' => $req['name']];
+        $clone->clone_group               = $req['group'];
+        $clone->clone_photo               = $req['photo'];
+        $clone->clone_attributes          = $req['attributes'];
+        $clone->clone_specific_price      = $req['specific_price'];
+        $clone->clone_product_images      = $req['product_images'];
+        $clone->clone_reviews             = $req['reviews'];
+        $clone->clone_product_accessories = $req['product_accessories'];
+        $clone->clone_questions_answers   = $req['questions_answers'];
+        $result = $clone->clone();
+
+        return  $this->sendResponse($result);
     }
 
     public function priceMinMax(Request $request)

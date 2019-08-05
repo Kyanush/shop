@@ -10,7 +10,7 @@
 
             <button type="button" class="btn btn-danger pull-right" @click="clearFilters">
                 <i class="fa fa-times" aria-hidden="true"></i>
-                Очистить все фильтры
+                Очистить
             </button>
 
         </div>
@@ -171,44 +171,37 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table table-bordered ">
+            <table class="table table-bordered table-sort">
             <thead>
             <tr>
                 <th>
                     ID
-                    <i @click="setSort('id-asc')"  v-bind:class="{ 'red': filter.sort == 'id-asc' }"  title="по возрастанию" class="asc fa fa-sort-asc pull-right cursor-pointer"></i>
-                    <i @click="setSort('id-desc')" v-bind:class="{ 'red': filter.sort == 'id-desc' }" title="по убыванию" class="desc fa fa-sort-desc pull-right cursor-pointer"></i>
+                    <SortTable v-model="filter.sort" :column="'id'"></SortTable>
                 </th>
                 <th width="200">
                     Название
-                    <i @click="setSort('name-asc')"  v-bind:class="{ 'red': filter.sort =='name-asc' }"  title="по возрастанию" class="asc fa fa-sort-asc pull-right cursor-pointer"></i>
-                    <i @click="setSort('name-desc')" v-bind:class="{ 'red': filter.sort =='name-desc' }" title="по убыванию" class="desc fa fa-sort-desc pull-right cursor-pointer"></i>
+                    <SortTable v-model="filter.sort" :column="'name'"></SortTable>
                 </th>
                 <th>Фото товара</th>
                 <th>Категории</th>
                 <th>SKU</th>
                 <th>
                     Цена
-                    <i @click="setSort('price-asc')"  v-bind:class="{ 'red': filter.sort =='price-asc' }"  title="по возрастанию" class="asc fa fa-sort-asc pull-right cursor-pointer"></i>
-                    <i @click="setSort('price-desc')" v-bind:class="{ 'red': filter.sort =='price-desc' }" title="по убыванию" class="desc fa fa-sort-desc pull-right cursor-pointer"></i>
+                    <SortTable v-model="filter.sort" :column="'price'"></SortTable>
                 </th>
                 <th>Кол-во на<br/> складе
-                    <i @click="setSort('stock-asc')"  v-bind:class="{ 'red': filter.sort =='stock-asc' }"  title="по возрастанию" class="asc fa fa-sort-asc pull-right cursor-pointer"></i>
-                    <i @click="setSort('stock-desc')" v-bind:class="{ 'red': filter.sort =='stock-desc' }" title="по убыванию" class="desc fa fa-sort-desc pull-right cursor-pointer"></i>
+                    <SortTable v-model="filter.sort" :column="'stock'"></SortTable>
                 </th>
                 <th>Кол-во <br/>просмотров
-                    <i @click="setSort('view_count-asc')"  v-bind:class="{ 'red': filter.sort =='view_count-asc' }"  title="по возрастанию" class="asc fa fa-sort-asc pull-right cursor-pointer"></i>
-                    <i @click="setSort('view_count-desc')" v-bind:class="{ 'red': filter.sort =='view_count-desc' }" title="по убыванию" class="desc fa fa-sort-desc pull-right cursor-pointer"></i>
+                    <SortTable v-model="filter.sort" :column="'view_count'"></SortTable>
                 </th>
                 <th>
                     Дата создания<br/>Дата изменения
-                    <i @click="setSort('created_at-asc')"  v-bind:class="{ 'red': filter.sort =='created_at-asc' }"  title="по возрастанию" class="asc fa fa-sort-asc pull-right cursor-pointer"></i>
-                    <i @click="setSort('created_at-desc')" v-bind:class="{ 'red': filter.sort =='created_at-desc' }" title="по убыванию" class="desc fa fa-sort-desc pull-right cursor-pointer"></i>
+                    <SortTable v-model="filter.sort" :column="'created_at'"></SortTable>
                 </th>
                 <th>
                     Статус
-                    <i @click="setSort('active-asc')"  v-bind:class="{ 'red': filter.sort =='active-asc' }"  title="по возрастанию" class="asc fa fa-sort-asc pull-right cursor-pointer"></i>
-                    <i @click="setSort('active-desc')" v-bind:class="{ 'red': filter.sort =='active-desc' }" title="по убыванию" class="desc fa fa-sort-desc pull-right cursor-pointer"></i>
+                    <SortTable v-model="filter.sort" :column="'active'"></SortTable>
                 </th>
                 <th>Действия</th>
             </tr>
@@ -410,20 +403,19 @@
 
 
 <script>
-    import Paginate from 'vuejs-paginate';
-    import datePicker from 'vue-bootstrap-datetimepicker';
+    import Paginate       from 'vuejs-paginate';
+    import datePicker     from 'vue-bootstrap-datetimepicker';
     import { mapGetters } from 'vuex';
     import { mapActions } from 'vuex';
-    import Categories from '../plugins/Categories';
+    import Categories     from '../plugins/Categories';
+    import SortTable      from '../plugins/SortTable';
 
     export default {
         components:{
-            Paginate, datePicker, Categories
+            Paginate, datePicker, Categories, SortTable
         },
         data () {
             return {
-
-
                 product_show_filter: false,
                 product_attribute_show_filter: false,
                 
@@ -438,8 +430,6 @@
                 products_price: [],
 
                 products_attributes_filters: [],
-
-
 
                 products: [],
                 filter:{
@@ -512,12 +502,6 @@
             }
         },
         methods:{
-            setSort(value){
-                if(value == this.filter.sort)
-                    value = '';
-                this.filter.sort = value;
-            },
-
             setProductShowFilter(){
                 this.product_show_filter = !this.product_show_filter;
                 localStorage.setItem('product_show_filter', this.product_show_filter);
@@ -672,20 +656,5 @@
     }
     #products-attributes-filters ul li label{
         cursor: pointer;
-    }
-    .asc{
-        top: 22px;
-    }
-    .desc{
-        bottom: 7px;
-    }
-    .asc, .desc{
-        right: 3px;
-        position: absolute;
-        color: #3c8dbc;
-        font-size: 17px;
-    }
-    th{
-        position: relative;
     }
 </style>

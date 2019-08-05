@@ -11,6 +11,7 @@ use App\Services\ServiceYouWatchedProduct;
 use App\Tools\Helpers;
 use App\Tools\Seo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -68,7 +69,17 @@ class ProductController extends Controller
 
 
         //Кол-во просмотров
-        $product->increment('view_count');
+        $view_count = false;
+
+        if(Auth::check())
+            if(Auth::user()->hasRole('client'))
+                $view_count = true;
+        if(Auth::guest())
+            $view_count = true;
+        if($view_count)
+            $product->increment('view_count');
+
+
 
         //категория
         $category = Category::where('url', $category_url)->first();

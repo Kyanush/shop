@@ -256,4 +256,21 @@ class Helpers
         return $statement[0]->Auto_increment;
     }
 
+    public static function sortConvert($value, $column = 'id', $order = 'DESC'){
+        if($value)
+        {
+            $sort = explode('-', $value);
+            if(isset($sort[0]) and isset($sort[1]))
+            {
+                $column = $sort[0];
+                $order  = $sort[1];
+            }
+        }
+
+        return [
+            'column' => $column,
+            'order'  => $order
+        ];
+    }
+
 }

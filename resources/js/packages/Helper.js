@@ -185,19 +185,26 @@ export default function(Vue){
         dateFormatTodayYesterday(dateString){
             var date = this.dateFormat(dateString, 'date');
 
+
             var today = new Date();
             var month = today.getMonth() + 1;
-            var current_date = today.getDate() + '.' + (month < 10 ? ('0' + month) : month) + '.' + today.getFullYear();
+            var current_date = (today.getDate() < 10 ? ('0' + today.getDate()) : today.getDate())
+                + '.' + (month < 10 ? ('0' + month) : month)
+                + '.' + today.getFullYear();
+
 
             var today = new Date(Date.now() - 86400000);
             var month = today.getMonth() + 1;
-            var yesterday_date = today.getDate() + '.' + (month < 10 ? ('0' + month) : month) + '.' + today.getFullYear();
+            var yesterday_date = (today.getDate() < 10 ? ('0' + today.getDate()) : today.getDate())
+                + '.' + (month < 10 ? ('0' + month) : month)
+                + '.' + today.getFullYear();
+
 
             if(date == current_date)
-                return 'сегодня ' + this.dateFormat(dateString, 'time');
+                return 'сегодня в ' + this.dateFormat(dateString, 'time');
 
             if(date == yesterday_date)
-                return 'вчера ' + this.dateFormat(dateString, 'time');
+                return 'вчера в ' + this.dateFormat(dateString, 'time');
 
             return this.dateFormat(dateString, 'datetime');
         },

@@ -265,8 +265,9 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::get('new-orders-count',           'OrderController@newOrdersCount');
 
         //статистика
-        Route::get('full-calendar',              'StatisticsController@fullCalendar');
-        Route::get('highcharts-monthly-amount',  'StatisticsController@highchartsMonthlyAmount');
+        Route::get('full-calendar',                        'StatisticsController@fullCalendar');
+        Route::get('highcharts-monthly-amount',            'StatisticsController@highchartsMonthlyAmount');
+        Route::get('highcharts-monthly-amount-callbacks',  'StatisticsController@highchartsMonthlyAmountCallbacks');
 
         //компания
         Route::get('addresses-list',        'AddressController@list');

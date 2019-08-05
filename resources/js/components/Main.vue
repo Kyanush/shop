@@ -67,7 +67,12 @@
 
         <div class="col-md-12">
             <div class="box">
-                <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                <div id="highcharts-monthly-amount" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="box">
+                <div id="highcharts-monthly-amount-callbacks" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             </div>
         </div>
 
@@ -144,9 +149,21 @@
         created(){
             axios.get('/admin/highcharts-monthly-amount').then((res)=>{
                 var data = res.data;
+
+                console.log(data);
+
                 setTimeout(function() {
-                    highchartsMonthlyAmount(data.categories, data.series);
-                }, 1000);
+                    highchartsMonthlyAmount(data.categories, data.series, 'highcharts-monthly-amount', 'Сумма по месяцам', 'Сумма(тг)');
+                }, 2000);
+            });
+            axios.get('/admin/highcharts-monthly-amount-callbacks').then((res)=>{
+                var data = res.data;
+
+                console.log(data);
+
+                setTimeout(function() {
+                    highchartsMonthlyAmount(data.categories, data.series, 'highcharts-monthly-amount-callbacks', ' Обратные звонки по месяц', 'Количество');
+                }, 2000);
             });
         }
     }
