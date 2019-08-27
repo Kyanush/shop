@@ -39,15 +39,15 @@ class Seo
         if($product->seo_keywords)
             $keywords = $product->seo_keywords;
         else
-            $keywords =  "{$category->name}, {$product->name} , купить, НИЗКАЯ ЦЕНА, Скидки, Акции, {$siteName}, характеристики, описание, отзывы, рейтинг, цена";
+            $keywords =  "{$category->name}, {$product->name} , купить, НИЗКАЯ ЦЕНА, Скидки, Акции, {$siteName}, характеристики, описание, отзывы, рейтинг, цена, обзоры";
 
         if($product->seo_description)
             $description = $product->seo_description;
         else
-            $description = "{$siteName} – {$category->name}, {$product->name} в {$city->name}, Казахстан. Сравнивайте цены всех продавцов ✅, читайте характеристики и отзывы покупаталей ⭐, покупайте по самым выгодным условиям ⚡, заказывайте доставку в любой город Казахстана ☝.";
+            $description = "{$product->name} в {$city->name}, Казахстан. Сравнивайте цены всех продавцов ✅, читайте характеристики и отзывы покупаталей ⭐, покупайте по самым выгодным условиям ⚡, заказывайте доставку в любой город Казахстана ☝.";
 
         return [
-            'title'       => "Купить, цена {$product->name} в {$city->name}, Казахстан",
+            'title'       => "{$product->name} купить в {$city->name}, Казахстан",
             'keywords'    => $keywords,
             'description' => $description
         ];
@@ -57,7 +57,7 @@ class Seo
     public static function catalog($category){
 
         $keywords = $description = $title = 'Каталог товаров';
-        $siteName = env('APP_NAME');
+
 
         if($category)
         {
@@ -66,14 +66,14 @@ class Seo
             if($category->seo_keywords)
                 $keywords = $category->seo_keywords;
             else
-                $keywords =  "{$category->name} , купить, {$siteName}, казахстан, цена";
+                $keywords =  "{$category->name}, купить, казахстан, цена, характеристики, отзывы, обзоры, доставка";
 
             if($category->seo_description)
                 $description = $category->seo_description;
             else
-                $description = "Купить {$category->name} в {$city->name} в интернет-магазине {$siteName} ✅. Цены ⭐, характеристики ⚡, отзывы, доставка ☝.";
+                $description = "{$category->name} купить в {$city->name}, Казахстан ✅. Цены ⭐, характеристики ⚡, отзывы, обзоры, доставка ☝.";
 
-            $title = "Купить {$category->name} в {$city->name}, Казахстан - купить, цена в {$siteName}";
+            $title = "{$category->name} купить в {$city->name}, Казахстан";
         }
 
         return [

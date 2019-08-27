@@ -37,6 +37,7 @@ class ServiceProductClone
             $clone->group_id = ProductGroup::create()->id;
 
         //Save cloned product
+        $clone->view_count = 0;
         $clone->push();
 
         if($this->data)

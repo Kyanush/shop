@@ -27,6 +27,11 @@ class ServiceProduct implements ProductInterface
             ];
 
         $product = Product::find($product_id);
+        if(!$product)
+            return [
+                'message' => 'Товар не найден',
+                'success' => false
+            ];
 
         //папка товара
         File::deleteDirectory($product->productFileFolder());

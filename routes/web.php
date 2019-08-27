@@ -129,6 +129,12 @@ Route::group(['namespace'  => 'Sitemap', 'as' => 'sitemap.'], function () {
 });
 
 
+//YANDEX
+Route::group(['namespace'  => 'Yandex', 'as' => 'yandex.'], function () {
+    Route::get('market-export.xml', 'MarketExportController@marketExport');
+});
+
+
 Route::group(['middleware' => 'auth', 'namespace'  => 'Site'], function () {
 
     Route::post('product-features-wishlist/{product_id}', 'ProductFeaturesWishlistController@addAndDelete')->where(['product_id' => '[0-9]+']);
@@ -162,6 +168,7 @@ Route::group(['middleware' => 'auth', 'namespace'  => 'Site'], function () {
 Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespace'  => 'Admin'], function () {
 
     Route::get('report-goods/{format}',          'ReportController@goods');
+    Route::get('yandex-directory/{format}',      'ReportController@yandexDirectory');
 
     if (!request()->ajax()){
         Route::get('/{any}', 'AdminController@index')->where('any', '.*');
@@ -201,6 +208,11 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::get('group-products/{group_id}',      'ProductController@groupProducts')->where(['group_id' => '[0-9]+']);
         Route::post('clone-product',                 'ProductController@cloneProduct');
         Route::any('search-products',                'ProductController@searchProducts');
+        Route::post('products-selected-edit',        'ProductController@productsSelectedEdit');
+        Route::post('product-change-quickly-save',   'ProductController@productChangeQuicklySave');
+
+
+
 
         //отзывы
         Route::get('reviews-list',                'ReviewController@list');

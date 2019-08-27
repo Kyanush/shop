@@ -21,6 +21,9 @@ class CategoryController extends AdminController
                 ->OrderBy('id', 'DESC')
                 ->paginate($request->input('per_page', 10));
 
+        foreach ($list as $k => $item)
+            $list[ $k ]->path_image = $item->pathImage(true);
+
         return  $this->sendResponse($list);
     }
 

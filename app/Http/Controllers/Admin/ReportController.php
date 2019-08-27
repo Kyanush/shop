@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\AdminController;
 
+use App\Models\Product;
 use Mpdf\Mpdf;
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -12,6 +13,28 @@ class ReportController extends AdminController
 {
 
     private $splitPageLimit = 400;
+
+
+    public function yandexDirectory($format, Request $request){
+        $title = $request->input('title', 'Отчет');
+
+        $filters = $request->all();
+
+        $products =  Product::with('categories', 'attributes')
+                            ->filters($filters)
+                            ->filtersAttributes($filters)
+                            ->get();
+
+        $result = view('reports.yandex_directory', [
+            'title'          => $title,
+            'format'         => $format,
+            'products'       => $products,
+            'date_start'     => false,
+            'date_end'       => false
+        ]);
+
+        return $this->render($format, $result, $title);
+    }
 
     public function goods($format, Request $request){
         $title = $request->input('title', 'Отчет');

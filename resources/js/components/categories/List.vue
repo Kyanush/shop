@@ -23,8 +23,9 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Родитель</th>
                             <th>Название</th>
+                            <th>Родитель</th>
+                            <th>Фото</th>
                             <th>Url</th>
                             <th>Класс</th>
                             <th>Сортировка</th>
@@ -36,8 +37,11 @@
                     <tbody>
                         <tr class="odd even" v-for="(item, index) in categories.data" v-bind:class="{ 'deleted': !item.active }">
                             <td>{{ item.id }}</td>
-                            <td>{{ item.parent ? item.parent.name : '' }}</td>
                             <td>{{ item.name }}</td>
+                            <td>{{ item.parent ? item.parent.name : '' }}</td>
+                            <td class="text-center">
+                                <img v-if="item.path_image" :src="item.path_image" width="50"/>
+                            </td>
                             <td>{{ item.url }}</td>
                             <td>{{ item.class }}</td>
                             <td>{{ item.sort }}</td>
@@ -59,8 +63,9 @@
                     <tfoot>
                         <tr>
                             <th>ID</th>
-                            <th>Родитель</th>
                             <th>Название</th>
+                            <th>Родитель</th>
+                            <th>Фото</th>
                             <th>Url</th>
                             <th>Класс</th>
                             <th>Сортировка</th>
@@ -149,6 +154,9 @@
                     params['search'] = this.filter.search;
 
                 axios.get('/admin/categories-list', {params:  params}).then((res)=>{
+
+                    console.log(res.data);
+
                     this.categories = res.data;
                     this.$router.push({query: params});
                 });

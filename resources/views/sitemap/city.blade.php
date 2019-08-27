@@ -15,19 +15,21 @@
             </image:image>
         </url>
 
-        @foreach(['attributes', 'reviews', 'questions'] as $tab)
-            <url>
-                <loc>{{ $product->detailUrlProduct($city->code) }}/{{ $tab }}</loc>
-                <lastmod><?php echo date('c', strtotime($product->updated_at)); ?></lastmod>
-                <changefreq>weekly</changefreq>
-                <priority>0.8</priority>
-                <image:image>
-                    <image:loc>
-                        {{ $siteUrl . $product->pathPhoto(true) }}
-                    </image:loc>
-                </image:image>
-            </url>
-        @endforeach
+        @if(false)
+            @foreach(['attributes', 'reviews', 'questions'] as $tab)
+                <url>
+                    <loc>{{ $product->detailUrlProduct($city->code) }}/{{ $tab }}</loc>
+                    <lastmod><?php echo date('c', strtotime($product->updated_at)); ?></lastmod>
+                    <changefreq>weekly</changefreq>
+                    <priority>0.8</priority>
+                    <image:image>
+                        <image:loc>
+                            {{ $siteUrl . $product->pathPhoto(true) }}
+                        </image:loc>
+                    </image:image>
+                </url>
+            @endforeach
+        @endif
 
     @endforeach
 

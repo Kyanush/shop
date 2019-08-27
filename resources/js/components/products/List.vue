@@ -13,6 +13,11 @@
                 Очистить
             </button>
 
+            <div class="btn btn-primary pull-right" @click="showReport" style="margin-right: 5px;">
+                <i class="fa fa-print" aria-hidden="true"></i>
+                Отчеты
+            </div>
+
         </div>
 
         <div class="box-header with-border">
@@ -171,117 +176,161 @@
         </div>
 
         <div class="table-responsive">
-            <table class="table table-bordered table-sort">
-            <thead>
-            <tr>
-                <th>
-                    ID
-                    <SortTable v-model="filter.sort" :column="'id'"></SortTable>
-                </th>
-                <th width="200">
-                    Название
-                    <SortTable v-model="filter.sort" :column="'name'"></SortTable>
-                </th>
-                <th>Фото товара</th>
-                <th>Категории</th>
-                <th>SKU</th>
-                <th>
-                    Цена
-                    <SortTable v-model="filter.sort" :column="'price'"></SortTable>
-                </th>
-                <th>Кол-во на<br/> складе
-                    <SortTable v-model="filter.sort" :column="'stock'"></SortTable>
-                </th>
-                <th>Кол-во <br/>просмотров
-                    <SortTable v-model="filter.sort" :column="'view_count'"></SortTable>
-                </th>
-                <th>
-                    Дата создания<br/>Дата изменения
-                    <SortTable v-model="filter.sort" :column="'created_at'"></SortTable>
-                </th>
-                <th>
-                    Статус
-                    <SortTable v-model="filter.sort" :column="'active'"></SortTable>
-                </th>
-                <th>Действия</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="odd even" v-for="(item, index) in products.data" v-bind:class="{ 'deleted': !item.active || !item.stock }">
-                <td>{{ item.id }}</td>
-                <td>
-                    <router-link :to="{ path: '/products/edit/' + item.id}">
-                        {{ item.name }}
-                    </router-link>
-                </td>
-                <td>
-                    <img v-bind:src="item.path_photo" width="70" class="img"/>
-                </td>
-                <td>
-                    <p v-for="category in item.categories" class="margin-padding-none">
-                        {{ category.name }}
-                    </p>
-                </td>
-                <td>{{ item.sku }}</td>
-                <td>
-                    <span v-if="item.price_discount">
-                         <del> {{ item.format_price }}</del>
-                         <br/>
-                         {{ item.price_discount }}
-                    </span>
-                    <span v-else>
-                        {{ item.format_price }}
-                    </span>
-                </td>
-                <td :class="{ 'red': !item.stock }">{{ item.stock }} шт.</td>
-                <td>{{ item.view_count }}</td>
-                <td>
-                    {{ dateFormat(item.created_at) }}
-                    <br/>
-                    {{ dateFormat(item.updated_at) }}
-                </td>
-                <td>
-                    <i class="fa fa-times-circle" aria-hidden="true" v-bind:class="{ 'fa-times-circle red': !item.active, 'fa-check-circle green': item.active }"></i>
-                </td>
-                <td>
-                    <p>
-                        <a class="btn btn-xs btn-default" :href="item.detail_url_product" target="_blank" title="Посмотреть товар">
-                            <i class="fa fa-internet-explorer" aria-hidden="true"></i>
-                        </a>
+            <table class="table table-bordered table-sort" id="products-list">
+                <thead>
+                    <tr>
+                        <th width="30">
+                            <input type="checkbox" v-model="selected.all"/>
+                        </th>
+                        <th>
+                            ID
+                            <SortTable v-model="filter.sort" :column="'id'"></SortTable>
+                        </th>
+                        <th width="200">
+                            Название
+                            <SortTable v-model="filter.sort" :column="'name'"></SortTable>
+                        </th>
+                        <th>Фото товара</th>
+                        <th>Категории</th>
+                        <th>SKU</th>
+                        <th>
+                            Цена
+                            <SortTable v-model="filter.sort" :column="'price'"></SortTable>
+                        </th>
+                        <th width="100">Кол-во на<br/> складе
+                            <SortTable v-model="filter.sort" :column="'stock'"></SortTable>
+                        </th>
+                        <th width="110">Кол-во <br/>просмотров
+                            <SortTable v-model="filter.sort" :column="'view_count'"></SortTable>
+                        </th>
+                        <th>
+                            Дата создания<br/>Дата изменения
+                            <SortTable v-model="filter.sort" :column="'created_at'"></SortTable>
+                        </th>
+                        <th width="100">
+                            Статус
+                            <SortTable v-model="filter.sort" :column="'active'"></SortTable>
+                        </th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="odd even" v-for="(item, index) in products.data"
+                        v-bind:class="{ 'deleted': !item.active || !item.stock }"
+                        title="Нажмите дважды чтобы изменить"
+                        v-on:dblclick="changeQuicklySelect(item)">
 
-                        <router-link :to="{ path: '/products/edit/' + item.id}" class="btn btn-xs btn-default" title="Изменить">
-                            <i class="fa fa-edit"></i> <!--Изменить-->
-                        </router-link>
-                    </p>
-                    <p>
-                        <a class="btn btn-xs btn-default" @click="deleteProduct(item, index)" title="Удалить">
-                            <i class="fa fa-remove"></i> <!--Удалить-->
-                        </a>
-                        <a class="btn btn-xs btn-default clone-btn" @click="cloneShow(item)" title="Создать дубликат">
-                            <i class="fa fa-clone"></i> <!--Создать дубликат-->
-                        </a>
-                    </p>
-                </td>
-            </tr>
-            </tbody>
-            <tfoot>
-            <tr>
-                <th>ID</th>
-                <th>Название</th>
-                <th>Фото товара</th>
-                <th>Категории</th>
-                <th>SKU</th>
-                <th>Цена</th>
-                <th>Количество на<br/> складе</th>
-                <th>Кол-во <br/>просмотров</th>
-                <th>Дата создания<br/>Дата изменения</th>
-                <th>Статус</th>
-                <th>Действия</th>
-            </tr>
-            </tfoot>
-        </table>
+                        <td>
+                           <input type="checkbox" v-model="selected.products_ids" :value="item.id" v-if="!selected.all"/>
+                        </td>
+                        <td>
+                            {{ item.id }}
+                        </td>
+                        <td>
+                            <router-link :to="{ path: '/products/edit/' + item.id}">
+                                {{ item.name }}
+                            </router-link>
+                        </td>
+                        <td>
+                            <img v-bind:src="item.path_photo" width="70" class="img"/>
+                        </td>
+                        <td>
+                            <p v-for="category in item.categories" class="margin-padding-none">
+                                {{ category.name }}
+                            </p>
+                        </td>
+                        <td>{{ item.sku }}</td>
+                        <td>
+                            <span v-if="item.price_discount">
+                                 <del> {{ item.format_price }}</del>
+                                 <br/>
+                                 {{ item.price_discount }}
+                            </span>
+                            <span v-else>
+                                {{ item.format_price }}
+                            </span>
+                        </td>
+                        <td :class="{ 'red': !item.stock }">{{ item.stock }} шт.</td>
+                        <td>{{ item.view_count }}</td>
+                        <td>
+                            {{ dateFormat(item.created_at) }}
+                            <br/>
+                            {{ dateFormat(item.updated_at) }}
+                        </td>
+                        <td>
+                            <i class="fa fa-times-circle" aria-hidden="true" v-bind:class="{ 'fa-times-circle red': !item.active, 'fa-check-circle green': item.active }"></i>
+                        </td>
+                        <td>
+                            <p>
+                                <a class="btn btn-xs btn-default" :href="item.detail_url_product" target="_blank" title="Посмотреть товар">
+                                    <i class="fa fa-internet-explorer" aria-hidden="true"></i>
+                                </a>
+
+                                <router-link :to="{ path: '/products/edit/' + item.id}" class="btn btn-xs btn-default" title="Изменить">
+                                    <i class="fa fa-edit"></i> <!--Изменить-->
+                                </router-link>
+                            </p>
+                            <p>
+                                <a class="btn btn-xs btn-default" @click="deleteProduct(item, index)" title="Удалить">
+                                    <i class="fa fa-remove"></i> <!--Удалить-->
+                                </a>
+                                <a class="btn btn-xs btn-default clone-btn" @click="cloneShow(item)" title="Создать дубликат">
+                                    <i class="fa fa-clone"></i> <!--Создать дубликат-->
+                                </a>
+                            </p>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th>
+                            <input type="checkbox" v-model="selected.all"/>
+                        </th>
+                        <th>ID</th>
+                        <th>Название</th>
+                        <th>Фото товара</th>
+                        <th>Категории</th>
+                        <th>SKU</th>
+                        <th>Цена</th>
+                        <th>Количество на<br/> складе</th>
+                        <th>Кол-во <br/>просмотров</th>
+                        <th>Дата создания<br/>Дата изменения</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                    <tr v-if="selected.products_ids.length > 0 || selected.all">
+                        <th><b class="green">{{ selected.all ? 'Все' : selected.products_ids.length }}</b></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>
+                            <input type="text" class="form-control" v-model="selected.stock" @change="editSelected('stock')"/>
+                        </th>
+                        <th></th>
+                        <th></th>
+                        <th>
+                            <select class="form-control" v-model="selected.active" @change="editSelected('active')">
+                                <option value=""></option>
+                                <option value="1">Активный</option>
+                                <option value="0">Неактивный</option>
+                            </select>
+                        </th>
+                        <th>
+                            <button class="btn btn-danger" @click="editSelected('delete')" title="Удалить всех">
+                                <i class="fa fa-remove"></i>
+                            </button>
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
+
         <div class="text-center">
+            <p>{{ products.to }} из {{ products.total }}</p>
+
             <paginate
                     v-if="products.last_page > 1"
                     v-model="products.current_page"
@@ -398,6 +447,91 @@
             </div>
         </div>
 
+        <!-- Modal -->
+        <div class="modal fade" id="changeQuickly" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form v-on:submit="changeQuicklySave">
+                        <div class="modal-header">
+                            <b class="modal-title" id="exampleModalLabel">
+                                №{{ change_quickly.id }} | {{ change_quickly.name }}
+                            </b>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table table-bordered ">
+                                <tbody>
+                                    <tr>
+                                        <td width="25%" class="text-right">
+                                            <label for="stock">Количество на складе(шт.):</label>
+                                        </td>
+                                        <td width="75%">
+                                            <div class="col-md-6" v-bind:class="{'has-error' : IsError('change_quickly.stock')}">
+                                                <input required id="stock" type="number" v-model="change_quickly.stock" class="form-control"/>
+                                                <span v-if="IsError('change_quickly.stock')" class="help-block" v-for="e in IsError('change_quickly.stock')">
+                                                     {{ e }}
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="25%" class="text-right">
+                                            <label>
+                                                <span class="red">*</span>
+                                                <i class="fa fa-money" aria-hidden="true"></i>
+                                                Цена:
+                                            </label>
+                                        </td>
+                                        <td width="75%">
+                                            <div class="col-md-6" v-bind:class="{'has-error' : IsError('change_quickly.price')}">
+                                                <input required id="price" type="number" v-model="change_quickly.price" class="form-control"/>
+                                                <span v-if="IsError('change_quickly.price')" class="help-block" v-for="e in IsError('change_quickly.price')">
+                                                     {{ e }}
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="25%" class="text-right">
+                                            <label>
+                                                <i class="fa fa-star" aria-hidden="true"></i>
+                                                Статус:
+                                            </label>
+                                        </td>
+                                        <td width="75%">
+                                            <div class="col-md-4" v-bind:class="{'has-error' : IsError('change_quickly.active')}">
+                                                <select required v-model="change_quickly.active" class="form-control">
+                                                    <option value="1">Активный</option>
+                                                    <option value="0">Неактивный</option>
+                                                </select>
+                                                <span v-if="IsError('change_quickly.active')" class="help-block" v-for="e in IsError('change_quickly.active')">
+                                                     {{ e }}
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                <i class="fa fa-ban" aria-hidden="true"></i>
+                                Отменить
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                                Изменить
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <report :report_types="report_types" :filter="filter"></report>
+
     </div>
 </template>
 
@@ -409,16 +543,24 @@
     import { mapActions } from 'vuex';
     import Categories     from '../plugins/Categories';
     import SortTable      from '../plugins/SortTable';
+    import report     from '../plugins/Report';
 
     export default {
         components:{
-            Paginate, datePicker, Categories, SortTable
+            Paginate, datePicker, Categories, SortTable, report
         },
         data () {
             return {
+                report_types:[
+                    {
+                        id: 'yandex-directory',
+                        text: 'Яндекс справочник'
+                    }
+                ],
+
                 product_show_filter: false,
                 product_attribute_show_filter: false,
-                
+
                 datetimepicker: {
                     format: 'YYYY-MM-DD HH:mm:ss',
                     useCurrent: false,
@@ -459,6 +601,19 @@
                     product_accessories: false,
                     reviews: false,
                     questions_answers: false
+                },
+                selected: {
+                    products_ids: [],
+                    stock:  '',
+                    active: '',
+                    all: false
+                },
+                change_quickly: {
+                    id:     0,
+                    name:   '',
+                    price:  0,
+                    stock:  0,
+                    active: 1
                 }
             }
         },
@@ -502,6 +657,77 @@
             }
         },
         methods:{
+            showReport(){
+                $('#popup-peport').modal('show');
+            },
+            changeQuicklySelect(product){
+                this.change_quickly.id     = product.id;
+                this.change_quickly.name   = product.name;
+                this.change_quickly.price  = product.price;
+                this.change_quickly.stock  = product.stock;
+                this.change_quickly.active = product.active;
+                $('#changeQuickly').modal('show');
+            },
+            changeQuicklySave(event){
+                event.preventDefault();
+
+                axios.post('/admin/product-change-quickly-save', this.change_quickly).then((res)=>{
+                    if(res.data)
+                    {
+                        this.productsList();
+                        $('#changeQuickly').modal('hide');
+                    }else
+                        alert('Error');
+                });
+            },
+            editSelected(action){
+                var title = 'Вы действительно хотите изменить?';
+
+                if(action == 'stock')
+                    title = 'Вы действительно хотите изменить количество на складе?';
+
+                if(action == 'active')
+                    title = 'Вы действительно хотите изменить статус?';
+
+                if(action == 'delete')
+                    title = 'Внимание! Вы действительно хотите УДАЛИТЬ?';
+
+                this.$swal({
+                    title: title,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Да',
+                    cancelButtonText: 'Нет'
+                }).then((result) => {
+                    if (result.value) {
+                        axios.post('/admin/products-selected-edit', {
+
+                            products_ids: this.selected.products_ids,
+                            stock:        this.selected.stock,
+                            active:       this.selected.active,
+                            action:       action,
+                            filter:       this.filter,
+                            all:          this.selected.all,
+
+                        }).then((res)=>{
+                            if(res.data)
+                            {
+                                this.productsList();
+                                this.selected = {
+                                    products_ids: [],
+                                    stock:  '',
+                                    active: ''
+                                };
+                            }
+                        });
+                    }else{
+                        this.selected.stock  = '';
+                        this.selected.active = '';
+                    }
+                });
+            },
             setProductShowFilter(){
                 this.product_show_filter = !this.product_show_filter;
                 localStorage.setItem('product_show_filter', this.product_show_filter);
@@ -567,6 +793,11 @@
                     }
                 });
                 this.$router.push({path: '/products'});
+                this.selected = {
+                    products_ids: [],
+                    stock:  '',
+                    active: ''
+                };
             },
             dateFormat(date, type_format){
                 return this.$helper.dateFormat(date, type_format);
@@ -655,6 +886,10 @@
         list-style:none;
     }
     #products-attributes-filters ul li label{
+        cursor: pointer;
+    }
+    #products-list tbody tr:hover{
+        background-color: #ecf0f5;
         cursor: pointer;
     }
 </style>

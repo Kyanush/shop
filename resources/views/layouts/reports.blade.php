@@ -25,23 +25,21 @@
 </head>
 <body>
 
-    <div>
-        <img src="{{ config('shop.logo') }}" height="40" style="float: left;"/>
-        <div style="text-align: right;">
-            Напечатано {{ date('d.m.Y H:m:s') }}
+    @if($date_start or $date_end)
+        <div>
+            <img src="{{ config('shop.logo') }}" height="40" style="float: left;"/>
+            <div style="text-align: right;">
+                Напечатано {{ date('d.m.Y H:m:s') }}
+            </div>
         </div>
-    </div>
-
-    <div style="text-align: right;">
-        @if($date_start or $date_end)
-            За период с
-            {{ $date_start ? date('d.m.Y H:m:s', strtotime($date_start)) : '' }}
-            по
-            {{ $date_end ? date('d.m.Y H:m:s', strtotime($date_end)) : ''}}
-        @endif
-    </div>
-
-    <br/>
+        <div style="text-align: right;">
+                За период с
+                {{ $date_start ? date('d.m.Y H:m:s', strtotime($date_start)) : '' }}
+                по
+                {{ $date_end ? date('d.m.Y H:m:s', strtotime($date_end)) : ''}}
+        </div>
+        <br/>
+    @endif
 
     @yield('content')
 </body>

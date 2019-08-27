@@ -26,7 +26,7 @@ if(env('APP_NO_URL') == 'ShopX.kz')
 
         'address' => [
             [
-                "streetAddress" => "ул. Жибек жолы 115, оф. 113 (Рядом Аэровокзала)",
+                "streetAddress" => "ул. Жибек жолы 115, оф. 113",
                 "addressLocality" => "г. Алматы",
                 "postalCode" => "050004",
                 "addressCountry" => "Казахстан",
@@ -69,7 +69,7 @@ if(env('APP_NO_URL') == 'OnePoint.kz')
 
         'address' => [
             [
-                "streetAddress"   => "ул. Жибек жолы 115, оф. 113 (Рядом Аэровокзала)",
+                "streetAddress"   => "ул. Жибек жолы 115, оф. 113",
                 "addressLocality" => "г. Алматы",
                 "postalCode"      => "050004",
                 "addressCountry"  => "Казахстан",

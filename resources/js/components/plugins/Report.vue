@@ -51,7 +51,7 @@
         components:{
             Select2
         },
-        props:['report_types'],
+        props:['report_types', 'filter'],
         data () {
             return {
                 report: {
@@ -70,10 +70,17 @@
                 this.report.title = text;
             },
             reportDownload(){
+
+                console.log(this.filter);
+
                 if(this.report.view && this.report.ext)
                 {
 
-                    var query = this.$route.query;
+                    if(this.filter)
+                        var query = this.filter;
+                    else
+                        var query = this.$route.query;
+
                     this.$set(query, 'title', this.report.title);
 
                     let routeData = this.$router.resolve({
