@@ -73,6 +73,43 @@
 </head>
 <body class="skin-blue sidebar-mini">
 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+
+<input type="file" id="fileUpload"/>
+
+<script>
+    function fileReader(oEvent) {
+        var oFile = oEvent.target.files[0];
+        var sFilename = oFile.name;
+
+        var reader = new FileReader();
+        var result = {};
+
+        reader.onload = function (e) {
+            var data = e.target.result;
+            data = new Uint8Array(data);
+            var workbook = XLSX.read(data, {type: 'array'});
+            console.log(workbook);
+            var result = {};
+            workbook.SheetNames.forEach(function (sheetName) {
+                var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {header: 1});
+                if (roa.length) result[sheetName] = roa;
+            });
+            // see the result, caution: it works after reader event is done.
+            console.log(result);
+        };
+        reader.readAsArrayBuffer(oFile);
+    }
+
+    // Add your id of "File Input"
+    $('#fileUpload').change(function(ev) {
+        // Do something
+        fileReader(ev);
+    });
+</script>
+
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>

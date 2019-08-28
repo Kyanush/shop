@@ -35,6 +35,7 @@
         "vue-sortable-tree": "^1.2.2",
         "vue-swatches": "^1.0.3",
         "vue-sweetalert2": "^1.5.7",
+        "vue-xlsx-table": "^1.2.8",
         "vuejs-paginate": "^2.0.1",
         "vuex": "^3.0.1",
         "weekstart": "^1.0.0"

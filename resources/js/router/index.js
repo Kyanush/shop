@@ -15,6 +15,8 @@ import attributes_sets_save    from  '../components/attributes-sets/Save.vue';
 
 import products_list    from  '../components/products/List.vue';
 import products_save    from  '../components/products/Save.vue';
+import products_import  from  '../components/products/Import.vue';
+
 
 import reviews    from  '../components/reviews/reviews.vue';
 import questions_answers    from  '../components/questions-answers/QuestionsAnswers.vue';
@@ -231,7 +233,7 @@ export default new Router({
             meta: {
                 breadcrumb: [
                     { name: 'Главная страница', link: '/main' },
-                    { name: 'Товары', link: '/products' },
+                    { name: 'Товары',           link: '/products' },
                 ]
             }
         },
@@ -242,10 +244,22 @@ export default new Router({
             meta: {
                 breadcrumb: [
                     { name: 'Главная страница', link: '/main' },
-                    { name: 'Товары', link: '/products' },
+                    { name: 'Товары',           link: '/products' },
                 ]
             }
         },
+        {
+            path: '/products/import',
+            name: 'Импорт товара',
+            component: products_import,
+            meta: {
+                breadcrumb: [
+                    { name: 'Главная страница', link: '/main' },
+                    { name: 'Товары',           link: '/products' },
+                ]
+            }
+        },
+
 
 
 

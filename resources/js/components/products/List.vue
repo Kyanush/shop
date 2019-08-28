@@ -18,6 +18,11 @@
                 Отчеты
             </div>
 
+            <router-link class="btn btn-primary pull-right" :to="{ path: '/products/import'}" style="margin-right: 5px;">
+                <i class="fa fa-download" aria-hidden="true"></i>
+                <span>Импорт</span>
+            </router-link>
+
         </div>
 
         <div class="box-header with-border">
