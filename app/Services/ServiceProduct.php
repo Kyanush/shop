@@ -153,7 +153,7 @@ class ServiceProduct implements ProductInterface
                 if(is_uploaded_file($item['value'])){
 
                     $upload = new Upload();
-                    $upload->fileName = str_slug($product->name) . '-' . Helpers::tableNextId('product_images');
+                    $upload->fileName = str_slug($product->name) . '-' . ServiceDB::tableNextId('product_images');
                     $upload->setWidth(460);
                     $upload->setHeight(350);
                     $upload->setPath($product->productFileFolder());

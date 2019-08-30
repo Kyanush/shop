@@ -251,9 +251,18 @@ class Helpers
             return false;
     }
 
-    public static function tableNextId($tableName){
-        $statement = DB::select("show table status like '" . env('DB_TABLE_PREFIX') . $tableName . "'");
-        return $statement[0]->Auto_increment;
+    public static function getModels(){
+        $dir = app_path('Models');
+        $models = [];
+        $classes = \File::allFiles($dir);
+        foreach ($classes as $class) {
+            $models[] = str_replace(
+                [app_path(), '/', '.php'],
+                ['\App', '\\', ''],
+                $class->getRealPath()
+            );
+        }
+        return $models;
     }
 
     public static function sortConvert($value, $column = 'id', $order = 'DESC'){

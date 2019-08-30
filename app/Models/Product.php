@@ -5,6 +5,7 @@ namespace App\Models;
 
 use App\Services\ServiceCategory;
 use App\Services\ServiceCity;
+use App\Services\ServiceDB;
 use Illuminate\Database\Eloquent\Model;
 use File;
 use App\Tools\Upload;
@@ -189,6 +190,12 @@ class Product extends Model
         //Событие до
         static::Saving(function($product) {
 
+            if($product->active != 0 and $product->active != 1)
+                $product->active = 1;
+
+            if(!is_numeric($product->stock))
+                $product->stock = 1;
+
             //группа товара
             if(empty($product->group_id))
                 $product->group_id = ProductGroup::create()->id;
@@ -197,7 +204,7 @@ class Product extends Model
             $product->url = str_slug(empty($product->url) ? $product->name : $product->url);
 
             if(empty($product->id))
-                $product_id = Helpers::tableNextId('products');
+                $product_id = ServiceDB::tableNextId('products');
 
             //фото
             if(is_uploaded_file($product->photo))

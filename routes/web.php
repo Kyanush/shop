@@ -210,7 +210,11 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::any('search-products',                'ProductController@searchProducts');
         Route::post('products-selected-edit',        'ProductController@productsSelectedEdit');
         Route::post('product-change-quickly-save',   'ProductController@productChangeQuicklySave');
+        Route::post('product-import',                'ProductController@import');
 
+        Route::post('import',                        'ImportController@import');
+        Route::get('table-list',                     'ImportController@tableList');
+        Route::get('table-columns/{table}',          'ImportController@tableColumns')->where(['table']);
 
 
 

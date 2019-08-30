@@ -18,11 +18,6 @@
                 Отчеты
             </div>
 
-            <router-link class="btn btn-primary pull-right" :to="{ path: '/products/import'}" style="margin-right: 5px;">
-                <i class="fa fa-download" aria-hidden="true"></i>
-                <span>Импорт</span>
-            </router-link>
-
         </div>
 
         <div class="box-header with-border">
@@ -82,9 +77,9 @@
                                     </td>
                                 </tr>
                                 <tr class="odd even">
-                                    <td><b>SKU:</b></td>
+                                    <td><b>Артикул:</b></td>
                                     <td>
-                                        <input type="text" class="form-control" placeholder="SKU" v-model="filter.sku">
+                                        <input type="text" class="form-control" placeholder="Артикул" v-model="filter.sku">
                                     </td>
                                 </tr>
                                 <tr class="odd even">
@@ -197,7 +192,7 @@
                         </th>
                         <th>Фото товара</th>
                         <th>Категории</th>
-                        <th>SKU</th>
+                        <th>Артикул</th>
                         <th>
                             Цена
                             <SortTable v-model="filter.sort" :column="'price'"></SortTable>
@@ -295,7 +290,7 @@
                         <th>Название</th>
                         <th>Фото товара</th>
                         <th>Категории</th>
-                        <th>SKU</th>
+                        <th>Артикул</th>
                         <th>Цена</th>
                         <th>Количество на<br/> складе</th>
                         <th>Кол-во <br/>просмотров</th>
@@ -374,7 +369,7 @@
                                     </span>
                                 </div>
                                 <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('clone_product.sku')}">
-                                    <label>SKU <span class="red">*</span></label>
+                                    <label>Артикул <span class="red">*</span></label>
                                     <input type="text" class="form-control" v-model="clone_product.sku"/>
                                     <span>Должно быть уникальным</span>
                                     <span v-if="IsError('clone_product.sku')" class="help-block" v-for="e in IsError('clone_product.sku')">

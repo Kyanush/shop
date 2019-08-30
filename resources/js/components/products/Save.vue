@@ -202,7 +202,7 @@
                                         </tr>
                                         <tr>
                                             <td width="25%" class="text-right">
-                                                <label>SKU:</label>
+                                                <label>Артикул:</label>
                                             </td>
                                             <td width="75%">
                                                 <div class="col-md-6" v-bind:class="{'has-error' : IsError('product.sku')}">
@@ -517,7 +517,7 @@
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Название</th>
-                                                <th>SKU</th>
+                                                <th>Артикул</th>
                                                 <th>Цена</th>
                                                 <th>Статус</th>
                                                 <th>Действия</th>
