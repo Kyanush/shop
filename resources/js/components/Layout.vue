@@ -257,10 +257,10 @@
                         </router-link>
                     </li>
 
-                    <li v-bind:class="{'active' : menu_active('/import/')}">
-                        <router-link :to="{ path: '/import'}">
+                    <li v-bind:class="{'active' : menu_active('/import-export/')}">
+                        <router-link :to="{ path: '/import-export'}">
                             <i class="fa fa-download" aria-hidden="true"></i>
-                            <span>Импорт</span>
+                            <span>Импорт/Экспорт</span>
                         </router-link>
                     </li>
 

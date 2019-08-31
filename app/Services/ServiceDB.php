@@ -11,7 +11,8 @@ class ServiceDB
 
         $tables = DB::select('SHOW TABLES');
         foreach($tables as $table)
-            $list[] = $table->Tables_in_shop;
+            foreach ($table as $value)
+                $list[] = $value;
 
         return $list;
     }

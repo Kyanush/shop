@@ -169,6 +169,7 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
 
     Route::get('report-goods/{format}',          'ReportController@goods');
     Route::get('yandex-directory/{format}',      'ReportController@yandexDirectory');
+    Route::get('export-table/{table}',           'ExportController@exportTable')->where(['table']);
 
     if (!request()->ajax()){
         Route::get('/{any}', 'AdminController@index')->where('any', '.*');
@@ -215,7 +216,6 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::post('import',                        'ImportController@import');
         Route::get('table-list',                     'ImportController@tableList');
         Route::get('table-columns/{table}',          'ImportController@tableColumns')->where(['table']);
-
 
 
         //отзывы

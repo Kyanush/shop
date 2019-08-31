@@ -1,7 +1,6 @@
 <?php
 namespace App\Services;
 
-use App\Tools\Helpers;
 use DB;
 
 class ServiceImport
@@ -13,18 +12,7 @@ class ServiceImport
     public $data_column;
     public $identification_column;
 
-    private function getModel(){
-        $models = Helpers::getModels();
-        foreach ($models as $model_item)
-        {
-            $obj = new $model_item();
-            if(env('DB_TABLE_PREFIX') . $obj->getTable() == $this->table)
-            {
-                return $model_item;
-            }
-        }
-        return false;
-    }
+
 
     private function clearData(){
         foreach ($this->selected as $key => $value)
@@ -53,7 +41,7 @@ class ServiceImport
 
         $this->clearData();
 
-        $model  = $this->getModel();
+        $model = ServiceModel::getModel($this->table);
         if(!$model)
             return false;
 
