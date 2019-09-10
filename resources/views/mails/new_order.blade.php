@@ -120,15 +120,17 @@
                 <div style="color:#a3a3a3;">Мобильный телефон:
                     <span style="color:#272727;">
                         <span class="wmi-callto">
-                            {{ $order->user->phone ?? 'Нет' }}
+                            <a href="tel:{{ $order->user->phone }}">
+                                {{ $order->user->phone }}
+                            </a>
                         </span>
                     </span>
                 </div>
 
                 <div style="color:#a3a3a3;">Электронная почта:
                     <span style="color:#272727;">
-                        <a href="mailto:{{ $order->user->email ?? 'Нет' }}" class="ns-action">
-                            {{ $order->user->email ?? 'Нет' }}
+                        <a href="mailto:{{ $order->user->email }}" class="ns-action">
+                            {{ $order->user->email }}
                         </a>
                     </span>
                 </div>

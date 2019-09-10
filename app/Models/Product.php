@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Services\ServiceCategory;
 use App\Services\ServiceCity;
 use App\Services\ServiceDB;
+use App\Services\ServiceUploadUrl;
 use Illuminate\Database\Eloquent\Model;
 use File;
 use App\Tools\Upload;
@@ -218,7 +219,28 @@ class Product extends Model
                 $upload->setHeight(600);
                 $upload->setPath($product->productFileFolder(false, $product_id ?? 0));
                 $upload->setFile($product->photo);
-                $product->photo = $upload->save();
+                $fileName = $upload->save();
+                if($fileName)
+                {
+                    $product->photo = $fileName;
+                }
+            }
+
+            //загрузка по ссылке
+            $serviceUploadUrl = new ServiceUploadUrl();
+            if($serviceUploadUrl->validUrlImage($product->photo))
+            {
+                if(!empty($product->id))
+                    self::find($product->id)->deletePhoto();
+
+                $serviceUploadUrl->name = str_slug($product->name);
+                $serviceUploadUrl->url = $product->photo;
+                $serviceUploadUrl->path_save = $product->productFileFolder(false, $product_id ?? 0);
+                $filename = $serviceUploadUrl->copy();
+                if($filename)
+                {
+                    $product->photo = $filename;
+                }
             }
 
             if(empty($product->sku))

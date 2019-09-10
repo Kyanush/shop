@@ -247,16 +247,46 @@
                                             </td>
                                             <td width="75%">
                                                 <div class="col-md-6" v-bind:class="{'has-error' : IsError('product.photo')}">
-                                                    <label class="btn btn-primary btn-file">
-                                                        <i class="fa fa-file-image-o" aria-hidden="true"></i>  Фото товара
-                                                        <input type="file" accept="image/*"  @change="setProductPhoto($event)"/>
-                                                    </label>
+
+                                                    <table class="table table-bordered ">
+                                                        <tbody>
+                                                            <tr>
+                                                                 <td>
+                                                                     <label>
+                                                                         <input type="radio" v-model="product_photo_upload_type" value="file"/>
+                                                                         Загрузить с компьютера
+                                                                     </label>
+                                                                 </td>
+                                                                 <td>
+                                                                     <label>
+                                                                         <input type="radio" v-model="product_photo_upload_type" value="url">
+                                                                         Вставить путь к файлу
+                                                                     </label>
+                                                                 </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="2">
+
+                                                                    <label v-if="product_photo_upload_type == 'file'" class="btn btn-primary btn-file">
+                                                                        <i class="fa fa-file-image-o" aria-hidden="true"></i> Загрузить
+                                                                        <input type="file" accept="image/*"  @change="setProductPhoto($event)"/>
+                                                                    </label>
+
+                                                                    <input v-if="product_photo_upload_type == 'url'"
+                                                                           placeholder="Пример: https://test.kz/uploads/products/339/xiaomi-mi-9-se-664gb-ocean-blue.jpeg"
+                                                                           class="form-control"
+                                                                           type="text"
+                                                                           v-model="product.photo"/>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
                                                     <span v-if="IsError('product.photo')" class="help-block" v-for="e in IsError('product.photo')">
                                                          {{ e }}
                                                     </span>
-                                                    <p>
+                                                    <p v-if="product.pathPhoto">
                                                         <br/>
-                                                        <img v-bind:src="product.pathPhoto ? product.pathPhoto : ''" class="img" id="photo-img" width="100"/>
+                                                        <img v-bind:src="product.pathPhoto" class="img" width="100"/>
                                                     </p>
                                                 </div>
                                             </td>
@@ -766,6 +796,7 @@
                     view_count: 0
                 },
 
+                product_photo_upload_type: 'file',
 
                 product_accessories: [],
                 attributes: [],
@@ -819,7 +850,9 @@
                             }
                         }
                     }
-                }
+                },
+
+
             }
         },
 
@@ -897,11 +930,15 @@
                 this.$set(this.attributes[index], 'value' , '');
             },
             setProductPhoto(event){
-                this.$helper.setImgSrc(event.target.files[0], '#photo-img');
+
+                var self = this;
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    self.product.pathPhoto = e.target.result;
+                };
+                reader.readAsDataURL(event.target.files[0]);
+
                 this.product.photo = event.target.files[0];
-            },
-            setImages(files){
-                this.product_images = files;
             },
             setTab(tab){
                 this.tab_active = tab;
@@ -991,10 +1028,14 @@
 
                         }else if(this.method_redirect == 'save_and_continue'){
                             var product_id = res.data;
+                            window.location = '/admin/products/edit/' + product_id;
+
+                            /*
                             if(!this.product.id)
                                 this.$router.push('/products/edit/' + product_id);
-
                             this.getProduct(product_id);
+                            */
+
                         }else if(this.method_redirect == 'save_and_new'){
                             window.location = '/admin/product/create';
                         }
@@ -1010,6 +1051,7 @@
 
                                 var data    = res.data;
                                 var product = data.product;
+
 
                                 this.product.id               = product.id;
                                 this.product.attribute_set_id = product.attribute_set_id;
@@ -1112,6 +1154,14 @@
         watch: {
             '$route'() {
                 this.getProduct(this.$route.params.id);
+            },
+            'product.photo':{
+                handler: function (val, oldVal) {
+                    if(this.product_photo_upload_type == 'url'){
+                        this.product.pathPhoto = val;
+                    }
+                },
+                deep: true
             }
         },
     }
