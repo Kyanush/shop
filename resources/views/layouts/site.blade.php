@@ -31,7 +31,6 @@
 
     <link rel="stylesheet" type="text/css" href="/site/css/stylesheet.css">
     <link rel="stylesheet" type="text/css" href="/site/css/style.css">
-    <link rel="icon" type="image/png" href="{{ config('shop.favicon') }}" />
 
     <!---- es  ----->
     <script type="text/javascript" src="/site/js/es.js"></script>

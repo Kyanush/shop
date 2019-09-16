@@ -36,5 +36,5 @@
 
         'site_email' => 'info@onepoint.kz',
         'logo'    => env('APP_URL') . '/site/images/onepoint-logo.png',
-        'favicon' => env('APP_URL') . '/site/images/onepoint-favicon.png'
+        'favicon' => env('APP_URL') . '/favicon.ico'
     ];
