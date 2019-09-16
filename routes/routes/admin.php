@@ -1,39 +1,4 @@
 <?php
-
-//загрузить файл
-Route::post('ckeditor-upload-image',   'UploadImageController@CkeditorUploadImage');
-
-//выход
-Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
-
-//clear cache
-Route::get('/clear-cache', function() {
-    Artisan::call('cache:clear');
-    return "Cache is cleared";
-});
-
-//sitemap
-Route::group(['namespace'  => 'Sitemap', 'as' => 'sitemap.'], function () {
-
-    Route::get('sitemap.xml', 'SitemapController@sitemap');
-    Route::get('pages.xml',   'SitemapController@pages')->name('pages');
-    Route::get('news.xml',    'SitemapController@news')->name('news');
-
-    $cities     = \App\Services\ServiceCity::listActiveSort();
-    foreach ($cities as $city)
-        Route::get($city->code . '.xml',   'SitemapController@city')->name($city->code);
-
-});
-
-
-//YANDEX
-Route::group(['namespace'  => 'Yandex', 'as' => 'yandex.'], function () {
-    Route::get('market-export.xml', 'MarketExportController@marketExport');
-});
-
-
-
-
 // Admin Interface
 Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespace'  => 'Admin'], function () {
 
