@@ -189,7 +189,7 @@
                     @php $i = 1; @endphp
                     @foreach($product->attributes as $k => $attribute)
 
-                        @if(empty($attribute->attribute_group_id) or empty($attribute->pivot->value))
+                        @if(empty($attribute->attribute_group_id) or empty($attribute->pivot->value) or $attribute->show_product_detail == 0)
                             @continue
                         @endif
 

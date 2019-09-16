@@ -1,7 +1,7 @@
 <?php $attributes = [];?>
 
 @foreach($product->attributes as $attribute)
-    @if(empty($attribute->attribute_group_id) or empty($attribute->pivot->value))
+    @if(empty($attribute->attribute_group_id) or empty($attribute->pivot->value) or $attribute->show_product_detail == 0)
         @continue
     @endif
     <?php $attributes[$attribute->attribute_group_id][] = $attribute;?>

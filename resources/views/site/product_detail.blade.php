@@ -25,8 +25,6 @@
                 <div class="product-info">
                     <div class="left">
 
-
-
                         <div class="stickers">
                             @if($product->specificPrice)
                                 <div class="product_sticker_special">
@@ -299,12 +297,10 @@
                                 </div>
                             </div>
 
-
-
                             <div class="go_to_description">
                                     <ul>
                                         @foreach($product->attributes as $attribute)
-                                            @if(!in_array($attribute->id, [49, 61, 62]) and $attribute->pivot->value)
+                                            @if($attribute->show_product_detail == 1 and $attribute->pivot->value)
                                                 <li>{{ $attribute->name }}: {{ $attribute->pivot->value }}</li>
                                             @endif
                                         @endforeach
@@ -430,7 +426,7 @@
                                         <?php $attributes = [];?>
 
                                         @foreach($product->attributes as $attribute)
-                                            @if(empty($attribute->attribute_group_id) or empty($attribute->pivot->value))
+                                            @if(empty($attribute->attribute_group_id) or empty($attribute->pivot->value) or $attribute->show_product_detail == 0)
                                                 @continue
                                             @endif
                                             <?php $attributes[$attribute->attribute_group_id][] = $attribute;?>
