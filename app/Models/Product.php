@@ -225,11 +225,10 @@ class Product extends Model
                     $product->photo = $fileName;
                 }
             }
-
             //загрузка по ссылке
-            $serviceUploadUrl = new ServiceUploadUrl();
-            if($serviceUploadUrl->validUrlImage($product->photo))
+            elseif(ServiceUploadUrl::validUrlImage($product->photo))
             {
+                $serviceUploadUrl = new ServiceUploadUrl();
                 if(!empty($product->id))
                     self::find($product->id)->deletePhoto();
 

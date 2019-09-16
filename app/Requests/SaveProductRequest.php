@@ -33,7 +33,7 @@ class SaveProductRequest extends FormRequest
             'specific_price.reduction'       => 'nullable|numeric|min:0',
             'specific_price.discount_type'   => 'nullable|max:10',
 
-            'product_images.*.value'         => 'nullable|image|mimes:jpeg,jpg,png|max:10000',
+            'product_images.*.value'         => '',//nullable|image|mimes:jpeg,jpg,png|max:10000
         ];
 
         if ($this->input('specific_price.reduction') > 0)

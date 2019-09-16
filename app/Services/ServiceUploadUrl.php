@@ -27,7 +27,7 @@ class ServiceUploadUrl
             return false;
     }
 
-    public function validUrlImage($image_full_path){
+    public static function validUrlImage($image_full_path){
         $is = @getimagesize($image_full_path);
         if (!$is)
             return false;

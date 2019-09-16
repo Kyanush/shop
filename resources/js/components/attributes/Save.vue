@@ -78,6 +78,17 @@
                         </span>
                     </div>
 
+                    <div class="form-group col-md-6" v-bind:class="{'has-error' : IsError('attribute.show_product_detail')}">
+                        <label>Показывать характеристика товара</label>
+                        <select class="form-control" v-model="attribute.show_product_detail">
+                            <option value="1">Да</option>
+                            <option value="0">Нет</option>
+                        </select>
+                        <span v-if="IsError('attribute.show_product_detail')" class="help-block" v-for="e in IsError('attribute.show_product_detail')">
+                            {{ e }}
+                        </span>
+                    </div>
+
                     <div class="form-group col-md-12 attr-field attr-type-media image" v-if="attribute.type == 'media'" v-bind:class="{'has-error' : IsError('attribute.values.0.value')}">
                         <div>
                             <label>Картина по умолчанию</label>
@@ -302,6 +313,7 @@
                     use_in_filter: 0,
                     description: '',
                     attribute_group_id: 0,
+                    show_product_detail: 1,
                     values: [{
                         id: 0,
                         value: '',
@@ -433,14 +445,15 @@
 
                 var form_data = new FormData();
 
-                form_data.append('attribute[id]',            this.attribute.id);
-                form_data.append('attribute[name]',          this.attribute.name);
-                form_data.append('attribute[type]',          this.attribute.type);
-                form_data.append('attribute[required]',      this.attribute.required);
-                form_data.append('attribute[code]',          this.attribute.code);
-                form_data.append('attribute[use_in_filter]', this.attribute.use_in_filter);
-                form_data.append('attribute[description]',   this.attribute.description);
+                form_data.append('attribute[id]',                   this.attribute.id);
+                form_data.append('attribute[name]',                 this.attribute.name);
+                form_data.append('attribute[type]',                 this.attribute.type);
+                form_data.append('attribute[required]',             this.attribute.required);
+                form_data.append('attribute[code]',                 this.attribute.code);
+                form_data.append('attribute[use_in_filter]',        this.attribute.use_in_filter);
+                form_data.append('attribute[description]',          this.attribute.description);
                 form_data.append('attribute[attribute_group_id]',   this.attribute.attribute_group_id);
+                form_data.append('attribute[show_product_detail]',  this.attribute.show_product_detail);
 
 
 
@@ -479,6 +492,7 @@
                                     use_in_filter: 0,
                                     description: '',
                                     attribute_group_id: 0,
+                                    show_product_detail: 1,
                                     values: [{
                                         id: 0,
                                         value: '',

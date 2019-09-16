@@ -24,6 +24,7 @@
                 <th>Показывать в фильтре</th>
                 <th>Описание</th>
                 <th>Группа</th>
+                <th>Показывать <br/>характеристика товара</th>
                 <th>Действия</th>
             </tr>
             </thead>
@@ -37,6 +38,7 @@
                 <td>{{ item.use_in_filter == 1 ? 'Да' : 'Нет' }}</td>
                 <td>{{ item.description }}</td>
                 <td>{{ item.attribute_group ? item.attribute_group.name : ''}}</td>
+                <td>{{ item.show_product_detail == 1 ? 'Да' : 'Нет' }}</td>
                 <td>
                     <router-link :to="{ path: '/attributes/edit/' + item.id}" class="btn btn-xs btn-default">
                         <i class="fa fa-edit"></i>
@@ -58,6 +60,7 @@
                 <th>Показывать в фильтре</th>
                 <th>Описание</th>
                 <th>Группа</th>
+                <th>Показывать <br/>характеристика товара</th>
                 <th>Действия</th>
             </tr>
             </tfoot>
