@@ -39,7 +39,7 @@
                 <tr v-for="item in reviews.data" v-bind:class="{ 'deleted': !item.active }">
                     <td>{{ item.id }}</td>
                     <td>
-                        <router-link :to="{ path: '/products/edit/' + item.product_id}">
+                        <router-link :to="{ path: '/product/' + item.product_id}">
                             {{ item.product.name }}
                         </router-link>
                     </td>

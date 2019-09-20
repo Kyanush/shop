@@ -14,7 +14,7 @@ class Order extends Model
 
     protected $table = 'orders';
     protected $fillable = [
-        'type',
+        'type_id',
         'user_id',
         'status_id',
         'carrier_id',
@@ -106,6 +106,11 @@ class Order extends Model
             }, 0) + ($this->carrier ? $this->carrier->price : 0);
     }
 
+    public function type()
+    {
+        return $this->belongsTo('App\Models\Status', 'type_id', 'id');
+    }
+
     public function user()
     {
         return $this->belongsTo('App\User', 'user_id', 'id');
@@ -154,8 +159,8 @@ class Order extends Model
         if(isset($filter['user_id']))
             $query->WhereIn('user_id', $this->convertArr($filter['user_id']));
 
-        if(isset($filter['type']))
-            $query->WhereIn('type', $this->convertArr($filter['type']));
+        if(isset($filter['type_id']))
+            $query->WhereIn('type_id', $this->convertArr($filter['type_id']));
 
         if(isset($filter['status_id']))
             $query->WhereIn('status_id', $this->convertArr($filter['status_id']));

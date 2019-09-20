@@ -139,7 +139,10 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::post('banner-delete/{id}',      'BannerController@delete')->where(['id' => '[0-9]+']);
 
         //Статусы
-        Route::post('statuses/{where_use}',    'StatusController@list')->where(['where_use' => '[0-9]+']);
+        Route::group(['prefix'     => 'status'], function () {
+            Route::get('callbacks-status-id', 'StatusController@callbacksStatusId');
+            Route::get('orders-type',         'StatusController@ordersType');
+        });
 
         //Новости
         Route::get('news-list',               'NewsController@list');

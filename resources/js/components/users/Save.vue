@@ -210,7 +210,7 @@
                             </ul>
                         </div>
 
-                        <router-link :to="{path: '/users'}" class="btn btn-default">
+                        <router-link :to="{ name: 'users' }" class="btn btn-default">
                             <span class="fa fa-ban"></span> &nbsp;
                             Отменить
                         </router-link>
@@ -366,9 +366,9 @@
             }
         },
         created(){
-            if(this.$route.params.id > 0)
+            if(this.$route.params.user_id > 0)
             {
-                axios.get('/admin/user-view/' + this.$route.params.id).then((res)=>{
+                axios.get('/admin/user-view/' + this.$route.params.user_id).then((res)=>{
                         var data = res.data;
 
                         this.user.id         = data.id;
@@ -513,7 +513,7 @@
             },
             userDefaultValues(){
                 return {
-                    id: this.$route.params.id ? this.$route.params.id : 0,
+                    id: this.$route.params.user_id ? this.$route.params.user_id : 0,
                     name: '',
                     surname: '',
                     email: '',
@@ -542,11 +542,12 @@
                             if(!this.user.id)
                             {
                                 this.user.id = res.data;
-                                this.$router.push('/users/edit/' + this.user.id);
+                                this.$router.push({ name: 'user_edit', params: { user_id: this.user.id }});
                             }
                         }else if(this.method_redirect == 'save_and_new'){
-                            window.location = '/admin/users/create';
-                            this.user = this.userDefaultValues();
+                            this.$router.go({
+                                name: 'user_create',
+                            });
                         }
                     }
                 });

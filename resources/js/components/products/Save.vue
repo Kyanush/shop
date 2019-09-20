@@ -565,7 +565,7 @@
                                                        v-bind:class="{ 'fa-times-circle red': !item.active, 'fa-check-circle green': item.active }"></i>
                                                 </td>
                                                 <td>
-                                                    <router-link :to="{ path: '/products/edit/' + item.id}" class="btn btn-xs btn-default" v-if="product.id != item.id" target="_blank">
+                                                    <router-link :to="{ path: '/product/' + item.id}" class="btn btn-xs btn-default" v-if="product.id != item.id" target="_blank">
                                                         <i class="fa fa-edit"></i> Изменить
                                                     </router-link>
 
@@ -778,7 +778,7 @@
                 },
 
                 product:{
-                    id: this.$route.params.id ? this.$route.params.id : 0,
+                    id: this.$route.params.product_id ? this.$route.params.product_id : 0,
                     attribute_set_id: 0,
                     name: '',
                     url: '',
@@ -1021,6 +1021,9 @@
                 axios.post('/admin/product-save', data).then((res)=>{
                     if(res.data)
                     {
+
+
+
                         this.$helper.swalSuccess(this.product.id ? 'Успешно изменено' : 'Успешно создано');
 
                         if(this.method_redirect == 'save_and_back'){
@@ -1028,16 +1031,18 @@
 
                         }else if(this.method_redirect == 'save_and_continue'){
                             var product_id = res.data;
-                            window.location = '/admin/products/edit/' + product_id;
 
-                            /*
-                            if(!this.product.id)
-                                this.$router.push('/products/edit/' + product_id);
-                            this.getProduct(product_id);
-                            */
+                            this.$router.go({
+                                name: 'product_edit',
+                                params: {
+                                    product_id: product_id
+                                }
+                            });
 
                         }else if(this.method_redirect == 'save_and_new'){
-                            window.location = '/admin/product/create';
+
+                            this.$router.go({ name: 'product_create' });
+
                         }
                     }
                 });

@@ -2,22 +2,19 @@
     <div class="box">
 
         <div class="box-header with-border">
-            <router-link :to="{ path: '/product/create'}" class="btn btn-primary ladda-button">
+            <router-link :to="{ name: 'product_create' }" class="btn btn-primary ladda-button">
                 <span class="ladda-label">
                     <i class="fa fa-plus"></i> Добавить товар
                 </span>
             </router-link>
-
             <button type="button" class="btn btn-danger pull-right" @click="clearFilters">
                 <i class="fa fa-times" aria-hidden="true"></i>
                 Очистить
             </button>
-
             <div class="btn btn-primary pull-right" @click="showReport" style="margin-right: 5px;">
                 <i class="fa fa-print" aria-hidden="true"></i>
                 Отчеты
             </div>
-
         </div>
 
         <div class="box-header with-border">
@@ -227,7 +224,7 @@
                             {{ item.id }}
                         </td>
                         <td>
-                            <router-link :to="{ path: '/products/edit/' + item.id}">
+                            <router-link :to="{ path: '/product/' + item.id}">
                                 {{ item.name }}
                             </router-link>
                         </td>
@@ -265,9 +262,9 @@
                                 <a class="btn btn-xs btn-default" :href="item.detail_url_product" target="_blank" title="Посмотреть товар">
                                     <i class="fa fa-internet-explorer" aria-hidden="true"></i>
                                 </a>
-
-                                <router-link :to="{ path: '/products/edit/' + item.id}" class="btn btn-xs btn-default" title="Изменить">
-                                    <i class="fa fa-edit"></i> <!--Изменить-->
+                                <router-link :to="{ name: 'product_edit', params: { product_id: item.id} }" class="btn btn-xs btn-default" title="Изменить">
+                                    <i class="fa fa-edit"></i>
+                                    <!--Изменить-->
                                 </router-link>
                             </p>
                             <p>

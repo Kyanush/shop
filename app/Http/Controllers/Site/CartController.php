@@ -104,7 +104,7 @@ class CartController extends Controller
 
         //заказ
         $order = new Order();
-        $order->type                = 1;
+        $order->type_id             = 4;
         $order->user_id             = $user->id;
         $order->status_id           = 1;//новый
         $order->carrier_id          = $request->input('carrier_id');
@@ -141,9 +141,9 @@ class CartController extends Controller
 
         //заказ
         $order = new Order();
-        $order->type                = 2;
-        $order->user_id             = $user->id;
-        $order->status_id           = 1;//новый
+        $order->type_id   = 5;
+        $order->user_id   = $user->id;
+        $order->status_id = 1;//новый
         if($order->save())
         {
             ServiceOrder::productAdd($request->input('product_id'), $order->id);

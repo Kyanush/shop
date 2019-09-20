@@ -3,7 +3,7 @@
 
         <div class="box-header with-border">
 
-            <router-link :to="{ path: '/attributes/create'}" class="btn btn-primary ladda-button">
+            <router-link :to="{ name: 'attribute_create' }" class="btn btn-primary ladda-button">
                             <span class="ladda-label">
                                 <i class="fa fa-plus"></i> Создать атрибут
                             </span>
@@ -40,7 +40,7 @@
                 <td>{{ item.attribute_group ? item.attribute_group.name : ''}}</td>
                 <td>{{ item.show_product_detail == 1 ? 'Да' : 'Нет' }}</td>
                 <td>
-                    <router-link :to="{ path: '/attributes/edit/' + item.id}" class="btn btn-xs btn-default">
+                    <router-link :to="{ name: 'attribute_edit', params:{ attribute_id: item.id }}" class="btn btn-xs btn-default">
                         <i class="fa fa-edit"></i>
                     </router-link>
 

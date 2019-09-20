@@ -89,7 +89,7 @@
 
                         </div>
 
-                        <router-link :to="{path: '/callbacks'}" class="btn btn-default">
+                        <router-link :to="{ name: 'callbacks' }" class="btn btn-default">
                             <span class="fa fa-ban"></span> &nbsp;
                             Отменить
                         </router-link>
@@ -111,7 +111,7 @@
             return {
                 method_redirect: 'save_and_back',
                 callback:{
-                    id: this.$route.params.id ? this.$route.params.id : 0,
+                    id: this.$route.params.callback_id ? this.$route.params.callback_id : 0,
                     type:    'Обратный звонок',
                     status:  0,
                     phone:   '',
@@ -137,7 +137,7 @@
                 });
             }
 
-            axios.post('/admin/statuses/1').then((res)=>{
+            axios.get('/admin/status/callbacks-status-id').then((res)=>{
                 this.statuses = res.data;
             });
         },
@@ -161,7 +161,12 @@
                             if(!this.callback.id)
                             {
                                 this.callback.id = res.data;
-                                this.$router.push('/callbacks/edit/' + this.callback.id);
+                                this.$router.push({
+                                    name: 'callback',
+                                    params:{
+                                        callback_id: this.callback.id
+                                    }
+                                });
                             }
                         }
                     }

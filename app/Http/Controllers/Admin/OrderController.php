@@ -26,6 +26,7 @@ class OrderController extends AdminController
                 $query->select(['id', 'name']);
             },
             'status',
+            'type'
         ])
         ->Filters($filters)
         ->OrderBy($column, $order)

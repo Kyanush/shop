@@ -76,9 +76,10 @@
                                     <td>
                                         <b><p>Тип заказа</p></b>
                                         <p>
-                                            <select class="form-control" v-model="order.type">
-                                                <option value="1">Оформление заказа</option>
-                                                <option value="2">Купить в 1 клик</option>
+                                            <select class="form-control" v-model="order.type_id">
+                                                <option v-for="item in types" :value="item.id">
+                                                    {{ item.name }}
+                                                </option>
                                             </select>
                                         </p>
                                     </td>
@@ -348,7 +349,7 @@
                                 <tbody>
                                 <tr v-for="(product, index) in order.products" v-if="!product.pivot.is_delete">
                                     <td class="vertical-align-middle">
-                                        <router-link :to="{ path: '/products/edit/' + product.pivot.product_id}">
+                                        <router-link :to="{ path: '/product/' + product.pivot.product_id}">
                                             <img v-bind:src="'/uploads/products/' + product.pivot.product_id + '/' + product.photo" class="photo"/>
                                             {{ product.pivot.name }}
                                         </router-link>
@@ -516,6 +517,7 @@
                 carriers: [],
                 payments: [],
                 users: [],
+                types: [],
 
                 products:{
                     options:  [],
@@ -559,7 +561,7 @@
                 return {
                     id: parseInt(this.$route.params.id) > 0 ? this.$route.params.id : 0,
                     user_id: 0,
-                    type: 1,
+                    type_id: 1,
                     status_id: 1,
                     carrier_id: 2,
                     shipping_address_id: 0,
@@ -583,7 +585,7 @@
                     {
                         this.$helper.swalSuccess(parseInt(this.$route.params.id) ? 'Заказ изменен' : 'Заказ создан');
                         if(!parseInt(this.$route.params.id))
-                            this.$router.push('/orders/' + res.data);
+                            this.$router.push('/order/' + res.data);
                         this.getOrder(res.data);
                     }
                 });
@@ -666,6 +668,11 @@
             axios.get('/admin/order/users').then((res)=>{
                 this.users = res.data;
             });
+
+            axios.get('/admin/status/orders-type').then((res)=>{
+                this.types = res.data;
+            });
+
         },
         watch: {
             '$route'() {

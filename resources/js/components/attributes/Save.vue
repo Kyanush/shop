@@ -269,7 +269,7 @@
 
                         </div>
 
-                        <router-link :to="{path: '/attributes'}" class="btn btn-default">
+                        <router-link :to="{ name: 'attributes' }" class="btn btn-default">
                             <span class="fa fa-ban"></span> &nbsp;
                             Отменить
                         </router-link>
@@ -359,9 +359,10 @@
             }
         },
         created(){
-            if(this.$route.params.id > 0)
+            var attribute_id = this.$route.params.attribute_id;
+            if(attribute_id > 0)
             {
-                axios.get('/admin/attribute-view/' + this.$route.params.id).then((res)=>{
+                axios.get('/admin/attribute-view/' + attribute_id).then((res)=>{
                     this.attribute = res.data;
 
                     if(!this.attribute.attribute_group_id)
@@ -478,29 +479,17 @@
                             if(!this.attribute.id)
                             {
                                 this.attribute.id = res.data;
-                                this.$router.push('/attributes/edit/' + this.attribute.id);
+                                this.$router.push({
+                                    name: 'attribute_edit',
+                                    params: {
+                                        attribute_id: this.attribute.id
+                                    }
+                                });
                             }
                         }else if(this.method_redirect == 'save_and_new'){
-                            window.location = '/admin/attributes/create';
-
-                            this.attribute = {
-                                id: 0,
-                                    name: '',
-                                    type: '',
-                                    required: 0,
-                                    code: '',
-                                    use_in_filter: 0,
-                                    description: '',
-                                    attribute_group_id: 0,
-                                    show_product_detail: 1,
-                                    values: [{
-                                        id: 0,
-                                        value: '',
-                                        code: '',
-                                        props: '',
-                                        is_delete: 0
-                                    }]
-                            };
+                            this.$router.go({
+                                name: 'attribute_create'
+                            });
                         }
                     }
                 });
