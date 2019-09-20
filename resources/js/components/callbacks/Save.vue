@@ -10,7 +10,7 @@
                 </div>
                 <div class="box-body row">
 
-                    <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('callback.type')}">
+                    <div class="form-group col-md-4" v-bind:class="{'has-error' : IsError('callback.type')}">
                         <label>Тип <span class="red">*</span></label>
                         <input disabled type="text" v-model="callback.type" class="form-control"/>
                         <span v-if="IsError('callback.type')" class="help-block" v-for="e in IsError('callback.type')">
@@ -18,7 +18,7 @@
                         </span>
                     </div>
 
-                    <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('callback.status_id')}">
+                    <div class="form-group col-md-4" v-bind:class="{'has-error' : IsError('callback.status_id')}">
                         <label>Статус <span class="red">*</span></label>
                         <select v-model="callback.status_id" class="selectpicker form-control">
                             <option v-for="status in statuses"
@@ -27,15 +27,12 @@
                                 {{ status.name }}
                             </option>
                         </select>
-
-
-
                         <span v-if="IsError('callback.status_id')" class="help-block" v-for="e in IsError('callback.status_id')">
                               {{ e }}
                         </span>
                     </div>
 
-                    <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('callback.phone')}">
+                    <div class="form-group col-md-4" v-bind:class="{'has-error' : IsError('callback.phone')}">
                         <label>Телефон <span class="red">*</span></label>
                         <input disabled v-model="callback.phone" type="text" class="form-control">
                         <span v-if="IsError('callback.phone')" class="help-block" v-for="e in IsError('callback.phone')">
@@ -43,7 +40,7 @@
                          </span>
                     </div>
 
-                    <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('callback.message')}">
+                    <div class="form-group col-md-4" v-bind:class="{'has-error' : IsError('callback.message')}">
                         <label>Сообщение</label>
                         <textarea disabled rows="5" v-model="callback.message" class="form-control"></textarea>
                         <span v-if="IsError('callback.message')" class="help-block" v-for="e in IsError('callback.message')">
@@ -51,20 +48,20 @@
                         </span>
                     </div>
 
-                    <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('callback.email')}">
-                        <label>E-mail</label>
-                        <input disabled v-model="callback.email" type="text" class="form-control">
-                        <span v-if="IsError('callback.email')" class="help-block" v-for="e in IsError('callback.email')">
-                             {{ e }}
-                         </span>
-                    </div>
-
-                    <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('callback.comment')}">
+                    <div class="form-group col-md-4" v-bind:class="{'has-error' : IsError('callback.comment')}">
                         <label>Комментарий администратора</label>
                         <textarea rows="5" v-model="callback.comment" class="form-control"></textarea>
                         <span v-if="IsError('callback.comment')" class="help-block" v-for="e in IsError('callback.comment')">
                                  {{ e }}
                         </span>
+                    </div>
+
+                    <div class="form-group col-md-4" v-bind:class="{'has-error' : IsError('callback.email')}">
+                        <label>E-mail</label>
+                        <input disabled v-model="callback.email" type="text" class="form-control">
+                        <span v-if="IsError('callback.email')" class="help-block" v-for="e in IsError('callback.email')">
+                             {{ e }}
+                         </span>
                     </div>
 
                 </div>
