@@ -20,7 +20,7 @@ class Status extends Model
     }
 
     public function scopeOrdersType($query){
-        return $query->where('where_use', 'orders_type');
+        return $query->where('where_use', 'orders_type_id');
     }
 
     public function scopeDefaultValue($query){

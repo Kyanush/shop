@@ -75,6 +75,7 @@ export default new Router({
 
         {
             path: '/main',
+            name: 'main',
             component: main,
             meta: {
                 title: 'Статистика',
@@ -504,6 +505,7 @@ export default new Router({
         //заказы
         {
             path: '/orders',
+            name: 'orders',
             component: orders_list,
             meta: {
                 title: 'Заказы',
@@ -513,7 +515,8 @@ export default new Router({
             }
         },
         {
-            path: '/order/:id',
+            path: '/order/:order_id',
+            name: 'order_edit',
             component: orders_detail,
             meta: {
                 title: 'Заказ',
@@ -525,6 +528,7 @@ export default new Router({
         },
         {
             path: '/order',
+            name: 'order_create',
             component: orders_detail,
             meta: {
                 title: 'Создать заказ',

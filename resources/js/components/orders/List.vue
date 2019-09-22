@@ -2,7 +2,7 @@
     <div class="box">
 
         <div class="box-header with-border">
-            <router-link :to="{ path: '/order'}" class="btn btn-primary ladda-button">
+            <router-link :to="{ name: 'order_create' }" class="btn btn-primary ladda-button">
                 <span class="ladda-label">
                     <i class="fa fa-plus"></i> Создать заказ
                 </span>
@@ -240,7 +240,7 @@
                 <td>{{ item.total }}</td>
                 <td>{{ dateFormatTodayYesterday(item.created_at) }}</td>
                 <td>
-                    <router-link :to="{ path: '/order/' + item.id}" title="Посмотреть" class="btn btn-xs btn-default">
+                    <router-link :to="{ name: 'order_edit', params: { order_id: item.id } }" title="Посмотреть" class="btn btn-xs btn-default">
                         <i class="fa fa-eye"></i> <!--Посмотреть--->
                     </router-link>
 

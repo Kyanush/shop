@@ -10,7 +10,7 @@
 
                         Заказ #{{ order.id }}
 
-                        <router-link :to="{ path: '/users/edit/' + order.user_id}" v-if="order.user">
+                        <router-link :to="{ name: 'user_edit', params: {user_id: order.user_id} }" v-if="order.user">
                             - | {{ order.user.name }} {{ order.user.surname }}
                         </router-link>
 
@@ -559,7 +559,7 @@
         methods:{
             orderDefault(){
                 return {
-                    id: parseInt(this.$route.params.id) > 0 ? this.$route.params.id : 0,
+                    id: parseInt(this.$route.params.order_id) > 0 ? this.$route.params.order_id : 0,
                     user_id: 0,
                     type_id: 1,
                     status_id: 1,
@@ -583,9 +583,16 @@
                 axios.post('/admin/order-save', {order: this.order}).then((res)=>{
                     if(res.data)
                     {
-                        this.$helper.swalSuccess(parseInt(this.$route.params.id) ? 'Заказ изменен' : 'Заказ создан');
-                        if(!parseInt(this.$route.params.id))
-                            this.$router.push('/order/' + res.data);
+                        var order_id = parseInt(this.$route.params.order_id);
+
+                        this.$helper.swalSuccess(order_id > 0 ? 'Заказ изменен' : 'Заказ создан');
+                        if(!order_id)
+                            this.$router.push({
+                                name: 'order_edit',
+                                params:{
+                                    order_id: res.data
+                                }
+                            });
                         this.getOrder(res.data);
                     }
                 });
@@ -676,9 +683,8 @@
         },
         watch: {
             '$route'() {
-                this.getOrder(
-                    parseInt(this.$route.params.id) > 0 ? this.$route.params.id : 0
-                );
+                var order_id = parseInt(this.$route.params.order_id);
+                this.getOrder(order_id);
             }
         },
         computed:{
