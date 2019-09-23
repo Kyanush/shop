@@ -1,19 +1,19 @@
 <template>
-    <div class="modal" role="dialog" id="show-product-add-form">
+    <div class="modal" role="dialog" id="search-products">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Выберите товар</h5>
+                    <h5 class="modal-title">Поиск товара</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input placeholder="Поиск..." type="text" class="form-control" v-model="q"/>
+                    <input placeholder="Поиск..." type="text" class="form-control" v-model="search"/>
                     <br/>
                     <ul>
                         <li v-for="item in results">
-                            <img :src="'https://onepoint.kz/uploads/products/300/7ac06a52180dc211596bc3b056d09801.jpeg'" width="50"/>
+                            <img :src="item.photo_path" width="50"/>
                             {{ item.product.id }}, {{ item.product.name }}
                             <a class="pull-right" @click="selected(item.product)">Выбрать</a>
                         </li>
@@ -27,35 +27,28 @@
     </div>
 </template>
 
-<style scoped>
-    ul li{
-        border-bottom: 1px solid #d6d2d2;
-        padding: 5px 0;
-    }
-</style>
-
 <script>
     export default {
         data () {
             return {
-                q: '',
+                search: '',
                 results: []
             }
         },
         updated () {
         },
         methods:{
-            searchProducts(q){
-                axios.get('/admin/search-products?search=' + q).then((res)=>{
+            searchProducts(search){
+                axios.get('/admin/search-products?search=' + search).then((res)=>{
                     this.results = res.data;
                 });
             },
-            selected(item){
-                console.log(item);
+            selected(product){
+                this.$emit('productSelected', product);
             }
         },
         watch: {
-            q: {
+            search: {
                 handler: function (val, oldVal) {
                    this.searchProducts(val);
                 },
@@ -65,3 +58,9 @@
     }
 </script>
 
+<style scoped>
+    ul li{
+        border-bottom: 1px solid #d6d2d2;
+        padding: 5px 0;
+    }
+</style>

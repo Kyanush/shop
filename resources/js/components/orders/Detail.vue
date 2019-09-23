@@ -458,31 +458,7 @@
                 </div>
             </div>
 
-            <searchProducts/>
-        <!--
-            <div class="modal" role="dialog" id="show-product-add-form">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Выберите товар</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <Select2
-                                    @select="productAdd($event)"
-                                    :settings="products.settings"
-                                    :options="products.options"/>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
--->
-
+            <searchProducts @productSelected="productAdd"/>
 
     </div>
 </template>
@@ -538,45 +514,55 @@
                 payments: [],
                 users: [],
                 types: [],
-
-                products:{
-                    options:  [],
-                    settings: {
-                        placeholder: "Поиск",
-                        ajax: {
-                            url: '/admin/products-list',
-                            dataType: 'json',
-                            data: function (params) {
-                                var query = {
-                                    search: params.term,
-                                    perPage: 10
-                                }
-                                return query;
-                            },
-                            processResults: function (data) {
-                                var results = [];
-                                data.data.forEach(function (item, index){
-                                    results.push({
-                                        id:    item.id,
-                                        text:  item.name,
-                                        sku:   item.sku,
-                                        price: item.price,
-                                        photo: item.photo,
-                                    });
-                                });
-                                return {
-                                    results: results
-                                };
-                            }
-                        }
-                    }
-                }
             }
         },
         updated () {
             $('.selectpicker').selectpicker('refresh');
         },
         methods:{
+            productAdd(product){
+
+                var product_id = product.id;
+                var name       = product.name;
+                var sku        = product.sku;
+                var price      = product.price;
+                var photo      = product.photo;
+
+                    var self = this;
+                    var add  = true;
+
+                    this.order.products.forEach(function (item, index)
+                    {
+                        if(item.pivot.product_id == product_id)
+                        {
+                            self.$set(self.order.products[index].pivot, 'quantity', self.order.products[index].pivot.quantity + 1);
+                            self.$delete(self.order.products[index].pivot, 'is_delete');
+                            add = false;
+                            return;
+                        }
+                    });
+
+                    if(add)
+                    {
+                        setTimeout(function () {
+                            this.order.products.push({
+                                photo: photo,
+                                pivot:{
+                                    name:       name,
+                                    order_id:   this.order.id,
+                                    price:      price,
+                                    product_id: product_id,
+                                    quantity:   1,
+                                    sku:        sku
+                                }
+                            });
+                        }.bind(this), 500);
+                        //$('#search-products').modal('hide');
+                    }else
+                        alert('Товар уже добавлен');
+
+
+            },
             saveOrder(){
                 axios.post('/admin/order-save', {
                     order:       this.order,
@@ -605,41 +591,9 @@
                 else
                     this.$set(this.order.products[index].pivot, 'is_delete', true);
             },
-            productAdd({id, text, sku, price, photo}){
-                var self = this;
-                var add  = true;
 
-                this.order.products.forEach(function (item, index) {
-                    if(item.pivot.product_id == id){
-                        self.$set(self.order.products[index].pivot, 'quantity', self.order.products[index].pivot.quantity + 1);
-                        self.$delete(self.order.products[index].pivot, 'is_delete');
-                        add = false;
-                        return;
-                    }
-                });
-
-                if(add)
-                {
-                    setTimeout(function () {
-                        this.order.products.push({
-                            photo: photo,
-                            pivot:{
-                                name:       text,
-                                order_id:   this.order.id,
-                                price:      price,
-                                product_id: id,
-                                quantity:   1,
-                                sku:        sku
-                            }
-                        });
-                    }.bind(this), 500);
-                    $('#show-product-add-form').modal('hide');
-                }else
-                    alert('Товар уже добавлен');
-
-            },
             showProductAddForm(){
-                $('#show-product-add-form').modal('show');
+                $('#search-products').modal('show');
             },
             convertDataSelect2(values, column_id, column_text, disabled_column, default_option){
                 return this.$helper.convertDataSelect2(values, column_id, column_text, disabled_column, default_option);
@@ -754,7 +708,7 @@
     }
 </style>
 <style>
-    #show-product-add-form .select2{
+    #search-products .select2{
         width: 100%!important;
     }
 </style>

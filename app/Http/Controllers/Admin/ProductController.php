@@ -23,16 +23,20 @@ class ProductController extends AdminController
     }
 
     public function searchProducts(Request $request){
-        $products = Product::filters(['name' => $request->input('search')])
-                        ->limit(10)
-                        ->get();
-
-        $data = $products->map(function ($item) {
-            return  [
-                'product'    => $item,
-                'photo_path' => $item->pathPhoto(true),
-            ];
-        });
+        $data = [];
+        $search = $request->input('search');
+        if($search)
+        {
+            $products = Product::filters(['name' => $request->input('search')])
+                            ->limit(10)
+                            ->get();
+            $data = $products->map(function ($item) {
+                return  [
+                    'product'    => $item,
+                    'photo_path' => $item->pathPhoto(true),
+                ];
+            });
+        }
 
         return $this->sendResponse($data);
     }
