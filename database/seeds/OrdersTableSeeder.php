@@ -18,7 +18,6 @@ class OrdersTableSeeder extends Seeder
                 'user_id'             => 2,
                 'status_id'           => 1,
                 'carrier_id'          => 1,
-                'shipping_address_id' => 1,
                 'billing_address_id'  => 1,
                 'billing_company_id'  => 1,
                 'currency_id'         => 1,

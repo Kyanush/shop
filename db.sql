@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.7
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Сен 22 2019 г., 19:39
--- Версия сервера: 5.7.20
--- Версия PHP: 7.1.12
+-- Время создания: Сен 23 2019 г., 14:30
+-- Версия сервера: 10.3.13-MariaDB
+-- Версия PHP: 7.1.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,98 +19,8 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- База данных: `shop`
+-- База данных: `onepoint`
 --
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `t_addresses`
---
-
-CREATE TABLE `t_addresses` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `user_id` int(10) UNSIGNED NOT NULL,
-  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `city` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Дамп данных таблицы `t_addresses`
---
-
-INSERT INTO `t_addresses` (`id`, `user_id`, `address`, `city`, `created_at`, `updated_at`) VALUES
-(30, 18, 'Bulvar Mira', 'Karaganda', '2019-02-15 09:12:53', '2019-02-15 09:12:53'),
-(31, 19, 'мкр Аккент 28 кв 54', 'Алматы', '2019-02-15 11:30:55', '2019-02-15 11:30:55'),
-(32, 20, NULL, NULL, '2019-02-15 11:31:45', '2019-02-15 11:31:45'),
-(33, 20, NULL, NULL, '2019-02-15 11:31:47', '2019-02-15 11:31:47'),
-(34, 20, 'fgsgsdsd', 'hdhdfhfh', '2019-02-15 11:40:05', '2019-02-15 11:40:05'),
-(40, 26, 'ул. Жанибека Тархана дом 5/1 кв. 1', 'Астана', '2019-03-01 16:41:39', '2019-03-01 16:41:39'),
-(41, 25, NULL, NULL, '2019-03-02 21:33:38', '2019-03-02 21:33:38'),
-(42, 27, 'пацаева 29/2', 'осакаровка', '2019-03-04 19:47:28', '2019-03-04 19:47:28'),
-(43, 31, 'Сатпаева 30а', 'Алматы', '2019-03-28 09:36:52', '2019-03-28 09:36:52'),
-(47, 32, '27-1-13', 'актау', '2019-03-31 21:08:28', '2019-03-31 21:08:28'),
-(48, 33, 'Улица Гоголя 50/2 квартира 70', 'Караганда', '2019-04-02 09:26:09', '2019-04-02 09:26:09'),
-(49, 36, NULL, NULL, '2019-04-05 08:43:39', '2019-04-05 08:43:39'),
-(50, 38, NULL, NULL, '2019-04-11 08:22:57', '2019-04-11 08:22:57'),
-(51, 44, 'г.Алматы, улица Желтоксан, 191, БЦ Q', 'Алматы', '2019-04-15 07:18:03', '2019-04-15 07:18:03'),
-(52, 45, 'ул. Киевская 11/1', 'п.Карабалык (Костанайская область)', '2019-04-16 14:42:22', '2019-04-16 14:42:22'),
-(53, 46, NULL, NULL, '2019-04-17 05:11:46', '2019-04-17 05:11:46'),
-(55, 51, 'пр. Республики 16 кв 26', 'Караганда', '2019-04-26 16:17:32', '2019-04-26 16:17:32'),
-(56, 54, 'ул. Пушкина(угол Богенбай батыра) д.83, кв.57', 'Алматы', '2019-05-01 06:48:40', '2019-05-01 06:48:40'),
-(57, 55, NULL, NULL, '2019-05-02 04:56:03', '2019-05-02 04:56:03'),
-(58, 1, 'микро 7, дом 41', 'Алматы', '2019-05-02 16:27:32', '2019-05-02 16:27:32'),
-(59, 58, 'Степной-1, дом 11, кв 36', 'Караганда', '2019-05-04 08:57:51', '2019-05-04 08:57:51'),
-(60, 60, 'Красноармейская д34 кв8', 'Фёдорока', '2019-05-05 08:29:40', '2019-05-05 08:29:40'),
-(61, 63, 'Мухита 78б, БС Бургер', 'Уральск', '2019-05-09 17:22:38', '2019-05-09 17:22:38'),
-(62, 65, 'ул. Бурундайская, 93Д/2,  Жетысуский район, 050011', 'Алматы', '2019-05-15 08:40:08', '2019-05-15 08:40:08'),
-(63, 34, 'test', 'test', '2019-05-15 16:43:11', '2019-05-15 16:43:11'),
-(64, 34, 'микро 7, дом 41', 'Алматы', '2019-05-15 16:51:39', '2019-05-15 16:51:39'),
-(65, 34, 'микро 7, дом 41', 'Алматы', '2019-05-15 16:54:11', '2019-05-15 16:54:11'),
-(66, 34, 'микро 7, дом 41', 'Алматы', '2019-05-15 17:01:57', '2019-05-15 17:01:57'),
-(67, 34, NULL, NULL, '2019-05-15 17:18:27', '2019-05-15 17:18:27'),
-(68, 34, NULL, NULL, '2019-05-15 17:27:02', '2019-05-15 17:27:02'),
-(70, 34, NULL, NULL, '2019-05-15 18:04:47', '2019-05-15 18:04:47'),
-(71, 34, NULL, NULL, '2019-05-15 18:06:18', '2019-05-15 18:06:18'),
-(72, 34, 'test', 'Алматы', '2019-05-15 18:15:14', '2019-05-15 18:15:14'),
-(73, 34, NULL, NULL, '2019-05-15 18:17:53', '2019-05-15 18:17:53'),
-(75, 34, NULL, NULL, '2019-05-15 19:06:05', '2019-05-15 19:06:05'),
-(76, 34, NULL, NULL, '2019-05-16 02:11:34', '2019-05-16 02:11:34'),
-(78, 34, NULL, NULL, '2019-05-16 06:09:16', '2019-05-16 06:09:16'),
-(80, 34, 'Test', 'Test', '2019-05-17 05:27:23', '2019-05-17 05:27:23'),
-(81, 70, NULL, NULL, '2019-05-17 05:29:55', '2019-05-17 05:29:55'),
-(82, 34, NULL, NULL, '2019-05-17 22:14:17', '2019-05-17 22:14:17'),
-(83, 71, NULL, NULL, '2019-05-19 12:17:28', '2019-05-19 12:17:28'),
-(85, 72, 'Мкр. Жетысу 1 дом 20', 'Алматы', '2019-05-21 13:45:29', '2019-05-21 13:45:29'),
-(86, 73, 'пр. Аль-Фараби, 40', 'Алматы', '2019-05-22 12:08:10', '2019-05-22 12:08:10'),
-(87, 76, 'Гагарина', '135д', '2019-05-23 15:05:18', '2019-05-23 15:05:18'),
-(89, 82, 'улица Желтоксан дом 2/1 квартира 26', 'Нур-Султан', '2019-06-03 22:13:32', '2019-06-03 22:13:32'),
-(90, 83, NULL, NULL, '2019-06-04 10:38:44', '2019-06-04 10:38:44'),
-(91, 87, '2 мкр 12 здание офис ТОО \"СКС-plus\"', 'Актау', '2019-06-11 07:17:42', '2019-06-11 07:17:42'),
-(92, 89, NULL, NULL, '2019-06-13 05:06:07', '2019-06-13 05:06:07'),
-(93, 90, NULL, NULL, '2019-06-14 10:11:13', '2019-06-14 10:11:13'),
-(94, 97, 'Жандосова 37в', 'Алматы', '2019-06-21 05:17:22', '2019-06-21 05:17:22'),
-(95, 98, 'Мангилик ел 19/2, кв.98', 'Нур-Султан', '2019-06-22 14:22:52', '2019-06-22 14:22:52'),
-(96, 99, 'М. Габдуллина 18, кв. 39', 'Нур-Султан', '2019-06-23 17:18:39', '2019-06-23 17:18:39'),
-(97, 100, 'Авиагородок 24/130', 'Актобе', '2019-06-24 01:25:06', '2019-06-24 01:25:06'),
-(98, 102, 'улица Байзакова 280 Южная башня МК «Almaty Towers» 4 этаж', 'Алматы', '2019-06-25 03:17:36', '2019-06-25 03:17:36'),
-(99, 103, 'Момышулы 15/2, кв.94', 'Астана', '2019-06-25 12:49:09', '2019-06-25 12:49:09'),
-(100, 104, 'ул. Тимирязева 42, павильон 23А, офис 215', 'Алматы', '2019-06-26 08:51:26', '2019-06-26 08:51:26'),
-(101, 106, 'Микрорайон Строитель, дом 19, кв 140', 'Уральск', '2019-06-28 06:31:38', '2019-06-28 06:31:38'),
-(102, 107, 'Ул. Тараса Шевченко 4 кв 63', 'Нур-Султан', '2019-06-29 07:04:34', '2019-06-29 07:04:34'),
-(103, 109, 'Шерхан', 'Хромтау', '2019-07-02 03:04:18', '2019-07-02 03:04:18'),
-(104, 110, 'проспект Республики, дом 16, квартира 12', 'Шымкент', '2019-07-03 11:57:43', '2019-07-03 11:57:43'),
-(105, 112, 'Шелихова 93', 'Алматы', '2019-07-05 02:20:28', '2019-07-05 02:20:28'),
-(106, 119, 'улица Новая', 'Санкт-Петербург', '2019-07-17 09:15:29', '2019-07-17 09:15:29'),
-(107, 122, 'ул.Чайжунусова, 210', 'Семей', '2019-07-23 12:04:55', '2019-07-23 12:04:55'),
-(108, 123, 'Жарокова 269 А. Квартира 17', 'Алматы', '2019-07-23 19:20:30', '2019-07-23 19:20:30'),
-(109, 124, 'Жетысу-2, 38,кв.29', 'Алматы', '2019-07-27 07:42:25', '2019-07-27 07:42:25'),
-(110, 1, NULL, NULL, '2019-08-11 14:27:17', '2019-08-11 14:27:17'),
-(111, 1, NULL, NULL, '2019-08-11 14:28:53', '2019-08-11 14:28:53'),
-(112, 1, 'вавав', 'вавава', '2019-08-11 14:37:22', '2019-08-11 14:37:22'),
-(113, 1, NULL, NULL, '2019-08-12 07:17:37', '2019-08-12 07:17:37');
 
 -- --------------------------------------------------------
 
@@ -122,10 +32,10 @@ CREATE TABLE `t_attributes` (
   `id` int(10) UNSIGNED NOT NULL,
   `type` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `required` int(11) DEFAULT '0',
+  `required` int(11) DEFAULT 0,
   `code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `use_in_filter` int(11) DEFAULT '0',
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `use_in_filter` int(11) DEFAULT 0,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `attribute_group_id` int(10) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -267,7 +177,7 @@ INSERT INTO `t_attribute_attribute_set` (`id`, `attribute_id`, `attribute_set_id
 CREATE TABLE `t_attribute_groups` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sort` int(11) NOT NULL DEFAULT '0',
+  `sort` int(11) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2157,7 +2067,7 @@ CREATE TABLE `t_attribute_values` (
   `attribute_id` int(10) UNSIGNED NOT NULL,
   `value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `props` text COLLATE utf8mb4_unicode_ci,
+  `props` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2369,7 +2279,7 @@ CREATE TABLE `t_banners` (
   `name` varchar(255) NOT NULL,
   `link` varchar(255) NOT NULL,
   `body` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
@@ -2391,10 +2301,10 @@ CREATE TABLE `t_callbacks` (
   `id` int(10) UNSIGNED NOT NULL,
   `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `message` text COLLATE utf8mb4_unicode_ci,
+  `message` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status_id` int(11) NOT NULL DEFAULT '0' COMMENT 'Статус',
-  `comment` text COLLATE utf8mb4_unicode_ci COMMENT 'Комментарий администратора',
+  `status_id` int(11) NOT NULL DEFAULT 0 COMMENT 'Статус',
+  `comment` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Комментарий администратора',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `order_id` int(10) UNSIGNED DEFAULT NULL
@@ -2405,7 +2315,7 @@ CREATE TABLE `t_callbacks` (
 --
 
 INSERT INTO `t_callbacks` (`id`, `phone`, `type`, `message`, `email`, `status_id`, `comment`, `created_at`, `updated_at`, `order_id`) VALUES
-(2, '+7(777) 777-1111', 'Обратный звонок', NULL, NULL, 1, NULL, '2019-09-21 09:32:33', '2019-09-21 09:32:33', NULL);
+(2, '+7(777) 777-1111', 'Обратный звонок', NULL, 'kyka@gmail.com', 1, NULL, '2019-09-21 09:32:33', '2019-09-23 10:58:17', 261);
 
 -- --------------------------------------------------------
 
@@ -2416,7 +2326,7 @@ INSERT INTO `t_callbacks` (`id`, `phone`, `type`, `message`, `email`, `status_id
 CREATE TABLE `t_carriers` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `price` decimal(13,2) DEFAULT '0.00',
+  `price` decimal(13,2) DEFAULT 0.00,
   `delivery_text` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `logo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL
@@ -2663,7 +2573,7 @@ INSERT INTO `t_carts` (`id`, `visit_number`, `user_id`, `created_at`, `updated_a
 (319, 'a5d07e4672e712d4825a8f9c9d6c4470b301d7fe', NULL, '2019-07-25 19:25:35', '2019-07-25 19:25:35'),
 (321, 'f4935145231a448ab5bf9e3f7a7d57ca4afe9b05', NULL, '2019-07-28 08:54:17', '2019-07-28 08:54:17'),
 (322, '5b96a6016bcfbb0c83ead64b3c5cbb7bfaef8fa1', NULL, '2019-08-08 13:35:54', '2019-08-08 13:35:54'),
-(326, 'cb4363da216aed3feae6e78d3ef69d6274730ad9', 1, '2019-08-12 07:27:40', '2019-08-12 07:27:40');
+(331, '997f9fbb14179b0ae2f9c04af006d7596fdcec2a', 1, '2019-09-23 08:37:15', '2019-09-23 08:37:15');
 
 -- --------------------------------------------------------
 
@@ -2675,7 +2585,7 @@ CREATE TABLE `t_cart_items` (
   `id` int(10) UNSIGNED NOT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
   `cart_id` int(10) UNSIGNED NOT NULL,
-  `quantity` int(11) NOT NULL DEFAULT '1',
+  `quantity` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2889,8 +2799,7 @@ INSERT INTO `t_cart_items` (`id`, `product_id`, `cart_id`, `quantity`, `created_
 (666, 213, 56, 1, '2019-07-28 08:53:37', '2019-07-28 08:53:37'),
 (667, 213, 321, 2, '2019-07-28 08:54:17', '2019-07-28 08:54:18'),
 (670, 210, 322, 1, '2019-08-08 13:35:54', '2019-08-08 13:35:54'),
-(727, 279, 326, 9, '2019-08-13 07:02:13', '2019-08-13 07:02:13'),
-(728, 203, 326, 5, '2019-08-13 07:02:32', '2019-08-13 07:02:32');
+(735, 278, 331, 1, '2019-09-23 08:37:15', '2019-09-23 08:37:15');
 
 -- --------------------------------------------------------
 
@@ -2900,17 +2809,17 @@ INSERT INTO `t_cart_items` (`id`, `product_id`, `cart_id`, `quantity`, `created_
 
 CREATE TABLE `t_categories` (
   `id` int(10) UNSIGNED NOT NULL,
-  `parent_id` int(11) DEFAULT '0',
+  `parent_id` int(11) DEFAULT 0,
   `name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `url` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `class` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `sort` int(11) DEFAULT '0',
+  `sort` int(11) DEFAULT 0,
   `type` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
-  `seo_keywords` text COLLATE utf8mb4_unicode_ci,
-  `seo_description` text COLLATE utf8mb4_unicode_ci,
-  `active` int(11) NOT NULL DEFAULT '1',
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `seo_keywords` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `seo_description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `active` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -3008,7 +2917,7 @@ CREATE TABLE `t_category_filter_links` (
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `link` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `category_id` int(10) UNSIGNED NOT NULL,
-  `sort` int(10) DEFAULT '0',
+  `sort` int(10) DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -3270,9 +3179,9 @@ CREATE TABLE `t_cities` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `code` varchar(255) NOT NULL,
-  `sort` int(11) NOT NULL DEFAULT '0',
-  `active` int(11) NOT NULL DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `sort` int(11) NOT NULL DEFAULT 0,
+  `active` int(11) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
@@ -3321,24 +3230,6 @@ INSERT INTO `t_cities` (`id`, `name`, `code`, `sort`, `active`, `created_at`, `u
 (38, 'Шымкент', 'shymkent', 38, 1, '2019-06-27 02:49:47', '2019-06-27 02:49:47'),
 (39, 'Щучинск', 'shchuchinsk', 39, 0, '2019-06-27 02:49:04', '2019-06-02 21:45:21'),
 (40, 'Экибастуз', 'ekibastuz', 40, 0, '2019-06-27 02:49:04', '2019-06-02 21:45:28');
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `t_companies`
---
-
-CREATE TABLE `t_companies` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `user_id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `county` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `city` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `info` text COLLATE utf8mb4_unicode_ci,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -3561,7 +3452,7 @@ CREATE TABLE `t_news` (
   `image` varchar(255) NOT NULL,
   `preview_text` varchar(500) DEFAULT NULL,
   `detail_text` text NOT NULL,
-  `active` int(11) NOT NULL DEFAULT '1',
+  `active` int(11) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3590,7 +3481,7 @@ CREATE TABLE `t_notification_templates` (
   `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `model` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `body` longtext COLLATE utf8mb4_unicode_ci
+  `body` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3608,19 +3499,23 @@ INSERT INTO `t_notification_templates` (`id`, `name`, `slug`, `model`, `body`) V
 
 CREATE TABLE `t_orders` (
   `id` int(10) UNSIGNED NOT NULL,
-  `type_id` int(10) DEFAULT '1',
-  `user_id` int(10) UNSIGNED NOT NULL,
-  `status_id` int(10) UNSIGNED NOT NULL,
-  `carrier_id` int(10) UNSIGNED DEFAULT NULL,
-  `shipping_address_id` int(10) UNSIGNED DEFAULT NULL,
-  `comment` mediumtext COLLATE utf8mb4_unicode_ci,
-  `delivery_date` datetime DEFAULT NULL,
-  `total` decimal(13,2) DEFAULT NULL,
+  `type_id` int(10) NOT NULL COMMENT 'Тип заказа',
+  `user_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'Пользователь',
+  `status_id` int(10) UNSIGNED NOT NULL COMMENT 'Текущее состояние',
+  `carrier_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'Курьер',
+  `comment` mediumtext COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Комментарии',
+  `delivery_date` datetime DEFAULT NULL COMMENT 'Дата доставки',
+  `total` decimal(13,2) DEFAULT NULL COMMENT 'Сумма',
   `payment_id` int(10) UNSIGNED DEFAULT NULL COMMENT 'Тип оплаты',
-  `paid` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `payment_date` timestamp NULL DEFAULT NULL,
-  `payment_result` text COLLATE utf8mb4_unicode_ci,
-  `where_ordered` int(11) NOT NULL DEFAULT '0' COMMENT 'Где заказал',
+  `paid` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Оплачено',
+  `payment_date` timestamp NULL DEFAULT NULL COMMENT 'Дата оплаты',
+  `payment_result` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Результат оплаты',
+  `where_ordered` int(11) NOT NULL DEFAULT 0 COMMENT 'Где заказал',
+  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Адрес',
+  `city` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Город',
+  `user_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Имя пользователя',
+  `user_phone` varchar(25) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Телефон пользователя',
+  `user_email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Почта пользователя',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -3629,96 +3524,116 @@ CREATE TABLE `t_orders` (
 -- Дамп данных таблицы `t_orders`
 --
 
-INSERT INTO `t_orders` (`id`, `type_id`, `user_id`, `status_id`, `carrier_id`, `shipping_address_id`, `comment`, `delivery_date`, `total`, `payment_id`, `paid`, `payment_date`, `payment_result`, `where_ordered`, `created_at`, `updated_at`) VALUES
-(78, 4, 32, 6, 1, 47, NULL, NULL, '124500.00', 2, 0, NULL, NULL, 0, '2019-03-31 21:08:28', '2019-04-04 06:20:50'),
-(79, 4, 33, 5, 1, 48, 'За час до доставки позвонить мне. Что бы я успел приехать с работы!', '2019-04-04 12:19:59', '191000.00', 1, 1, '2019-04-04 06:19:59', NULL, 0, '2019-04-02 09:26:09', '2019-04-04 06:20:36'),
-(81, 4, 35, 5, 2, NULL, NULL, '2019-04-04 11:35:02', '79900.00', 1, 1, '2019-04-04 05:35:02', NULL, 0, '2019-04-03 16:56:06', '2019-04-04 06:21:04'),
-(82, 4, 36, 6, 2, 49, NULL, NULL, '207000.00', 1, 0, NULL, NULL, 0, '2019-04-05 08:43:39', '2019-04-06 07:30:14'),
-(83, 4, 38, 5, 2, 50, NULL, NULL, '215000.00', 2, 0, NULL, NULL, 0, '2019-04-11 08:22:57', '2019-04-11 10:14:48'),
-(84, 5, 39, 6, 2, NULL, NULL, NULL, '89500.00', 2, 0, NULL, NULL, 0, '2019-04-11 15:15:42', '2019-04-15 05:21:29'),
-(85, 5, 41, 6, 1, NULL, NULL, NULL, '81900.00', 1, 0, NULL, NULL, 0, '2019-04-14 14:27:24', '2019-04-15 06:15:47'),
-(86, 5, 42, 5, 2, NULL, NULL, NULL, '59900.00', 1, 0, NULL, NULL, 0, '2019-04-14 19:04:58', '2019-04-15 05:58:42'),
-(87, 5, 43, 5, 2, NULL, NULL, NULL, '119000.00', 1, 0, NULL, NULL, 0, '2019-04-15 06:07:48', '2019-04-15 06:14:00'),
-(88, 4, 44, 5, 2, 51, NULL, NULL, '189800.00', 1, 0, NULL, NULL, 0, '2019-04-15 07:18:03', '2019-04-15 09:53:05'),
-(89, 4, 45, 5, 2, 52, NULL, NULL, '79000.00', 1, 0, NULL, NULL, 0, '2019-04-16 14:42:22', '2019-04-18 05:38:11'),
-(90, 4, 46, 5, 2, 53, NULL, NULL, '144900.00', 2, 1, NULL, NULL, 0, '2019-04-17 05:11:46', '2019-04-17 08:33:02'),
-(91, 5, 48, 5, 1, NULL, NULL, NULL, '64900.00', 2, 1, NULL, NULL, 0, '2019-04-22 18:04:36', '2019-04-28 04:57:01'),
-(92, 5, 49, 5, 2, NULL, NULL, NULL, '14900.00', 1, 1, NULL, NULL, 0, '2019-04-23 05:40:32', '2019-04-24 13:28:21'),
-(94, 4, 51, 5, 1, 55, NULL, NULL, '67500.00', 1, 1, NULL, NULL, 0, '2019-04-26 16:17:32', '2019-04-30 06:12:10'),
-(95, 5, 52, 5, 1, NULL, NULL, NULL, '133000.00', 1, 1, NULL, NULL, 0, '2019-04-27 14:23:00', '2019-04-30 06:12:02'),
-(96, 4, 54, 5, 1, 56, 'Буду благодарна за звонок заранее.', NULL, '17900.00', 1, 1, NULL, NULL, 0, '2019-05-01 06:48:41', '2019-05-01 08:23:59'),
-(97, 4, 55, 6, 2, 57, NULL, NULL, '0.00', 1, 0, NULL, NULL, 0, '2019-05-02 04:56:03', '2019-05-04 08:30:12'),
-(98, 5, 56, 5, 1, NULL, NULL, NULL, '129000.00', 1, 0, NULL, NULL, 0, '2019-05-02 06:23:37', '2019-05-03 09:11:58'),
-(104, 5, 50, 6, 2, NULL, NULL, NULL, '23000.00', 1, 0, NULL, NULL, 2, '2019-05-03 05:53:53', '2019-05-03 08:30:29'),
-(106, 5, 59, 5, 1, NULL, NULL, NULL, '145900.00', 1, 0, NULL, NULL, 1, '2019-05-04 07:17:41', '2019-05-04 08:30:55'),
-(107, 4, 58, 5, 1, 59, NULL, NULL, '175900.00', 1, 1, NULL, NULL, 1, '2019-05-04 08:57:51', '2019-05-05 06:48:21'),
-(108, 5, 60, 5, 2, NULL, NULL, NULL, '88500.00', 2, 1, NULL, NULL, 2, '2019-05-05 08:25:13', '2019-05-05 09:31:49'),
-(109, 4, 60, 5, 2, 60, NULL, NULL, '88500.00', 2, 1, NULL, NULL, 2, '2019-05-05 08:29:40', '2019-05-05 09:32:50'),
-(110, 5, 61, 5, 1, NULL, NULL, NULL, '79500.00', 1, 1, NULL, NULL, 2, '2019-05-05 11:40:33', '2019-05-07 11:45:59'),
-(111, 5, 62, 5, 2, NULL, NULL, NULL, '102900.00', 1, 1, NULL, NULL, 2, '2019-05-08 04:44:07', '2019-05-08 12:28:06'),
-(112, 4, 63, 5, 1, 61, 'Запасной номер 87085300417', NULL, '122000.00', 1, 1, NULL, NULL, 2, '2019-05-09 17:22:38', '2019-05-14 07:27:14'),
-(114, 4, 65, 5, 1, 62, NULL, NULL, '143900.00', 1, 1, NULL, NULL, 1, '2019-05-15 08:40:08', '2019-05-17 05:09:58'),
-(117, 4, 67, 5, 1, NULL, NULL, NULL, '76000.00', 1, 1, NULL, NULL, 2, '2019-05-15 15:06:42', '2019-05-18 12:56:34'),
-(169, 4, 72, 6, 1, 85, NULL, NULL, '69000.00', 2, 0, NULL, NULL, 2, '2019-05-21 13:45:29', '2019-05-23 04:31:08'),
-(170, 4, 73, 5, 1, 86, 'Предварительно прошу по телефону сообщить точные характеристики заказа (на сайте указаны иные, чем в наименовании). Прошу сообщить с какой прошивкой смартфон, необходима Global Version (не Китай).\nДоставку осуществить по указанному адресу до 18:00.', NULL, '95999.00', 1, 1, NULL, NULL, 1, '2019-05-22 12:08:10', '2019-05-23 07:07:41'),
-(173, 4, 76, 5, 1, 87, NULL, NULL, '129500.00', 2, 1, NULL, NULL, 1, '2019-05-23 15:05:18', '2019-05-26 11:07:00'),
-(178, 5, 80, 5, 1, NULL, NULL, NULL, '76000.00', 1, 1, NULL, NULL, 2, '2019-06-02 11:07:26', '2019-06-04 09:19:11'),
-(179, 5, 81, 5, 2, NULL, NULL, NULL, '142900.00', 1, 1, NULL, NULL, 2, '2019-06-03 03:30:44', '2019-06-03 07:40:56'),
-(180, 4, 82, 5, 1, 89, NULL, NULL, '149900.00', 1, 1, NULL, NULL, 1, '2019-06-03 22:13:32', '2019-06-06 04:16:25'),
-(181, 4, 83, 5, 2, 90, NULL, NULL, '66500.00', 1, 1, NULL, NULL, 2, '2019-06-04 10:38:44', '2019-06-04 11:33:54'),
-(182, 5, 84, 6, 2, NULL, NULL, NULL, '50500.00', 2, 0, NULL, NULL, 2, '2019-06-04 13:12:10', '2019-06-06 04:18:03'),
-(183, 5, 85, 5, 2, NULL, NULL, NULL, '79900.00', 1, 1, NULL, NULL, 2, '2019-06-06 16:41:20', '2019-06-08 04:09:39'),
-(184, 5, 86, 6, 2, NULL, NULL, NULL, '182800.00', 2, 0, NULL, NULL, 2, '2019-06-08 18:39:58', '2019-06-09 04:44:42'),
-(185, 4, 87, 2, 1, 91, 'Мангистауская область', NULL, '143900.00', 1, 0, NULL, NULL, 1, '2019-06-11 07:17:42', '2019-06-11 09:01:14'),
-(186, 5, 88, 6, 1, NULL, NULL, NULL, '161000.00', 2, 0, NULL, NULL, 2, '2019-06-12 18:20:49', '2019-06-14 03:54:33'),
-(187, 4, 89, 5, 2, 92, NULL, NULL, '142900.00', 1, 1, NULL, NULL, 1, '2019-06-13 05:06:07', '2019-06-14 03:52:17'),
-(188, 4, 90, 6, 2, 93, 'Забрать нужно сегодня', NULL, '124000.00', 2, 1, NULL, NULL, 1, '2019-06-14 10:11:13', '2019-06-14 12:30:24'),
-(189, 5, 91, 6, 2, NULL, NULL, NULL, '23000.00', 1, 0, NULL, NULL, 1, '2019-06-15 15:36:18', '2019-06-19 04:38:18'),
-(190, 5, 92, 6, 2, NULL, NULL, NULL, '75000.00', 1, 0, NULL, NULL, 1, '2019-06-15 20:36:34', '2019-06-19 04:36:47'),
-(191, 5, 93, 5, 1, NULL, NULL, NULL, '103900.00', 1, 1, NULL, NULL, 2, '2019-06-17 14:21:45', '2019-06-21 04:30:34'),
-(192, 5, 94, 6, 2, NULL, NULL, NULL, '87900.00', 1, 0, NULL, NULL, 2, '2019-06-18 04:32:25', '2019-06-19 04:36:28'),
-(193, 5, 96, 5, 2, NULL, NULL, NULL, '345595.00', 1, 1, NULL, NULL, 2, '2019-06-19 06:48:34', '2019-06-21 04:30:18'),
-(194, 4, 97, 5, 1, 94, NULL, NULL, '76000.00', 1, 1, NULL, NULL, 2, '2019-06-21 05:17:22', '2019-06-21 08:12:53'),
-(197, 4, 98, 5, 1, 95, NULL, NULL, '143900.00', 1, 1, NULL, NULL, 2, '2019-06-22 14:22:52', '2019-07-16 04:21:07'),
-(198, 4, 99, 5, 1, 96, NULL, NULL, '143900.00', 1, 0, NULL, NULL, 1, '2019-06-23 17:18:39', '2019-07-16 04:20:42'),
-(199, 4, 100, 6, 1, 97, NULL, NULL, '64500.00', 1, 0, NULL, NULL, 2, '2019-06-24 01:25:06', '2019-07-13 07:22:51'),
-(200, 4, 102, 6, 1, 98, 'Добрый день! Юр лицо\nреквизиты компании ниже\nТОО «Documentolog»\n010000, Республика Казахстан,  \nг.Астана, ул. Д.Кунаева 12/1, ВП-80, офис 203,210\nБИН 070840007503\nРНН 600 400 584 842\nИИК KZ05914012203KZ00375\nБИК  SABRKZKA\nДБ АО \"Сбербанк\"\nКбе 17\nНДС Серия 62001 № 1004962 от 19.10.2016 года.\nГенеральный директор Канафин Б.Б.\nДействует на основании Устава', NULL, '15900.00', 2, 0, NULL, NULL, 1, '2019-06-25 03:17:36', '2019-06-27 05:57:49'),
-(202, 4, 103, 5, 1, 99, 'Позвоните пожалуйста по номерам\n87027618646\n87026840030', NULL, '18990.00', 1, 0, NULL, NULL, 1, '2019-06-25 12:49:09', '2019-07-13 07:18:58'),
-(203, 4, 104, 5, 1, 100, 'РЕКВИЗИТЫ :\n\nТОО «Алтын-Адам Құрылыс»\n\nЖШС «Алтын-Адам Құрылыс»\n\nРНН 091200219088\n\nБИН 100140009813\n\nКБЕ 17\n\nТекущий счет (IBAN счет) В KZT: KZ3796502F0009842062\n\nЮРИДИЧЕСКИЙ АДРЕС: Алматинская обл., Енбекшиказахский район, г. Есик, мкр. 1, д. 8, кв. 25\n\nФактический адрес: г. Алматы, ул. Тимирязева 42, павильон 23А, офис 215\n\nДиректор: Әбілханова Дина Еркінқызы', NULL, '253800.00', 2, 1, NULL, NULL, 1, '2019-06-26 08:51:26', '2019-06-27 10:48:46'),
-(204, 5, 105, 5, 1, NULL, NULL, NULL, '76000.00', 1, 1, NULL, NULL, 2, '2019-06-27 03:57:43', '2019-06-27 07:33:16'),
-(205, 4, 106, 6, 1, 101, NULL, NULL, '151000.00', 1, 0, NULL, NULL, 2, '2019-06-28 06:31:38', '2019-07-13 07:17:15'),
-(206, 4, 107, 6, 1, 102, NULL, NULL, '143900.00', 2, 0, NULL, NULL, 2, '2019-06-29 07:04:34', '2019-07-13 07:18:43'),
-(207, 5, 108, 6, 2, NULL, NULL, NULL, '17990.00', 1, 0, NULL, NULL, 2, '2019-06-30 08:52:40', '2019-07-02 05:26:50'),
-(208, 4, 109, 6, 1, 103, NULL, NULL, '168990.00', 2, 0, NULL, NULL, 2, '2019-07-02 03:04:18', '2019-07-02 05:26:20'),
-(209, 5, 24, 5, 1, NULL, NULL, NULL, '43000.00', 1, 0, NULL, NULL, 2, '2019-07-02 10:42:22', '2019-07-07 05:54:00'),
-(210, 4, 110, 5, 1, 104, NULL, NULL, '175900.00', 1, 1, NULL, NULL, 1, '2019-07-03 11:57:43', '2019-07-07 05:05:48'),
-(211, 5, 112, 6, 2, NULL, NULL, NULL, '23000.00', 2, 0, NULL, NULL, 2, '2019-07-04 16:05:31', '2019-07-05 05:52:07'),
-(212, 4, 112, 5, 1, 105, NULL, NULL, '24000.00', 1, 1, NULL, NULL, 2, '2019-07-05 02:20:28', '2019-07-07 05:05:12'),
-(213, 5, 113, 4, 2, NULL, NULL, NULL, '23000.00', 1, 0, NULL, NULL, 2, '2019-07-08 17:43:47', '2019-07-09 05:01:01'),
-(214, 5, 114, 5, 2, NULL, NULL, NULL, '102900.00', 1, 0, NULL, NULL, 2, '2019-07-09 01:05:11', '2019-07-09 04:54:44'),
-(215, 5, 115, 5, 1, NULL, NULL, NULL, '143900.00', 1, 0, NULL, NULL, 1, '2019-07-09 06:20:31', '2019-07-16 04:21:46'),
-(216, 5, 116, 6, 2, NULL, NULL, NULL, '17990.00', 1, 0, NULL, NULL, 2, '2019-07-10 12:30:04', '2019-07-16 04:21:58'),
-(217, 5, 117, 6, 2, NULL, NULL, NULL, '124000.00', 1, 0, NULL, NULL, 1, '2019-07-13 03:41:02', '2019-07-13 06:57:25'),
-(218, 5, 118, 6, 2, NULL, NULL, NULL, '23000.00', 1, 0, NULL, NULL, 2, '2019-07-13 06:08:54', '2019-07-19 05:14:12'),
-(219, 4, 119, 5, 1, 106, NULL, NULL, '24000.00', 1, 0, NULL, NULL, 1, '2019-07-17 09:15:29', '2019-07-17 10:35:06'),
-(220, 5, 121, 6, 2, NULL, NULL, NULL, '53000.00', 1, 0, NULL, NULL, 2, '2019-07-19 14:57:18', '2019-07-22 05:45:04'),
-(222, 4, 122, 5, 1, 107, NULL, NULL, '47000.00', 1, 0, NULL, NULL, 1, '2019-07-23 12:04:55', '2019-07-24 11:00:32'),
-(223, 4, 123, 5, 1, 108, 'Доставьте пожалуйста сегодня', NULL, '24000.00', 1, 0, NULL, NULL, 2, '2019-07-23 19:20:30', '2019-07-24 04:52:42'),
-(224, 4, 124, 1, 1, 109, NULL, NULL, '148900.00', 2, 0, NULL, NULL, 2, '2019-07-27 07:42:25', '2019-07-27 07:42:25'),
-(225, 5, 125, 1, NULL, NULL, NULL, NULL, '50500.00', NULL, 0, NULL, NULL, 2, '2019-07-27 10:09:55', '2019-07-27 10:09:55'),
-(226, 5, 1, 1, NULL, NULL, NULL, NULL, '64000.00', NULL, 0, NULL, NULL, 1, '2019-08-02 15:43:46', '2019-08-02 15:43:47'),
-(227, 5, 1, 1, NULL, NULL, NULL, NULL, '174900.00', NULL, 0, NULL, NULL, 1, '2019-08-10 16:59:20', '2019-08-10 16:59:21'),
-(228, 5, 1, 1, NULL, NULL, NULL, NULL, '174900.00', NULL, 0, NULL, NULL, 1, '2019-08-10 17:00:59', '2019-08-10 17:00:59'),
-(229, 5, 1, 1, NULL, NULL, NULL, NULL, '174900.00', NULL, 0, NULL, NULL, 1, '2019-08-10 18:43:05', '2019-08-10 18:43:05'),
-(230, 4, 1, 1, 2, 110, NULL, NULL, '166900.00', 1, 0, NULL, NULL, 1, '2019-08-11 14:27:17', '2019-08-11 14:27:17'),
-(231, 4, 1, 1, 2, 111, NULL, NULL, '411095.00', 1, 0, NULL, NULL, 1, '2019-08-11 14:28:53', '2019-08-11 14:28:53'),
-(232, 4, 1, 1, 1, 112, 'вавава', NULL, '522500.00', 1, 0, NULL, NULL, 1, '2019-08-11 14:37:22', '2019-08-11 14:37:22'),
-(233, 5, 1, 1, NULL, NULL, NULL, NULL, '59500.00', NULL, 0, NULL, NULL, 1, '2019-08-11 14:38:25', '2019-08-11 14:38:25'),
-(234, 4, 1, 1, 1, 58, 'ghmfgh', NULL, '206400.00', 1, 0, NULL, NULL, 1, '2019-08-11 16:20:29', '2019-08-11 16:20:29'),
-(235, 5, 1, 1, NULL, NULL, NULL, NULL, '79900.00', NULL, 0, NULL, NULL, 2, '2019-08-12 07:15:44', '2019-08-12 07:15:44'),
-(236, 4, 1, 1, 2, 113, NULL, NULL, '254800.00', 1, 0, NULL, NULL, 2, '2019-08-12 07:17:37', '2019-09-21 07:49:43'),
-(237, 4, 124, 1, 2, 109, 'sdsd', NULL, '136100.00', 1, 0, NULL, NULL, 1, '2019-09-05 16:57:56', '2019-09-21 16:38:38'),
-(238, 6, 124, 1, 2, 109, NULL, '2019-09-12 13:43:35', '22000.00', 1, 0, '2019-09-04 07:43:35', NULL, 1, '2019-08-28 07:43:35', '2019-09-21 08:46:11');
+INSERT INTO `t_orders` (`id`, `type_id`, `user_id`, `status_id`, `carrier_id`, `comment`, `delivery_date`, `total`, `payment_id`, `paid`, `payment_date`, `payment_result`, `where_ordered`, `address`, `city`, `user_name`, `user_phone`, `user_email`, `created_at`, `updated_at`) VALUES
+(78, 4, 32, 6, 1, NULL, NULL, '124500.00', 2, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-03-31 21:08:28', '2019-04-04 06:20:50'),
+(79, 4, 33, 5, 1, 'За час до доставки позвонить мне. Что бы я успел приехать с работы!', '2019-04-04 12:19:59', '191000.00', 1, 1, '2019-04-04 06:19:59', NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-04-02 09:26:09', '2019-04-04 06:20:36'),
+(81, 4, 35, 5, 2, NULL, '2019-04-04 11:35:02', '79900.00', 1, 1, '2019-04-04 05:35:02', NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-04-03 16:56:06', '2019-04-04 06:21:04'),
+(82, 4, 36, 6, 2, NULL, NULL, '207000.00', 1, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-04-05 08:43:39', '2019-04-06 07:30:14'),
+(83, 4, 38, 5, 2, NULL, NULL, '215000.00', 2, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-04-11 08:22:57', '2019-04-11 10:14:48'),
+(84, 5, 39, 6, 2, NULL, NULL, '89500.00', 2, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-04-11 15:15:42', '2019-04-15 05:21:29'),
+(85, 5, 41, 6, 1, NULL, NULL, '81900.00', 1, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-04-14 14:27:24', '2019-04-15 06:15:47'),
+(86, 5, 42, 5, 2, NULL, NULL, '59900.00', 1, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-04-14 19:04:58', '2019-04-15 05:58:42'),
+(87, 5, 43, 5, 2, NULL, NULL, '119000.00', 1, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-04-15 06:07:48', '2019-04-15 06:14:00'),
+(88, 4, 44, 5, 2, NULL, NULL, '189800.00', 1, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-04-15 07:18:03', '2019-04-15 09:53:05'),
+(89, 4, 45, 5, 2, NULL, NULL, '79000.00', 1, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-04-16 14:42:22', '2019-04-18 05:38:11'),
+(90, 4, 46, 5, 2, NULL, NULL, '144900.00', 2, 1, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-04-17 05:11:46', '2019-04-17 08:33:02'),
+(91, 5, 48, 5, 1, NULL, NULL, '64900.00', 2, 1, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-04-22 18:04:36', '2019-04-28 04:57:01'),
+(92, 5, 49, 5, 2, NULL, NULL, '14900.00', 1, 1, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-04-23 05:40:32', '2019-04-24 13:28:21'),
+(94, 4, 51, 5, 1, NULL, NULL, '67500.00', 1, 1, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-04-26 16:17:32', '2019-04-30 06:12:10'),
+(95, 5, 52, 5, 1, NULL, NULL, '133000.00', 1, 1, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-04-27 14:23:00', '2019-04-30 06:12:02'),
+(96, 4, 54, 5, 1, 'Буду благодарна за звонок заранее.', NULL, '17900.00', 1, 1, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-05-01 06:48:41', '2019-05-01 08:23:59'),
+(97, 4, 55, 6, 2, NULL, NULL, '0.00', 1, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-05-02 04:56:03', '2019-05-04 08:30:12'),
+(98, 5, 56, 5, 1, NULL, NULL, '129000.00', 1, 0, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, '2019-05-02 06:23:37', '2019-05-03 09:11:58'),
+(104, 5, 50, 6, 2, NULL, NULL, '23000.00', 1, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-05-03 05:53:53', '2019-05-03 08:30:29'),
+(106, 5, 59, 5, 1, NULL, NULL, '145900.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-05-04 07:17:41', '2019-05-04 08:30:55'),
+(107, 4, 58, 5, 1, NULL, NULL, '175900.00', 1, 1, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-05-04 08:57:51', '2019-05-05 06:48:21'),
+(108, 5, 60, 5, 2, NULL, NULL, '88500.00', 2, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-05-05 08:25:13', '2019-05-05 09:31:49'),
+(109, 4, 60, 5, 2, NULL, NULL, '88500.00', 2, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-05-05 08:29:40', '2019-05-05 09:32:50'),
+(110, 5, 61, 5, 1, NULL, NULL, '79500.00', 1, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-05-05 11:40:33', '2019-05-07 11:45:59'),
+(111, 5, 62, 5, 2, NULL, NULL, '102900.00', 1, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-05-08 04:44:07', '2019-05-08 12:28:06'),
+(112, 4, 63, 5, 1, 'Запасной номер 87085300417', NULL, '122000.00', 1, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-05-09 17:22:38', '2019-05-14 07:27:14'),
+(114, 4, 65, 5, 1, NULL, NULL, '143900.00', 1, 1, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-05-15 08:40:08', '2019-05-17 05:09:58'),
+(117, 4, 67, 5, 1, NULL, NULL, '76000.00', 1, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-05-15 15:06:42', '2019-05-18 12:56:34'),
+(169, 4, 72, 6, 1, NULL, NULL, '69000.00', 2, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-05-21 13:45:29', '2019-05-23 04:31:08'),
+(170, 4, 73, 5, 1, 'Предварительно прошу по телефону сообщить точные характеристики заказа (на сайте указаны иные, чем в наименовании). Прошу сообщить с какой прошивкой смартфон, необходима Global Version (не Китай).\nДоставку осуществить по указанному адресу до 18:00.', NULL, '95999.00', 1, 1, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-05-22 12:08:10', '2019-05-23 07:07:41'),
+(173, 4, 76, 5, 1, NULL, NULL, '129500.00', 2, 1, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-05-23 15:05:18', '2019-05-26 11:07:00'),
+(178, 5, 80, 5, 1, NULL, NULL, '76000.00', 1, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-02 11:07:26', '2019-06-04 09:19:11'),
+(179, 5, 81, 5, 2, NULL, NULL, '142900.00', 1, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-03 03:30:44', '2019-06-03 07:40:56'),
+(180, 4, 82, 5, 1, NULL, NULL, '149900.00', 1, 1, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-06-03 22:13:32', '2019-06-06 04:16:25'),
+(181, 4, 83, 5, 2, NULL, NULL, '66500.00', 1, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-04 10:38:44', '2019-06-04 11:33:54'),
+(182, 5, 84, 6, 2, NULL, NULL, '50500.00', 2, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-04 13:12:10', '2019-06-06 04:18:03'),
+(183, 5, 85, 5, 2, NULL, NULL, '79900.00', 1, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-06 16:41:20', '2019-06-08 04:09:39'),
+(184, 5, 86, 6, 2, NULL, NULL, '182800.00', 2, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-08 18:39:58', '2019-06-09 04:44:42'),
+(185, 4, 87, 2, 1, 'Мангистауская область', NULL, '143900.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-06-11 07:17:42', '2019-06-11 09:01:14'),
+(186, 5, 88, 6, 1, NULL, NULL, '161000.00', 2, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-12 18:20:49', '2019-06-14 03:54:33'),
+(187, 4, 89, 5, 2, NULL, NULL, '142900.00', 1, 1, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-06-13 05:06:07', '2019-06-14 03:52:17'),
+(188, 4, 90, 6, 2, 'Забрать нужно сегодня', NULL, '124000.00', 2, 1, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-06-14 10:11:13', '2019-06-14 12:30:24'),
+(189, 5, 91, 6, 2, NULL, NULL, '23000.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-06-15 15:36:18', '2019-06-19 04:38:18'),
+(190, 5, 92, 6, 2, NULL, NULL, '75000.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-06-15 20:36:34', '2019-06-19 04:36:47'),
+(191, 5, 93, 5, 1, NULL, NULL, '103900.00', 1, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-17 14:21:45', '2019-06-21 04:30:34'),
+(192, 5, 94, 6, 2, NULL, NULL, '87900.00', 1, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-18 04:32:25', '2019-06-19 04:36:28'),
+(193, 5, 96, 5, 2, NULL, NULL, '345595.00', 1, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-19 06:48:34', '2019-06-21 04:30:18'),
+(194, 4, 97, 5, 1, NULL, NULL, '76000.00', 1, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-21 05:17:22', '2019-06-21 08:12:53'),
+(197, 4, 98, 5, 1, NULL, NULL, '143900.00', 1, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-22 14:22:52', '2019-07-16 04:21:07'),
+(198, 4, 99, 5, 1, NULL, NULL, '143900.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-06-23 17:18:39', '2019-07-16 04:20:42'),
+(199, 4, 100, 6, 1, NULL, NULL, '64500.00', 1, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-24 01:25:06', '2019-07-13 07:22:51'),
+(200, 4, 102, 6, 1, 'Добрый день! Юр лицо\nреквизиты компании ниже\nТОО «Documentolog»\n010000, Республика Казахстан,  \nг.Астана, ул. Д.Кунаева 12/1, ВП-80, офис 203,210\nБИН 070840007503\nРНН 600 400 584 842\nИИК KZ05914012203KZ00375\nБИК  SABRKZKA\nДБ АО \"Сбербанк\"\nКбе 17\nНДС Серия 62001 № 1004962 от 19.10.2016 года.\nГенеральный директор Канафин Б.Б.\nДействует на основании Устава', NULL, '15900.00', 2, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-06-25 03:17:36', '2019-06-27 05:57:49'),
+(202, 4, 103, 5, 1, 'Позвоните пожалуйста по номерам\n87027618646\n87026840030', NULL, '18990.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-06-25 12:49:09', '2019-07-13 07:18:58'),
+(203, 4, 104, 5, 1, 'РЕКВИЗИТЫ :\n\nТОО «Алтын-Адам Құрылыс»\n\nЖШС «Алтын-Адам Құрылыс»\n\nРНН 091200219088\n\nБИН 100140009813\n\nКБЕ 17\n\nТекущий счет (IBAN счет) В KZT: KZ3796502F0009842062\n\nЮРИДИЧЕСКИЙ АДРЕС: Алматинская обл., Енбекшиказахский район, г. Есик, мкр. 1, д. 8, кв. 25\n\nФактический адрес: г. Алматы, ул. Тимирязева 42, павильон 23А, офис 215\n\nДиректор: Әбілханова Дина Еркінқызы', NULL, '253800.00', 2, 1, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-06-26 08:51:26', '2019-06-27 10:48:46'),
+(204, 5, 105, 5, 1, NULL, NULL, '76000.00', 1, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-27 03:57:43', '2019-06-27 07:33:16'),
+(205, 4, 106, 6, 1, NULL, NULL, '151000.00', 1, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-28 06:31:38', '2019-07-13 07:17:15'),
+(206, 4, 107, 6, 1, NULL, NULL, '143900.00', 2, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-29 07:04:34', '2019-07-13 07:18:43'),
+(207, 5, 108, 6, 2, NULL, NULL, '17990.00', 1, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-06-30 08:52:40', '2019-07-02 05:26:50'),
+(208, 4, 109, 6, 1, NULL, NULL, '168990.00', 2, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-07-02 03:04:18', '2019-07-02 05:26:20'),
+(209, 5, 24, 5, 1, NULL, NULL, '43000.00', 1, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-07-02 10:42:22', '2019-07-07 05:54:00'),
+(210, 4, 110, 5, 1, NULL, NULL, '175900.00', 1, 1, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-07-03 11:57:43', '2019-07-07 05:05:48'),
+(211, 5, 112, 6, 2, NULL, NULL, '23000.00', 2, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-07-04 16:05:31', '2019-07-05 05:52:07'),
+(212, 4, 112, 5, 1, NULL, NULL, '24000.00', 1, 1, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-07-05 02:20:28', '2019-07-07 05:05:12'),
+(213, 5, 113, 4, 2, NULL, NULL, '23000.00', 1, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-07-08 17:43:47', '2019-07-09 05:01:01'),
+(214, 5, 114, 5, 2, NULL, NULL, '102900.00', 1, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-07-09 01:05:11', '2019-07-09 04:54:44'),
+(215, 5, 115, 5, 1, NULL, NULL, '143900.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-07-09 06:20:31', '2019-07-16 04:21:46'),
+(216, 5, 116, 6, 2, NULL, NULL, '17990.00', 1, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-07-10 12:30:04', '2019-07-16 04:21:58'),
+(217, 5, 117, 6, 2, NULL, NULL, '124000.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-07-13 03:41:02', '2019-07-13 06:57:25'),
+(218, 5, 118, 6, 2, NULL, NULL, '23000.00', 1, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-07-13 06:08:54', '2019-07-19 05:14:12'),
+(219, 4, 119, 5, 1, NULL, NULL, '24000.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-07-17 09:15:29', '2019-07-17 10:35:06'),
+(220, 5, 121, 6, 2, NULL, NULL, '53000.00', 1, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-07-19 14:57:18', '2019-07-22 05:45:04'),
+(222, 4, 122, 5, 1, NULL, NULL, '47000.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-07-23 12:04:55', '2019-07-24 11:00:32'),
+(223, 4, 123, 5, 1, 'Доставьте пожалуйста сегодня', NULL, '24000.00', 1, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-07-23 19:20:30', '2019-07-24 04:52:42'),
+(224, 4, 124, 1, 1, NULL, NULL, '148900.00', 2, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-07-27 07:42:25', '2019-07-27 07:42:25'),
+(225, 5, 125, 1, NULL, NULL, NULL, '50500.00', NULL, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-07-27 10:09:55', '2019-07-27 10:09:55'),
+(226, 5, 1, 1, NULL, NULL, NULL, '64000.00', NULL, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-08-02 15:43:46', '2019-08-02 15:43:47'),
+(227, 5, 1, 1, NULL, NULL, NULL, '174900.00', NULL, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-08-10 16:59:20', '2019-08-10 16:59:21'),
+(228, 5, 1, 1, NULL, NULL, NULL, '174900.00', NULL, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-08-10 17:00:59', '2019-08-10 17:00:59'),
+(229, 5, 1, 1, NULL, NULL, NULL, '174900.00', NULL, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-08-10 18:43:05', '2019-08-10 18:43:05'),
+(230, 4, 1, 1, 2, NULL, NULL, '166900.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-08-11 14:27:17', '2019-08-11 14:27:17'),
+(231, 4, 1, 1, 2, NULL, NULL, '411095.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-08-11 14:28:53', '2019-08-11 14:28:53'),
+(232, 4, 1, 1, 1, 'вавава', NULL, '522500.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-08-11 14:37:22', '2019-08-11 14:37:22'),
+(233, 5, 1, 1, NULL, NULL, NULL, '59500.00', NULL, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-08-11 14:38:25', '2019-08-11 14:38:25'),
+(234, 4, 1, 1, 1, 'ghmfgh', NULL, '206400.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-08-11 16:20:29', '2019-08-11 16:20:29'),
+(235, 5, 1, 1, NULL, NULL, NULL, '79900.00', NULL, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-08-12 07:15:44', '2019-08-12 07:15:44'),
+(236, 4, 1, 1, 2, NULL, NULL, '254800.00', 1, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-08-12 07:17:37', '2019-09-21 07:49:43'),
+(237, 4, 124, 1, 2, 'sdsd', NULL, '136100.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-09-05 16:57:56', '2019-09-21 16:38:38'),
+(238, 6, 124, 1, 2, NULL, '2019-09-12 13:43:35', '22000.00', 1, 0, '2019-09-04 07:43:35', NULL, 1, 'gggg', 'rrr', NULL, NULL, NULL, '2019-08-28 07:43:35', '2019-09-23 06:23:10'),
+(239, 5, 1, 1, NULL, NULL, NULL, '66000.00', NULL, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-09-23 06:24:07', '2019-09-23 06:24:07'),
+(240, 4, 1, 1, 2, NULL, NULL, '638000.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-09-23 06:29:20', '2019-09-23 06:29:20'),
+(241, 4, 1, 1, 1, NULL, NULL, '65999.00', 1, 0, NULL, NULL, 1, 'микро 7, дом 41', 'Алматы', NULL, NULL, NULL, '2019-09-23 06:30:09', '2019-09-23 06:30:09'),
+(242, 4, 1, 1, 2, NULL, NULL, '237000.00', 1, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-09-23 06:40:20', '2019-09-23 06:40:20'),
+(243, 4, 1, 1, 1, NULL, NULL, '449987.00', 1, 0, NULL, NULL, 2, 'dfgh', 'dfgh', NULL, NULL, NULL, '2019-09-23 06:41:06', '2019-09-23 06:41:06'),
+(244, 4, 1, 1, 2, NULL, NULL, '147900.00', 1, 0, NULL, NULL, 2, NULL, NULL, 'Куаныш', '+7(777) 777-1111', 'zheksenkulov.kuanysh@gmail.com', '2019-09-23 08:34:06', '2019-09-23 08:34:06'),
+(245, 5, 1, 1, NULL, NULL, NULL, '57500.00', NULL, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-09-23 08:36:27', '2019-09-23 08:36:27'),
+(246, 5, 1, 1, NULL, NULL, NULL, '57500.00', NULL, 0, NULL, NULL, 2, NULL, NULL, NULL, NULL, NULL, '2019-09-23 08:37:20', '2019-09-23 08:37:20'),
+(247, 5, 1, 1, NULL, NULL, NULL, '57500.00', NULL, 0, NULL, NULL, 2, NULL, NULL, 'Куаныш', '+7(777) 777-1111', 'zheksenkulov.kuanysh@gmail.com', '2019-09-23 08:38:17', '2019-09-23 08:38:17'),
+(248, 5, 1, 1, NULL, NULL, NULL, '57500.00', NULL, 0, NULL, NULL, 2, NULL, NULL, 'Куаныш', '+7(777) 777-1111', 'zheksenkulov.kuanysh@gmail.com', '2019-09-23 08:43:00', '2019-09-23 08:43:00'),
+(252, 7, NULL, 1, 2, NULL, NULL, '22000.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-09-26 09:04:17', '2019-09-23 09:04:29'),
+(253, 7, NULL, 1, 2, NULL, NULL, '23000.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-09-20 09:08:47', '2019-09-23 09:09:01'),
+(254, 7, NULL, 1, 2, NULL, NULL, '36900.00', 1, 0, NULL, NULL, 1, NULL, NULL, 'dfgh', 'dfghdf', 'ghdfgh', '2019-09-19 09:12:02', '2019-09-23 09:12:22'),
+(255, 7, NULL, 1, 2, NULL, NULL, '22000.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-09-13 09:16:12', '2019-09-23 09:18:30'),
+(256, 7, NULL, 1, 2, '56u56', NULL, '22000.00', 1, 1, '2019-09-19 09:33:03', NULL, 1, 'микро 7, дом 41', 'Алматы', '56u56', '+7(777) 777-7777', 'zheksenkulov.kuanysh@gmail.com', '2019-08-15 09:33:03', '2019-09-23 09:33:40'),
+(257, 7, NULL, 1, 2, NULL, NULL, '22000.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-09-04 09:37:00', '2019-09-23 09:37:13'),
+(258, 6, NULL, 1, 2, NULL, '2019-09-11 15:48:05', '23000.00', 1, 0, '2019-08-28 09:48:05', NULL, 1, 'микро 7, дом 41', 'Алматы', 'e56u', '+7(777) 777-7777', 'zheksenkulov.kuanysh@gmail.com', '2019-08-26 09:48:05', '2019-09-23 09:48:33'),
+(259, 6, NULL, 1, 2, NULL, NULL, '22000.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-09-04 10:02:08', '2019-09-23 10:02:32'),
+(260, 6, NULL, 1, 2, NULL, NULL, '45000.00', 1, 0, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, '2019-09-19 10:03:45', '2019-09-23 10:05:33'),
+(261, 6, NULL, 1, 2, 'ergerg', NULL, '22000.00', 1, 0, NULL, NULL, 1, NULL, NULL, 'erg', '+7(777) 777-1111', 'kyka@gmail.com', '2019-09-21 09:32:33', '2019-09-23 10:58:17');
 
 -- --------------------------------------------------------
 
@@ -3843,7 +3758,32 @@ INSERT INTO `t_order_product` (`id`, `product_id`, `order_id`, `name`, `sku`, `p
 (295, 292, 236, NULL, '292', '79900.00', 1, NULL, NULL),
 (296, 411, 237, 'Смарт-весы Xiaomi Smart Scales 2', '411', '15900.00', 2, NULL, NULL),
 (297, 408, 237, 'Маршрутизатор Xiaomi Mi WiFi Router 4', '408', '14900.00', 7, NULL, NULL),
-(298, 410, 238, 'Автомобильный видеорегистратор XiaoYi car DVR Gray', '410', '22000.00', 1, NULL, NULL);
+(298, 410, 238, 'Автомобильный видеорегистратор XiaoYi car DVR Gray', '410', '22000.00', 1, NULL, NULL),
+(299, 158, 239, NULL, '158', '66000.00', 1, NULL, NULL),
+(300, 279, 240, NULL, '279', '50500.00', 9, NULL, NULL),
+(301, 203, 240, NULL, '203', '23500.00', 5, NULL, NULL),
+(302, 158, 240, NULL, '158', '66000.00', 1, NULL, NULL),
+(303, 142, 241, NULL, '142', '64999.00', 1, NULL, NULL),
+(304, 287, 242, NULL, '287', '47000.00', 1, NULL, NULL),
+(305, 198, 242, NULL, '198', '190000.00', 1, NULL, NULL),
+(306, 173, 243, NULL, '173', '448987.00', 1, NULL, NULL),
+(307, 210, 244, NULL, '210', '147900.00', 1, NULL, NULL),
+(308, 278, 245, NULL, '278', '57500.00', 1, NULL, NULL),
+(309, 278, 246, NULL, '278', '57500.00', 1, NULL, NULL),
+(310, 278, 247, NULL, '278', '57500.00', 1, NULL, NULL),
+(311, 278, 248, NULL, '278', '57500.00', 1, NULL, NULL),
+(312, 410, 252, 'Автомобильный видеорегистратор XiaoYi car DVR Gray', '410', '22000.00', 1, NULL, NULL),
+(313, 409, 253, 'Автомобильный видеорегистратор MiJia Car 1S DVR Black', '409', '23000.00', 1, NULL, NULL),
+(314, 410, 254, 'Автомобильный видеорегистратор XiaoYi car DVR Gray', '410', '22000.00', 1, NULL, NULL),
+(315, 408, 254, 'Маршрутизатор Xiaomi Mi WiFi Router 4', '408', '14900.00', 1, NULL, NULL),
+(316, 410, 255, 'Автомобильный видеорегистратор XiaoYi car DVR Gray', '410', '22000.00', 1, NULL, NULL),
+(317, 410, 256, 'Автомобильный видеорегистратор XiaoYi car DVR Gray', '410', '22000.00', 1, NULL, NULL),
+(318, 410, 257, 'Автомобильный видеорегистратор XiaoYi car DVR Gray', '410', '22000.00', 1, NULL, NULL),
+(319, 409, 258, 'Автомобильный видеорегистратор MiJia Car 1S DVR Black', '409', '23000.00', 1, NULL, NULL),
+(320, 410, 259, 'Автомобильный видеорегистратор XiaoYi car DVR Gray', '410', '22000.00', 1, NULL, NULL),
+(321, 410, 260, 'Автомобильный видеорегистратор XiaoYi car DVR Gray', '410', '22000.00', 1, NULL, NULL),
+(322, 409, 260, 'Автомобильный видеорегистратор MiJia Car 1S DVR Black', '409', '23000.00', 1, NULL, NULL),
+(323, 410, 261, 'Автомобильный видеорегистратор XiaoYi car DVR Gray', '410', '22000.00', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3854,8 +3794,8 @@ INSERT INTO `t_order_product` (`id`, `product_id`, `order_id`, `name`, `sku`, `p
 CREATE TABLE `t_order_statuses` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `notification` int(11) NOT NULL DEFAULT '1',
-  `description` text COLLATE utf8mb4_unicode_ci COMMENT 'Описание',
+  `notification` int(11) NOT NULL DEFAULT 1,
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Описание',
   `class` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Класс иконки',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -4047,20 +3987,20 @@ CREATE TABLE `t_products` (
   `attribute_set_id` int(10) UNSIGNED DEFAULT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Ссылка товара',
-  `description` longtext COLLATE utf8mb4_unicode_ci,
-  `description_mini` text COLLATE utf8mb4_unicode_ci,
+  `description` longtext COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description_mini` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `photo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `price` int(10) DEFAULT NULL,
   `sku` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `stock` int(11) DEFAULT '0',
-  `viewed` int(11) DEFAULT '0',
-  `seo_keywords` text COLLATE utf8mb4_unicode_ci,
-  `seo_description` text COLLATE utf8mb4_unicode_ci,
+  `stock` int(11) DEFAULT 0,
+  `viewed` int(11) DEFAULT 0,
+  `seo_keywords` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `seo_description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `active` int(11) DEFAULT '1',
+  `active` int(11) DEFAULT 1,
   `youtube` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `view_count` int(11) NOT NULL DEFAULT '0'
+  `view_count` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -4763,12 +4703,12 @@ CREATE TABLE `t_questions_answers` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `question` text COLLATE utf8mb4_unicode_ci,
-  `answer` text COLLATE utf8mb4_unicode_ci,
+  `question` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `answer` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `product_id` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `active` int(10) DEFAULT '0'
+  `active` int(10) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -4781,14 +4721,14 @@ CREATE TABLE `t_reviews` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `comment` text COLLATE utf8mb4_unicode_ci,
-  `plus` text COLLATE utf8mb4_unicode_ci,
-  `minus` text COLLATE utf8mb4_unicode_ci,
+  `comment` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `plus` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `minus` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `rating` int(11) DEFAULT NULL,
   `product_id` int(10) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `active` int(10) DEFAULT '0'
+  `active` int(10) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -4816,7 +4756,7 @@ INSERT INTO `t_reviews` (`id`, `name`, `email`, `comment`, `plus`, `minus`, `rat
 
 CREATE TABLE `t_review_likes` (
   `id` int(10) UNSIGNED NOT NULL,
-  `like` int(11) NOT NULL DEFAULT '0',
+  `like` int(11) NOT NULL DEFAULT 0,
   `visit_number` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `review_id` int(10) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -4882,11 +4822,11 @@ CREATE TABLE `t_sliders` (
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `link` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sort` int(11) NOT NULL DEFAULT '0',
+  `sort` int(11) NOT NULL DEFAULT 0,
   `show_where` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `active` int(11) DEFAULT '1'
+  `active` int(11) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -4905,7 +4845,7 @@ INSERT INTO `t_sliders` (`id`, `name`, `link`, `image`, `sort`, `show_where`, `c
 
 CREATE TABLE `t_specific_prices` (
   `id` int(10) UNSIGNED NOT NULL,
-  `reduction` int(10) DEFAULT '0',
+  `reduction` int(10) DEFAULT 0,
   `discount_type` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `start_date` datetime DEFAULT NULL,
   `expiration_date` datetime DEFAULT NULL,
@@ -4933,8 +4873,8 @@ CREATE TABLE `t_statuses` (
   `name` varchar(255) NOT NULL,
   `class` varchar(255) NOT NULL,
   `where_use` varchar(20) NOT NULL,
-  `default` int(11) NOT NULL DEFAULT '0',
-  `sort` int(11) NOT NULL DEFAULT '0'
+  `default` int(11) NOT NULL DEFAULT 0,
+  `sort` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -4947,7 +4887,8 @@ INSERT INTO `t_statuses` (`id`, `name`, `class`, `where_use`, `default`, `sort`)
 (3, 'Не заказал', 'fa fa-ban status-canceled', 'callbacks_status_id', 0, 3),
 (4, 'Оформление заказа', '', 'orders_type_id', 0, 1),
 (5, 'Купить в 1 клик', '', 'orders_type_id', 0, 2),
-(6, 'Обратный звонок', '', 'orders_type_id', 0, 0);
+(6, 'Обратный звонок', '', 'orders_type_id', 0, 3),
+(7, 'Менеджер', '', 'orders_type_id', 1, 4);
 
 -- --------------------------------------------------------
 
@@ -4994,7 +4935,7 @@ CREATE TABLE `t_users` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `phone` varchar(25) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Телефон',
-  `active` int(11) DEFAULT '1'
+  `active` int(11) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -5002,7 +4943,7 @@ CREATE TABLE `t_users` (
 --
 
 INSERT INTO `t_users` (`id`, `name`, `surname`, `email`, `role_id`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `phone`, `active`) VALUES
-(1, 'Куаныш', 'dfsdfsdf', 'zheksenkulov.kuanysh@gmail.com', 1, NULL, '$2y$10$sLQJ6gKE0DInSO25LVzaNelBMkbBwQsJbzYrZc0albmetQXb3tZCm', 'ed9YU5qMMR0QjeChpaKnagkVWS3bhOcGnsV6EjRnasy4JhJ41ErQZM8qSCv9', '2018-10-30 04:52:24', '2019-08-11 14:57:13', '+7(777) 777-1111', 1),
+(1, 'Куаныш', 'dfsdfsdf', 'zheksenkulov.kuanysh@gmail.com', 1, NULL, '$2y$10$sLQJ6gKE0DInSO25LVzaNelBMkbBwQsJbzYrZc0albmetQXb3tZCm', 'MAQRtzMcdydciJ8kQX0Eo3R0DksuqnDx2Aa9uSBlUcH2KsJlzaprxvYUjnTo', '2018-10-30 04:52:24', '2019-08-11 14:57:13', '+7(777) 777-1111', 1),
 (17, 'AntonImamb', NULL, 'toni.lyadov.95@mail.ru', 2, NULL, '$2y$10$ydifT.7oNaWiw5a65HkjN.ItWRvy1mBHX5ACLQUjCgIP5T6CJrDKG', NULL, '2019-02-12 12:24:54', '2019-02-12 12:24:54', '87422217143', 1),
 (18, 'Pavel', NULL, 'pavel@mail.ru', 2, NULL, '$2y$10$7RDuNCQkxHCJBM7vDAhxgOvKrUzhigmNE2PtDNmWiAFHp74Fl57Wy', NULL, '2019-02-15 09:12:53', '2019-02-15 09:12:53', '+7 (701) 511-7918', 1),
 (19, 'Adilkhan Myrzakhanov', NULL, 'abusoft92@gmail.com', 2, NULL, '$2y$10$VQbAFowxYlDJWh2YazpDBe1oLRAaxzrvqyoGBzk2BfP42.Y6sUCaW', NULL, '2019-02-15 11:30:55', '2019-02-15 11:30:55', '+7 (747) 269-6628', 1),
@@ -10366,18 +10307,18 @@ INSERT INTO `t_you_watched_products` (`id`, `visit_number`, `product_id`, `creat
 (5328, 'efd108c12ddb957cf6de72714bd2dbc98953138d', 151, '2019-09-22 09:26:15', '2019-09-22 09:26:15'),
 (5329, 'efd108c12ddb957cf6de72714bd2dbc98953138d', 293, '2019-09-22 09:41:43', '2019-09-22 09:41:43'),
 (5330, 'efd108c12ddb957cf6de72714bd2dbc98953138d', 210, '2019-09-22 09:41:49', '2019-09-22 09:41:49'),
-(5331, 'efd108c12ddb957cf6de72714bd2dbc98953138d', 235, '2019-09-22 10:12:24', '2019-09-22 10:12:24');
+(5331, 'efd108c12ddb957cf6de72714bd2dbc98953138d', 235, '2019-09-22 10:12:24', '2019-09-22 10:12:24'),
+(5332, '997f9fbb14179b0ae2f9c04af006d7596fdcec2a', 158, '2019-09-23 06:24:00', '2019-09-23 06:24:00'),
+(5333, '997f9fbb14179b0ae2f9c04af006d7596fdcec2a', 142, '2019-09-23 06:29:57', '2019-09-23 06:29:57'),
+(5334, '997f9fbb14179b0ae2f9c04af006d7596fdcec2a', 287, '2019-09-23 06:30:48', '2019-09-23 06:30:48'),
+(5335, '997f9fbb14179b0ae2f9c04af006d7596fdcec2a', 198, '2019-09-23 06:35:55', '2019-09-23 06:35:55'),
+(5336, '997f9fbb14179b0ae2f9c04af006d7596fdcec2a', 173, '2019-09-23 06:40:51', '2019-09-23 06:40:51'),
+(5337, '997f9fbb14179b0ae2f9c04af006d7596fdcec2a', 210, '2019-09-23 07:36:44', '2019-09-23 07:36:44'),
+(5338, '997f9fbb14179b0ae2f9c04af006d7596fdcec2a', 278, '2019-09-23 08:36:22', '2019-09-23 08:36:22');
 
 --
 -- Индексы сохранённых таблиц
 --
-
---
--- Индексы таблицы `t_addresses`
---
-ALTER TABLE `t_addresses`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `addresses_user_id_foreign` (`user_id`);
 
 --
 -- Индексы таблицы `t_attributes`
@@ -10485,13 +10426,6 @@ ALTER TABLE `t_cities`
   ADD PRIMARY KEY (`id`);
 
 --
--- Индексы таблицы `t_companies`
---
-ALTER TABLE `t_companies`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `companies_user_id_foreign` (`user_id`);
-
---
 -- Индексы таблицы `t_migrations`
 --
 ALTER TABLE `t_migrations`
@@ -10518,7 +10452,6 @@ ALTER TABLE `t_orders`
   ADD KEY `orders_status_id_foreign` (`status_id`),
   ADD KEY `orders_user_id_foreign` (`user_id`),
   ADD KEY `orders_payment_id_foreign` (`payment_id`),
-  ADD KEY `orders_shipping_address_id_idx` (`shipping_address_id`),
   ADD KEY `orders_type_id_foreign_idx` (`type_id`);
 
 --
@@ -10671,12 +10604,6 @@ ALTER TABLE `t_you_watched_products`
 --
 
 --
--- AUTO_INCREMENT для таблицы `t_addresses`
---
-ALTER TABLE `t_addresses`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
-
---
 -- AUTO_INCREMENT для таблицы `t_attributes`
 --
 ALTER TABLE `t_attributes`
@@ -10734,13 +10661,13 @@ ALTER TABLE `t_carriers`
 -- AUTO_INCREMENT для таблицы `t_carts`
 --
 ALTER TABLE `t_carts`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=327;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=332;
 
 --
 -- AUTO_INCREMENT для таблицы `t_cart_items`
 --
 ALTER TABLE `t_cart_items`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=729;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=736;
 
 --
 -- AUTO_INCREMENT для таблицы `t_categories`
@@ -10767,12 +10694,6 @@ ALTER TABLE `t_cities`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
--- AUTO_INCREMENT для таблицы `t_companies`
---
-ALTER TABLE `t_companies`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT для таблицы `t_migrations`
 --
 ALTER TABLE `t_migrations`
@@ -10794,13 +10715,13 @@ ALTER TABLE `t_notification_templates`
 -- AUTO_INCREMENT для таблицы `t_orders`
 --
 ALTER TABLE `t_orders`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=239;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=262;
 
 --
 -- AUTO_INCREMENT для таблицы `t_order_product`
 --
 ALTER TABLE `t_order_product`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=299;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=324;
 
 --
 -- AUTO_INCREMENT для таблицы `t_order_statuses`
@@ -10896,7 +10817,7 @@ ALTER TABLE `t_specific_prices`
 -- AUTO_INCREMENT для таблицы `t_statuses`
 --
 ALTER TABLE `t_statuses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT для таблицы `t_subscribe`
@@ -10914,17 +10835,11 @@ ALTER TABLE `t_users`
 -- AUTO_INCREMENT для таблицы `t_you_watched_products`
 --
 ALTER TABLE `t_you_watched_products`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5332;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5339;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
-
---
--- Ограничения внешнего ключа таблицы `t_addresses`
---
-ALTER TABLE `t_addresses`
-  ADD CONSTRAINT `addresses_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `t_users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Ограничения внешнего ключа таблицы `t_attributes`
@@ -10986,18 +10901,11 @@ ALTER TABLE `t_category_product`
   ADD CONSTRAINT `category_product_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `t_products` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Ограничения внешнего ключа таблицы `t_companies`
---
-ALTER TABLE `t_companies`
-  ADD CONSTRAINT `companies_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `t_users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
---
 -- Ограничения внешнего ключа таблицы `t_orders`
 --
 ALTER TABLE `t_orders`
   ADD CONSTRAINT `orders_carrier_id_foreign` FOREIGN KEY (`carrier_id`) REFERENCES `t_carriers` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `orders_payment_id_foreign` FOREIGN KEY (`payment_id`) REFERENCES `t_payments` (`id`),
-  ADD CONSTRAINT `orders_shipping_address_id` FOREIGN KEY (`shipping_address_id`) REFERENCES `t_addresses` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `orders_status_id_foreign` FOREIGN KEY (`status_id`) REFERENCES `t_order_statuses` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `orders_type_id_foreign` FOREIGN KEY (`type_id`) REFERENCES `t_statuses` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `orders_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `t_users` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

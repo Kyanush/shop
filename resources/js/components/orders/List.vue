@@ -81,12 +81,6 @@
                                         </td>
                                     </tr>
                                     <tr class="odd even">
-                                        <td><b>Адрес:</b></td>
-                                        <td>
-                                            <Select2 :settings="{multiple: true}" v-model="filter.shipping_address_id" :options="convertDataSelect2(addresses, 'id', 'address|city')"/>
-                                        </td>
-                                    </tr>
-                                    <tr class="odd even">
                                         <td><b>Комментарии:</b></td>
                                         <td>
                                             <textarea class="form-control" v-model="filter.comment"></textarea>
@@ -222,7 +216,7 @@
                     </router-link>
                 </td>
                 <td>
-                    <router-link :to="{ path: '/users/edit/' + item.user_id}">
+                    <router-link v-if="item.user_id" :to="{ path: '/users/edit/' + item.user_id}">
                         {{ item.user.name }}
                     </router-link>
                 </td>
@@ -316,7 +310,6 @@
                 users: [],
                 order_statuses: [],
                 carriers: [],
-                addresses: [],
                 payments: [],
                 types: [],
 
@@ -367,10 +360,6 @@
 
             axios.get('/admin/carriers-list', {params:  {perPage: 1000}}).then((res)=>{
                 this.carriers = res.data.data;
-            });
-
-            axios.get('/admin/addresses-list').then((res)=>{
-                this.addresses = res.data;
             });
 
             axios.get('/admin/payments-list', {params:  {perPage: 1000}}).then((res)=>{

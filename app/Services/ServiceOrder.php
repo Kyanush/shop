@@ -68,8 +68,8 @@ class ServiceOrder implements OrderInterface
 
             $emails[] = env('MAIL_ADMIN');
 
-            if($order->user->email)
-                $emails[] = $order->user->email;
+            if($order->user_email)
+                $emails[] = $order->user_email;
 
             $subject = env('APP_NAME') . ' - ' . 'заказ №:' . $order->id;
             Mail::send('mails.new_order', ['order' => $order, 'subject' => $subject], function($m) use($subject, $emails)

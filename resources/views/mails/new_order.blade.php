@@ -113,15 +113,15 @@
 
                 <div style="color:#a3a3a3;">ФИО:
                     <span style="color:#272727;">
-                        {{ $order->user->name }} {{ $order->user->surname }}
+                        {{ $order->user_name }}
                     </span>
                 </div>
 
                 <div style="color:#a3a3a3;">Мобильный телефон:
                     <span style="color:#272727;">
                         <span class="wmi-callto">
-                            <a href="tel:{{ $order->user->phone }}">
-                                {{ $order->user->phone }}
+                            <a href="tel:{{ $order->user_phone }}">
+                                {{ $order->user_phone }}
                             </a>
                         </span>
                     </span>
@@ -129,22 +129,22 @@
 
                 <div style="color:#a3a3a3;">Электронная почта:
                     <span style="color:#272727;">
-                        <a href="mailto:{{ $order->user->email }}" class="ns-action">
-                            {{ $order->user->email }}
+                        <a href="mailto:{{ $order->user_email }}" class="ns-action">
+                            {{ $order->user_email }}
                         </a>
                     </span>
                 </div>
 
-                @if($order->shippingAddress)
-                    &nbsp;
-                    <div style="color:#a3a3a3;">Адрес доставки:
-                        <span style="color:#272727;">
-                            <span class="wmi-callto">
-                                {{ $order->shippingAddress->city }}, {{ $order->shippingAddress->address}}
-                            </span>
+
+                &nbsp;
+                <div style="color:#a3a3a3;">Адрес доставки:
+                    <span style="color:#272727;">
+                        <span class="wmi-callto">
+                            {{ $order->city }}, {{ $order->address}}
                         </span>
-                    </div>
-                @endif
+                    </span>
+                </div>
+
 
                 <div style="color:#a3a3a3;">Комментарий к заказу:
                     <span style="color:#272727;">

@@ -24,10 +24,17 @@ class ProductController extends AdminController
 
     public function searchProducts(Request $request){
         $products = Product::filters(['name' => $request->input('search')])
-                        ->limit(5)
+                        ->limit(10)
                         ->get();
 
-        return $this->sendResponse($products);
+        $data = $products->map(function ($item) {
+            return  [
+                'product'    => $item,
+                'photo_path' => $item->pathPhoto(true),
+            ];
+        });
+
+        return $this->sendResponse($data);
     }
 
     public function list(Request $request)

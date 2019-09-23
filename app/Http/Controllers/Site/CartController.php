@@ -93,24 +93,22 @@ class CartController extends Controller
             $request->input('user.phone')
         );
 
-        //адрес
-        $address_id = $request->input('address.id', 0);
-        if(!$address_id)
-        {
-            $address = $user->addresses()->create($request->input('address'));
-            $address_id = $address->id;
-        }
+
 
 
         //заказ
         $order = new Order();
-        $order->type_id             = 4;
-        $order->user_id             = $user->id;
-        $order->status_id           = 1;//новый
-        $order->carrier_id          = $request->input('carrier_id');
-        $order->shipping_address_id = $address_id;
-        $order->comment             = $request->input('comment', '');
-        $order->payment_id          = $request->input('payment_id');
+        $order->type_id     = 4;
+        $order->user_id     = $user->id;
+        $order->carrier_id  = $request->input('carrier_id');
+        $order->comment     = $request->input('comment', '');
+        $order->payment_id  = $request->input('payment_id');
+        $order->city        = $request->input('city');
+        $order->address     = $request->input('address');
+        $order->user_email  = $request->input('user.email');
+        $order->user_name   = $request->input('user.name');
+        $order->user_phone  = $request->input('user.phone');
+
         if($order->save())
         {
             //товара заказа
@@ -141,9 +139,12 @@ class CartController extends Controller
 
         //заказ
         $order = new Order();
-        $order->type_id   = 5;
-        $order->user_id   = $user->id;
-        $order->status_id = 1;//новый
+        $order->type_id     = 5;
+        $order->user_id     = $user->id;
+        $order->user_email  = $request->input('email');
+        $order->user_name   = $request->input('name');
+        $order->user_phone  = $request->input('phone');
+
         if($order->save())
         {
             ServiceOrder::productAdd($request->input('product_id'), $order->id);

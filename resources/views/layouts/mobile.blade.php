@@ -78,8 +78,7 @@
                ?>
                value="{{ json_encode([ 'name'      => ($user->name  ?? ''),
                                        'email'     => ($user->email ?? ''),
-                                       'phone'     => ($user->phone ?? ''),
-                                       'addresses' => ($user->addresses ?? [])
+                                       'phone'     => ($user->phone ?? '')
                                     ]) }}"
     />
 

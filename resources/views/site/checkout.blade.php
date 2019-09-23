@@ -27,7 +27,7 @@
         ];?>
         @include('includes.breadcrumb', ['breadcrumbs' => $breadcrumbs])
         <span id="app">
-            <checkout @if(Auth::check()) :_user="{{ \App\User::with('addresses')->find(Auth::user()->id) }}" @endif></checkout>
+            <checkout @if(Auth::check()) :_user="{{ \App\User::find(Auth::user()->id) }}" @endif></checkout>
         </span>
     </div>
 </div>

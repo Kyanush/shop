@@ -51,27 +51,23 @@
     </div>
 
 
-    @if(isset($order->carrier) or $order->shippingAddress)
-        <h2 class="container-title">Доставка</h2>
-        <div class="container">
-                <table width="100%">
-                    <tbody>
-                        @if(isset($order->carrier))
-                            <tr>
-                                <td><b>{{ $order->carrier->name }}</b></td>
-                                <td>{{ \App\Tools\Helpers::priceFormat($order->carrier->price) }}</td>
-                            </tr>
-                        @endif
-                        @if($order->shippingAddress)
-                            <tr>
-                                <td><b>Адрес доставки:</b></td>
-                                <td>{{ $order->shippingAddress->city }}, {{ $order->shippingAddress->address}}</td>
-                            </tr>
-                        @endif
-                    </tbody>
-                </table>
-        </div>
-    @endif
+    <h2 class="container-title">Доставка</h2>
+    <div class="container">
+            <table width="100%">
+                <tbody>
+                    @if(isset($order->carrier))
+                        <tr>
+                            <td><b>{{ $order->carrier->name }}</b></td>
+                            <td>{{ \App\Tools\Helpers::priceFormat($order->carrier->price) }}</td>
+                        </tr>
+                    @endif
+                    <tr>
+                        <td><b>Адрес доставки:</b></td>
+                        <td>{{ $order->city }}, {{ $order->address}}</td>
+                    </tr>
+                </tbody>
+            </table>
+    </div>
 
 
 

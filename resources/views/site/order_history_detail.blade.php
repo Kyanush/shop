@@ -84,9 +84,7 @@
                                   {{ $order->carrier->name }}, {{ \App\Tools\Helpers::priceFormat($order->carrier->price) }}
                             @endif
                             <br/>
-                            @if($order->shippingAddress)
-                                  <b>Адрес доставки:</b> {{ $order->shippingAddress->city }}, {{ $order->shippingAddress->address}}
-                            @endif
+                            <b>Адрес доставки:</b> {{ $order->city }}, {{ $order->address}}
                          </td>
                       </tr>
                    </tbody>

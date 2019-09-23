@@ -43,7 +43,7 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::post('products-attributes-filters',   'ProductController@productsAttributesFilters');
         Route::get('group-products/{group_id}',      'ProductController@groupProducts')->where(['group_id' => '[0-9]+']);
         Route::post('clone-product',                 'ProductController@cloneProduct');
-        Route::any('search-products',                'ProductController@searchProducts');
+        Route::get('search-products',                'ProductController@searchProducts');
         Route::post('products-selected-edit',        'ProductController@productsSelectedEdit');
         Route::post('product-change-quickly-save',   'ProductController@productChangeQuicklySave');
         Route::post('product-import',                'ProductController@import');

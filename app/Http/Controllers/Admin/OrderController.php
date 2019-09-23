@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\AdminController;
 
+use App\Models\Callback;
 use App\Models\Order;
 use App\Requests\SaveOrderRequest;
 use App\Tools\Helpers;
@@ -43,7 +44,6 @@ class OrderController extends AdminController
             'statusHistory' => function($query){
                 $query->with(['status', 'user']);
             },
-            'shippingAddress',
             'carrier',
             'products',
             'payment'
@@ -63,6 +63,13 @@ class OrderController extends AdminController
         $order->fill($data);
         if($order->save())
         {
+
+            $callback_id = $request->input('callback_id');
+            if($callback_id)
+            {
+                Callback::where('id', $callback_id)->update(['order_id' => $order->id]);
+            }
+
             foreach ($data['products'] as $product)
             {
                 $pivot = $product['pivot'];
@@ -80,13 +87,12 @@ class OrderController extends AdminController
 
     public function users()
     {
-        $users = User::with('addresses')->OrderBy('id', 'DESC')->get();
+        $users = User::OrderBy('id', 'DESC')->get();
 
         $data = $users->map(function ($item) {
             return [
                 'id'        => $item->id,
-                'name'      => $item->name . ' ' . $item->surname,
-                'addresses' => $item->addresses
+                'name'      => $item->name . ' ' . $item->surname
             ];
         });
 

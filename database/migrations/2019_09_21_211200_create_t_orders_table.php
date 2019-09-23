@@ -19,7 +19,6 @@ class CreateTOrdersTable extends Migration {
 			$table->integer('user_id')->unsigned()->index('orders_user_id_foreign');
 			$table->integer('status_id')->unsigned()->index('orders_status_id_foreign');
 			$table->integer('carrier_id')->unsigned()->nullable()->index('orders_carrier_id_foreign');
-			$table->integer('shipping_address_id')->unsigned()->nullable()->index('orders_shipping_address_id_idx');
 			$table->text('comment', 16777215)->nullable();
 			$table->dateTime('delivery_date')->nullable();
 			$table->decimal('total', 13)->nullable();

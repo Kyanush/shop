@@ -18,7 +18,6 @@ class Order extends Model
         'user_id',
         'status_id',
         'carrier_id',
-        'shipping_address_id',
         'comment',
         'delivery_date',
         'total',
@@ -26,9 +25,14 @@ class Order extends Model
         'paid',
         'payment_date',
         'payment_result',
+        'where_ordered',
+        'city',
+        'address',
+        'user_name',
+        'user_phone',
+        'user_email',
         'created_at',
-        'updated_at',
-        'where_ordered'
+        'updated_at'
     ];
 
     protected static function boot()
@@ -36,7 +40,6 @@ class Order extends Model
         parent::boot();
 
         static::updating(function($order) {
-
             if(env('APP_TEST') == 0)
             {
                 if($order->status_id != self::find($order->id)->status_id && $order->status->notification != 0)
@@ -48,8 +51,6 @@ class Order extends Model
                     });
                 }
             }
-
-
             if($order->status_id != self::find($order->id)->status_id)
             {
                 OrderStatusHistory::create([
@@ -58,19 +59,27 @@ class Order extends Model
                     'user_id'   => Auth::user()->id
                 ]);
             }
-
         });
-
 
         //Событие до
         static::Saving(function($model) {
-        });
 
+            //Текущее состояние - новый
+            if(!$model->status_id)
+                $model->status_id = 1;
+
+            //Тип заказа
+            if(!$model->type_id)
+                $model->type_id = Status::ordersType()->defaultValue()->first()->id;
+
+            if(!$model->user_id)
+                $model->user_id = null;
+
+        });
 
         //Событие после
         static::Created(function ($modal) {
         });
-
 
         //Событие до
         static::Creating(function ($modal) {
@@ -91,7 +100,6 @@ class Order extends Model
 
         //до
         static::deleting(function($product) {
-
             //история статуса
             $product->statusHistory()->delete();
             //продукты
@@ -131,10 +139,6 @@ class Order extends Model
         return $this->belongsTo('App\Models\Carrier', 'carrier_id', 'id');
     }
 
-    public function shippingAddress()
-    {
-        return $this->belongsTo('App\Models\Address', 'shipping_address_id', 'id');
-    }
 
     public function payment()
     {
@@ -167,9 +171,6 @@ class Order extends Model
 
         if(isset($filter['carrier_id']))
             $query->WhereIn('carrier_id', $this->convertArr($filter['carrier_id']));
-
-        if(isset($filter['shipping_address_id']))
-            $query->WhereIn('shipping_address_id', $this->convertArr($filter['shipping_address_id']));
 
         if(isset($filter['comment']))
             $query->whereLike('comment',   $filter['comment']);

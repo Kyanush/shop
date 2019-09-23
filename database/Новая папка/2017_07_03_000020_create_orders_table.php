@@ -19,7 +19,6 @@ class CreateOrdersTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->integer('status_id')->unsigned();
             $table->integer('carrier_id')->unsigned();
-            $table->integer('shipping_address_id')->unsigned()->nullable()->default(null);
             $table->integer('billing_address_id')->unsigned()->nullable()->default(null);
             $table->integer('billing_company_id')->unsigned()->nullable()->default(null);
             $table->integer('currency_id')->unsigned();

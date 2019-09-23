@@ -17,7 +17,8 @@ class Callback extends Model
         'message',
         'email',
         'status_id',
-        'comment'
+        'comment',
+        'order_id'
 	];
 
     public function scopeSearch($query, $search){
