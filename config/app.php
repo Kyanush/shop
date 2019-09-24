@@ -166,8 +166,8 @@ return [
         Intervention\Image\ImageServiceProvider::class,
 
         //создать мограцию
-       // Way\Generators\GeneratorsServiceProvider::class,
-       // Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider::class,
+        //Way\Generators\GeneratorsServiceProvider::class,
+        //Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider::class,
     ],
 
     /*
