@@ -29,6 +29,7 @@ class Product extends Model
         'description_mini',
         'photo',
     	'price',
+        'cost_price',
     	'sku',
     	'stock',
         'seo_keywords',

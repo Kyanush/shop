@@ -340,6 +340,7 @@
                                     <thead>
                                         <tr>
                                             <th>Товар</th>
+                                            <th>Себестоимость товара</th>
                                             <th>Цена</th>
                                             <th>Количество</th>
                                             <th class="text-right">Всего</th>
@@ -354,6 +355,11 @@
                                                     {{ product.pivot.name }}
                                                 </router-link>
                                                 <p class="font-12"><b>SKU:</b> {{ product.pivot.sku }}</p>
+                                            </td>
+                                            <td class="vertical-align-middle">
+                                                <input disabled type="text" class="form-control pull-left product-price" :value="product.pivot.cost_price"/>
+                                                &nbsp;&nbsp;
+                                                <div class="pull-left product-price-tg">тг</div>
                                             </td>
                                             <td class="vertical-align-middle">
                                                 <input type="text" class="form-control pull-left product-price" v-model="product.pivot.price"/>
@@ -458,7 +464,26 @@
                 </div>
             </div>
 
-            <searchProducts @productSelected="productAdd"/>
+            <div class="modal" role="dialog" id="search-products">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Поиск товара</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <searchProducts @productSelected="productAdd"/>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
 
     </div>
 </template>

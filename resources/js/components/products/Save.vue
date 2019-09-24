@@ -141,13 +141,30 @@
                                                 <label>
                                                     <span class="red">*</span>
                                                     <i class="fa fa-money" aria-hidden="true"></i>
-                                                    Цена:
+                                                    Цена продажи:
                                                 </label>
                                             </td>
                                             <td width="75%">
                                                 <div class="col-md-6" v-bind:class="{'has-error' : IsError('product.price')}">
                                                     <input id="price" type="number" v-model="product.price" class="form-control"/>
                                                     <span v-if="IsError('product.price')" class="help-block" v-for="e in IsError('product.price')">
+                                                         {{ e }}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="25%" class="text-right">
+                                                <label>
+                                                    <span class="red">*</span>
+                                                    <i class="fa fa-money" aria-hidden="true"></i>
+                                                    Себестоимость товара:
+                                                </label>
+                                            </td>
+                                            <td width="75%">
+                                                <div class="col-md-6" v-bind:class="{'has-error' : IsError('product.cost_price')}">
+                                                    <input id="cost_price" type="number" v-model="product.cost_price" class="form-control"/>
+                                                    <span v-if="IsError('product.cost_price')" class="help-block" v-for="e in IsError('product.cost_price')">
                                                          {{ e }}
                                                     </span>
                                                 </div>
@@ -583,11 +600,7 @@
 
                                     <h3>Добавить товар</h3>
                                     <div id="ungrouped_products">
-                                        <Select2
-                                                 @select="productGroupAdd($event)"
-                                                 :settings="productSearchSelect2.settings"
-                                                 :options="productSearchSelect2.options"
-                                                 />
+                                        <searchProducts ref="searchProducts" @productSelected="productGroupAdd"/>
                                     </div>
                                 </div>
                             </div>
@@ -626,16 +639,10 @@
                                         </table>
                                         </div>
                                     </div>
-
                                     <hr/>
-
                                     <h3>Добавить товар</h3>
                                     <div>
-                                        <Select2
-                                                @select="addProductAccessory($event)"
-                                                :settings="productSearchSelect2.settings"
-                                                :options="productSearchSelect2.options"
-                                        />
+                                        <searchProducts ref="searchProducts" @productSelected="addProductAccessory"/>
                                     </div>
 
                                 </div>
@@ -724,35 +731,20 @@
 
 
 <script>
-
-
-
     import Paginate from 'vuejs-paginate';
-
     //https://select2.org/configuration/options-api
     import Select2 from 'v-select2-component';
-
-
-
-
-
     import UploadImages from '../plugins/UploadImages';
-
     import { mapGetters } from 'vuex';
     import { mapActions } from 'vuex';
-
-
     import datePicker from 'vue-bootstrap-datetimepicker';
     import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
-
     import reviews from '../reviews/reviews';
     import questions_answers from '../questions-answers/QuestionsAnswers';
-
-
     import Categories  from '../plugins/Categories';
     import Ckeditor    from  '../plugins/Ckeditor';
     import SelectColor from '../plugins/SelectColor';
-
+    import searchProducts from '../plugins/SearchProducts';
 
     export default {
         components:{
@@ -764,11 +756,11 @@
             reviews,
             questions_answers,
             Categories,
-            SelectColor
+            SelectColor,
+            searchProducts
         },
         data () {
             return {
-
                 datetimepicker: {
                     format: 'YYYY-MM-DD HH:mm:ss',
                     useCurrent: false,
@@ -776,7 +768,6 @@
                     showClose: true,
                     locale: 'ru'
                 },
-
                 product:{
                     id: this.$route.params.product_id ? this.$route.params.product_id : 0,
                     attribute_set_id: 0,
@@ -787,6 +778,7 @@
                     photo: '',
                     pathPhoto: '',
                     price: 0,
+                    cost_price: 0,
                     sku: '',
                     stock: 0,
                     active: 1,
@@ -795,9 +787,7 @@
                     youtube: '',
                     view_count: 0
                 },
-
                 product_photo_upload_type: 'file',
-
                 product_accessories: [],
                 attributes: [],
                 product_images: [],
@@ -808,51 +798,11 @@
                     expiration_date: ''
                 },
                 categories: [],
-
                 method_redirect: 'save_and_back',
                 tab_active: 'tab_general',
                 categories_list: [],
                 attributes_sets_more_info: [],
-
-
                 group_products: [],
-
-
-                productSearchSelect2:{
-                    options:  [],
-                    settings: {
-                        placeholder: "Поиск",
-                        ajax: {
-                            url: '/admin/search-products',
-                            dataType: 'json',
-                            data: function (params) {
-                                var query = {
-                                    search: params.term,
-                                    perPage: 5
-                                }
-                                return query;
-                            },
-                            processResults: function (data) {
-                                var results = [];
-                                data.forEach(function (item, index){
-                                        results.push({
-                                            id:     item.id,
-                                            text:   item.name,
-                                            name:   item.name,
-                                            sku:    item.sku,
-                                            price:  item.price,
-                                            active: item.active,
-                                        });
-                                });
-                                return {
-                                    results: results
-                                };
-                            }
-                        }
-                    }
-                },
-
-
             }
         },
 
@@ -871,10 +821,11 @@
             deleteProductAccessory(index){
                  this.$delete(this.product_accessories, index);
             },
-            addProductAccessory({id, name, active}){
+            addProductAccessory(product){
+
                 var add = true;
                 this.product_accessories.forEach(function (item, index){
-                    if(item.product_id == id)
+                    if(item.id == product.id)
                     {
                         add = false;
                         return;
@@ -883,38 +834,37 @@
 
                 if(add)
                     this.product_accessories.push({
-                        id: id,
-                        name: name,
-                        active: active
+                        id:     product.id,
+                        name:   product.name,
+                        active: product.active
                     });
                 else{
                     this.$helper.swalError('Товар уже добавлен');
                 }
             },
+            productGroupAdd(product){
 
-
-            productGroupAdd({id, name, sku, price, active}){
                 var add = true;
                 this.group_products.forEach(function (item, index){
-                    if(id == item.id)
+                    if(item.id == product.id)
                     {
                         add = false;
                         return;
                     }
                 });
+
                 if(add)
                 {
                     this.group_products.push({
-                        id: id,
-                        name: name,
-                        sku: sku,
-                        price: price,
-                        active: active
+                        id:     product.id,
+                        name:   product.name,
+                        sku:    product.sku,
+                        price:  product.price,
+                        active: product.active
                     });
                 }else{
                     this.$helper.swalError('Товар уже добавлен');
                 }
-                this.productSearchSelect2.options = [];
             },
             productGroupDelete(index){
                 this.$delete(this.group_products, index);
@@ -1021,9 +971,6 @@
                 axios.post('/admin/product-save', data).then((res)=>{
                     if(res.data)
                     {
-
-
-
                         this.$helper.swalSuccess(this.product.id ? 'Успешно изменено' : 'Успешно создано');
 
                         if(this.method_redirect == 'save_and_back'){
@@ -1069,6 +1016,7 @@
                                 this.product.photo            = product.photo;
                                 this.product.pathPhoto        = product.pathPhoto;
                                 this.product.price            = parseInt(product.price);
+                                this.product.cost_price       = parseInt(product.cost_price);
                                 this.product.sku              = product.sku;
                                 this.product.stock            = product.stock;
                                 this.product.active           = product.active;

@@ -10,7 +10,7 @@ use App\Models\Status;
 class Callback extends Model
 {
 
-    protected $table = 'callbacks';
+    protected $table = 'callbacks1';
     protected $fillable = [
         'phone',
         'type',
