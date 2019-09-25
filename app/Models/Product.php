@@ -21,25 +21,25 @@ class Product extends Model
 
     protected $table = 'products';
     protected $fillable = [
-    	'group_id',
-    	'attribute_set_id',
-    	'name',
+        'group_id',
+        'attribute_set_id',
+        'name',
         'url',
-    	'description',
+        'description',
         'description_mini',
         'photo',
-    	'price',
+        'price',
         'cost_price',
-    	'sku',
-    	'stock',
+        'sku',
+        'stock',
         'seo_keywords',
         'seo_description',
-    	'created_at',
-    	'updated_at',
+        'created_at',
+        'updated_at',
         'active',
         'youtube',
         'view_count'
-	];
+    ];
 
     public function scopeIsActive($query){
         return $query->where('active', 1);
@@ -114,7 +114,7 @@ class Product extends Model
                         foreach ($value as $v)
                             if(trim($v))
                                 $value_codes[] = (string)$v;
-                }elseif(trim($value))
+                    }elseif(trim($value))
                         $value_codes[] = (string)$value;
                 }
             }
@@ -150,7 +150,7 @@ class Product extends Model
 
 
 
-	protected static function boot()
+    protected static function boot()
     {
         parent::boot();
 
@@ -168,22 +168,22 @@ class Product extends Model
 
             if(env('APP_TEST') == 0 and $product->stock > 0)
             {
-                    $old_stock = self::find($product->id)->stock;
+                $old_stock = self::find($product->id)->stock;
 
-                    if ($product->stock != $old_stock and empty($old_stock))
+                if ($product->stock != $old_stock and empty($old_stock))
+                {
+                    $subscribe = $product->subscribe;
+                    if($subscribe)
                     {
-                        $subscribe = $product->subscribe;
-                        if($subscribe)
+                        foreach ($subscribe as $item)
                         {
-                            foreach ($subscribe as $item)
-                            {
-                                $subject = env('APP_NAME') . ' - ' . 'Товар "' . $product->name . '" в наличии';
-                                Mail::send('mails.is_stock_product', ['product' => $product, 'subject' => $subject], function ($m) use ($item, $subject) {
-                                    $m->to($item->email)->subject($subject);
-                                });
-                            }
+                            $subject = env('APP_NAME') . ' - ' . 'Товар "' . $product->name . '" в наличии';
+                            Mail::send('mails.is_stock_product', ['product' => $product, 'subject' => $subject], function ($m) use ($item, $subject) {
+                                $m->to($item->email)->subject($subject);
+                            });
                         }
                     }
+                }
             }
 
 
@@ -202,11 +202,23 @@ class Product extends Model
             if(empty($product->group_id))
                 $product->group_id = ProductGroup::create()->id;
 
+
             //чпу
             $product->url = str_slug(empty($product->url) ? $product->name : $product->url);
 
             if(empty($product->id))
+            {
                 $product_id = ServiceDB::tableNextId('products');
+
+                $path_folder = public_path(config('shop.products_path_file') . $product_id) . '/';
+                if(!File::isDirectory($path_folder))
+                    File::makeDirectory($path_folder, 0777, true, true);
+
+            }else{
+                $product_id = $product->id;
+            }
+
+
 
             //фото
             if(is_uploaded_file($product->photo))
@@ -218,7 +230,7 @@ class Product extends Model
                 $upload->fileName = str_slug($product->name);
                 $upload->setWidth(300);
                 $upload->setHeight(600);
-                $upload->setPath($product->productFileFolder(false, $product_id ?? 0));
+                $upload->setPath(config('shop.products_path_file') . $product_id . '/');
                 $upload->setFile($product->photo);
                 $fileName = $upload->save();
                 if($fileName)
@@ -235,7 +247,7 @@ class Product extends Model
 
                 $serviceUploadUrl->name = str_slug($product->name);
                 $serviceUploadUrl->url = $product->photo;
-                $serviceUploadUrl->path_save = $product->productFileFolder(false, $product_id ?? 0);
+                $serviceUploadUrl->path_save = public_path(config('shop.products_path_file') . $product_id) . '/';
                 $filename = $serviceUploadUrl->copy();
                 if($filename)
                 {
@@ -251,25 +263,25 @@ class Product extends Model
 
 
     //категория
-	public function categories()
-	{
+    public function categories()
+    {
         return $this->belongsToMany('App\Models\Category', 'category_product', 'product_id', 'category_id');
     }
 
     //атрибуты
-	public function attributes()
-	{
-		return $this->belongsToMany('App\Models\Attribute', 'attribute_product_value', 'product_id', 'attribute_id')
-                    ->withPivot(['value']);
-	}
+    public function attributes()
+    {
+        return $this->belongsToMany('App\Models\Attribute', 'attribute_product_value', 'product_id', 'attribute_id')
+            ->withPivot(['value']);
+    }
 
     //Картинка
-	public function images()
-	{
-		return $this->hasMany('App\Models\ProductImage')->orderBy('order', 'ASC');
-	}
+    public function images()
+    {
+        return $this->hasMany('App\Models\ProductImage')->orderBy('order', 'ASC');
+    }
 
-	//аксессуары
+    //аксессуары
     public function productAccessories()
     {
         return $this->belongsToMany('App\Models\Product', 'product_accessories', 'product_id', 'accessory_product_id');
@@ -346,39 +358,39 @@ class Product extends Model
     public function oneProductFeaturesCompare()
     {
         return $this->hasOne('App\Models\ProductFeaturesCompare', 'product_id', 'id')
-                    ->where('visit_number', Helpers::visitNumber());
+            ->where('visit_number', Helpers::visitNumber());
     }
 
     public function oneProductFeaturesWishlist()
     {
         return $this->hasOne('App\Models\ProductFeaturesWishlist', 'product_id', 'id')
-                    ->where('user_id', Auth::check() ? Auth::user()->id : 0);
+            ->where('user_id', Auth::check() ? Auth::user()->id : 0);
     }
 
     public function inCart(){
         return $this->hasOne('App\Models\CartItem', 'product_id', 'id')
-                    ->whereHas('cart', function ($query){
-                         $query->currentUser();
-                    });
+            ->whereHas('cart', function ($query){
+                $query->currentUser();
+            });
     }
 
     public function scopeProductInfoWith($query){
         return
-        $query->with([
-            'specificPrice' => function($query){
-                $query->dateActive();
-            },
-            'attributes',
-            'categories',
-            'avgRating',
-            'oneProductFeaturesCompare',
-            'oneProductFeaturesWishlist',
-            'inCart'
-        ])
-        ->isActive()
-        ->withCount(['reviews' => function($query){
-            $query->isActive();
-        }]);
+            $query->with([
+                'specificPrice' => function($query){
+                    $query->dateActive();
+                },
+                'attributes',
+                'categories',
+                'avgRating',
+                'oneProductFeaturesCompare',
+                'oneProductFeaturesWishlist',
+                'inCart'
+            ])
+                ->isActive()
+                ->withCount(['reviews' => function($query){
+                    $query->isActive();
+                }]);
     }
 
 
@@ -393,10 +405,10 @@ class Product extends Model
             {
                 case 'percent':
                     $price = $price - $this->specificPrice->reduction / 100 * $price;
-                break;
+                    break;
                 case 'sum':
                     $price = $price - $this->specificPrice->reduction;
-                break;
+                    break;
             }
         }
         return $price;
@@ -461,7 +473,7 @@ class Product extends Model
     public function deletePhoto()
     {
         if($this->pathPhoto())
-           return File::delete($this->pathPhoto());
+            return File::delete($this->pathPhoto());
         else
             return false;
     }
