@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Models\Category;
 use DB;
 
 class ServiceImport
@@ -11,7 +12,7 @@ class ServiceImport
     public $selected;
     public $data_column;
     public $identification_column;
-
+    public $attribute_group_id;
 
 
     private function clearData(){
@@ -29,7 +30,20 @@ class ServiceImport
             {
                 if($data_column_item)
                 {
-                    $insert[$data_key][ $data_column_item ] = $data_item[ $data_column_index ];
+                    $value_new = $data_item[ $data_column_index ];
+                    $value_old = $insert[$data_key][ $data_column_item ] ?? false;
+
+                    if($value_old)
+                    {
+                        if(is_array($value_old)){
+                            $insert[$data_key][ $data_column_item ][] = $value_new;
+                        }else{
+                            $insert[$data_key][ $data_column_item ] = [
+                                $value_old, $value_new
+                            ];
+                        }
+                    }else
+                        $insert[$data_key][ $data_column_item ] = $value_new;
                 }
             }
         }
@@ -48,10 +62,18 @@ class ServiceImport
         $insert = $this->dataConvertToArray();
         $identification_column = $this->identification_column;
 
+
+
         if($insert)
         {
             foreach ($insert as $item)
             {
+
+                if($this->table == 't_products' and $this->attribute_group_id)
+                {
+                    $item['attribute_set_id'] = $this->attribute_group_id;
+                }
+
                 if($identification_column)
                 {
                     $value = mb_strtolower($item[ $identification_column ]);
@@ -72,6 +94,78 @@ class ServiceImport
                     $element->save();
                     $new++;
                 }
+
+                if($this->table == 't_products')
+                {
+
+                    //Атрибуты
+                    $attributes = [];
+                    foreach ($item as $attribute_id => $value)
+                    {
+                        if(is_numeric($attribute_id))
+                        {
+                            $attributes[] = [
+                                'attribute_id' => $attribute_id,
+                                'value'        => $value
+                            ];
+                        }
+                    }
+                    if(count($attributes) > 0)
+                    {
+                        ServiceProduct::productAttributesSave(
+                            $element->id,
+                            $attributes,
+                            false
+                        );
+                    }
+
+                    //Категория
+                    $categories = $item['categories'] ?? false;
+                    if($categories)
+                    {
+                        $categories = (array)$categories;
+                        $categories_ids = [];
+
+                        foreach ($categories as $name)
+                        {
+                            $category = Category::firstOrNew(['name' => $name]);
+                            $category->name = $name;
+                            $category->save();
+
+                            if($category)
+                                $categories_ids[] = $category->id;
+                        }
+
+                        if(count($categories_ids) > 0)
+                            $element->categories()->sync($categories_ids);
+                    }
+
+                    //Картинки
+                    $images = $item['images'] ?? false;
+                    if($images)
+                    {
+                        $format_images = [];
+                        $images = (array)$images;
+
+                        foreach($images as $image)
+                        {
+                            $format_images[] = [
+                                'id'        => 0,
+                                'is_delete' => 0,
+                                'value'     => $image
+                            ];
+                        }
+
+                        if(count($format_images) > 0)
+                        {
+                            ServiceProduct::productImagesSave($format_images, $element->id);
+                        }
+                    }
+
+
+
+                }
+
             }
         }
 
