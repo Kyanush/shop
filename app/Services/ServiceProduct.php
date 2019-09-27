@@ -6,7 +6,6 @@ use App\Models\Attribute;
 use App\Models\AttributeProductValue;
 use App\Models\Order;
 use App\Services\ServiceUploadUrl;
-use App\Services\ServiceUploadUrl;
 use App\Tools\Helpers;
 use File;
 use App\Models\ProductGroup;
