@@ -21,25 +21,25 @@ class Product extends Model
 
     protected $table = 'products';
     protected $fillable = [
-        'group_id',
-        'attribute_set_id',
-        'name',
+    	'group_id',
+    	'attribute_set_id',
+    	'name',
         'url',
-        'description',
+    	'description',
         'description_mini',
         'photo',
-        'price',
+    	'price',
         'cost_price',
-        'sku',
-        'stock',
+    	'sku',
+    	'stock',
         'seo_keywords',
         'seo_description',
-        'created_at',
-        'updated_at',
+    	'created_at',
+    	'updated_at',
         'active',
         'youtube',
         'view_count'
-    ];
+	];
 
     public function scopeIsActive($query){
         return $query->where('active', 1);
@@ -102,49 +102,49 @@ class Product extends Model
 
     public function scopeFiltersAttributes($query, $filters){
 
-        $product_ids_group = $product_ids = [];
+            $product_attribute_count = $product_ids = [];
 
-        if(count($filters) > 0)
-            foreach ($filters as $attr_code => $value_code)
-            {
-
-                if(empty($attr_code) or empty($value_code))
-                    continue;
-
-                $attribute = Attribute::where('code', $attr_code)->first();
-                if($attribute)
+            if(count($filters) > 0)
+                foreach ($filters as $filter_code => $filter_value)
                 {
-                    $value = $attribute->values()->where('code', $value_code)->first()->value ?? false;
-                    if($value)
+
+                    if(empty($filter_code) or empty($filter_value))
+                        continue;
+
+                    $attribute = Attribute::where('code', $filter_code)->first();
+                    if($attribute)
                     {
-                        $arr = AttributeProductValue::where('attribute_id', $attribute->id)->where('value', $value)->get();
-                        foreach ($arr as $fff)
-                        {
-                            $product_ids_group[$fff->product_id][] = $fff->product_id;
-                        }
+                       $value = $attribute->values()->where('code', $filter_value)->first()->value ?? false;
+                       if($value)
+                       {
+                           $attributeProductValue = AttributeProductValue::where('attribute_id', $attribute->id)->where('value', $value)->get();
+                           foreach ($attributeProductValue as $item)
+                           {
+                               $product_attribute_count[ $item->product_id ][] = $item->product_id;
+                           }
+                       }
                     }
+                }
+
+            $max = 0;
+            foreach ($product_attribute_count as $key => $item)
+            {
+                if(count($item) > $max)
+                    $max = count($item);
+            }
+
+            foreach ($product_attribute_count as $key => $item)
+            {
+                if(count($item) == $max)
+                {
+                    $product_ids[$key] = $key;
                 }
             }
 
-        $max = 0;
-        foreach ($product_ids_group as $key => $item)
-        {
-            if(count($item) > $max)
-                $max = count($item);
-        }
-
-        foreach ($product_ids_group as $key => $item)
-        {
-            if(count($item) == $max)
+            if(count($product_ids) > 0)
             {
-                $product_ids[$key] = $key;
+                $query->whereIn('id', $product_ids);
             }
-        }
-
-        if(count($product_ids) > 0)
-        {
-            $query->whereIn('id', $product_ids);
-        }
 
         return $query;
     }
@@ -152,7 +152,7 @@ class Product extends Model
 
 
 
-    protected static function boot()
+	protected static function boot()
     {
         parent::boot();
 
@@ -170,22 +170,22 @@ class Product extends Model
 
             if(env('APP_TEST') == 0 and $product->stock > 0)
             {
-                $old_stock = self::find($product->id)->stock;
+                    $old_stock = self::find($product->id)->stock;
 
-                if ($product->stock != $old_stock and empty($old_stock))
-                {
-                    $subscribe = $product->subscribe;
-                    if($subscribe)
+                    if ($product->stock != $old_stock and empty($old_stock))
                     {
-                        foreach ($subscribe as $item)
+                        $subscribe = $product->subscribe;
+                        if($subscribe)
                         {
-                            $subject = env('APP_NAME') . ' - ' . 'Товар "' . $product->name . '" в наличии';
-                            Mail::send('mails.is_stock_product', ['product' => $product, 'subject' => $subject], function ($m) use ($item, $subject) {
-                                $m->to($item->email)->subject($subject);
-                            });
+                            foreach ($subscribe as $item)
+                            {
+                                $subject = env('APP_NAME') . ' - ' . 'Товар "' . $product->name . '" в наличии';
+                                Mail::send('mails.is_stock_product', ['product' => $product, 'subject' => $subject], function ($m) use ($item, $subject) {
+                                    $m->to($item->email)->subject($subject);
+                                });
+                            }
                         }
                     }
-                }
             }
 
 
@@ -265,25 +265,25 @@ class Product extends Model
 
 
     //категория
-    public function categories()
-    {
+	public function categories()
+	{
         return $this->belongsToMany('App\Models\Category', 'category_product', 'product_id', 'category_id');
     }
 
     //атрибуты
-    public function attributes()
-    {
-        return $this->belongsToMany('App\Models\Attribute', 'attribute_product_value', 'product_id', 'attribute_id')
-            ->withPivot(['value']);
-    }
+	public function attributes()
+	{
+		return $this->belongsToMany('App\Models\Attribute', 'attribute_product_value', 'product_id', 'attribute_id')
+                    ->withPivot(['value']);
+	}
 
     //Картинка
-    public function images()
-    {
-        return $this->hasMany('App\Models\ProductImage')->orderBy('order', 'ASC');
-    }
+	public function images()
+	{
+		return $this->hasMany('App\Models\ProductImage')->orderBy('order', 'ASC');
+	}
 
-    //аксессуары
+	//аксессуары
     public function productAccessories()
     {
         return $this->belongsToMany('App\Models\Product', 'product_accessories', 'product_id', 'accessory_product_id');
@@ -360,39 +360,39 @@ class Product extends Model
     public function oneProductFeaturesCompare()
     {
         return $this->hasOne('App\Models\ProductFeaturesCompare', 'product_id', 'id')
-            ->where('visit_number', Helpers::visitNumber());
+                    ->where('visit_number', Helpers::visitNumber());
     }
 
     public function oneProductFeaturesWishlist()
     {
         return $this->hasOne('App\Models\ProductFeaturesWishlist', 'product_id', 'id')
-            ->where('user_id', Auth::check() ? Auth::user()->id : 0);
+                    ->where('user_id', Auth::check() ? Auth::user()->id : 0);
     }
 
     public function inCart(){
         return $this->hasOne('App\Models\CartItem', 'product_id', 'id')
-            ->whereHas('cart', function ($query){
-                $query->currentUser();
-            });
+                    ->whereHas('cart', function ($query){
+                         $query->currentUser();
+                    });
     }
 
     public function scopeProductInfoWith($query){
         return
-            $query->with([
-                'specificPrice' => function($query){
-                    $query->dateActive();
-                },
-                'attributes',
-                'categories',
-                'avgRating',
-                'oneProductFeaturesCompare',
-                'oneProductFeaturesWishlist',
-                'inCart'
-            ])
-                ->isActive()
-                ->withCount(['reviews' => function($query){
-                    $query->isActive();
-                }]);
+        $query->with([
+            'specificPrice' => function($query){
+                $query->dateActive();
+            },
+            'attributes',
+            'categories',
+            'avgRating',
+            'oneProductFeaturesCompare',
+            'oneProductFeaturesWishlist',
+            'inCart'
+        ])
+        ->isActive()
+        ->withCount(['reviews' => function($query){
+            $query->isActive();
+        }]);
     }
 
 
@@ -407,10 +407,10 @@ class Product extends Model
             {
                 case 'percent':
                     $price = $price - $this->specificPrice->reduction / 100 * $price;
-                    break;
+                break;
                 case 'sum':
                     $price = $price - $this->specificPrice->reduction;
-                    break;
+                break;
             }
         }
         return $price;
@@ -480,7 +480,7 @@ class Product extends Model
     public function deletePhoto()
     {
         if($this->pathPhoto())
-            return File::delete($this->pathPhoto());
+           return File::delete($this->pathPhoto());
         else
             return false;
     }

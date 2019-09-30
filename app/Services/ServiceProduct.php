@@ -271,8 +271,6 @@ class ServiceProduct implements ProductInterface
 
     public static function productsAttributesFilters($filters, $useInFilter = true)
     {
-        if($filters)
-        {
             $attributeProductValue = AttributeProductValue::select(['attribute_id', 'value'])
                 ->whereHas('product', function($query) use ($filters){
                     $query->filters($filters);
@@ -305,20 +303,19 @@ class ServiceProduct implements ProductInterface
                 });
 
             }])
-                ->whereHas('values', function ($query) use ($attributeProductValue){
+            ->whereHas('values', function ($query) use ($attributeProductValue){
 
-                    $query->where(function ($query) use ($attributeProductValue) {
-                        foreach($attributeProductValue as $value)
-                        {
-                            $query->orwhere(function ($query) use ($value) {
-                                $query->where('attribute_id', $value->attribute_id);
-                                $query->where('value', $value->value);
-                            });
-                        }
-                    });
-                })
-                ->get();
-        }
+                $query->where(function ($query) use ($attributeProductValue) {
+                    foreach($attributeProductValue as $value)
+                    {
+                        $query->orwhere(function ($query) use ($value) {
+                            $query->where('attribute_id', $value->attribute_id);
+                            $query->where('value', $value->value);
+                        });
+                    }
+                });
+            })
+            ->get();
     }
 
 }

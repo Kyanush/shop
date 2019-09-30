@@ -47,6 +47,7 @@ class ImportController extends AdminController
         $import->data_column = $data_column;
         $import->identification_column = $identification_column;
         $import->attribute_group_id = $attribute_group_id;
+
         $result = $import->save();
 
         if($result)

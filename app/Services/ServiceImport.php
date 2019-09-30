@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\Category;
+use App\Models\ProductGroup;
 use DB;
 
 class ServiceImport
@@ -62,16 +63,30 @@ class ServiceImport
         $insert = $this->dataConvertToArray();
         $identification_column = $this->identification_column;
 
-
+        $products_groups = [];
 
         if($insert)
         {
             foreach ($insert as $item)
             {
 
-                if($this->table == 't_products' and $this->attribute_group_id)
+                if($this->table == 't_products')
                 {
-                    $item['attribute_set_id'] = $this->attribute_group_id;
+
+                    if($this->attribute_group_id)
+                        $item['attribute_set_id'] = $this->attribute_group_id;
+
+                    $group_id = $item['group_id'] ?? false;
+                    if($group_id)
+                    {
+                        if(!isset($products_groups[ $group_id ]))
+                        {
+                            $item['group_id'] = ProductGroup::create()->id;
+                            $products_groups[ $group_id ] = $item['group_id'];
+                        }else{
+                            $item['group_id'] = $products_groups[ $group_id ];
+                        }
+                    }
                 }
 
                 if($identification_column)

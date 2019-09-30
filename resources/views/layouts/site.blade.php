@@ -58,24 +58,24 @@
     <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <!-- slick js --->
 
+    <!-- Vue js -->
+    <script type="text/javascript" src="/mobile/js/vue.2.6.4.js"></script>
+    <script type="module">
+        import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.4/dist/vue.esm.browser.js'
+    </script>
+    <!-- Vue js -->
+
     <!-- axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="/global/config-axios.js"></script>
     <!-- axios -->
 
-    @if(env('APP_NO_URL') == 'ShopX.kz')
-        <meta name="msvalidate.01" content="FA2FCEE563AF49653FFF42334E7092CC" />
-        <meta name='wmail-verification' content='c74818c22574ac605627147e0e2b3938' />
-        <meta name="yandex-verification" content="c53e2b353e1786fd" />
-        <meta name="google-site-verification" content="lIuokO3B8NA53x6eSCa44i-eQSaIeWhj99_76Dl-OyM" />
-    @endif
 
-    @if(env('APP_NO_URL') == 'OnePoint.kz')
-        <meta name="msvalidate.01" content="F55DDAE4472BFCE0E1078D1AD1189395" />
-        <meta name='wmail-verification' content='07844bf5bc650958f491165a1819df8b' />
-        <meta name="yandex-verification" content="d9d1d901f0c53a09" />
-        <meta name="google-site-verification" content="YOGU9Dh4gfT8os5uvRCSuQ_kwUhoUbXwqQFiNshBSHw" />
-    @endif
+    <meta name="msvalidate.01" content="F55DDAE4472BFCE0E1078D1AD1189395" />
+    <meta name='wmail-verification' content='07844bf5bc650958f491165a1819df8b' />
+    <meta name="yandex-verification" content="d9d1d901f0c53a09" />
+    <meta name="google-site-verification" content="YOGU9Dh4gfT8os5uvRCSuQ_kwUhoUbXwqQFiNshBSHw" />
+
 
     @yield('add_in_head')
 
