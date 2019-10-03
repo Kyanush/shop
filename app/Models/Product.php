@@ -230,8 +230,8 @@ class Product extends Model
 
                 $upload = new Upload();
                 $upload->fileName = str_slug($product->name);
-                $upload->setWidth(300);
-                $upload->setHeight(600);
+                //$upload->setWidth(300);
+                //$upload->setHeight(600);
                 $upload->setPath(config('shop.products_path_file') . $product_id . '/');
                 $upload->setFile($product->photo);
                 $fileName = $upload->save();
@@ -287,6 +287,12 @@ class Product extends Model
     public function productAccessories()
     {
         return $this->belongsToMany('App\Models\Product', 'product_accessories', 'product_id', 'accessory_product_id');
+    }
+
+    //аксессуары
+    public function productAccessoriesBack()
+    {
+        return $this->belongsToMany('App\Models\Product', 'product_accessories', 'accessory_product_id', 'product_id');
     }
 
     //Отзывы
@@ -456,7 +462,7 @@ class Product extends Model
     }
 
     public function detailUrlProductAdmin(){
-        return '/admin/products/edit/' . $this->id;
+        return '/admin/product/' . $this->id;
     }
 
     public function pathPhoto($firstSlash = false)

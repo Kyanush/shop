@@ -347,13 +347,23 @@
                                             <td width="25%" class="text-right">
                                                 <label><span class="red">*</span> Наборы атрибутов:</label>
                                             </td>
-                                            <td width="75%">
+                                            <td width="60%">
                                                 <div class="form-group col-md-6">
-                                                    <Select2 @change="selectAttributeSetId($event)"
+                                                    <Select2
                                                              v-if="tab_active == 'tab_attributes'"
                                                              v-model="product.attribute_set_id"
                                                              :options="convertDataSelect2(attributes_sets_more_info)"/>
                                                 </div>
+                                            </td>
+                                            <td width="15%">
+                                                <router-link target="_blank" :to="{ name: 'attribute_set_edit', params: { attribute_set_id: product.attribute_set_id} }" class="btn btn-xs btn-default">
+                                                    <i class="fa fa-edit"></i>
+                                                    Изменить
+                                                </router-link>
+                                                <button type="button" class="btn btn-xs btn-default" @click="attributeSetsMoreInfo">
+                                                    <i class="fa fa-refresh" aria-hidden="true"></i>
+                                                    Обновить все
+                                                </button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -361,19 +371,18 @@
 
 
 
-
                                 <table class="table table-bordered "
                                        v-for="item in attributes_sets_more_info"
-                                       v-if="item.id == product.attribute_set_id && attributes.length > 0"
-                                >
+                                       v-if="item.id == product.attribute_set_id && attributes.length > 0">
                                     <tbody>
                                         <tr v-for="(attribute, index) in item.attributes">
                                             <td width="25%" class="text-right">
                                                 <label>
-                                                    <span class="red" v-if="attribute.required == 1">*</span> {{ attribute.name }}:
+                                                    <span class="red" v-if="attribute.required == 1">*</span>
+                                                    {{ attribute.name }}:
                                                 </label>
                                             </td>
-                                            <td width="75%">
+                                            <td width="60%">
 
                                                     <div class="form-group col-md-6" v-if="attribute.type == 'text'" v-bind:class="{'has-error' : IsError('attributes.' + index + '.value')}">
                                                         <p class="help-block">Текст</p>
@@ -455,6 +464,12 @@
                                                         </span>
 
                                                     </div>
+                                            </td>
+                                            <td width="15%">
+                                                <router-link :title="'Изменить ' + attribute.name"  target="_blank" :to="{ name: 'attribute_edit', params:{ attribute_id: attribute.id }}" class="btn btn-xs btn-default">
+                                                    <i class="fa fa-edit"></i>
+                                                    Изменить
+                                                </router-link>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -807,6 +822,19 @@
         },
 
         methods:{
+            attributeSetsMoreInfo(refresh){
+                  axios.get('/admin/attribute-sets-more-info').then((res)=>{
+                        this.attributes_sets_more_info = res.data;
+                        if(refresh)
+                        {
+                            this.$swal({
+                                type: 'success',
+                                //html: 'Номер заказа <a style="font-size: 20px;" href="/order-history/' + this.order_id + '">№:' + this.order_id + '</a>',
+                                title: 'Успешно обновлено'
+                            });
+                        }
+                  });
+            },
             convertColorOptions(values){
                 var data = [];
                 values.forEach(function (item, index) {
@@ -997,7 +1025,7 @@
             getProduct(product_id){
                 if(product_id > 0)
                 {
-                    setTimeout(function () {
+
                             axios.get('/admin/product-view/' + product_id).then((res)=>{
                                 document.querySelector('input[type=file]').value = '';
 
@@ -1023,26 +1051,22 @@
                                 this.product.youtube          = product.youtube;
                                 this.product.view_count       = product.view_count;
 
-
-
-                                this.selectAttributeSetId(product.attribute_set_id);
                                 this.groupProducts(product.group_id);
-
 
                                 this.categories     = data.categories;
                                 this.product_images = data.images;
 
-                                var self = this;
-                                $.each(data.attributes, function(attribute_id, value) {
-
+                                setTimeout(function () {
+                                    var self = this;
+                                    $.each(data.attributes, function(attribute_id, value) {
                                         self.attributes.forEach(function (item, index) {
                                             if(attribute_id == item.attribute_id)
                                             {
                                                 self.$set(self.attributes[index], 'value' , value);
                                             }
                                         });
-
-                                });
+                                    });
+                                }.bind(this, data), 1000);
 
                                 this.product_accessories = data.product_accessories;
 
@@ -1056,7 +1080,6 @@
                                 }
 
                             });
-                    }.bind(this), 250);
                 }
             },
             groupProducts(group_id){
@@ -1067,20 +1090,17 @@
             ...mapActions(['SetErrors'])
         },
         created(){
-            axios.get('/admin/attribute-sets-more-info').then((res)=>{
-                this.attributes_sets_more_info = res.data;
-            });
+            this.attributeSetsMoreInfo();
 
             var params = {per_page: 100};
             axios.get('/admin/categories-list', {params:  params}).then((res)=>{
                 this.categories_list = res.data.data;
             });
 
-
-            if(this.product.id > 0)
-                this.getProduct(this.product.id);
-
-
+            setTimeout(function () {
+                if(this.product.id > 0)
+                    this.getProduct(this.product.id);
+            }.bind(this), 1000);
         },
 
         computed:{
@@ -1113,6 +1133,12 @@
                     if(this.product_photo_upload_type == 'url'){
                         this.product.pathPhoto = val;
                     }
+                },
+                deep: true
+            },
+            'product.attribute_set_id':{
+                handler: function (val, oldVal) {
+                    this.selectAttributeSetId(val);
                 },
                 deep: true
             }
