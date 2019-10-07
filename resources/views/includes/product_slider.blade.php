@@ -1,4 +1,4 @@
-@if($products and count($products) > 0)
+@if($products->isNotEmpty())
         <div class="rr-widget cartRelated rr-active">
             <header class="widgettitle">{{ $title }}</header>
             <ul class="items">
@@ -104,5 +104,3 @@
             </ul>
         </div>
 @endif
-
-<?php unset($products); ?>

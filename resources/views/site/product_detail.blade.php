@@ -11,9 +11,13 @@
 
 @section('content')
 
+    @include('schemas.product', [
+        'product'          => $product,
+        'group_products'   => $group_products,
+        'category'         => $category
+    ])
 
-
-    <div class="container" style="position:static;">
+    <div class="container" style="position:static;"  itemtype="http://schema.org/Product" itemscope>
 
         @include('includes.breadcrumb', ['breadcrumbs' => $breadcrumbs])
 
@@ -49,12 +53,11 @@
 
                             <div class="product-images-main">
                                 <div class="item">
-                                    <img src="{{ $product->pathPhoto(true) }}" title="{{ $seo['title'] }}" alt="{{ $seo['title'] }}"/>
+                                    <img itemprop="image" src="{{ $product->pathPhoto(true) }}" title="{{ $seo['title'] }}" alt="{{ $seo['title'] }}"/>
                                 </div>
-
                                 @foreach($product->images as $image)
                                     <div class="item">
-                                        <img src="{{ $image->imagePath(true) }}" title="{{ $seo['title'] }}" alt="{{ $seo['title'] }}"/>
+                                        <img itemprop="image" src="{{ $image->imagePath(true) }}" title="{{ $seo['title'] }}" alt="{{ $seo['title'] }}"/>
                                     </div>
                                 @endforeach
                             </div>
@@ -124,7 +127,8 @@
 
                         </div>
 
-                        <h1>{{ $product->name }}</h1>
+                        <h1 itemprop="name">{{ $product->name }}</h1>
+                        <meta itemprop="mpn" content="{{ $product->sku }}" />
 
                         <div class="under_h1">
                             <div class="left_info_product_last_review_rating">
@@ -230,6 +234,49 @@
 
                                     @php $price = $product->getReducedPrice(); @endphp
 
+                                    <div itemprop="offers" itemtype="http://schema.org/Offer" itemscope>
+                                        <link itemprop="url" href="{{ $product->detailUrlProduct() }}" />
+                                        <meta itemprop="priceCurrency" content="KZT" />
+                                        <meta itemprop="itemCondition" content="https://schema.org/UsedCondition" />
+                                        <meta itemprop="price" content="{{ $product->getReducedPrice() }}" />
+                                        @if($product->stock > 0)
+                                            <meta itemprop="availability"  content="https://schema.org/InStock" />
+                                            <meta itemprop="itemCondition" content="http://schema.org/NewCondition" />
+                                        @else
+                                            <meta itemprop="availability" content="https://schema.org/OutOfStock" />
+                                        @endif
+                                        @php
+                                            $specificPrice = $product->specificPrice(function ($query){
+                                                                          $query->DateActive();
+                                                                     })
+                                                                     ->first();
+                                        @endphp
+                                        @if($specificPrice)
+                                            @if($specificPrice->expiration_date)
+                                                <meta itemprop="priceValidUntil" content="{{ date('Y-m-d', strtotime($specificPrice->expiration_date)) }}" />
+                                            @else
+                                                <meta itemprop="priceValidUntil" content="{{date('Y')+1}}-12-31" />
+                                            @endif
+                                        @else
+                                            <meta itemprop="priceValidUntil" content="{{date('Y')+1}}-12-31" />
+                                        @endif
+                                        <div itemprop="seller" itemtype="http://schema.org/Organization" itemscope>
+                                            <meta itemprop="name" content="{{ env('APP_NAME') }}" />
+                                        </div>
+                                    </div>
+
+                                    <meta itemprop="sku" content="{{ $product->sku }}" />
+                                    <div itemprop="brand" itemtype="http://schema.org/Thing" itemscope>
+                                        <meta itemprop="name" content="{{ $category->name }}" />
+                                    </div>
+
+                                    @if(intval($product->avgRating[0]->avg_rating ?? 0) > 0 and $product->reviews_count > 0)
+                                        <div itemprop="aggregateRating" itemtype="http://schema.org/AggregateRating" itemscope>
+                                            <meta itemprop="reviewCount" content="{{ $product->reviews_count }}" />
+                                            <meta itemprop="ratingValue" content="{{ intval($product->avgRating[0]->avg_rating ?? 0) }}" />
+                                        </div>
+                                    @endif
+
                                     @if($product->stock > 0)
                                         <div class="price">
                                             @if($product->specificPrice)
@@ -312,12 +359,6 @@
                                     @endif
                             </div>
 
-                            @include('schemas.product', [
-                                'product'          => $product,
-                                'group_products'   => $group_products,
-                                'category'         => $category
-                            ])
-
                         </div>
                     </div>
                     <div class="cl_b"></div>
@@ -364,29 +405,21 @@
                 </div>
             </div>
 
+            @include('includes.product_slider', ['products' => $products_interested, 'title' => 'С этим товаром покупают'])
+            @include('includes.product_slider', ['products' => $group_products,      'title' => 'Похожие товары'])
 
-            @if(count($products_interested) > 0)
-                <span class="you-may-be-interested">
-                    @include('includes.product_slider', ['products' => $products_interested, 'title' => 'С этим товаром покупают'])
-                </span>
-            @endif
-
-
-
-
-
-            <div class="product_info_bottom">
+            <div class="product_info_bottom" itemprop="description">
                 <div class="product_tabs">
                     <div class="product_tabs_htabs">
-
-                        <a href="{{ $product->detailUrlProduct() }}/descriptions"
-                           tab="tab-descriptions"
-                           class="product_tabs_tab_active">Описание</a>
-
-                        <a href="{{ $product->detailUrlProduct() }}/attributes" tab="tab-attributes">Характеристики</a>
-
-                        <a href="{{ $product->detailUrlProduct() }}/reviews" tab="tab-reviews">Отзывы <span>( {{ $product->reviews_count }})</span></a>
-
+                        <a tab="tab-descriptions" class="product_tabs_tab_active">
+                            Описание
+                        </a>
+                        <a tab="tab-attributes">
+                            Характеристики
+                        </a>
+                        <a tab="tab-reviews">
+                            Отзывы <span>( {{ $product->reviews_count }})</span>
+                        </a>
                     </div>
                     <div class="product_tabs_content">
                         <div class="active" id="tab-descriptions">
@@ -465,19 +498,26 @@
                                     <p>Нет отзывы</p>
                                 @else
                                     @foreach($product->reviews as $review)
-                                            <div class="one-review">
+                                            <div class="one-review" itemprop="review" itemtype="http://schema.org/Review" itemscope>
+
+                                                <div itemprop="reviewRating" itemtype="http://schema.org/Rating" itemscope>
+                                                    <meta itemprop="ratingValue" content="{{ $review->rating }}" />
+                                                    <meta itemprop="bestRating"  content="5" />
+                                                    <meta itemprop="worstRating" content="1" />
+                                                </div>
+
                                                 <div class="one-review-left">
-                                                    <div class="one-review-left-author">
-                                                        {{ $review->name }}
+                                                    <div class="one-review-left-author" itemprop="author" itemtype="http://schema.org/Person" itemscope>
+                                                       <span itemprop="name">{{ $review->name }}</span>
                                                     </div>
-                                                    <div class="one-review-left-date">
+                                                    <div class="one-review-left-date" itemprop="datePublished" content="{{ date('Y-m-d', strtotime($review->created_at)) }}">
                                                         {{ \App\Tools\Helpers::ruDateFormat($review->created_at) }}
                                                     </div>
                                                     <div class="rating_stars">
                                                         <div class="rating_full" style="width: {{ $review->rating * 20 }}%"></div>
                                                     </div>
                                                 </div>
-                                                <div class="one-review-right">
+                                                <div class="one-review-right" itemprop="reviewBody">
                                                     <div class="one-review-right-text-plus">
                                                         <span class="review-head">Достоинства</span>
                                                         <span class="review-text">
@@ -524,22 +564,10 @@
 
                             </div>
                         </div>
-
-
                         <div class="product_orange">Пожалуйста, если вы увидели, что в описании товара есть ошибка, например, фактическая или просто опечатка, то <a href="#">дайте нам знать</a>. Мы быстро исправим.</div>
-
                     </div>
-
-
                 </div>
             </div>
-
-
-
-
-            <br/>
-            <br/>
-            @include('includes.product_slider', ['products' => $group_products, 'title' => 'Похожие товары'])
 
         </div>
 
