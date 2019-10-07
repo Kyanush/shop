@@ -79,7 +79,7 @@
         <div class="rating">
             <div class="rating_left">
                 <a class="rating_stars" href="{{ $product->detailUrlProduct() }}#reviews">
-                    <div class="rating_full" style="width: {{ intval($product->avgRating->avg_rating ?? 0) * 20 }}%"></div>
+                    <div class="rating_full" style="width: {{ intval($product->avgRating[0]->avg_rating ?? 0) * 20 }}%"></div>
                 </a>
             </div>
             <div class="rating_right">

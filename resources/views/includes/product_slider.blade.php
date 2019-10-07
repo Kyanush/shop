@@ -57,7 +57,7 @@
                             <div class="rating">
                                 <div class="rating_left">
                                     <a class="rating_stars" href="{{ $product->detailUrlProduct() }}" tabindex="-1">
-                                        <div class="rating_full stars_{{ $product->avgRating->avg_rating ?? 0 }}"></div>
+                                        <div class="rating_full stars_{{ $product->avgRating[0]->avg_rating ?? 0 }}"></div>
                                     </a>
                                 </div>
                                 <div class="rating_right">

@@ -1,17 +1,20 @@
 @extends('layouts.mobile')
 
-@section('title',    	 $seo['title'])
+@section('title',    	$seo['title'])
 @section('description', $seo['description'])
 @section('keywords',    $seo['keywords'])
-
-@section('og_title',    	 $seo['title'])
-@section('og_description',  $seo['description'])
-@section('og_image',    	 env('APP_URL') . $product->pathPhoto(true))
+@section('og_image',    env('APP_URL') . $product->pathPhoto(true))
 
 @section('content')
 
+    @include('schemas.product', [
+        'product'          => $product,
+        'group_products'   => $group_products,
+        'category'         => $category
+    ])
 
-    @if(empty($product_tab))
+    @php $view = $_GET['view'] ?? false; @endphp
+    @if(empty($view))
         @include('mobile.includes.topbar', [
             'class'       => 'g-bb0 g-bg-c0',
             'title'       => '',
@@ -19,7 +22,7 @@
             'menu_link'   => '',
             'menu_class'  => 'icon_menu'
         ])
-    @elseif($product_tab == 'attributes')
+    @elseif($view == 'attributes')
         @include('mobile.includes.topbar', [
             'class'       => '_fixed',
             'title'       => 'Характеристики',
@@ -27,7 +30,7 @@
             'menu_link'   => $product->detailUrlProduct(),
             'menu_class'  => 'icon_back'
         ])
-    @elseif($product_tab == 'reviews')
+    @elseif($view == 'reviews')
         @include('mobile.includes.topbar', [
             'class'       => '_fixed _fixed-top',
             'title'       => 'Отзывы',
@@ -35,7 +38,7 @@
             'menu_link'   => $product->detailUrlProduct(),
             'menu_class'  => 'icon_back'
         ])
-    @elseif($product_tab == 'descriptions')
+    @elseif($view == 'descriptions')
         @include('mobile.includes.topbar', [
             'class'       => '_fixed',
             'title'       => 'Описание',
@@ -46,13 +49,13 @@
     @endif
 
 
-    @if(empty($product_tab))
+    @if(empty($view))
         @include('mobile.product.main')
-    @elseif($product_tab == 'attributes')
+    @elseif($view == 'attributes')
         @include('mobile.product.attributes')
-    @elseif($product_tab == 'reviews')
+    @elseif($view == 'reviews')
         @include('mobile.product.reviews')
-    @elseif($product_tab == 'descriptions')
+    @elseif($view == 'descriptions')
         @include('mobile.product.descriptions')
     @endif
 

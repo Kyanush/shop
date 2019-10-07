@@ -6,12 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
 use App\Services\ServiceCategory;
-use App\Services\ServiceCity;
 use App\Services\ServiceYouWatchedProduct;
 use App\Tools\Helpers;
 use App\Tools\Seo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class ProductController extends Controller
 {
@@ -38,33 +38,43 @@ class ProductController extends Controller
     public function productDetailMain($city, $product_url, $category_url, $product_tab = '')
     {
 
+
         $product = Product::productInfoWith()
-                            ->with(['images' => function($query){
-                                    $query->OrderBy('order', 'ASC');
-                                },
-                                'questionsAnswers' => function($query){
-                                    $query->isActive();
-                                },
-                                'reviews' => function($query) use($product_tab){
-                                    $query->with('isLike');
-                                    $query->withCount(['likes', 'disLikes']);
-                                    $query->isActive();
+            ->with(['images' => function($query){
+                $query->OrderBy('order', 'ASC');
+            }
+            ])
+            ->where('url', $product_url)
+            ->firstOrFail();
 
-                                    if(empty($product_tab) and Helpers::isMobile())
-                                        $query->limit(2);
-                                }
-                            ])
-                            ->where('url', $product_url)
-                            ->first();
+        if(Helpers::isMobile()){
+            $view = $_GET['view'] ?? false;
+            if($view == 'reviews')
+                $reviews = $product->reviews()->with('isLike')->withCount(['likes', 'disLikes'])->isActive()->get();
+            else
+                $reviews = $product->reviews()->with('isLike')->withCount(['likes', 'disLikes'])->isActive()->paginate(2);
+        }else{
+            $reviews = $product->reviews()->with('isLike')->withCount(['likes', 'disLikes'])->isActive()->paginate(3);
+        }
 
 
+        $ratings_groups = $product->reviews()
+            ->select('rating', DB::raw('count(*) as total'))
+            ->groupBy('rating')
+            ->orderBy('rating')
+            ->get();
+
+        //Похожие товары
         $group_products = $product->groupProducts()->productInfoWith()->where('id', '<>', $product->id)->get();
 
+        //С этим товаром покупаю
         $products_interested = $product->productAccessories()->productInfoWith()->get();
+        if($products_interested->isEmpty())
+            $products_interested = $product->productAccessoriesBack()->productInfoWith()->get();
 
         //Вы смотрели
         ServiceYouWatchedProduct::youWatchedProduct($product->id);
-        $youWatchedProducts = ServiceYouWatchedProduct::listProducts($product->id);
+        $youWatchedProducts = ServiceYouWatchedProduct::listProducts($product->id, 10);
 
 
 
@@ -79,42 +89,27 @@ class ProductController extends Controller
         if($view_count)
             $product->increment('view_count');
 
-
-
         //категория
         $category = Category::where('url', $category_url)->first();
         if(!$category)
             $category = Category::find($product->categories[0]->id);
 
-        $tab_title = '';
-        switch ($product_tab){
-            case 'attributes':
-                $tab_title = 'характеристики и инструкция';
-                break;
-            case 'reviews':
-                $tab_title = 'отзывы и обзоры';
-                break;
-            case 'questions':
-                $tab_title = 'ответы на ваши вопросы';
-                break;
-        }
-
         //Хлебная крошка
-        $breadcrumbs = ServiceCategory::breadcrumbCategories($category->id, $product->name . ($tab_title ? ': ' . $tab_title : ''));
+        $breadcrumbs = ServiceCategory::breadcrumbCategories($category->id, $product->name);
 
         //seo
         $seo = Seo::productDetail($product, $category);
 
         return view(Helpers::isMobile() ? 'mobile.product.index' : 'site.product_detail', [
             'product'  => $product,
-            'product_tab' => $product_tab,
+            'reviews' => $reviews,
+            'ratings_groups' => $ratings_groups,
             'group_products' => $group_products,
             'products_interested' => $products_interested,
             'youWatchedProducts' => $youWatchedProducts,
             'category' => $category,
             'seo' => $seo,
             'breadcrumbs' => $breadcrumbs,
-            'tab_title' => $tab_title
         ]);
     }
 

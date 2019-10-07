@@ -38,7 +38,7 @@ $productDay =  \App\Models\Product::productInfoWith()
         <div class="rating_left">
 
             <a class="rating_stars" href="{{ $productDay->detailUrlProduct() }}#reviews" tabindex="-1">
-                <div class="rating_full stars_{{ $productDay->avgRating->avg_rating ?? 0 }}"></div>
+                <div class="rating_full stars_{{ $productDay->avgRating[0]->avg_rating ?? 0 }}"></div>
             </a>
 
         </div>

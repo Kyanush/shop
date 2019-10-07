@@ -55,26 +55,21 @@
                 @foreach($product->attributes as $attribute)
                     @if($attribute->id == 49 and $attribute->pivot->value)
                         @if($attribute->pivot->value == 'Хит')
-                            <div class="hit"><img src="/site/images/sticker_hit.png"> Хит</div>
-                        @endif
-                        @if($attribute->pivot->value == 'New!')
+                            <div class="hit">Хит</div>
+                        @elseif($attribute->pivot->value == 'New!')
                             <div class="new">New!</div>
+                        @else
+                            <div class="new">{{ $attribute->pivot->value }}</div>
                         @endif
                     @endif
                 @endforeach
             </div>
 
             <div class="item__badges _right">
-                <div onclick="productFeaturesWishlist(this)"
-                     class="product_features_wishlist {{ $product->oneProductFeaturesWishlist ? 'active' : '' }}"
-                     product_id="{{ $product->id }}"
-                     product_url="{{ $product->detailUrlProduct() }}"
-                     product_name="{{ $product->name }}"></div>
-                <div onclick="productFeaturesCompare(this)"
-                     class="product_features_compare {{ $product->oneProductFeaturesCompare  ? 'active' : '' }}"
-                     product_id="{{ $product->id }}"
-                     product_url="{{ $product->detailUrlProduct() }}"
-                     product_name="{{ $product->name }}"></div>
+                <div onclick="productFeaturesWishlist(this, {{ $product->id }})"
+                     class="product_features_wishlist {{ $product->oneProductFeaturesWishlist ? 'active' : '' }}"></div>
+                <div onclick="productFeaturesCompare(this, {{ $product->id }})"
+                     class="product_features_compare {{ $product->oneProductFeaturesCompare  ? 'active' : '' }}"></div>
             </div>
 
         </div>
@@ -84,7 +79,7 @@
                 {{ $product->name }}
             </h1>
             <a class="item__rating">
-                <span class="rating _{{ ($product->avgRating->avg_rating ?? 0) * 2}}"></span>
+                <span class="rating _{{ ($product->avgRating[0]->avg_rating ?? 0) * 2}}"></span>
                 <span class="rating-count">(<span> {{ $product->reviews_count }}</span>&nbsp;отзывов)</span>
             </a>
             <div class="item__sku">Код товара:&nbsp;{{ $product->sku }}</div>
@@ -130,10 +125,11 @@
 
     </div>
 
-    <div class="container-title">Поховые товары</div>
+
     <div class="mount-sellers-offers _short-list" id="sellers">
         <div class="sellers-offers _short-list">
 
+            <div class="container-title">Поховые товары</div>
             <div class="_sellers-offers">
                 <div class="container loan-selector g-bb-fat">
                     <div class="loan-selector__text-before">Цвет</div>
@@ -179,9 +175,8 @@
                 </div>
             </div>
 
-
-
-
+            @include('mobile.includes.product_slider', ['products' => $group_products,  'title' => 'Похожие товары', 'url' => ''])
+            @include('mobile.includes.product_slider', ['products' => $products_interested, 'title' => 'С этим товаром покупаю', 'url' => ''])
 
             <div class="container-title">Характеристики</div>
             <div class="short-specifications container">
@@ -202,7 +197,7 @@
                 </ul>
             </div>
             <div class="container g-pa0 g-bb-fat">
-                <a href="{{ $product->detailUrlProduct() }}/attributes" class="link-more _link-specifications">Подробнее</a>
+                <a href="{{ $product->detailUrlProduct() }}?view=attributes" class="link-more _link-specifications">Подробнее</a>
             </div>
 
 
@@ -216,8 +211,8 @@
             <div class="container-title">Отзывы</div>
             <div class="reviews__rating container ">
                 <div class="reviews__rating-heading">Рейтинг товара</div>
-                <a href="{{ $product->detailUrlProduct() }}/reviews" class="reviews__rating-link">
-                    <span class="rating _big _{{ ($product->avgRating->avg_rating ?? 0) * 2}}"></span>
+                <a href="{{ $product->detailUrlProduct() }}?view=reviews" class="reviews__rating-link">
+                    <span class="rating _big _{{ ($product->avgRating[0]->avg_rating ?? 0) * 2}}"></span>
                     <span class="rating-count g-fl-r">
                         <span>{{ $product->reviews_count }}</span>&nbsp;
                         отзывов
@@ -225,16 +220,16 @@
                 </a>
             </div>
 
-            @if(count($product->reviews) == 0)
+            @if($reviews->isEmpty())
                 <p class="padding-4vw">Нет отзывы</p>
             @else
-                @foreach($product->reviews as $review)
+                @foreach($reviews as $review)
                     @include('mobile.product.review_item', ['review' => $review, 'like_show' => false, 'review_text_class' => '_short'])
                 @endforeach
             @endif
 
             <div class="container g-pa0 g-bb-fat">
-                <a href="{{ $product->detailUrlProduct() }}/reviews" class="link-more _link-reviews">
+                <a href="{{ $product->detailUrlProduct() }}?view=reviews" class="link-more _link-reviews">
                     Еще {{ $product->reviews_count }}&nbsp;отзывов
                 </a>
             </div>
@@ -247,12 +242,11 @@
                 </div>
             </div>
             <div class="container g-pa0 g-bb-fat">
-                <a href="{{ $product->detailUrlProduct() }}/descriptions" class="link-more _link-description">
+                <a href="{{ $product->detailUrlProduct() }}?view=descriptions" class="link-more _link-description">
                     Подробнее
                 </a>
             </div>
 
-            @include('mobile.includes.product_slider', ['products' => $products_interested, 'title' => 'С этим товаром покупаю', 'url' => ''])
             @include('mobile.includes.product_slider', ['products' => $youWatchedProducts,  'title' => 'Вы смотрели', 'url' => ''])
 
             <button type="button" class="button _big-fixed button-sellers" onclick="_addToCart({{ $product->id }})">

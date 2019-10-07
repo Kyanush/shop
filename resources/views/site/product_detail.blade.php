@@ -1,12 +1,12 @@
 @extends('layouts.site')
 
 
-@section('title',    	 $seo['title']       .($tab_title  ? ' - '. $tab_title : ''))
-@section('description', $seo['description'] . ($tab_title ? ' '. $tab_title  : ''))
-@section('keywords',    $seo['keywords']    . ($tab_title ? ',' . $tab_title : ''))
+@section('title',    	 $seo['title'])
+@section('description', $seo['description'])
+@section('keywords',    $seo['keywords'])
 
-@section('og_title',    	  $seo['title']        . ($tab_title ? ' - '. $tab_title : ''))
-@section('og_description',   $seo['description']  . ($tab_title ? ' '. $tab_title    : ''))
+@section('og_title',    	  $seo['title'])
+@section('og_description',   $seo['description'])
 @section('og_image',    	  env('APP_URL') . $product->pathPhoto(true))
 
 @section('content')
@@ -124,7 +124,7 @@
 
                         </div>
 
-                        <h1>{{ $product->name . ($tab_title ? ': ' . $tab_title : '')}}</h1>
+                        <h1>{{ $product->name }}</h1>
 
                         <div class="under_h1">
                             <div class="left_info_product_last_review_rating">
@@ -132,7 +132,7 @@
                                     {{ $product->reviews_count }} Отзыв
                                 </a>
                                 <div class="rating_stars">
-                                    <div class="rating_full" style="width: {{ intval($product->avgRating->avg_rating ?? 0) * 20 }}%"></div>
+                                    <div class="rating_full" style="width: {{ intval($product->avgRating[0]->avg_rating ?? 0) * 20 }}%"></div>
                                 </div>
                             </div>
                             <div style="clear: left;"></div>
@@ -373,15 +373,7 @@
 
 
 
-            <?php $questionsAnswers = \App\Tools\Helpers::createTree($product->questionsAnswers);?>
 
-            @if($product_tab)
-                <script>
-                    $(document).ready(function() {
-                        $('html, body').animate({scrollTop: $('#tab-{{ $product_tab }}').offset().top - 70}, 1100);
-                    });
-                </script>
-            @endif
 
             <div class="product_info_bottom">
                 <div class="product_tabs">
@@ -389,34 +381,18 @@
 
                         <a href="{{ $product->detailUrlProduct() }}/descriptions"
                            tab="tab-descriptions"
-                           @if($product_tab == 'descriptions' or !$product_tab)
-                                class="product_tabs_tab_active"
-                           @endif>Описание</a>
+                           class="product_tabs_tab_active">Описание</a>
 
-                        <a href="{{ $product->detailUrlProduct() }}/attributes"
-                           tab="tab-attributes"
-                           @if($product_tab == 'attributes')
-                                class="product_tabs_tab_active"
-                           @endif>Характеристики</a>
+                        <a href="{{ $product->detailUrlProduct() }}/attributes" tab="tab-attributes">Характеристики</a>
 
-                        <a href="{{ $product->detailUrlProduct() }}/reviews"
-                           tab="tab-reviews"
-                           @if($product_tab == 'reviews')
-                                class="product_tabs_tab_active"
-                           @endif>Отзывы <span>( {{ $product->reviews_count }})</span></a>
-
-                        <a href="{{ $product->detailUrlProduct() }}/questions"
-                           tab="tab-questions"
-                           @if($product_tab == 'questions')
-                                class="product_tabs_tab_active"
-                           @endif>Вопрос-ответ <span>({{ count($questionsAnswers) }})</span></a>
+                        <a href="{{ $product->detailUrlProduct() }}/reviews" tab="tab-reviews">Отзывы <span>( {{ $product->reviews_count }})</span></a>
 
                     </div>
                     <div class="product_tabs_content">
-                        <div  @if($product_tab == 'descriptions' or !$product_tab) class="active"  @endif id="tab-descriptions">
+                        <div class="active" id="tab-descriptions">
                             {!! $product->description  !!}
                         </div>
-                        <div @if($product_tab == 'attributes')   class="active"  @endif id="tab-attributes">
+                        <div id="tab-attributes">
                             <div class="tab_attribute_all">
                                 <div class="tab_attribute_left tab_attribute_left_fixed1">
 
@@ -478,7 +454,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div @if($product_tab == 'reviews')      class="active"  @endif id="tab-reviews">
+                        <div id="tab-reviews">
                             <div class="tab-review-header">
                                 <div class="tab-review-header-left">Отзывы</div>
                                 <div class="tab-review-header-right"><a class="write_review testimonial_write button" href="#"><span>Написать отзыв</span></a></div>
@@ -548,49 +524,7 @@
 
                             </div>
                         </div>
-                        <div @if($product_tab == 'questions')   class="active"  @endif id="tab-questions">
-                            <div class="tab-questions-header">
-                                <div class="tab-questions-header-left">Вопрос-ответ</div>
-                                <div class="tab-questions-header-right">
-                                    <a class="write_question qa_write button" href="#">
-                                        <span>Задать вопрос</span>
-                                    </a>
-                                </div>
-                            </div>
 
-                            @if(count($questionsAnswers) == 0)
-                                <div class="reviews_clear">Еще никто не задал вопрос по данному товару.</div>
-                            @else
-                                <div class="tab-questions-body">
-                                    @foreach($questionsAnswers as $question_answer)
-                                        <div class="one-question">
-                                            <div class="tab-questions-body-left">
-                                                <div class="tab-questions-body-left-author">
-                                                    {{ $question_answer->name }}
-                                                </div>
-                                                <time>
-                                                    {{ \App\Tools\Helpers::ruDateFormat($question_answer->created_at) }}
-                                                </time>
-                                            </div>
-                                                <div class="tab-questions-body-right">
-                                                    <div class="text">
-                                                        {{ $question_answer->question }}
-                                                    </div>
-                                                        <div class="text_otvet">
-                                                            <div class="text_otvet_left">Ответ компании
-                                                                <div class="kitmall_otvet"></div>
-                                                            </div>
-                                                            <div class="text_otvet_right">
-                                                                {{ $question_answer->answer }}
-                                                            </div>
-                                                        </div>
-                                                </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
-
-                        </div>
 
                         <div class="product_orange">Пожалуйста, если вы увидели, что в описании товара есть ошибка, например, фактическая или просто опечатка, то <a href="#">дайте нам знать</a>. Мы быстро исправим.</div>
 
@@ -605,7 +539,7 @@
 
             <br/>
             <br/>
-            @include('includes.product_slider', ['products' => $youWatchedProducts, 'title' => 'Вы смотрели'])
+            @include('includes.product_slider', ['products' => $group_products, 'title' => 'Похожие товары'])
 
         </div>
 

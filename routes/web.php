@@ -51,7 +51,7 @@ Route::group(['namespace'  => 'Site'], function () {
         $params .= "/{param$i?}";
 
     //каталог иобильный
-    Route::get('c/{cCategory}',                          'CatalogController@c')->where(['cCategory']);
+    Route::get('c/{category}', 'CatalogController@c')->where(['category'])->name('category_menu_mobile');
 
     //каталог
     Route::get('{city}/catalog/{category}'   . $params,  'CatalogController@catalogCity')
@@ -64,20 +64,15 @@ Route::group(['namespace'  => 'Site'], function () {
         ->name('catalog');
 
     //товар детально
-    Route::get('p/{product_url}/{product_tab?}',         'ProductController@productDetailDefault')
+    Route::get('p/{product_url}',         'ProductController@productDetailDefault')
         ->where(['product_url'])
-        ->where(['product_tab'])
         ->name('productDetailDefault');
-    Route::get('{city}/p/{product_url}/{product_tab?}',  'ProductController@productDetailCity')
+    Route::get('{city}/p/{product_url}',  'ProductController@productDetailCity')
         ->where(['city'])
         ->where(['product_url'])
-        ->where(['product_tab'])
         ->name('productDetailCity');
 
-    //удалить потом
-    Route::get('product/{category_url}/{product_url}/{product_tab?}',  'ProductController@productDetail')->where(['category_url'])
-        ->where(['product_url'])
-        ->where(['product_tab']);
+
 
     //мобильный получить картинки
     Route::post('product-images/{product_id}',   'ProductController@productImages')->where(['product_id' => '[0-9]+']);

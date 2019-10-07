@@ -37,10 +37,10 @@
     "productID"   :  "{{ $product->id }}",
     "image"       :  [ {!! $images !!} ],
 
-    @if(intval($product->avgRating->avg_rating ?? 0) > 0 and $product->reviews_count > 0)
+    @if(intval($product->avgRating[0]->avg_rating ?? 0) > 0 and $product->reviews_count > 0)
     "aggregateRating": {
         "@type": "AggregateRating",
-        "ratingValue": "{{ intval($product->avgRating->avg_rating ?? 0) }}",
+        "ratingValue": "{{ intval($product->avgRating[0]->avg_rating ?? 0) }}",
         "reviewCount": "{{ $product->reviews_count }}"
     },
     @endif

@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Tools\Helpers;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use Mail;
+
 
 class Review extends Model
 {
@@ -17,7 +19,6 @@ class Review extends Model
         'plus',
         'minus',
         'rating',
-        'product_id',
         'active',
         'created_at',
         'updated_at'
@@ -53,9 +54,11 @@ class Review extends Model
         return $this->hasMany('App\Models\ReviewLike', 'review_id', 'id');
     }
 
-    public function product()
+
+
+    public function products()
     {
-        return $this->belongsTo('App\Models\Product', 'product_id', 'id');
+        return $this->belongsToMany('App\Models\Product', 'review_product', 'review_id', 'product_id');
     }
 
     protected static function boot()
@@ -65,23 +68,25 @@ class Review extends Model
         //Событие после
         static::Created(function ($modal) {
 
-            if($modal->email)
+            if($modal->email and env('APP_TEST') == 0 and !Helpers::isAdmin())
             {
-                if(env('APP_TEST') == 0)
-                {
-                    $subject = env('APP_NAME') . ' - ' . 'Написать отзыв';
-                    Mail::send('mails.write_review', ['data' => $modal, 'subject' => $subject], function ($m) use ($subject) {
-                        $m->to(env('MAIL_ADMIN'))->subject($subject);
-                    });
-                }
+                $subject = env('APP_NAME') . ' - ' . 'Написать отзыв';
+
+                $emails = [ env('MAIL_ADMIN') ];
+
+                Mail::send('mails.write_review', ['data' => $modal, 'subject' => $subject], function ($m) use ($subject, $emails) {
+                    $m->to($emails)->subject($subject);
+                });
             }
 
         });
 
         //до
-        static::deleting(function($product) {
-            $product->reviewLikes()->delete();
+        static::deleting(function($review) {
+            $review->reviewLikes()->delete();
+            $review->products()->detach();
         });
+
     }
 
     public function scopeSearch($query, $search){

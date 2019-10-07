@@ -19,10 +19,15 @@ class CatalogController extends Controller
     {
     }
 
-    public function c($cCategory){
+    public function c($category){
 
         //категория
-        $category = Category::where('url', $cCategory)->first();
+        $category = Category::with(['children' => function($query){
+            $query->orderBy('sort');
+            $query->isActive();
+
+        }])->where('url', $category)->first();
+
         //город
         $currentCity = ServiceCity::getCurrentCity();
         //seo
