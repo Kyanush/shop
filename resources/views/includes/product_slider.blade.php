@@ -1,4 +1,5 @@
-@if($products->isNotEmpty())
+@if(isset($products))
+@if(count($products) > 0)
         <div class="rr-widget cartRelated rr-active">
             <header class="widgettitle">{{ $title }}</header>
             <ul class="items">
@@ -103,4 +104,5 @@
                 @endforeach
             </ul>
         </div>
+@endif
 @endif
