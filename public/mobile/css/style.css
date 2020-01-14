@@ -5106,7 +5106,7 @@ img[data-src] {
 .main-slider__image {
     display: block;
     border-radius: 2px;
-    height: auto;
+    height: 200px;
 }
 
 .map-marker {

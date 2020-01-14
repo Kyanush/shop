@@ -13,7 +13,12 @@
                 <div id="home-page-slider" class="owl-carousel-main-slider">
                     @foreach($listSlidersHomePage as $item)
                         <a class="slide_id1 be_create"  href="{{ $item->link }}">
-                            <img style="height: 410px;" src="{{ $item->pathImage(true) }}" alt="{{ $item->name }}">
+                            <img style="
+    max-height: 410px;
+    max-width: 100%;
+    margin: 0 auto;
+    display: block;
+" src="{{ $item->pathImage(true) }}" alt="{{ $item->name }}">
                         </a>
                     @endforeach
                 </div>

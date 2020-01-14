@@ -86,12 +86,34 @@
         </div>
 
         <div class="item__info container text-center">
-            <button
-                    type="button"
-                    class="button _white"
-                    onclick="buyIn1Click({{ $product->id }})">
-                Купить в 1 клик
-            </button>
+            @if($product->stock > 0)
+                <button
+                        type="button"
+                        class="button _white"
+                        onclick="buyIn1Click({{ $product->id }})">
+                    Купить в 1 клик
+                </button>
+            @else
+                <form action="javascript:void(null);" onsubmit="subscribe(this); return false;" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+                    <p>Оставьте электронную почту, чтобы узнать о поступлении товара</p>
+                    <p>
+                        <input class="search__input"
+                               type="text"
+                               name="email"
+                               @auth value="{{ Auth::user()->email }}" @endauth
+                               placeholder="Ваша электронная почта"/>
+                    </p>
+                    <p>
+                        <button type="submit" class="button">
+                            <i class="fa fa-bell"></i>
+                            Подписаться
+                        </button>
+                    </p>
+                </form>
+            @endif
         </div>
 
         <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
@@ -249,9 +271,11 @@
 
             @include('mobile.includes.product_slider', ['products' => $youWatchedProducts,  'title' => 'Вы смотрели', 'url' => ''])
 
-            <button type="button" class="button _big-fixed button-sellers" onclick="_addToCart({{ $product->id }})">
-                Оформить заказ
-            </button>
+            @if($product->stock > 0)
+                <button type="button" class="button _big-fixed button-sellers" onclick="_addToCart({{ $product->id }})">
+                    Оформить заказ
+                </button>
+            @endif
 
         </div>
     </div>
