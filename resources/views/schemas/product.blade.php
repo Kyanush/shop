@@ -1,3 +1,6 @@
+
+<input id="product_id" type="hidden" value="{{ $product->id }}"/>
+
 @php
 
     $images = '';
@@ -25,10 +28,10 @@
     "productID"   :  "{{ $product->id }}",
     "image"       :  [ {!! $images !!} ],
 
-    @if(intval($product->avgRating[0]->avg_rating ?? 0) > 0 and $product->reviews_count > 0)
+    @if(intval($product->reviews_rating_avg ?? 0) > 0 and $product->reviews_count > 0)
             "aggregateRating": {
                 "@type": "AggregateRating",
-                "ratingValue": "{{ intval($product->avgRating[0]->avg_rating ?? 0) }}",
+                "ratingValue": "{{ intval($product->reviews_rating_avg ?? 0) }}",
         "reviewCount": "{{ $product->reviews_count }}"
     },
     @endif
@@ -91,7 +94,7 @@
                         "image"       : "{{ env('APP_URL') . $group_product->pathPhoto(true) }}",
                         "url"         : "{{ $group_product->detailUrlProduct() }}",
                         "name"        : "{{ $group_product->name }}",
-                        "description" : "{{ strip_tags($group_product->description_mini) }}",
+                        "description" : "",
                         "offers"      : {
                             "@type": "Offer",
                             "price": "{{ $group_product->getReducedPrice() }}",
@@ -149,10 +152,10 @@
             </div>
         </div>
 
-        @if(intval($product->avgRating[0]->avg_rating ?? 0) > 0 and $product->reviews_count > 0)
+        @if(intval($product->reviews_rating_avg ?? 0) > 0 and $product->reviews_count > 0)
             <div itemprop="aggregateRating" itemtype="http://schema.org/AggregateRating" itemscope>
                 <meta itemprop="reviewCount" content="{{ $product->reviews_count }}" />
-                <meta itemprop="ratingValue" content="{{ intval($product->avgRating[0]->avg_rating ?? 0) }}" />
+                <meta itemprop="ratingValue" content="{{ intval($product->reviews_rating_avg ?? 0) }}" />
             </div>
         @endif
 

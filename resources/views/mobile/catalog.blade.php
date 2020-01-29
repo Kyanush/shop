@@ -85,12 +85,12 @@
             @include('mobile.includes.space', ['style' => 'height: 36.273vw;'])
 
             <div class="catalog-grid _list _top">
-                @foreach($products as $product)
+                @foreach($catalog as $product)
                     @include('mobile.includes.product_item', ['product' => $product])
                 @endforeach
             </div>
 
-            {!! $products->links("pagination::mobile") !!}
+            {!! $catalog->links("pagination::mobile") !!}
 
         </div>
 
@@ -100,6 +100,14 @@
 
         <input id="productsAttributesFilters" type="hidden" value='<?=json_encode($productsAttributesFilters);?>'/>
         <input id="filters"                   type="hidden" value='<?=json_encode($filters);?>'/>
+
+
+        @if($category->description)
+            <div class="container description">
+                <h2 class="text-center">{{ $category->name }}</h2>
+                {!! $category->description  !!}
+            </div>
+        @endif
 
         @include('mobile.includes.footer')
 

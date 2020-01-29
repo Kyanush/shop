@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use App\Services\ServiceCity;
 use Illuminate\Database\Eloquent\Model;
 use DB;
 use File;
 use App\Tools\Upload;
+use App\Models\CategoryProduct;
 
 class Category extends Model
 {
@@ -17,11 +17,13 @@ class Category extends Model
          'parent_id',
          'name',
          'url',
+         'redirect_url',
          'image',
          'class',
          'sort',
          'type',
          'description',
+         'seo_title',
          'seo_keywords',
          'seo_description',
          'active'
@@ -30,7 +32,7 @@ class Category extends Model
     public function scopeSearch($query, $search){
         $search = trim(mb_strtolower($search));
         if($search)
-            $query->whereLike(['name', 'url', 'description'],   $search);
+            $query->whereLike(['name'],   $search);
 
         return $query;
     }
@@ -81,6 +83,11 @@ class Category extends Model
             }
         });
 
+        //до
+        static::deleting(function($obj) {
+            CategoryProduct::where('category_id', $obj->id)->delete();
+        });
+
         static::deleting(function($obj) {
             $obj->deleteImage();
         });
@@ -99,19 +106,11 @@ class Category extends Model
         return File::delete($this->pathImage());
     }
 
-    public function catalogUrl($city_code = ''){
-
-        if(!$city_code)
+    public function catalogUrl($redirect_url = false)
+    {
+        if($redirect_url and $this->redirect_url)
         {
-            $city = ServiceCity::getCurrentCity();
-            $city_code = $city->code;
-        }
-
-        if($city_code == 'almaty')
-            $city_code = '';
-
-        if($city_code){
-            return route('catalogCity', ['category' => $this->url, 'city' => $city_code]);
+            return $this->redirect_url;
         }else{
             return route('catalog', ['category' => $this->url]);
         }

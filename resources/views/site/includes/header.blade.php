@@ -22,14 +22,13 @@
 
     <div id="header_top">
         <div class="container">
-
+            <!--
             <div class="town_selector">
                 Ваш город:
                 <span class="town_moscow town_go_find" onclick="showCity()">
-                    {{ $currentCity->name }}
+
                 </span>
             </div>
-            <!--
                         <div class="contact">
                             <span class="address"><img src="/site/images/rumi_shops_link.png"/> г. Алматы, ул. Жибек жолы 115, оф. 113 (Рядом Аэровокзала)</span>
                             <span class="phone">

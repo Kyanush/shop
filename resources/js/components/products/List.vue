@@ -202,7 +202,7 @@
                 <tbody>
                     <tr class="odd even" v-for="(item, index) in products.data"
                         v-bind:class="{ 'deleted': !item.active || !item.stock }"
-                        title="Нажмите дважды чтобы изменить"
+                        title1="Нажмите дважды чтобы изменить"
                         v-on:dblclick="changeQuicklySelect(item)">
 
                         <td>
@@ -407,13 +407,6 @@
                                                 Отзывы
                                             </label>
                                         </li>
-                                        <li>
-                                            <label>
-                                                <input type="checkbox" v-model="clone_product.questions_answers"/>
-                                                Вопросы-ответы
-                                            </label>
-                                        </li>
-
                                     </ul>
                                     <span v-if="IsError('clone_product.images')" class="help-block" v-for="e in IsError('clone_product.images')">
                                             {{ e }}
@@ -473,6 +466,23 @@
                                             <div class="col-md-6" v-bind:class="{'has-error' : IsError('change_quickly.price')}">
                                                 <input required id="price" type="number" v-model="change_quickly.price" class="form-control"/>
                                                 <span v-if="IsError('change_quickly.price')" class="help-block" v-for="e in IsError('change_quickly.price')">
+                                                     {{ e }}
+                                                </span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="25%" class="text-right">
+                                            <label>
+                                                <span class="red">*</span>
+                                                <i class="fa fa-money" aria-hidden="true"></i>
+                                                parent_id:
+                                            </label>
+                                        </td>
+                                        <td width="75%">
+                                            <div class="col-md-6" v-bind:class="{'has-error' : IsError('change_quickly.parent_id')}">
+                                                <input required id="price" type="number" v-model="change_quickly.parent_id" class="form-control"/>
+                                                <span v-if="IsError('change_quickly.parent_id')" class="help-block" v-for="e in IsError('change_quickly.parent_id')">
                                                      {{ e }}
                                                 </span>
                                             </div>
@@ -598,6 +608,7 @@
                 },
                 change_quickly: {
                     id:     0,
+                    parent_id: 0,
                     name:   '',
                     price:  0,
                     stock:  0,
@@ -648,6 +659,7 @@
             },
             changeQuicklySelect(product){
                 this.change_quickly.id     = product.id;
+                this.change_quickly.parent_id     = product.parent_id;
                 this.change_quickly.name   = product.name;
                 this.change_quickly.price  = product.price;
                 this.change_quickly.stock  = product.stock;
@@ -823,10 +835,6 @@
         list-style:none;
     }
     #products-attributes-filters ul li label{
-        cursor: pointer;
-    }
-    #products-list tbody tr:hover{
-        background-color: #ecf0f5;
         cursor: pointer;
     }
 </style>

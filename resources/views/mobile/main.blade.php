@@ -24,9 +24,9 @@
     <div class="catalog-items _grid">
         <?php $categories = \App\Models\Category::orderBy('sort')->where('parent_id', 0)->get();?>
         @foreach($categories as $category)
-            <a href="/c/{{ $category->url }}" class="catalog-item container">
+            <a href="{{ $category->redirect_url ? $category->redirect_url : route('category_menu_mobile',['category' => $category->url]) }}" class="catalog-item container">
                 <span class="catalog-item__img">
-                    <img width="24" src="{{ $category->pathImage(true) }}">
+                    <img width="24" src="{{ $category->pathImage(true) }}"/>
                 </span>
                 <span class="catalog-item__title">
                    {{ $category->name }}
@@ -36,24 +36,54 @@
         @endforeach
     </div>
 
+
     @include('mobile.includes.main-slider')
 
-    @include('mobile.includes.product_slider', ['products' => $productsRecommend, 'title' => 'Рекомендуемое для вас', 'url' => ''])
-    @include('mobile.includes.product_slider', ['products' => $productsDiscount,  'title' => 'Акции',                 'url' => ''])
-    @include('mobile.includes.product_slider', ['products' => $productsHit,       'title' => 'Хиты продаж',           'url' => ''])
-    @include('mobile.includes.product_slider', ['products' => $productsNew,       'title' => 'Новинки',               'url' => ''])
+
+    @include('mobile.includes.product_slider', ['products' => $products1, 'title' => 'Redmi Note 8 Pro', 'url' => ''])
+    @include('mobile.includes.product_slider', ['products' => $products2, 'title' => 'Redmi Note 8', 'url' => ''])
+
+    @include('mobile.includes.product_slider', ['products' => $productsDiscount,  'title' => 'Акции', 'url' => ''])
 
 
-    <h2 class="container-title"></h2>
-    <div class="container g-pa0 g-bb-thin _grid"></div>
-    <div class="container g-pa0 g-bb-fat _list"></div>
+    <div class="mount-item-teaser">
+        <h2 class="container-title">Мы в социальных сетях</h2>
+        <div class="container">
+            @include('social-network.instagram')
+        </div>
+            @if(false)
+            @section('add_in_head')
+                <script type="text/javascript" src="https://vk.com/js/api/openapi.js?162"></script>
+                <script  src="https://connect.facebook.net/ru_RU/sdk.js#xfbml=1&version=v5.0&appId=373541409772772&autoLogAppEvents=1"></script>
+            @stop
 
+            <div class="container">
+                <!-- VK Widget -->
+                <div id="vk_groups"></div>
+                <script type="text/javascript">
+                    VK.Widgets.Group("vk_groups", {mode: 4, no_cover: 1, height: "400"}, 188528698);
+                </script>
+            </div>
+            <div class="container">
+                <div id="fb-root"></div>
+                <div class="fb-page" data-href="https://web.facebook.com/mihome.kz/" data-tabs="timeline" data-width="" data-height="400" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="true"><blockquote cite="https://web.facebook.com/mihome.kz/" class="fb-xfbml-parse-ignore"><a href="https://web.facebook.com/mihome.kz/">Интернет-магазин MiHome.kz</a></blockquote></div>
+            </div>
+        @endif
+    </div>
+
+    <div class="mount-item-teaser">
+        <div class="container g-bb-fat g-bg-c0 company-text">
+            @include('includes.about_text')
+        </div>
+        <!--
+        <div class="container g-bb-fat g-bg-c0">
+            <a id="show-full">
+                Показать полностью
+                <br/>
+            </a>
+        </div>-->
+    </div>
 
     @include('mobile.includes.footer')
-
-
-
-
-
 
 @endsection

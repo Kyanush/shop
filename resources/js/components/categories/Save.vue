@@ -66,6 +66,19 @@
                                          </tr>
                                          <tr>
                                              <td width="25%" class="text-right">
+                                                 <label>Редирект url</label>
+                                             </td>
+                                             <td width="75%">
+                                                 <div class="form-group col-md-8" v-bind:class="{'has-error' : IsError('category.redirect_url')}">
+                                                     <input v-model="category.redirect_url" type="text" class="form-control">
+                                                     <span v-if="IsError('category.redirect_url')" class="help-block" v-for="e in IsError('category.redirect_url')">
+                                                         {{ e }}
+                                                     </span>
+                                                 </div>
+                                             </td>
+                                         </tr>
+                                         <tr>
+                                             <td width="25%" class="text-right">
                                                  <label>Сортировка <span class="red">*</span></label>
                                              </td>
                                              <td width="75%">
@@ -169,7 +182,7 @@
                                          <tr>
                                              <td width="100%" colspan="2">
                                                  <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('category.description')}">
-                                                     <Ckeditor v-model="category.description"></Ckeditor>
+                                                     <Ckeditor v-model="category.description" :uploadFilePath="uploadFilePath"></Ckeditor>
 
                                                      <span v-if="IsError('category.description')" class="help-block" v-for="e in IsError('category.description')">
                                                         {{ e }}
@@ -250,11 +263,24 @@
                                      <tbody>
                                          <tr>
                                              <td width="25%" class="text-right">
+                                                 <label>Заголовок</label>
+                                             </td>
+                                             <td width="75%">
+                                                 <div class="form-group col-md-8" v-bind:class="{'has-error' : IsError('category.seo_title')}">
+                                                     <textarea rows="5" v-model="category.seo_title" class="form-control"></textarea>
+                                                     <span v-if="IsError('category.seo_title')" class="help-block" v-for="e in IsError('category.seo_title')">
+                                                             {{ e }}
+                                                     </span>
+                                                 </div>
+                                             </td>
+                                         </tr>
+                                         <tr>
+                                             <td width="25%" class="text-right">
                                                  <label>Keywords</label>
                                              </td>
                                              <td width="75%">
                                                  <div class="form-group col-md-8" v-bind:class="{'has-error' : IsError('category.seo_keywords')}">
-                                                     <textarea v-model="category.seo_keywords" class="form-control"></textarea>
+                                                     <textarea rows="5" v-model="category.seo_keywords" class="form-control"></textarea>
                                                      <span v-if="IsError('category.seo_keywords')" class="help-block" v-for="e in IsError('category.seo_keywords')">
                                                          {{ e }}
                                                      </span>
@@ -267,7 +293,7 @@
                                              </td>
                                              <td width="75%">
                                                  <div class="form-group col-md-8" v-bind:class="{'has-error' : IsError('category.seo_description')}">
-                                                     <textarea v-model="category.seo_description" class="form-control"></textarea>
+                                                     <textarea rows="5" v-model="category.seo_description" class="form-control"></textarea>
                                                      <span v-if="IsError('category.seo_description')" class="help-block" v-for="e in IsError('category.seo_description')">
                                                          {{ e }}
                                                      </span>
@@ -312,7 +338,7 @@
 
                              </div>
 
-                             <router-link :to="{path: '/categories'}" class="btn btn-default">
+                             <router-link :to="{ name: 'categories' }" class="btn btn-default">
                                  <span class="fa fa-ban"></span> &nbsp;
                                  Отменить
                              </router-link>
@@ -346,11 +372,14 @@
                     parent_id: 0,
                     name: '',
                     url: '',
+                    redirect_url: '',
+                    sort: 0,
                     image: '',
                     class: '',
                     path_image: '',
                     type: '',
                     description: '',
+                    seo_title: '',
                     seo_keywords: '',
                     seo_description: '',
                     active: 1,
@@ -375,10 +404,13 @@
                     this.category.parent_id = res.parent_id;
                     this.category.name = res.name;
                     this.category.url = res.url;
+                    this.category.redirect_url = res.redirect_url;
+                    this.category.sort = res.sort;
                     this.category.image = res.image;
                     this.category.class = res.class;
                     this.category.type = res.type;
                     this.category.description = res.description;
+                    this.category.seo_title = res.seo_title;
                     this.category.seo_keywords = res.seo_keywords;
                     this.category.seo_description = res.seo_description;
                     this.category.active = res.active;
@@ -485,7 +517,13 @@
         computed:{
             ...mapGetters([
                 'IsError'
-            ])
+            ]),
+            uploadFilePath(){
+                if(this.category.id)
+                    return 'uploads/categories/' + this.category.id + '/';
+                else
+                    return '';
+            }
         }
     }
 </script>

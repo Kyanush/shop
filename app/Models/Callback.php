@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Mail;
 use DB;
 use App\Models\Status;
+use App\Models\Setting;
 
 class Callback extends Model
 {
@@ -18,7 +19,7 @@ class Callback extends Model
         'email',
         'status_id',
         'comment',
-        'order_id'
+        'url'
 	];
 
     public function scopeSearch($query, $search){
@@ -49,10 +50,18 @@ class Callback extends Model
 
             if(env('APP_TEST') == 0)
             {
-                $subject = env('APP_NAME') . ' - ' . $modal->type;
-                Mail::send('mails.callback', ['data' => $modal, 'subject' => $subject], function ($m) use ($subject) {
-                    $m->to(env('MAIL_ADMIN'))->subject($subject);
-                });
+                $emails = [];
+                $settings = Setting::where('key', 'сallback_notification_email')->get();
+                foreach ($settings as $setting)
+                    $emails[] = $setting->value;
+
+                if(count($emails) > 0)
+                {
+                    $subject = env('APP_NAME') . ' - ' . $modal->type;
+                    Mail::send('mails.callback', ['data' => $modal, 'subject' => $subject], function ($m) use ($subject, $emails) {
+                        $m->to($emails)->subject($subject);
+                    });
+                }
             }
         });
 

@@ -13,7 +13,7 @@
 
                     @foreach($categories as $category)
                         <li>
-                            <a href="{{ $category->catalogUrl($currentCity->code) }}" class="{{ $category->class }} main_menu">
+                            <a href="{{ $category->catalogUrl() }}" class="{{ $category->class }} main_menu">
                                 <span>{{ $category->name }}</span>
                             </a>
 
@@ -44,7 +44,7 @@
                                             @endif
                                             <li>
                                                 @if($category->id == $item->parent_id)
-                                                    <a class="link main_menu_sub" href="{{ $item->catalogUrl($currentCity->code) }}">
+                                                    <a class="link main_menu_sub" href="{{ $item->catalogUrl() }}">
                                                                 <span class="text">
                                                                     {{ $item->name }}
                                                                     @if($item->type)
@@ -58,7 +58,7 @@
                                                     <div class="subchildren">
                                                         <ul>
                                                             <li>
-                                                                <a href="{{ $item->catalogUrl($currentCity->code) }}">
+                                                                <a href="{{ $item->catalogUrl() }}">
                                                                             <span>
                                                                                   {{ $item->name }}
                                                                             </span>

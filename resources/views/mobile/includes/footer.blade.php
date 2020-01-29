@@ -5,12 +5,16 @@
 
 <div class="footer">
     <div class="footer__contacts">
-        <div class="footer__contacts-call">
-            <span class="icon icon_phone"></span>
-            <a class="footer__contacts-number" href="tel:{{ $number_phones[0]['number'] }}">
-                {{ $number_phones[0]['format'] }}
-            </a>
-        </div>
+
+        @foreach($number_phones as $phone)
+            <div class="footer__contacts-call">
+                <span class="icon icon_phone"></span>
+                <a class="footer__contacts-number" href="tel:{{ $phone['number'] }}">
+                    {{ $phone['format'] }}
+                </a>
+            </div>
+        @endforeach
+
         <div class="footer__contacts-text">
             <b>Адрес:</b>
             {{ $address[0]['addressLocality'] }}, {{ $address[0]['streetAddress'] }}
@@ -22,6 +26,14 @@
         <div class="footer__contacts-text">
             <b>E-mail:</b>
             <a href="mailto:{{ config('shop.site_email') }}">{{ config('shop.site_email') }}</a>
+        </div>
+        <div class="footer__contacts-text">
+            <b>Мы в соцсетях:</b>
+            @foreach(config('shop.social_network') as $item)
+                <a href="{{ $item['url'] }}" title="{{ $item['title'] }}" target="_blank" rel="nofollow">
+                    <img height="30" data-original="{{ $item['icon'] }}" class="lazy"/>
+                </a>
+            @endforeach
         </div>
     </div>
     <div class="footer__links">

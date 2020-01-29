@@ -53,17 +53,31 @@ Route::group(['namespace'  => 'Site'], function () {
     //каталог иобильный
     Route::get('c/{category}', 'CatalogController@c')->where(['category'])->name('category_menu_mobile');
 
-    //каталог
-    Route::get('{city}/catalog/{category}'   . $params,  'CatalogController@catalogCity')
-        ->where(['city'])
-        ->where(['category'])
-        ->name('catalogCity');
 
+
+    //каталог
+    Route::get('{city}/catalog/{category}', function ($city, $category){
+        return redirect(route('catalog', ['category' => $category]));
+    });
     Route::get('catalog/{category}'          . $params,  'CatalogController@catalog')
         ->where(['category'])
         ->name('catalog');
 
+
+
     //товар детально
+    Route::get('{city}/p/{product_url}', function ($city, $product_url){
+        return redirect(route('productDetail', ['product_url' => $product_url]));
+    });
+    Route::get('p/{product_url}',         'ProductController@productDetail')
+        ->where(['product_url'])
+        ->name('productDetail');
+
+
+
+    Route::post('set-rating',   'ProductController@setRating');
+
+    /*
     Route::get('p/{product_url}',         'ProductController@productDetailDefault')
         ->where(['product_url'])
         ->name('productDetailDefault');
@@ -71,7 +85,7 @@ Route::group(['namespace'  => 'Site'], function () {
         ->where(['city'])
         ->where(['product_url'])
         ->name('productDetailCity');
-
+    */
 
 
     //мобильный получить картинки

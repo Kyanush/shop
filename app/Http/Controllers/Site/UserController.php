@@ -44,10 +44,10 @@ class UserController extends Controller
     }
 
     public function changePasswordSave(ChangePasswordRequest $request){
-            $user = Auth::user();
-            $user->password = bcrypt($request->input('password'));
-            $user->save();
-            return Redirect::back()->with('success', 'Ваш пароль успешно изменен');
+        $user = Auth::user();
+        $user->password = bcrypt($request->input('password'));
+        $user->save();
+        return Redirect::back()->with('success', 'Ваш пароль успешно изменен');
     }
 
 }

@@ -19,6 +19,7 @@ class Order extends Model
         'status_id',
         'carrier_id',
         'comment',
+        'comment_admin',
         'delivery_date',
         'total',
         'payment_id',
@@ -151,7 +152,7 @@ class Order extends Model
 
     public function products()
     {
-        return $this->belongsToMany('App\Models\Product')->withPivot(['name', 'sku', 'price', 'cost_price', 'quantity']);
+        return $this->belongsToMany('App\Models\Product')->withPivot(['name', 'sku', 'price', 'quantity']);
     }
 
 
@@ -216,7 +217,7 @@ class Order extends Model
     public function whereOrdered(){
         switch ($this->where_ordered) {
             case 1:
-                $title = 'Компютер';
+                $title = 'Компьютер';
                 $class = 'fa fa-desktop';
                 break;
             case 2:

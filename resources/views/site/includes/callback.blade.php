@@ -1,6 +1,7 @@
 <div id="callback" style="display: none;">
     <form action="javascript:void(null);" onsubmit="callback(this); return false;" method="post" enctype="multipart/form-data">
         @csrf
+        <input type="hidden" name="url" value="{{ url()->current() }}"/>
         <div class="callback_popup">
             <div class="callback_popup_line"></div>
             <div class="callback_popup_header">Обратный звонок

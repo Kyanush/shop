@@ -1,4 +1,4 @@
-@if(env('APP_TEST') == 0)
+@if(env('APP_TEST') == 0 and !\App\Tools\Helpers::isAdmin() and !isset($_GET['a']))
 
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-135477957-1"></script>

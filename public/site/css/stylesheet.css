@@ -1436,6 +1436,7 @@ ul.box-filter > li ul {
     margin-right: 23px;
     width: 473px;
     overflow: hidden;
+    position: relative;
 }
 
 
@@ -2201,7 +2202,7 @@ ul.box-filter > li ul {
     margin-top: 18px;
 }
 .product_tabs {
-    width: 1050px;
+    width: 100%;
     float: left;
 }
 .product_tabs .product_tabs_htabs {
@@ -3215,11 +3216,11 @@ body {
 }
 #header #logo {
     position: absolute;
-    top: 6px;
+    top: 8px;
     left: 0;
 }
 #header #logo img{
-    width: 150px;
+    width: 230px;
 }
 #header #header_middle_menu {
     position: absolute;
@@ -8227,7 +8228,10 @@ a.map_block_metro:hover {
 }
 
 .product-info .stickers  {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
 }
 .product-info .stickers > div {
     width: 50px;
@@ -10751,7 +10755,7 @@ a.product_specialblock_kitbonus {
     width: 24px;
     height: 24px;
     position: absolute;
-    background: url(../images/product_special_plus.png) no-repeat;
+    /*background: url(../images/product_special_plus.png) no-repeat;*/
     left: -13px;
     top: 31px;
 }
@@ -10776,7 +10780,7 @@ a.product_specialblock_years {
     width: 24px;
     height: 24px;
     position: absolute;
-    background: url(../images/product_special_plus.png) no-repeat;
+    /*background: url(../images/product_special_plus.png) no-repeat;*/
     left: -13px;
     top: 31px;
 }
@@ -11548,3 +11552,43 @@ a.product_specialblock_years {
     padding-top: 15px;
 }
 /************************* news ************************/
+
+#select-model-product{
+    font-size: 13px;
+    border: 2px solid #01b37c;
+    border-radius: 5px;
+    height: 40px;
+    padding: 0 15px;
+    background-color: #fff;
+    width: 100%;
+}
+
+.table {
+    border: 1px solid #ddd;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+    background-color: transparent;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.whats-app{
+    font-size: 16px;
+    text-decoration: none!important;
+    position: relative;
+    margin-left: 23px;
+    color: #2f9c33!important;
+}
+.whats-app img{
+    position: absolute;
+    left: -23px;
+    top: -1px;
+}

@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-
 use App\Services\ServiceCategory;
-use App\Services\ServiceCity;
 use App\Services\ServiceDB;
 use App\Services\ServiceUploadUrl;
 use Illuminate\Database\Eloquent\Model;
@@ -21,24 +19,27 @@ class Product extends Model
 
     protected $table = 'products';
     protected $fillable = [
-    	'group_id',
-    	'attribute_set_id',
+        'parent_id',
     	'name',
+        'sort',
         'url',
     	'description',
-        'description_mini',
+        'description_style_id',
         'photo',
     	'price',
-        'cost_price',
     	'sku',
     	'stock',
+        'status_id',
+        'seo_title',
         'seo_keywords',
         'seo_description',
     	'created_at',
     	'updated_at',
         'active',
         'youtube',
-        'view_count'
+        'view_count',
+        'reviews_rating_avg',
+        'reviews_count',
 	];
 
     public function scopeIsActive($query){
@@ -49,9 +50,39 @@ class Product extends Model
         return $query->where('active', 0);
     }
 
+    public function scopeMain($query){
+        return $query->where('parent_id', 0);
+    }
+
+    public function scopeNotMain($query){
+        return $query->where('parent_id', '>', 0);
+    }
+
+    public function descriptionStyle()
+    {
+        return $this->belongsTo('App\Models\Status', 'description_style_id', 'id');
+    }
+
+    public function status()
+    {
+        return $this->belongsTo('App\Models\Status', 'status_id', 'id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id', 'id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id', 'id');
+    }
 
     public function scopeFilters($query, $filters)
     {
+
+        if(isset($filters['main']))
+            $query->main();
 
         if(isset($filters['created_at_start']))
             $query->whereDate('created_at', '>=', $filters['created_at_start']);
@@ -200,10 +231,8 @@ class Product extends Model
             if(!is_numeric($product->stock))
                 $product->stock = 1;
 
-            //группа товара
-            if(empty($product->group_id))
-                $product->group_id = ProductGroup::create()->id;
-
+            if(!$product->status_id)
+                $product->status_id = Status::where('where_use', 'products_status_id')->defaultValue()->first()->id;
 
             //чпу
             $product->url = str_slug(empty($product->url) ? $product->name : $product->url);
@@ -257,8 +286,10 @@ class Product extends Model
                 }
             }
 
-            if(empty($product->sku))
-                $product->sku = $product->id ?? $product_id;
+            if($product->parent_id == 0)
+            {
+                 $product->children()->update(['stock' => $product->stock]);
+            }
 
         });
     }
@@ -274,8 +305,13 @@ class Product extends Model
 	public function attributes()
 	{
 		return $this->belongsToMany('App\Models\Attribute', 'attribute_product_value', 'product_id', 'attribute_id')
-                    ->withPivot(['value']);
+                    ->withPivot(['name', 'value']);
 	}
+
+    public function attributeProductValue()
+    {
+        return $this->hasMany('App\Models\AttributeProductValue');
+    }
 
     //Картинка
 	public function images()
@@ -301,12 +337,6 @@ class Product extends Model
         return $this->belongsToMany('App\Models\Review', 'review_product', 'product_id', 'review_id');
     }
 
-    //Вопрос-ответ
-    public function questionsAnswers()
-    {
-        return $this->hasMany('App\Models\QuestionAnswer', 'product_id', 'id');
-    }
-
     //подписка
     public function subscribe()
     {
@@ -318,19 +348,6 @@ class Product extends Model
     {
         return $this->hasOne('App\Models\SpecificPrice', 'product_id', 'id');
     }
-
-
-
-    //Группа товаров
-    public function group()
-    {
-        return $this->belongsTo('App\Models\ProductGroup');
-    }
-    public function groupProducts()
-    {
-        return $this->hasMany('App\Models\Product', 'group_id', 'group_id');
-    }
-    //Группа товаров
 
     //товары в корзине
     public function cartItems()
@@ -396,9 +413,13 @@ class Product extends Model
             'inCart'
         ])
         ->isActive()
+
+            /*
         ->withCount(['reviews' => function($query){
             $query->isActive();
-        }]);
+        }])
+        */
+        ;
     }
 
 
@@ -438,27 +459,8 @@ class Product extends Model
         return '';
     }
 
-
-
-
-
-    public function detailUrlProduct($city_code = ''){
-
-        if(!$city_code)
-        {
-            $city = ServiceCity::getCurrentCity();
-            $city_code = $city->code;
-        }
-
-        if($city_code == 'almaty')
-            $city_code = '';
-
-        if($city_code)
-        {
-            return route('productDetailCity',    ['product_url' => $this->url, 'city' => $city_code]);
-        }else{
-            return route('productDetailDefault', ['product_url' => $this->url]);
-        }
+    public function detailUrlProduct(){
+        return route('productDetail', ['product_url' => $this->url]);
     }
 
     public function detailUrlProductAdmin(){

@@ -137,12 +137,6 @@
                                         <span>Отзывы</span>
                                     </router-link>
                                 </li>
-                                <li v-bind:class="{'active' : menu_active('/questions-answers/')}">
-                                    <router-link :to="{ path: '/questions-answers'}">
-                                        <i class="fa fa-question-circle" aria-hidden="true"></i>
-                                        <span>Вопросы-ответы</span>
-                                    </router-link>
-                                </li>
                                 <li v-bind:class="{'active' : menu_active('/specific-prices/')}">
                                     <router-link :to="{ path: '/specific-prices'}">
                                         <i class="fa fa-money"></i>
@@ -231,27 +225,7 @@
                             <span>Импорт/Экспорт</span>
                         </router-link>
                     </li>
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-tag"></i>
-                            <span>Атрибуты</span>
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu" style="display: none;">
-                            <li v-bind:class="{'active' : menu_active('/attributes/')}">
-                                <router-link :to="{ path: '/attributes'}">
-                                    <i class="fa fa-tag"></i>
-                                    <span>Атрибуты</span>
-                                </router-link>
-                            </li>
-                            <li v-bind:class="{'active' : menu_active('/attributes-sets/')}">
-                                <router-link :to="{ path: '/attributes-sets'}">
-                                    <i class="fa fa-tags"></i>
-                                    <span>Наборы атрибутов</span>
-                                </router-link>
-                            </li>
-                        </ul>
-                    </li>
+
                     <li v-bind:class="{'active' : menu_active('/users/')}">
                         <router-link :to="{ path: '/users'}">
                             <i class="fa fa-users"></i>
@@ -295,7 +269,19 @@
                                     <span>Город</span>
                                 </router-link>
                             </li>
+                            <li v-bind:class="{'active' : menu_active('/attributes/')}">
+                                <router-link :to="{ path: '/attributes'}">
+                                    <i class="fa fa-tag"></i>
+                                    <span>Характеристики</span>
+                                </router-link>
+                            </li>
                         </ul>
+                    </li>
+                    <li v-bind:class="{'active' : menu_active('/settings/')}">
+                        <router-link :to="{ path: '/settings'}">
+                            <i class="fa fa-cogs"></i>
+                            <span>Настройки</span>
+                        </router-link>
                     </li>
                     <!--
 

@@ -23,9 +23,11 @@ $productDay =  \App\Models\Product::productInfoWith()
     <div class="day_title">Товар дня</div>
     <div class="image">
         <a href="{{ $productDay->detailUrlProduct() }}">
-            <img src="{{ $productDay->pathPhoto(true) }}"
-                 title=" {{ $productDay->name }}"
-                 alt=" {{ $productDay->name }}"></a>
+            <img class="lazy"
+                 title="{{ $productDay->name }}"
+                 alt="{{ $productDay->name }}"
+                 data-original="{{ $productDay->pathPhoto(true) }}"/>
+        </a>
     </div>
     <div class="category_name">Гаджеты</div>
     <div class="name">

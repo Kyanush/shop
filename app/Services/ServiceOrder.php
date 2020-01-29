@@ -4,6 +4,7 @@ namespace App\Services;
 use App\Contracts\OrderInterface;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Setting;
 use Mail;
 
 class ServiceOrder implements OrderInterface
@@ -34,7 +35,6 @@ class ServiceOrder implements OrderInterface
                     $price = $product->price;
             }
 
-            $cost_price = $product->cost_price;
 
             //findOrNew
             $order = Order::find($order_id);
@@ -44,7 +44,6 @@ class ServiceOrder implements OrderInterface
                     'name'       => $product->name,
                     'sku'        => $product->sku,
                     'price'      => $price,
-                    'cost_price' => $cost_price,
                     'quantity'   => $quantity
                 ]
             ]);
@@ -69,16 +68,23 @@ class ServiceOrder implements OrderInterface
             if (!$order)
                 return false;
 
-            $emails[] = env('MAIL_ADMIN');
+            $emails = [];
+
+            $settings = Setting::where('key', 'order_notification_email')->get();
+            foreach ($settings as $setting)
+                $emails[] = $setting->value;
 
             if($order->user_email)
                 $emails[] = $order->user_email;
 
-            $subject = env('APP_NAME') . ' - ' . 'заказ №:' . $order->id;
-            Mail::send('mails.new_order', ['order' => $order, 'subject' => $subject], function($m) use($subject, $emails)
+            if(count($emails) > 0)
             {
-                $m->to($emails)->subject($subject);
-            });
+                $subject = env('APP_NAME') . ' - ' . 'заказ №:' . $order->id;
+                Mail::send('mails.new_order', ['order' => $order, 'subject' => $subject], function($m) use($subject, $emails)
+                {
+                    $m->to($emails)->subject($subject);
+                });
+            }
         }
         return true;
     }

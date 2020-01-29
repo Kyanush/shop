@@ -1,7 +1,24 @@
 <a class="item-card ddl_product ddl_product_link" href="{{ $product->detailUrlProduct() }}">
+
+    <div class="product-label">
+        @foreach($product->attributes as $attribute)
+            @if($attribute->id == 49 and $attribute->pivot->value)
+                @if($attribute->pivot->value == 'Хит')
+                    <div class="label hit"><img src="/mobile/images/sticker_hit.png"> Хит</div>
+                @elseif($attribute->pivot->value == 'New!')
+                    <div class="label new">New!</div>
+                @else
+                    <div class="label new">{{ $attribute->pivot->value }}</div>
+                @endif
+            @endif
+        @endforeach
+    </div>
+
     <div class="item-card__sticker"></div>
     <div class="item-card__image-wrapper ddl_product_link">
-        <img class="item-card__image" alt="{{ $product->name }}" src="{{ $product->pathPhoto(true) }}">
+          <img class="item-card__image"
+               alt="{{ $product->name }}"
+               src="{{ $product->pathPhoto(true) }}"/>
     </div>
     <div class="item-card__info">
         <h3 class="item-card__name">
@@ -10,7 +27,7 @@
             </div>
         </h3>
         <div class="item-card__rating">
-            <span class="rating _{{ ($product->avgRating[0]->avg_rating ?? 0) * 2 }}"></span>
+            <span class="rating _{{ ($product->reviews_rating_avg ?? 0) * 2 }}"></span>
 
             <span class="rating-count">
                 @if($product->reviews_count > 0)
@@ -19,6 +36,7 @@
             </span>
 
         </div>
+
         <div class="item-card__prices">
             <div class="item-card__debet">
                 <span class="item-card__prices-title">Цена</span>
@@ -32,17 +50,19 @@
                 </span>
             </div>
             <div class="item-card__instalment">
+                <span class="item-card__prices-price">
+                    @if($product->stock > 0)
+                        <i class="fa fa-check"></i>
+                    @else
+                        <i class="fa fa-hourglass-half" aria-hidden="true"></i>
+                    @endif
+                </span>
+                <span class="item-card__add-info">
+                    {{ $product->stock > 0 ? 'В наличии' : 'Скоро в продаже' }}
+                </span>
 
-                    @foreach($product->attributes as $attribute)
-                        @if($attribute->id == 49 and $attribute->pivot->value)
-                            @if($attribute->pivot->value == 'Хит')
-                                <div class="hit"><img src="/site/images/sticker_hit.png"> Хит</div>
-                            @endif
-                            @if($attribute->pivot->value == 'New!')
-                                <div class="new">New!</div>
-                            @endif
-                        @endif
-                    @endforeach
+
+
 
                 <!--
                 <span onclick="productFeaturesWishlist(this)"
@@ -63,7 +83,16 @@
                 <span class="item-card__prices-price">3 067 ₸</span>
                 <span class="item-card__add-info"> x 3 мес </span>
                 -->
+
+
+
+
             </div>
         </div>
+
+        <!--
+        <div class="button" style="margin-top: 20px;">Подробнее</div>
+        ---->
+
     </div>
 </a>

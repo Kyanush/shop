@@ -105,7 +105,7 @@ class Helpers
     }
 
     public static function getSortedToFilter($filters){
-        $value   = 'sort_view_count-asc';
+        $value   = 'sort_sort-desc';
         $default = true;
 
         foreach ($filters as $code => $filter_value)
@@ -134,25 +134,25 @@ class Helpers
             [
                 'column' => 'view_count',
                 'order'  => 'DESC',
-                'title'  => 'популярные',
+                'title'  => 'популярные А-Я',
                 'value'  => 'sort_view_count-desc'
             ],
             [
                 'column' => 'view_count',
                 'order'  => 'ASC',
-                'title'  => 'популярные',
+                'title'  => 'популярные Я-А',
                 'value'  => 'sort_view_count-asc'
             ],
             [
                 'column' => 'name',
                 'order'  => 'ASC',
-                'title'  => 'по названию',
+                'title'  => 'по названию А-Я',
                 'value'  => 'sort_name-asc'
             ],
             [
                 'column' => 'name',
                 'order'  => 'DESC',
-                'title'  => 'по названию',
+                'title'  => 'по названию Я-А',
                 'value'  => 'sort_name-desc'
             ],
             [
@@ -168,10 +168,16 @@ class Helpers
                 'value'  => 'sort_price-desc'
             ],
             [
-                'column' => 'created_at',
+                'column' => 'sort',
+                'order'  => 'ASC',
+                'title'  => 'новинки',
+                'value'  => 'sort_sort-asc'
+            ],
+            [
+                'column' => 'sort',
                 'order'  => 'DESC',
                 'title'  => 'новинки',
-                'value'  => 'sort_created_at-desc'
+                'value'  => 'sort_sort-desc'
             ]
         ];
 
@@ -187,7 +193,7 @@ class Helpers
                     break;
                 }
             }
-            return $result ? $result : self::listSortingProducts('sort_view_count-asc');
+            return $result ? $result : self::listSortingProducts('sort_sort-desc');
         }
     }
 

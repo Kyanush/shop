@@ -8,17 +8,18 @@
 
 namespace App\Tools;
 
-use App\Services\ServiceCity;
 
 class Seo
 {
 
+    public static $city = 'Алматы, Нур-Султане (Астана), Шымкенте, Караганде, Казахстан';
+
     public static function main(){
-        $city     = ServiceCity::getCurrentCity();
         $siteName = env('APP_NAME');
-        $title       = "{$siteName} в {$city->name} - Электроника, Бытовая Техника, Смартфоны";
+        $title       = "OnePoint - Электроника, Бытовая Техника, Смартфоны";
         $description = "{$siteName} — покупка бытовой техники и электроники ✅. Удобная процедура оформления ⭐, простой процесс покупки и большой ассортимент товаров ⚡. Описания товаров, отзывы и лучшие цены в Казахстане ☝.";
         $keywords    = "товары, НИЗКАЯ ЦЕНА, Скидки, Акции, {$siteName}, купить, бытовая техника, электроника, покупка";
+
         return [
             'title'       => $title,
             'keywords'    => $keywords,
@@ -29,22 +30,16 @@ class Seo
 
     public static function productDetail($product, $category){
 
-        $city     = ServiceCity::getCurrentCity();
+        $city = self::$city;
 
-        $siteName = env('APP_NAME');
+        $siteName    = env('APP_NAME');
+        $title       = $product->seo_title ? $product->seo_title : $product->name;
+        $keywords    = "{$product->seo_keywords}, {$category->name}, {$product->name} , купить, НИЗКАЯ ЦЕНА, Скидки, Акции, {$siteName}, характеристики, описание, отзывы, рейтинг, цена, обзоры";
 
-        if($product->seo_keywords)
-            $keywords = $product->seo_keywords;
-        else
-            $keywords =  "{$category->name}, {$product->name} , купить, НИЗКАЯ ЦЕНА, Скидки, Акции, {$siteName}, характеристики, описание, отзывы, рейтинг, цена, обзоры";
-
-        if($product->seo_description)
-            $description = $product->seo_description;
-        else
-            $description = "{$product->name} в {$city->name}, Казахстан. Сравнивайте цены всех продавцов ✅, читайте характеристики и отзывы покупаталей ⭐, покупайте по самым выгодным условиям ⚡, заказывайте доставку в любой город Казахстана ☝.";
+        $description = "{$product->seo_description}【{$product->name}】; Только оригинал ✅; Гарантия 1 год ☝ Бесплатная доставка по Алматы ✌ Скидки и подарки ⭐; Адрес: Жибек Жолы 115. Доставка в Астану 1 ⚡ рабочий день. Доставка по Казахстану 1 ⚡ рабочих дня в Шымкент, Караганда, Актобе, Тараз, Павлодар, Усть-Каменогорск, Семей, Уральск, Костанай, Атырау, Кызылорда, Петропавловск, Актау, Кокшетау, Экибастуз";
 
         return [
-            'title'       => "{$product->name} купить в {$city->name}, Казахстан",
+            'title'       => "{$title} цена, купить в {$city}",
             'keywords'    => $keywords,
             'description' => $description
         ];
@@ -58,19 +53,15 @@ class Seo
 
         if($category)
         {
-            $city = ServiceCity::getCurrentCity();
+            $city = self::$city;
 
-            if($category->seo_keywords)
-                $keywords = $category->seo_keywords;
-            else
-                $keywords =  "{$category->name}, купить, казахстан, цена, характеристики, отзывы, обзоры, доставка";
+            $keywords    = $category->seo_keywords ? $category->seo_keywords . ', ' : '';
+            $keywords    = "{$keywords}{$category->name} купить в $city, купить, казахстан, цена, характеристики, отзывы, обзоры, доставка";
 
-            if($category->seo_description)
-                $description = $category->seo_description;
-            else
-                $description = "{$category->name} купить в {$city->name}, Казахстан ✅. Цены ⭐, характеристики ⚡, отзывы, обзоры, доставка ☝.";
+            $description = "{$category->seo_description}【{$category->name}】; Только оригинал ✅; Гарантия 1 год ☝ Бесплатная доставка по Алматы ✌ Скидки и подарки ⭐; Адрес: Жибек Жолы 115. Доставка в Астану 1 ⚡ рабочий день. Доставка по Казахстану 1 ⚡ рабочих дня в Шымкент, Караганда, Актобе, Тараз, Павлодар, Усть-Каменогорск, Семей, Уральск, Костанай, Атырау, Кызылорда, Петропавловск, Актау, Кокшетау, Экибастуз";
 
-            $title = "{$category->name} купить в {$city->name}, Казахстан";
+            $title = $category->seo_title ? $category->seo_title : $category->name;
+            $title = "{$title} цена, купить в $city";
         }
 
         return [

@@ -19,16 +19,13 @@
         </div>
         <div class="footer_column footer_column_3">
             <div class="footer_column_header">Каталог</div>
-            @php
-                $city = $currentCity['code'] == 'almaty' ? '' : '/' . $currentCity['code'];
-            @endphp
             <ul>
-                <li><a href="{{$city}}/catalog/smartfony-xiaomi">Смартфоны Xiaomi</a></li>
-                <li><a href="{{$city}}/catalog/gadzhety">Гаджеты и устройства</a></li>
-                <li><a href="{{$city}}/catalog/transport">Электронный транспорт</a></li>
-                <li><a href="{{$city}}/catalog/naushniki-i-kolonki">Наушники и колонки</a></li>
-                <li><a href="{{$city}}/catalog/aksessuary">Аксессуары</a></li>
-                <li><a href="{{$city}}/catalog/zaryadnye-ustroystva">Зарядные устройства</a></li>
+                <li><a href="/catalog/smartfony-xiaomi">Смартфоны Xiaomi</a></li>
+                <li><a href="/catalog/gadzhety">Гаджеты и устройства</a></li>
+                <li><a href="/catalog/transport">Электронный транспорт</a></li>
+                <li><a href="/catalog/naushniki-i-kolonki">Наушники и колонки</a></li>
+                <li><a href="/catalog/aksessuary">Аксессуары</a></li>
+                <li><a href="/catalog/zaryadnye-ustroystva">Зарядные устройства</a></li>
             </ul>
         </div>
         <div class="footer_column footer_column_4">
@@ -44,7 +41,7 @@
                 Все права защищены.			</div>
             <div class="footer_bottom_social">
                 <div class="contact_block_social" style="padding: 0;">
-                    <a href="{{ config('shop.social_network.instagram') }}" class="contact_in1" target="_blank" title="Вы в Instagram">
+                    <a href="{{ config('shop.social_network.instagram.url') }}" class="contact_in1" target="_blank" title="Вы в Instagram">
                         <img src="/site/images/insta.png" width="30">
                     </a>
                     <!--

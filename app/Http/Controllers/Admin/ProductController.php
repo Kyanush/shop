@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\AdminController;
 
 use App\Models\Product;
-use App\Models\AttributeSet;
 use App\Models\SpecificPrice;
 use App\Requests\CloneProductRequest;
 use App\Requests\SaveProductRequest;
@@ -17,36 +16,33 @@ use DB;
 class ProductController extends AdminController
 {
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
+
 
     public function searchProducts(Request $request){
-        $data = [];
         $search = $request->input('search');
         if($search)
         {
             $products = Product::filters(['name' => $request->input('search')])
                             ->limit(10)
                             ->get();
-            $data = $products->map(function ($item) {
-                return  [
-                    'product'    => $item,
-                    'photo_path' => $item->pathPhoto(true),
-                    'price'      => Helpers::priceFormat($item->getReducedPrice()),
-                ];
-            });
+
+            foreach ($products as $key => $product)
+            {
+                $products[$key]->reduced_price        = $product->getReducedPrice();
+                $products[$key]->reduced_price_format = Helpers::priceFormat($product->getReducedPrice());
+                $products[$key]->photo_path           = $product->pathPhoto(true);
+            }
+
         }
 
-        return $this->sendResponse($data);
+        return $this->sendResponse($products ?? []);
     }
 
     public function list(Request $request)
     {
         $filters = $request->all();
 
-        $sort = Helpers::sortConvert($filters['sort'] ?? false);
+        $sort = Helpers::sortConvert($filters['sort'] ?? 'sort-DESC');
         $column = $sort['column'];
         $order  = $sort['order'];
 
@@ -56,6 +52,7 @@ class ProductController extends AdminController
                     $query->dateActive();
                 }
             ])
+            ->main()
             ->filters($filters)
             ->filtersAttributes($filters)
             ->OrderBy($column, $order)
@@ -77,11 +74,6 @@ class ProductController extends AdminController
         return  $this->sendResponse($list);
     }
 
-    public function AttributeSetsMoreInfo(){
-        $list =  AttributeSet::with('attributes.values')->get();
-        return  $this->sendResponse($list);
-    }
-
     public function save(SaveProductRequest $req)
     {
 
@@ -91,12 +83,15 @@ class ProductController extends AdminController
         $product = Product::findOrNew($reqProduct['id']);
         $product->fill($reqProduct);
 
-        $old_attribute_set_id = $product->attribute_set_id;
 
         if($product->save())
         {
+
             //категория
-            $product->categories()->sync($request['categories']);
+            $categories = $request['categories'] ?? false;
+            if($categories)
+                $product->categories()->sync($categories);
+
 
             //Конкретная цена
             if(!empty($request['specific_price']['reduction']))
@@ -104,20 +99,13 @@ class ProductController extends AdminController
                 $SpecificPrice = SpecificPrice::firstOrNew(['product_id' => $product->id]);
                 $SpecificPrice->fill($request['specific_price']);
                 $SpecificPrice->save();
+            }else{
+                $product->specificPrice()->delete();
             }
-
-            //Атрибуты
-            ServiceProduct::productAttributesSave(
-                $product->id,
-                $request['attributes'],
-                $old_attribute_set_id == $reqProduct['attribute_set_id'] ? false : true
-            );
 
             //Картинки
             ServiceProduct::productImagesSave($request['product_images'] ?? [], $product->id);
 
-            //Группа товаров
-            ServiceProduct::productGroupSave($product->id, $product->group_id, $request['products_ids_group'] ?? []);
 
             //С этим товаром покупают
             if(isset($request['accessories_product_ids']))
@@ -133,7 +121,11 @@ class ProductController extends AdminController
             'attributes',
             'specificPrice',
             'images',
-            'productAccessories'
+            'productAccessories',
+            'parent',
+            'children' => function($query){
+                $query->OrderBy('price');
+            }
         ])->findOrFail($id);
 
         //фото товара
@@ -143,11 +135,16 @@ class ProductController extends AdminController
         $categories = $product->categories->pluck('id');
 
 
-        //атрибуты
-        $attributes = [];
-        foreach ($product->attributes as $item)
-            $attributes[$item->pivot->attribute_id][] = $item->pivot->value;
-
+        $children = $product->children->map(function ($item) {
+            return  [
+                'id'             => $item->id,
+                'name'           => $item->name,
+                'sku'            => $item->sku,
+                'price'          => Helpers::priceFormat($item->getReducedPrice()),
+                'old_price'      => Helpers::priceFormat($item->price),
+                'active'         => $item->active
+            ];
+        });
 
         //картинки
         $images = $product->images->map(function ($item) {
@@ -169,32 +166,23 @@ class ProductController extends AdminController
             ];
         });
 
+
         return $this->sendResponse([
+            'discount_price'      => [
+                 'sum'    => $product->getReducedPrice(),
+                 'format' => Helpers::priceFormat($product->getReducedPrice()),
+                 'discount_type_info' => $product->getDiscountTypeinfo()
+            ],
+            'detail_url'          => $product->detailUrlProduct(),
             'product'             => $product,
             'product_accessories' => $product_accessories,
             'images'              => $images,
-            'attributes'          => $attributes,
             'categories'          => $categories,
-            'specific_price'      => $product->specificPrice
+            'specific_price'      => $product->specificPrice,
+            'children'            => $children
         ]);
     }
 
-    public function groupProducts($group_id)
-    {
-        $products = Product::where('group_id', $group_id)->get();
-
-        $products = $products->map(function ($item) {
-            return  [
-                'id'         => $item->id,
-                'name'       => $item->name,
-                'sku'        => $item->sku,
-                'price'      => $item->price,
-                'active'     => $item->active
-            ];
-        });
-
-        return  $this->sendResponse($products);
-    }
 
     public function delete($product_id)
     {
@@ -220,7 +208,6 @@ class ProductController extends AdminController
         $clone->clone_product_images      = $req['product_images'];
         $clone->clone_reviews             = $req['reviews'];
         $clone->clone_product_accessories = $req['product_accessories'];
-        $clone->clone_questions_answers   = $req['questions_answers'];
         $result = $clone->clone();
 
         return  $this->sendResponse($result);
@@ -277,16 +264,12 @@ class ProductController extends AdminController
     public function productChangeQuicklySave(Request $request){
 
         $id     = $request->input('id');
-        $stock  = intval($request->input('stock',  0));
-        $price  = intval($request->input('price',  0));
-        $active = intval($request->input('active', 0));
 
         $product = Product::find($id);
-        $product->stock  = $stock;
-        $product->price  = $price;
-        $product->active = $active;
+        $product->fill($request->all());
 
         return $this->sendResponse($product->save() ? true : false);
     }
+
 
 }

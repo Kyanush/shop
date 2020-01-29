@@ -143,11 +143,14 @@ $(document).ready(function() {
 
     //Купить в 1 клик
     $('#oneclick_button_send').on('click', function() {
-        es_show_temp_window($('#one-click-order'), {
-            vertical_align: 'top',
-            padding: '0',
-            maxwidth: '370px'
-        });
+        if(validSelectModelProduct())
+        {
+            es_show_temp_window($('#one-click-order'), {
+                vertical_align: 'top',
+                padding: '0',
+                maxwidth: '370px'
+            });
+        }
         return false;
     });
 
@@ -838,21 +841,22 @@ function addToCartInList(self){
 }
 
 function addToCartInDetail(self) {
-    if($(self).attr('id') == 'button-cart')
+    if(validSelectModelProduct())
     {
-        var product_id = $(self).attr('product_id');
-        if(addToCart(product_id))
+        if ($(self).attr('id') == 'button-cart')
         {
-            $(self).attr('href', '/checkout');
-            $(self).find('span').html('В корзине');
-            $(self).attr('id', 'button-cart-incart');
+            var product_id = $(self).attr('product_id');
+            if (addToCart(product_id)) {
+                $(self).attr('href', '/checkout');
+                $(self).find('span').html('В корзине');
+                $(self).attr('id', 'button-cart-incart');
 
-            headerCartTotal();
-            cardSuccessPopup(product_id);
-            return false;
+                headerCartTotal();
+                cardSuccessPopup(product_id);
+                return false;
+            }
         }
     }
-
 }
 
 function showCity() {

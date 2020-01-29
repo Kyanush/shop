@@ -10,10 +10,10 @@ use App\Services\ServiceOrder;
 use App\Services\ServiceUser;
 use App\Tools\Helpers;
 use App\Tools\Seo;
-use App\User;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use Auth;
+use App\User;
 
 class CartController extends Controller
 {
@@ -61,7 +61,7 @@ class CartController extends Controller
         if(Auth::check())
             $user = User::find(Auth::user()->id);
 
-        return view(Helpers::isMobile() ? 'mobile.checkout' : 'site.checkout',[
+        return view(Helpers::isMobile() ? 'mobile.checkout' : 'site.checkout', [
             'seo'  => $seo,
             'user' => $user
         ]);

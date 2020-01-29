@@ -22,19 +22,16 @@
 
     <div class="container">
         <p>
-            Обсудить с нами возникшие вопросы или проконсультироваться звоните к нам по номеру:
-            <a style="font-size: 14px;text-decoration: none;" href="tel:{{ $number_phones[0]['number'] }}">
-                {{ $number_phones[0]['format'] }}
-            </a>
-            ({{ $address[0]['working_hours'] }}).
-            Кроме того, Вы можете отправить любые запросы или вопросы нам на электронную почту
-
-            <a style="font-size: 14px;text-decoration: none;" href="mailto:{{ config('shop.site_email') }}">
+            Остались вопросы? Наш call center к вашим услугам ежедневно с 11:00 до 19:00.
+            Дозвониться к нам можно по номерам:
+            @foreach($number_phones as $phone)
+                <a style="font-size: 14px;text-decoration: none;"  href="tel: {{ $phone['number'] }}"> {{ $phone['format'] }}</a>
+            @endforeach
+            .
+            Также наша почта <a style="font-size: 14px;text-decoration: none;" href="mailto:{{ config('shop.site_email') }}">
                 {{ config('shop.site_email') }}
-            </a> ,
-
-            не забудьте указать Ваше имя и контактные номера телефонов. Если Вас не устраивают какие-либо наши товары или услуги,
-            мы с удовольствием выслушаем Вас. Мы всегда готовы решить проблему.
+            </a> всегда готова выслушать ваши претензии. Для получения обратной связи укажите свой телефон и ваше имя.
+            Мы открыты к любым предложениям.
         </p>
         <p>
             <ul>
@@ -43,7 +40,9 @@
                     <br/>
                     Ежедневно, круглосуточно(телефон или WhatsApp)
                     <br/>
-                    <a href="tel: {{ $number_phones[0]['number'] }}"> {{ $number_phones[0]['format'] }}</a>
+                    @foreach($number_phones as $phone)
+                        <a href="tel: {{ $phone['number'] }}"> {{ $phone['format'] }}</a>
+                    @endforeach
                 </li>
                 <li>
                     <b>Время работы:</b>
@@ -66,7 +65,21 @@
             </ul>
         </p>
         <p>
-            <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A809d57a2d5e1595921eb0d4243f8faaa2748651e7ca204d04724d363036ff2ab&amp;source=constructor" width="100%" height="300" style="margin: 0;" frameborder="0"></iframe>
+            <ul>
+                <li><b>Мы в соцсетях.</b></li>
+                <li>
+                    <p>
+                        @foreach(config('shop.social_network') as $item)
+                            <a href="{{ $item['url'] }}" title="{{ $item['title'] }}" target="_blank" rel="nofollow">
+                                <img height="30" src="{{ $item['icon'] }}"/>
+                            </a>
+                        @endforeach
+                    </p>
+                </li>
+            </ul>
+        </p>
+        <p>
+            <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A600b99af60f97b0805532a04e142a4ee0e8f29daaaae627f508e6c2725daa451&amp;source=constructor" width="100%" height="600" frameborder="0"></iframe>
         </p>
     </div>
 

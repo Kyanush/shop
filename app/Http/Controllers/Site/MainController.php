@@ -2,8 +2,10 @@
 namespace App\Http\Controllers\Site;
 
 use App\Http\Controllers\Controller;
+use App\Models\News;
 use App\Services\ServiceSlider;
 use App\Models\Product;
+use App\Services\ServiceYouWatchedProduct;
 use App\Tools\Helpers;
 use App\Tools\Seo;
 
@@ -13,13 +15,6 @@ class MainController extends Controller
     public function main(){
 
 
-        $productsRecommend = Product::productInfoWith()
-            ->filtersAttributes(['rekomenduemoe_dlya_vas' => 'da'])
-            ->limit(10)
-            ->where('stock', '>', 0)
-            //->OrderBy('id', 'DESC')
-            ->inRandomOrder()
-            ->get();
 
 
         $productsDiscount = Product::productInfoWith()
@@ -34,33 +29,34 @@ class MainController extends Controller
                 ->get();
 
 
-        $productsHit = Product::productInfoWith()
-                ->filtersAttributes(['tipy_tovarov' => 'hit'])
-                ->limit(10)
-                ->where('stock', '>', 0)
-                //->OrderBy('id', 'DESC')
-                ->inRandomOrder()
-                ->get();
+        $products1 =Product::productInfoWith()
+            ->filters(['category' => 'redmi-note-8-pro'])
+            ->limit(10)
+            ->where('stock', '>', 0)
+            ->get();
 
 
-        $productsNew = Product::productInfoWith()
-                    ->filtersAttributes(['tipy_tovarov' => 'new'])
+
+        $products2 = Product::productInfoWith()
+                    ->filters(['category' => 'redmi-note-8'])
                     ->limit(10)
                     ->where('stock', '>', 0)
-                    //->OrderBy('id', 'DESC')
-                    ->inRandomOrder()
                     ->get();
 
+
+
         $seo = Seo::main();
+
+        $news = News::isActive()->limit(3)->OrderBy('created_at', 'DESC')->get();
 
         return view(Helpers::isMobile() ? 'mobile.main' : 'site.main',
             [
                 'listSlidersHomePage'          => ServiceSlider::listSlidersHomePage(),
-                'productsRecommend'            => $productsRecommend,
                 'productsDiscount'             => $productsDiscount,
-                'productsHit'                  => $productsHit,
-                'productsNew'                  => $productsNew,
-                'seo'                          => $seo
+                'products1'                    => $products1,
+                'products2'                    => $products2,
+                'seo'                          => $seo,
+                'news'                         => $news
             ]);
     }
 

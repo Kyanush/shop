@@ -19,7 +19,7 @@
         @include('includes.breadcrumb', ['breadcrumbs' => $breadcrumbs])
 
         <h1 itemprop="name">
-            {{ $title }}
+            <h1>{{ $category->name }}</h1>
         </h1>
 
         <div id="column-left">
@@ -202,7 +202,7 @@
                 </div>
 
                 <div class="product-grid product-grid_4">
-                    @foreach($products as $product)
+                    @foreach($catalog as $product)
                         @include('includes.catalog_item', ['product' => $product])
                     @endforeach
 					<script>
@@ -221,40 +221,17 @@
                     </span>
                 </div>
 
-   			    {!! $products->links("pagination::default") !!}
+   			    {!! $catalog->links("pagination::default") !!}
 
-				@if(isset($category->description))
+				@if($category->description)
 					<div class="category-info">
-                        <h2>Купить {{ $category->name }} в {{ $currentCity->name }}, Казахстан</h2>
-                        <br/>
-
-                        @if($category->description)
-                            {!! $category->description  !!}
-                            <br/>
-                            <br/>
-                        @endif
-
-                        <h2>Где купить {{ $category->name }}</h2>
-                        <br/>
-                        <p>
-                            Заказать товар с доставкой на дом в пределах {{ $currentCity->name }}, Казахстан можно круглосуточно, через корзину на сайте.
-                            Интернет-магазин официальных товаров {{ env('APP_NO_URL') }} предлагает доставку заказов и в
-                            другие города Республики Казахстан. К оплате принимаются банковские карты и наличные средства.
-                        </p>
-
+                        {!! $category->description  !!}
 						<div class="category-info_show_all"><span>показать полностью</span></div>
 					</div>
 				@endif
 
                 <div class="category_bottom_10px"></div>
             </div>
-
-			<br>
-			<br>
-			@include('includes.product_slider', ['products' => $productsHitViewed, 'title' => 'Хиты'])
-            <br>
-            <br>
-            @include('includes.product_slider', ['products' => $youWatchedProducts, 'title' => 'Вы смотрели'])
         </div>
 
 

@@ -90,7 +90,7 @@
                        <div class="contact_page_block">
                            <div class="contact_page_block_header">Мы в соцсетях</div>
                            <div class="contact_block_social">
-                               <a href="{{ config('shop.social_network.instagram') }}" class="contact_in1"  title="Вы в Instagram" target="_blank">
+                               <a href="{{ config('shop.social_network.instagram.url') }}" class="contact_in1"  title="Вы в Instagram" target="_blank">
                                    <img src="/site/images/insta.png" width="30">
                                </a>
                            </div>
@@ -120,7 +120,7 @@
 
 
                <div style="width: 100%;height: 300px;display: table">
-                   <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Ade9d92460f096fdbf3730e9f27c44faa41ee4502b84a6e3fb69e9d10da159565&amp;width=100%25&amp;height=400&amp;lang=ru_RU&amp;scroll=true"></script>
+                   <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A600b99af60f97b0805532a04e142a4ee0e8f29daaaae627f508e6c2725daa451&amp;source=constructor" width="100%" height="400" frameborder="0"></iframe>
                </div>
 
 

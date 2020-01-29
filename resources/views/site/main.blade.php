@@ -44,15 +44,14 @@
         </div>
 
 
-
-
-        @include('includes.product_slider', ['products' => $productsRecommend, 'title' => 'Рекомендуемое для вас'])
         @include('includes.product_slider', ['products' => $productsDiscount, 'title' => 'Акции'])
-        @include('includes.product_slider', ['products' => $productsHit, 'title' => 'Хиты продаж'])
-        @include('includes.product_slider', ['products' => $productsNew, 'title' => 'Новинки'])
+        @include('includes.product_slider', ['products' => $products1, 'title' => 'Redmi Note 8 Pro'])
+        @include('includes.product_slider', ['products' => $products2, 'title' => 'Redmi Note 8'])
+
 
         <br/><br/>
-        @include('site.news.slider')
+        @include('site.news.slider', ['news' => $news])
+
 
         <div class="welcome">
             <div class="welcome_left">

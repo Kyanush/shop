@@ -3,20 +3,23 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Admin\AdminController;
 
-use App\Models\Callback;
 use App\Models\Order;
 use App\Requests\SaveOrderRequest;
 use App\Tools\Helpers;
 use App\User;
 use App\Services\ServiceOrder;
 use Illuminate\Http\Request;
+use DB;
 
 class OrderController extends AdminController
 {
 
+
     public function list(Request $request)
     {
         $filters = $request->all();
+
+        $product_name = $filters['product_name'] ?? '';
 
         $sort = Helpers::sortConvert($filters['sort'] ?? false);
         $column = $sort['column'];
@@ -30,6 +33,14 @@ class OrderController extends AdminController
             'type'
         ])
         ->Filters($filters)
+        ->where(function ($query) use ($product_name){
+            if($product_name)
+            {
+                $query->whereHas('products', function($query) use ($product_name){
+                    $query->where(DB::raw('t_products.name'), 'like', '%' . $product_name . '%');
+                });
+            }
+        })
         ->OrderBy($column, $order)
         ->paginate($request->input('perPage', 10));
 
@@ -63,13 +74,6 @@ class OrderController extends AdminController
         $order->fill($data);
         if($order->save())
         {
-
-            $callback_id = $request->input('callback_id');
-            if($callback_id)
-            {
-                Callback::where('id', $callback_id)->update(['order_id' => $order->id]);
-            }
-
             foreach ($data['products'] as $product)
             {
                 $pivot = $product['pivot'];

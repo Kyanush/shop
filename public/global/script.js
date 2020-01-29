@@ -83,114 +83,95 @@ function getCsrfToken() {
     return $('meta[name="csrf-token"]').attr('content');
 }
 
-function productFeaturesWishlist(self){
+function productFeaturesWishlist(self, product_id){
+    getProduct(product_id, function(result){
 
+        $.ajax({
+            url: '/product-features-wishlist/' + product_id,
+            type: 'post',
+            data: { _token: getCsrfToken() },
+            dataType: 'json',
+            success: function(data) {
+                if(data)
+                {
+                    if($(self).hasClass('active'))
+                        $(self).removeClass('active');
+                    else{
+                        $(self).addClass('active');
+                        Swal({
+                            title: 'Закладки',
+                            html: '<p class="text-swal2">Товар <a href="' + result.detailUrlProduct + '">'
+                            + result.product.name +
+                            '</a> добавлен в <a href="/wishlist">закладки</a>!</p>'
+                        });
+                    }
 
+                    if(typeof header == 'object')
+                        header.getProductFeaturesWishlistCount();
 
-    var product_id   = $(self).attr('product_id');
-    var product_url  = $(self).attr('product_url');
-    var product_name = $(self).attr('product_name');
-
-    $.ajax({
-        url: '/product-features-wishlist/' + product_id,
-        type: 'post',
-        data: { _token: getCsrfToken() },
-        dataType: 'json',
-        success: function(data) {
-            if(data)
-            {
-                productFeaturesWishlistCount();
-                if($(self).hasClass('active'))
-                    $(self).removeClass('active');
-                else{
-                    $(self).addClass('active');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if(jqXHR.status == 401)
+                {
                     Swal({
                         title: 'Закладки',
-                        html: '<p class="text-swal2">Товар <a href="' + product_url + '">'
-                        + product_name +
-                        '</a> добавлен в <a href="/wishlist">закладки</a>!</p>'
+                        html: '<p class="text-swal2">Необходимо войти в <a href="/login">Личный Кабинет</a> или <a href="/register">создать учетную запись</a>, '
+                        +
+                        'чтобы сохранить товар <a href="' + result.detailUrlProduct + '">' + result.product.name + '</a> в свои <a href="/wishlist">закладки</a>!</p>'
                     });
                 }
             }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            if(jqXHR.status == 401)
-            {
-                Swal({
-                    title: 'Закладки',
-                    html: '<p class="text-swal2">Необходимо войти в <a href="/login">Личный Кабинет</a> или <a href="/register">создать учетную запись</a>, '
-                    +
-                    'чтобы сохранить товар <a href="' + product_url + '">' + product_name + '</a> в свои <a href="/wishlist">закладки</a>!</p>'
-                });
-            }
-        }
+        });
+
     });
-
 }
-function productFeaturesCompare(self){
 
+function getProduct(product_id, callback){
+    axios.post('/get-product/' + product_id).then(function (response) {
+        var data = response.data;
 
+        //console.log(data);
 
-    var product_id   = $(self).attr('product_id');
-    var product_url  = $(self).attr('product_url');
-    var product_name = $(self).attr('product_name');
+        callback(data);
+    }).catch(function (error) {
 
-    $.ajax({
-        url: '/product-features-compare/' + product_id,
-        type: 'post',
-        data: { _token: getCsrfToken() },
-        dataType: 'json',
-        success: function(data) {
-            if(data)
-            {
-                productFeaturesCompareCount();
-                if($(self).hasClass('active'))
-                    $(self).removeClass('active');
-                else{
-                    $(self).addClass('active');
-                    Swal({
-                        title: 'Сравнение товаров',
-                        html: '<p class="text-swal2">Вы добавили <a href="' + product_url + '">' + product_name + '</a> в ваш <a href="/compare-products">список сравнения</a>!</p>'
-                    });
+        //console.log(error);
+
+        alert('error');
+    });
+}
+
+function productFeaturesCompare(self, product_id){
+    getProduct(product_id, function(result) {
+
+        $.ajax({
+            url: '/product-features-compare/' + product_id,
+            type: 'post',
+            data: {_token: getCsrfToken()},
+            dataType: 'json',
+            success: function (data) {
+                if (data) {
+                    if($(self).hasClass('active'))
+                        $(self).removeClass('active');
+                    else{
+                        $(self).addClass('active');
+                        Swal({
+                            title: 'Сравнение товаров',
+                            html: '<p class="text-swal2">Вы добавили <a href="' + result.detailUrlProduct + '">' + result.product.name + '</a> в ваш <a href="/compare-products">список сравнения</a>!</p>'
+                        });
+                    }
+
+                    if(typeof header == 'object')
+                        header.getProductFeaturesCompareCount();
+
                 }
             }
-        }
+        });
+
     });
 }
 
-function productFeaturesCompareCount(){
-    $.ajax({
-        url: '/product-features-compare-count',
-        type: 'get',
-        data: { _token: getCsrfToken() },
-        dataType: 'json',
-        success: function(data) {
-            var count = parseInt(data);
-            if(!count)
-                $('.header_compare').addClass('non_active');
-            else
-                $('.header_compare').removeClass('non_active');
-            $('.header_compare span').html(count);
-        }
-    });
-}
-
-function productFeaturesWishlistCount(){
-    $.ajax({
-        url: '/product-features-wishlist-count',
-        type: 'get',
-        data: { _token: getCsrfToken() },
-        dataType: 'json',
-        success: function(data) {
-            var count = parseInt(data);
-            if(!count)
-                $('.header_wishlist').addClass('non_active');
-            else
-                $('.header_wishlist').removeClass('non_active');
-            $('.header_wishlist span').html(count);
-        }
-    });
-}
 
 
 function productReviewSetLike(review_id, like, callback){
@@ -216,8 +197,11 @@ function productReviewSetLike(review_id, like, callback){
 }
 
 
-function addToCart(product_id) {
-    product_id = parseInt(product_id);
+function addToCart(product_id, quantity) {
+
+    if(!quantity)
+        quantity = 0;
+
     if(product_id > 0)
     {
 
@@ -228,6 +212,7 @@ function addToCart(product_id) {
             type: 'post',
             data: {
                 product_id: product_id,
+                quantity: quantity,
                 _token: getCsrfToken()
             },
             dataType: 'json',
@@ -266,12 +251,135 @@ function setCity(city_code){
     axios.post('/set-city/' + city_code, {
         _token: getCsrfToken()
     }).then(function (response) {
-        console.log(response);
+        //console.log(response);
         location.href = '/';
     });
 }
 
 $(document).ready(function() {
     if($(".phone-mask").length > 0)
-        $(".phone-mask").mask("+7(999) 999-9999");
+        $(".phone-mask").mask("+7(999)999-99-99");
 });
+
+
+function subscribe(self) {
+    var formData = getFormData(self);
+    ajaxLoader(self, true);
+
+    $.ajax({
+        type: 'POST',
+        url: '/subscribe',
+        data: formData,
+        success: function(data) {
+            if(data){
+                var html  = formData['product_id'] ? 'Вы успешно подписались на уведомление о поступлении товара' : 'Вы успешно подписались на наши новости!';
+                var title = formData['product_id'] ? 'Подписка на товары' : 'Подписка';
+                Swal({
+                    title: title,
+                    html: html
+                });
+            }else{
+                Swal({
+                    type: 'error',
+                    title: 'Подписка',
+                    html: 'Вы уже подписаны!'
+                });
+            }
+            clearFormData(self);
+            ajaxLoader(self, false);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            if(jqXHR.status == 422)
+            {
+                swalErrors(jqXHR.responseJSON.errors, 'Ошибка 422');
+            }
+            ajaxLoader(self, false);
+        }
+    });
+}
+
+
+function getFormData(self) {
+    var data_array = $(self).serializeArray();
+    var data = {};
+    data_array.forEach(function (item, index) {
+        data[item['name']] = item['value'];
+    });
+    return data;
+}
+
+function clearFormData(self){
+    $(self).find('input[type=text]').val('');
+    $(self).find('input[type=email]').val('');
+    $(self).find('input[type=password]').val('');
+    $(self).find('textarea').val('');
+}
+
+function ajaxLoader(self, active){
+    if(active)
+        $(self).find('.ajax-loader').addClass('active');
+    else
+        $(self).find('.ajax-loader').removeClass('active');
+}
+
+
+$(document).ready(function() {
+
+    setInterval( function() {
+
+        var avg = $('.lis-sys-rating-average').text();
+        var count = $('.lis-sys-rating-votes-count').text();
+        var product_id = $('#product_id').val();
+
+        if(avg && count && product_id)
+        {
+
+            axios.post('/set-rating', {
+                reviews_rating_avg: avg,
+                reviews_count: count,
+                product_id: product_id
+            }).then(function (response) {
+                //console.log(response);
+            }).catch(function (error) {
+                //console.log(error);
+            });
+
+        }
+
+    }, 2000);
+
+
+    setTimeout(function tick() {
+        $("img.lazy").lazyload({
+            effect: "fadeIn",
+            threshold: 300
+        });
+    }, 1000);
+
+    $('#select-model-product').on('change', function(){
+        var link = $(this).val();
+        if(link)
+            window.location = link;
+    });
+
+});
+
+function validSelectModelProduct() {
+
+    if($('#select-model-product').length)
+    {
+        var value = $('#select-model-product').val();
+        if(value){
+            return true;
+        }
+    }else{
+        return true;
+    }
+
+    Swal({
+        title: 'ВНИМАНИЕ',
+        html: 'Выберите модель товара (цвет, память), нажав на поле "Выберите варинат"'
+    });
+
+    return false;
+}

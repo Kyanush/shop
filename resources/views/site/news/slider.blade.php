@@ -1,6 +1,3 @@
-@php
-    $news = \App\Models\News::isActive()->limit(10)->OrderBy('created_at', 'DESC')->get();
-@endphp
 <div class="container">
     <div class="box">
         <div class="box-heading">

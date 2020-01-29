@@ -10,9 +10,6 @@ import categories_save    from  '../components/categories/Save.vue';
 import attributes_list    from  '../components/attributes/List.vue';
 import attributes_save    from  '../components/attributes/Save.vue';
 
-import attributes_sets_list    from  '../components/attributes-sets/List.vue';
-import attributes_sets_save    from  '../components/attributes-sets/Save.vue';
-
 import products_list    from  '../components/products/List.vue';
 import products_save    from  '../components/products/Save.vue';
 
@@ -21,7 +18,6 @@ import import_export   from '../components/import-export/Import-export.vue';
 
 
 import reviews    from  '../components/reviews/reviews.vue';
-import questions_answers    from  '../components/questions-answers/QuestionsAnswers.vue';
 
 
 import users_list from  '../components/users/List.vue';
@@ -56,6 +52,7 @@ import banners_save from  '../components/banners/Save.vue';
 import news_list from  '../components/news/List.vue';
 import news_save from  '../components/news/Save.vue';
 
+import settings from  '../components/plugins/Settings.vue';
 
 import layout from  '../components/Layout.vue';
 import checkout from  '../components/checkout/Checkout.vue';
@@ -138,13 +135,13 @@ export default new Router({
 
 
 
-        //Атрибуты
+        //Характеристики
         {
             path: '/attributes',
             name: 'attributes',
             component: attributes_list,
             meta: {
-                title: 'Атрибуты',
+                title: 'Характеристики',
                 breadcrumb: [
                     { title: 'Главная страница', link: '/main' },
                 ]
@@ -158,7 +155,7 @@ export default new Router({
                 title: 'Создать атрибут',
                 breadcrumb: [
                     { title: 'Главная страница', link: '/main' },
-                    { title: 'Атрибуты', link: '/attributes' },
+                    { title: 'Характеристики', link: '/attributes' },
                 ]
             }
         },
@@ -170,59 +167,10 @@ export default new Router({
                 title: 'Редактировать атрибут',
                 breadcrumb: [
                     { title: 'Главная страница', link: '/main' },
-                    { title: 'Атрибуты', link: '/attributes' },
+                    { title: 'Характеристики', link: '/attributes' },
                 ]
             }
         },
-
-
-
-
-
-
-
-        //Attribute Sets
-        {
-            path: '/attributes-sets',
-            name: 'attributes_sets',
-            component: attributes_sets_list,
-            meta: {
-                title: 'Наборы атрибутов',
-                breadcrumb: [
-                    { title: 'Главная страница', link: '/main' },
-                ]
-            }
-        },
-        {
-            path: '/attribute-set',
-            name: 'attribute_set_create',
-            component: attributes_sets_save,
-            meta: {
-                title: 'Добавить набор атрибутов',
-                breadcrumb: [
-                    { title: 'Главная страница', link: '/main' },
-                    { title: 'Наборы атрибутов', link: '/attributes-sets' },
-                ]
-            }
-        },
-        {
-            path: '/attribute-set/:attribute_set_id',
-            name: 'attribute_set_edit',
-            component: attributes_sets_save,
-            meta: {
-                title: 'Редактировать набор атрибутов',
-                breadcrumb: [
-                    { title: 'Главная страница', link: '/main' },
-                    { title: 'Наборы атрибутов', link: '/attributes-sets' },
-                ]
-            }
-
-        },
-
-
-
-
-
 
 
         //Товары
@@ -288,18 +236,6 @@ export default new Router({
             }
         },
 
-        //Вопросы-ответы
-        {
-            path: '/questions-answers',
-            component: questions_answers,
-            meta: {
-                title: 'Вопросы-ответы',
-                breadcrumb: [
-                    { title: 'Главная страница', link: '/main' },
-                    { title: 'Товары', link: '/products' },
-                ]
-            }
-        },
 
 
         /**********************************************************************************************************************/
@@ -694,6 +630,20 @@ export default new Router({
                 breadcrumb: [
                     { title: 'Главная страница', link: '/main' },
                     { title: 'Новости', link: '/news' },
+                ]
+            }
+        },
+
+
+
+        {
+            path: '/settings',
+            name: 'settings',
+            component: settings,
+            meta: {
+                title: 'Настройки',
+                breadcrumb: [
+                    { title: 'Главная страница', link: '/main' }
                 ]
             }
         },

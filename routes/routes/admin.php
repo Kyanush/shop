@@ -29,24 +29,23 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::get('attribute-view/{id}',      'AttributeController@view')->where(['id' => '[0-9]+']);
         Route::post('attribute-delete/{id}',   'AttributeController@delete')->where(['id' => '[0-9]+']);
 
-        Route::get('attributes-sets-list ',      'AttributeSetController@list');
-        Route::post('attribute-set-save',        'AttributeSetController@save');
-        Route::get('attribute-set-view/{id}',    'AttributeSetController@view')->where(['id' => '[0-9]+']);
-        Route::post('attribute-set-delete/{id}', 'AttributeSetController@delete')->where(['id' => '[0-9]+']);
-
         Route::any('products-list',                  'ProductController@list');
-        Route::get('attribute-sets-more-info',       'ProductController@AttributeSetsMoreInfo');
         Route::post('product-save',                  'ProductController@save');
         Route::get('product-view/{id}',              'ProductController@view')->where(['id' => '[0-9]+']);
         Route::post('product-delete/{id}',           'ProductController@delete')->where(['id' => '[0-9]+']);
         Route::post('product-price-min-max',         'ProductController@priceMinMax');
         Route::post('products-attributes-filters',   'ProductController@productsAttributesFilters');
-        Route::get('group-products/{group_id}',      'ProductController@groupProducts')->where(['group_id' => '[0-9]+']);
+
         Route::post('clone-product',                 'ProductController@cloneProduct');
         Route::get('search-products',                'ProductController@searchProducts');
         Route::post('products-selected-edit',        'ProductController@productsSelectedEdit');
         Route::post('product-change-quickly-save',   'ProductController@productChangeQuicklySave');
         Route::post('product-import',                'ProductController@import');
+
+        Route::group(['prefix'     => 'product-attribute'], function () {
+            Route::post('save',                         'ProductAttributeController@save');
+            Route::post('get/{product_id}',             'ProductAttributeController@get')->where(['product_id' => '[0-9]+']);
+        });
 
         Route::post('import',                        'ImportController@import');
         Route::get('table-list',                     'ImportController@tableList');
@@ -59,11 +58,6 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::post('review',                'ReviewController@save');
         Route::get('review/{review_id}',     'ReviewController@get')->where(['review_id' => '[0-9]+']);
 
-
-        //Вопросы-ответы
-        Route::get('questions-answers-list',               'QuestionAnswerController@list');
-        Route::post('question-answer-delete/{review_id}',  'QuestionAnswerController@delete')->where(['review_id' => '[0-9]+']);
-        Route::post('question-answer-save',                'QuestionAnswerController@save');
 
         //Пользователи
         Route::get('users-list',        'UserController@list');
@@ -144,6 +138,7 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::group(['prefix'     => 'status'], function () {
             Route::get('callbacks-status-id', 'StatusController@callbacksStatusId');
             Route::get('orders-type',         'StatusController@ordersType');
+            Route::get('list',                'StatusController@list');
         });
 
         //Новости
@@ -151,6 +146,10 @@ Route::group(['middleware' => ['role:admin'], 'prefix'     => 'admin', 'namespac
         Route::post('news-save',              'NewsController@save');
         Route::get('news-view/{id}',          'NewsController@view')->where(['id' => '[0-9]+']);
         Route::post('news-delete/{id}',       'NewsController@delete')->where(['id' => '[0-9]+']);
+
+        //Настройки
+        Route::post('save-settings',    'SettingController@saveSetting');
+        Route::get('get-settings',      'SettingController@getSetting');
 
     }
 });

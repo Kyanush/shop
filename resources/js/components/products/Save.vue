@@ -22,7 +22,7 @@
                                             Главная
                                         </a>
                                     </li>
-                                    <li v-bind:class="{'active' : tab_active == 'tab_category'}" @click="setTab('tab_category')">
+                                    <li v-bind:class="{'active' : tab_active == 'tab_category'}" @click="setTab('tab_category')" v-if="!product.parent_id">
                                         <a>
                                             <i class="fa fa-folder-open" aria-hidden="true"></i>
                                             Категория
@@ -34,10 +34,10 @@
                                             Описание и фото товара
                                         </a>
                                     </li>
-                                    <li v-bind:class="{'active' : tab_active == 'tab_attributes'}" @click="setTab('tab_attributes')">
+                                    <li v-if="!product.parent_id && product.id" v-bind:class="{'active' : tab_active == 'tab_attributes'}" @click="setTab('tab_attributes')">
                                         <a>
                                             <i class="fa fa-cogs" aria-hidden="true"></i>
-                                            Атрибуты
+                                            Характеристики
                                         </a>
                                     </li>
                                     <li v-bind:class="{'active' : tab_active == 'tab_pictures'}" @click="setTab('tab_pictures')">
@@ -52,13 +52,13 @@
                                             Скидки
                                         </a>
                                     </li>
-                                    <li v-bind:class="{'active' : tab_active == 'tab_product_groups'}" @click="setTab('tab_product_groups')">
+                                    <li v-if="!product.parent_id && product.id" v-bind:class="{'active' : tab_active == 'tab_product_groups'}" @click="setTab('tab_product_groups')">
                                         <a>
                                             <i class="fa fa-users" aria-hidden="true"></i>
-                                            Похожие товары
+                                            Торговые предложения
                                         </a>
                                     </li>
-                                    <li v-bind:class="{'active' : tab_active == 'tab_with_this_product_buy'}" @click="setTab('tab_with_this_product_buy')">
+                                    <li v-bind:class="{'active' : tab_active == 'tab_with_this_product_buy'}" @click="setTab('tab_with_this_product_buy')" v-if="!product.parent_id">
                                         <a>
                                             <i class="fa fa-gift" aria-hidden="true"></i>
                                             Аксессуары
@@ -70,16 +70,10 @@
                                             SEO
                                         </a>
                                     </li>
-                                    <li v-bind:class="{'active' : tab_active == 'tab_reviews'}" @click="setTab('tab_reviews')" v-if="product.id > 0">
+                                    <li v-if="!product.parent_id && product.id" v-bind:class="{'active' : tab_active == 'tab_reviews'}" @click="setTab('tab_reviews')">
                                         <a>
                                             <i class="fa fa-comments" aria-hidden="true"></i>
                                             Отзывы
-                                        </a>
-                                    </li>
-                                    <li v-bind:class="{'active' : tab_active == 'tab_questions_answers'}" @click="setTab('tab_questions_answers')" v-if="product.id > 0">
-                                        <a>
-                                            <i class="fa fa-question-circle" aria-hidden="true"></i>
-                                            Вопросы-ответы
                                         </a>
                                     </li>
                                 </ul>
@@ -99,6 +93,19 @@
                                                 <div class="col-md-6" v-bind:class="{'has-error' : IsError('product.name')}">
                                                     <input type="text" v-model="product.name" class="form-control">
                                                     <span v-if="IsError('product.name')" class="help-block" v-for="e in IsError('product.name')">
+                                                         {{ e }}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="25%" class="text-right">
+                                                <label>Сортировка:</label>
+                                            </td>
+                                            <td width="75%">
+                                                <div class="col-md-6" v-bind:class="{'has-error' : IsError('product.sort')}">
+                                                    <input type="text" v-model="product.sort" class="form-control">
+                                                    <span v-if="IsError('product.sort')" class="help-block" v-for="e in IsError('product.sort')">
                                                          {{ e }}
                                                     </span>
                                                 </div>
@@ -136,6 +143,25 @@
                                                 </div>
                                             </td>
                                         </tr>
+
+                                        <tr>
+                                            <td width="25%" class="text-right">
+                                                <label><span class="red">*</span> Статус:</label>
+                                            </td>
+                                            <td width="75%">
+                                                <div class="col-md-6">
+                                                    <select v-model="product.status_id" class="form-control">
+                                                        <option v-for="item in statuses"
+                                                                :selected="item.default === 1"
+                                                                :value="item.id"
+                                                                v-if="item.where_use == 'products_status_id'">
+                                                             {{ item.name }}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+
                                         <tr>
                                             <td width="25%" class="text-right">
                                                 <label>
@@ -153,20 +179,16 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr v-if="product.price != discount_price.sum">
                                             <td width="25%" class="text-right">
-                                                <label>
-                                                    <span class="red">*</span>
-                                                    <i class="fa fa-money" aria-hidden="true"></i>
-                                                    Себестоимость товара:
+                                                <label class="red">
+                                                    <i class="fa fa-percent" aria-hidden="true"></i>
+                                                    Цена со скидкой:
                                                 </label>
                                             </td>
                                             <td width="75%">
-                                                <div class="col-md-6" v-bind:class="{'has-error' : IsError('product.cost_price')}">
-                                                    <input id="cost_price" type="number" v-model="product.cost_price" class="form-control"/>
-                                                    <span v-if="IsError('product.cost_price')" class="help-block" v-for="e in IsError('product.cost_price')">
-                                                         {{ e }}
-                                                    </span>
+                                                <div class="col-md-6 red">
+                                                    <b>{{ discount_price.format }} ( {{ discount_price.discount_type_info }} )</b>
                                                 </div>
                                             </td>
                                         </tr>
@@ -174,14 +196,14 @@
                                             <td width="25%" class="text-right">
                                                 <label>
                                                     <i class="fa fa-star" aria-hidden="true"></i>
-                                                    Статус:
+                                                    Показать товар:
                                                 </label>
                                             </td>
                                             <td width="75%">
                                                 <div class="col-md-4" v-bind:class="{'has-error' : IsError('product.active')}">
                                                     <select v-model="product.active" class="form-control">
-                                                        <option value="1">Активный</option>
-                                                        <option value="0">Неактивный</option>
+                                                        <option value="1">Да</option>
+                                                        <option value="0">Нет</option>
                                                     </select>
                                                     <span v-if="IsError('product.active')" class="help-block" v-for="e in IsError('product.active')">
                                                          {{ e }}
@@ -191,7 +213,7 @@
                                         </tr>
                                         <tr>
                                             <td width="25%" class="text-right">
-                                                <label for="stock">Количество просмотров:</label>
+                                                <label>Количество просмотров:</label>
                                             </td>
                                             <td width="75%">
                                                 <div class="col-md-6">
@@ -199,7 +221,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr v-if="!product.parent_id">
                                             <td width="25%" class="text-right">
                                                 <label>
                                                     <i class="fa fa-youtube" aria-hidden="true"></i>
@@ -237,7 +259,6 @@
 
                             </div>
 
-
                             <div v-bind:class="{'active' : tab_active == 'tab_category'}" role="tabpanel" class="tab-pane" id="tab_category">
                                 <table class="table table-bordered ">
                                     <tbody>
@@ -252,7 +273,6 @@
                                     </tbody>
                                 </table>
                             </div>
-
 
                             <div v-bind:class="{'active' : tab_active == 'tab_product_description_and_photo'}" role="tabpanel" class="tab-pane" id="tab_product_description_and_photo">
 
@@ -308,13 +328,23 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr v-if="!product.parent_id">
                                             <td width="25%" class="text-right">
                                                 <label><span class="red">*</span> Описание:</label>
                                             </td>
-                                            <td width="75%"></td>
+                                            <td width="75%">
+                                                <select v-model="product.description_style_id" class="form-control">
+                                                    <option></option>
+                                                    <option v-for="item in statuses"
+                                                            :selected="item.default === 1"
+                                                            :value="item.id"
+                                                            v-if="item.where_use == 'products_description_style_id'">
+                                                        {{ item.name }}
+                                                    </option>
+                                                </select>
+                                            </td>
                                         </tr>
-                                        <tr>
+                                        <tr v-if="!product.parent_id">
                                             <td width="100%" colspan="2">
                                                 <div class="form-group col-md-12" v-bind:class="{'has-error' : IsError('product.description')}">
                                                     <Ckeditor v-model="product.description" :uploadFilePath="uploadFilePath"></Ckeditor>
@@ -324,14 +354,6 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td width="25%" class="text-right">
-                                                <label>Краткое описание(Максумум 500 слов):</label>
-                                            </td>
-                                            <td width="75%">
-                                                <Ckeditor v-model="product.description_mini"></Ckeditor>
-                                            </td>
-                                        </tr>
                                     </tbody>
                                 </table>
 
@@ -339,141 +361,8 @@
 
                             </div>
 
-                            <div v-bind:class="{'active' : tab_active == 'tab_attributes'}" role="tabpanel" class="tab-pane" id="tab_attributes">
-
-                                <table class="table table-bordered ">
-                                    <tbody>
-                                        <tr>
-                                            <td width="25%" class="text-right">
-                                                <label><span class="red">*</span> Наборы атрибутов:</label>
-                                            </td>
-                                            <td width="60%">
-                                                <div class="form-group col-md-6">
-                                                    <Select2
-                                                             v-if="tab_active == 'tab_attributes'"
-                                                             v-model="product.attribute_set_id"
-                                                             :options="convertDataSelect2(attributes_sets_more_info)"/>
-                                                </div>
-                                            </td>
-                                            <td width="15%">
-                                                <router-link target="_blank" :to="{ name: 'attribute_set_edit', params: { attribute_set_id: product.attribute_set_id} }" class="btn btn-xs btn-default">
-                                                    <i class="fa fa-edit"></i>
-                                                    Изменить
-                                                </router-link>
-                                                <button type="button" class="btn btn-xs btn-default" @click="attributeSetsMoreInfo">
-                                                    <i class="fa fa-refresh" aria-hidden="true"></i>
-                                                    Обновить все
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-
-
-                                <table class="table table-bordered "
-                                       v-for="item in attributes_sets_more_info"
-                                       v-if="item.id == product.attribute_set_id && attributes.length > 0">
-                                    <tbody>
-                                        <tr v-for="(attribute, index) in item.attributes">
-                                            <td width="25%" class="text-right">
-                                                <label>
-                                                    <span class="red" v-if="attribute.required == 1">*</span>
-                                                    {{ attribute.name }}:
-                                                </label>
-                                            </td>
-                                            <td width="60%">
-
-                                                    <div class="form-group col-md-6" v-if="attribute.type == 'text'" v-bind:class="{'has-error' : IsError('attributes.' + index + '.value')}">
-                                                        <p class="help-block">Текст</p>
-                                                        <input type="text" v-model="attributes[index].value" class="form-control">
-                                                        <span v-if="IsError('attributes.' + index + '.value')" class="help-block" v-for="e in IsError('attributes.' + index + '.value')">
-                                                             {{ e }}
-                                                        </span>
-                                                    </div>
-
-                                                    <div class="form-group col-md-6" v-if="attribute.type == 'textarea'" v-bind:class="{'has-error' : IsError('attributes.' + index + '.value')}">
-                                                        <p class="help-block">Текстовая область</p>
-                                                        <textarea v-model="attributes[index].value" class="form-control"></textarea>
-                                                        <span v-if="IsError('attributes.' + index + '.value')" class="help-block" v-for="e in IsError('attributes.' + index + '.value')">
-                                                             {{ e }}
-                                                        </span>
-                                                    </div>
-
-                                                    <div class="form-group col-md-6" v-if="attribute.type == 'date'" v-bind:class="{'has-error' : IsError('attributes.' + index + '.value')}">
-                                                        <p class="help-block">Дата</p>
-                                                        <input type="date" v-model="attributes[index].value" class="form-control"/>
-                                                        <span v-if="IsError('attributes.' + index + '.value')" class="help-block" v-for="e in IsError('attributes.' + index + '.value')">
-                                                             {{ e }}
-                                                        </span>
-                                                    </div>
-
-                                                    <div class="form-group col-md-6" v-if="attribute.type == 'multiple_select'" v-bind:class="{'has-error' : IsError('attributes.' + index + '.value')}">
-                                                        <p class="help-block">Множественный выбор</p>
-                                                        <Select2 v-model="attributes[index].value" :settings="{ multiple: true }" :options="convertDataSelect2(attribute.values, 'value', 'value')"/>
-                                                        <span v-if="IsError('attributes.' + index + '.value')" class="help-block" v-for="e in IsError('attributes.' + index + '.value')">
-                                                             {{ e }}
-                                                        </span>
-                                                    </div>
-
-                                                    <div class="form-group col-md-6" v-if="attribute.type == 'media'" v-bind:class="{'has-error' : IsError('attributes.' + index + '.value')}">
-                                                        <div class="row">
-                                                            <div class="col-sm-6" style="margin-bottom: 20px;">
-                                                                <img width="100" id="attribute-img" class="img" v-bind:src="attributes[index].value ? '/uploads/attributes/' + attributes[index].value : ''"/>
-                                                            </div>
-                                                        </div>
-                                                        <input type="hidden" v-model="attributes[index].value"/>
-
-                                                        <div class="btn-group">
-                                                            <label class="btn btn-primary btn-file">
-                                                                Загрузить
-                                                                <input  type="file" accept="image/*" id="uploadImage" class="hide" @change="setAttributeImage($event, index)"/>
-                                                            </label>
-                                                            <button class="btn btn-danger" id="remove" type="button" @click="clearAttributeImage(index)">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </div>
-
-                                                        <p class="help-block">Картинка</p>
-                                                        <span v-if="IsError('attributes.' + index + '.value')" class="help-block" v-for="e in IsError('attributes.' + index + '.value')">
-                                                             {{ e }}
-                                                        </span>
-                                                    </div>
-
-                                                    <div class="form-group col-md-6" v-if="attribute.type == 'dropdown'" v-bind:class="{'has-error' : IsError('attributes.' + index + '.value')}">
-                                                        <p class="help-block">Выбор</p>
-                                                        <Select2 v-model="attributes[index].value" :options="convertDataSelect2(attribute.values, 'value', 'value')"/>
-                                                        <span v-if="IsError('attributes.' + index + '.value')" class="help-block" v-for="e in IsError('attributes.' + index + '.value')">
-                                                             {{ e }}
-                                                        </span>
-                                                    </div>
-
-
-                                                    <div class="form-group col-md-6" v-if="attribute.type == 'color'" v-bind:class="{'has-error' : IsError('attributes.' + index + '.value')}">
-                                                        <p class="help-block">Цвет</p>
-                                                        <!--
-                                                        <Select2 v-model="attributes[index].value"
-                                                                 :options="convertDataSelect2(attribute.values, 'value', 'value')"/>
-                                                        -->
-                                                        <SelectColor
-                                                                :colorOptions="convertColorOptions(attribute.values)"
-                                                                v-model="attributes[index].value"></SelectColor>
-
-                                                        <span v-if="IsError('attributes.' + index + '.value')" class="help-block" v-for="e in IsError('attributes.' + index + '.value')">
-                                                             {{ e }}
-                                                        </span>
-
-                                                    </div>
-                                            </td>
-                                            <td width="15%">
-                                                <router-link :title="'Изменить ' + attribute.name"  target="_blank" :to="{ name: 'attribute_edit', params:{ attribute_id: attribute.id }}" class="btn btn-xs btn-default">
-                                                    <i class="fa fa-edit"></i>
-                                                    Изменить
-                                                </router-link>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div v-if="product.id" v-bind:class="{'active' : tab_active == 'tab_attributes'}" role="tabpanel" class="tab-pane" id="tab_attributes">
+                                <Attributes :product_id="product.id"></Attributes>
                             </div>
 
                             <div v-bind:class="{'active' : tab_active == 'tab_pictures'}" role="tabpanel" class="tab-pane" id="tab_pictures">
@@ -562,35 +451,46 @@
                                     </tbody>
                                 </table>
 
-
-
-
-
-
                             </div>
 
-                            <div v-bind:class="{'active' : tab_active == 'tab_product_groups'}" role="tabpanel" class="tab-pane" id="tab_product_groups">
+                            <div  v-if="!product.parent_id && product.id" v-bind:class="{'active' : tab_active == 'tab_product_groups'}" role="tabpanel" class="tab-pane" id="tab_product_groups">
 
                                 <div class="col-md-12">
+
+                                    <a target="_blank" v-if="product.id" :href="'/admin/product?parent_id=' + product.id" class="btn btn-primary" title="Создать">
+                                        <i role="presentation" aria-hidden="true" class="fa fa-plus-square"></i>
+                                        Создать
+                                    </a>
+
+
                                     <div id="group-products">
                                         <div class="table-responsive1">
                                             <table class="table table-striped">
-                                            <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Название</th>
-                                                <th>Артикул</th>
-                                                <th>Цена</th>
-                                                <th>Статус</th>
-                                                <th>Действия</th>
-                                            </tr>
-                                            </thead>
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID</th>
+                                                        <th>Название</th>
+                                                        <th>Артикул</th>
+                                                        <th>Цена</th>
+                                                        <th>Статус</th>
+                                                        <th>Действия</th>
+                                                    </tr>
+                                                </thead>
                                             <tbody>
                                             <tr class="tr-current-product" v-for="(item, index) in group_products">
                                                 <td>{{ item.id }}</td>
                                                 <td>{{ item.name }}</td>
                                                 <td>{{ item.sku }}</td>
-                                                <td>{{ item.price }}</td>
+                                                <td>
+                                                    <span v-if="item.old_price != item.price">
+                                                         <del> {{ item.old_price }}</del>
+                                                         <br/>
+                                                         {{ item.price }}
+                                                    </span>
+                                                    <span v-else>
+                                                        {{ item.price }}
+                                                    </span>
+                                                </td>
                                                 <td>
                                                     <i class="fa fa-times-circle"
                                                        aria-hidden="true"
@@ -601,21 +501,14 @@
                                                         <i class="fa fa-edit"></i> Изменить
                                                     </router-link>
 
-                                                    <a class="btn btn-xs btn-default btn-remove-from-group" v-if="product.id != item.id" @click="productGroupDelete(index)">
-                                                        <i class="fa fa-times"></i> Удалить из группы
+                                                    <a class="btn btn-xs btn-default btn-remove-from-group" v-if="product.id != item.id" @click="tradingOffersDelete(item, index)">
+                                                        <i class="fa fa-times"></i> Удалить
                                                     </a>
                                                 </td>
                                             </tr>
                                             </tbody>
                                         </table>
                                         </div>
-                                    </div>
-
-                                    <hr/>
-
-                                    <h3>Добавить товар</h3>
-                                    <div id="ungrouped_products">
-                                        <searchProducts ref="searchProducts" @productSelected="productGroupAdd"/>
                                     </div>
                                 </div>
                             </div>
@@ -669,6 +562,23 @@
                                     <tbody>
                                         <tr>
                                             <td width="25%" class="text-right">
+                                                <label>Название:</label>
+                                            </td>
+                                            <td width="75%">
+                                                <div class="col-md-12" v-bind:class="{'has-error' : IsError('product.seo_title')}">
+                                                    <textarea rows="4" v-model="product.seo_title" class="form-control"></textarea>
+                                                    <br/>
+                                                    <button type="button" @click="product.seo_title = product.name">
+                                                        Вставить название
+                                                    </button>
+                                                    <span v-if="IsError('product.seo_title')" class="help-block" v-for="e in IsError('product.seo_title')">
+                                                         {{ e }}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="25%" class="text-right">
                                                 <label>Keywords:</label>
                                             </td>
                                             <td width="75%">
@@ -702,12 +612,46 @@
 
                             </div>
 
-                            <div v-bind:class="{'active' : tab_active == 'tab_reviews'}" role="tabpanel" class="tab-pane" id="tab_reviews" v-if="product.id > 0">
-                                    <reviews :product_id="product.id"></reviews>
-                            </div>
+                            <div v-if="!product.parent_id && product.id" v-bind:class="{'active' : tab_active == 'tab_reviews'}" role="tabpanel" class="tab-pane" id="tab_reviews">
 
-                            <div v-bind:class="{'active' : tab_active == 'tab_questions_answers'}" role="tabpanel" class="tab-pane" id="tab_questions_answers" v-if="product.id > 0">
-                                <questions_answers :product_id="product.id"></questions_answers>
+                                <table class="table table-bordered ">
+                                    <tbody>
+                                        <tr>
+                                            <td width="25%" class="text-right">
+                                                <label>
+                                                    <i class="fa fa-comment"></i>
+                                                    Средний рейтинг отзывов:
+                                                </label>
+                                            </td>
+                                            <td width="75%">
+                                                <div class="col-md-6" v-bind:class="{'has-error' : IsError('product.reviews_rating_avg')}">
+                                                    <input type="text" v-model="product.reviews_rating_avg" class="form-control">
+                                                    <span v-if="IsError('product.reviews_rating_avg')" class="help-block" v-for="e in IsError('product.reviews_rating_avg')">
+                                                             {{ e }}
+                                                        </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="25%" class="text-right">
+                                                <label>
+                                                    <i class="fa fa-comment"></i>
+                                                    Количество отзывов:
+                                                </label>
+                                            </td>
+                                            <td width="75%">
+                                                <div class="col-md-6" v-bind:class="{'has-error' : IsError('product.reviews_count')}">
+                                                    <input type="text" v-model="product.reviews_count" class="form-control">
+                                                    <span v-if="IsError('product.reviews_count')" class="help-block" v-for="e in IsError('product.reviews_count')">
+                                                         {{ e }}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <reviews :product_id="product.id"></reviews>
                             </div>
 
                         </div>
@@ -729,10 +673,16 @@
                                 <span data-value="save_and_back">Сохранить и новый</span>
                             </button>
 
-                            <router-link :to="{path: '/products'}" class="btn btn-default">
+                            <a target="_blank" :href="detail_url" v-if="detail_url" class="btn btn-warning">
+                                <i class="fa fa-internet-explorer" aria-hidden="true"></i>
+                                Посмотреть товар
+                            </a>
+
+                            <router-link :to="{ name: 'products' }" class="btn btn-default">
                                 <span class="fa fa-ban"></span> &nbsp;
                                 Отменить
                             </router-link>
+
                         </div>
                     </div><!-- /.box-footer-->
 
@@ -755,11 +705,12 @@
     import datePicker from 'vue-bootstrap-datetimepicker';
     import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
     import reviews from '../reviews/reviews';
-    import questions_answers from '../questions-answers/QuestionsAnswers';
     import Categories  from '../plugins/Categories';
     import Ckeditor    from  '../plugins/Ckeditor';
     import SelectColor from '../plugins/SelectColor';
     import searchProducts from '../plugins/SearchProducts';
+    import Attributes  from '../products/Attributes';
+
 
     export default {
         components:{
@@ -769,10 +720,10 @@
             datePicker,
             Ckeditor,
             reviews,
-            questions_answers,
             Categories,
             SelectColor,
-            searchProducts
+            searchProducts,
+            Attributes
         },
         data () {
             return {
@@ -784,27 +735,31 @@
                     locale: 'ru'
                 },
                 product:{
-                    id: this.$route.params.product_id ? this.$route.params.product_id : 0,
-                    attribute_set_id: 0,
+                    id:        this.$route.params.product_id ? this.$route.params.product_id : 0,
+                    parent_id: this.$route.query.parent_id   ? this.$route.query.parent_id   : 0,
                     name: '',
+                    sort: 0,
                     url: '',
                     description: '',
-                    description_mini: '',
                     photo: '',
                     pathPhoto: '',
                     price: 0,
-                    cost_price: 0,
                     sku: '',
-                    stock: 0,
+                    stock: 1,
+                    status_id: 0,
                     active: 1,
+                    seo_title: '',
                     seo_keywords: '',
                     seo_description: '',
                     youtube: '',
-                    view_count: 0
+                    view_count: 0,
+                    reviews_rating_avg: 0,
+                    reviews_count: 0,
+                    description_style_id: 0
                 },
                 product_photo_upload_type: 'file',
                 product_accessories: [],
-                attributes: [],
+
                 product_images: [],
                 specific_price:{
                     reduction: 0,
@@ -812,40 +767,22 @@
                     start_date: '',
                     expiration_date: ''
                 },
+
                 categories: [],
                 method_redirect: 'save_and_back',
                 tab_active: 'tab_general',
                 categories_list: [],
-                attributes_sets_more_info: [],
                 group_products: [],
+                detail_url: '',
+                discount_price: {
+                    sum:    0,
+                    format: 0,
+                    discount_type_info: ''
+                },
+                statuses: []
             }
         },
-
         methods:{
-            attributeSetsMoreInfo(refresh){
-                  axios.get('/admin/attribute-sets-more-info').then((res)=>{
-                        this.attributes_sets_more_info = res.data;
-                        if(refresh)
-                        {
-                            this.$swal({
-                                type: 'success',
-                                //html: 'Номер заказа <a style="font-size: 20px;" href="/order-history/' + this.order_id + '">№:' + this.order_id + '</a>',
-                                title: 'Успешно обновлено'
-                            });
-                        }
-                  });
-            },
-            convertColorOptions(values){
-                var data = [];
-                values.forEach(function (item, index) {
-                    data.push({
-                        id:   item.value,
-                        hex:  item.props,
-                        name: item.value
-                    });
-                });
-                return data;
-            },
             deleteProductAccessory(index){
                  this.$delete(this.product_accessories, index);
             },
@@ -870,42 +807,29 @@
                     this.$helper.swalError('Товар уже добавлен');
                 }
             },
-            productGroupAdd(product){
-
-                var add = true;
-                this.group_products.forEach(function (item, index){
-                    if(item.id == product.id)
-                    {
-                        add = false;
-                        return;
+            tradingOffersDelete(item, index){
+                this.$swal({
+                    title: 'Вы действительно хотите удалить' + ' "' + item.name + '"?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Да',
+                    cancelButtonText: 'Нет'
+                }).then((result) => {
+                    if (result.value) {
+                        axios.post('/admin/product-delete/' + item.id).then((res)=>{
+                            if(res.data)
+                            {
+                                this.$helper.swalSuccess('Успешно удален');
+                                this.$delete(this.group_products, index);
+                            }
+                        });
                     }
                 });
-
-                if(add)
-                {
-                    this.group_products.push({
-                        id:     product.id,
-                        name:   product.name,
-                        sku:    product.sku,
-                        price:  product.price,
-                        active: product.active
-                    });
-                }else{
-                    this.$helper.swalError('Товар уже добавлен');
-                }
-            },
-            productGroupDelete(index){
-                this.$delete(this.group_products, index);
             },
             setMethodRedirect(value){
                 this.method_redirect = value;
-            },
-            setAttributeImage(event, index){
-                this.$helper.setImgSrc(event.target.files[0], '#attribute-img');
-                this.$set(this.attributes[index], 'value' , event.target.files[0]);
-            },
-            clearAttributeImage(index){
-                this.$set(this.attributes[index], 'value' , '');
             },
             setProductPhoto(event){
 
@@ -920,32 +844,6 @@
             },
             setTab(tab){
                 this.tab_active = tab;
-            },
-            selectAttributeSetId(id){
-                this.attributes = [];
-                var self = this;
-                this.attributes_sets_more_info.forEach(function (item, index) {
-                    if(item.id == id)
-                    {
-                        item.attributes.forEach(function (attribute, attribute_index) {
-                            if(['text', 'textarea', 'date', 'media'].indexOf(attribute.type) != -1)
-                            {
-                                self.attributes.push({
-                                    value: attribute.values[0].value,
-                                    attribute_id: attribute.id
-                                });
-                            }else{
-                                self.attributes.push({
-                                    value: '',
-                                    attribute_id: attribute.id
-                                });
-                            }
-                        });
-                    }
-                });
-            },
-            convertDataSelect2(values, column_id, column_text){
-                return this.$helper.convertDataSelect2(values, column_id, column_text);
             },
             productSave(event){
                 event.preventDefault();
@@ -982,21 +880,11 @@
                     data.append('product_images[' + index + '][value]',     item.value);
                 });
 
-                $.each(this.attributes, function(index, item) {
-                    data.append('attributes[' + index + '][attribute_id]', item.attribute_id);
 
-                    if(Array.isArray(item.value)){
-                        for(var i = 0; i < item.value.length; i++)
-                            data.append('attributes[' + index + '][value][' + i + ']', item.value[i]);
-                    }else
-                        data.append('attributes[' + index + '][value]', item.value);
-                });
-
-                $.each(this.group_products, function(index, item) {
-                    data.append('products_ids_group[' + index + ']', item.id);
-                });
 
                 axios.post('/admin/product-save', data).then((res)=>{
+                    var product_id = res.data;
+
                     if(res.data)
                     {
                         this.$helper.swalSuccess(this.product.id ? 'Успешно изменено' : 'Успешно создано');
@@ -1005,14 +893,14 @@
                             history.back();
 
                         }else if(this.method_redirect == 'save_and_continue'){
-                            var product_id = res.data;
 
-                            this.$router.go({
+                            this.$router.push({
                                 name: 'product_edit',
                                 params: {
                                     product_id: product_id
                                 }
                             });
+                            location.reload();
 
                         }else if(this.method_redirect == 'save_and_new'){
 
@@ -1025,51 +913,38 @@
             getProduct(product_id){
                 if(product_id > 0)
                 {
-
                             axios.get('/admin/product-view/' + product_id).then((res)=>{
                                 document.querySelector('input[type=file]').value = '';
 
                                 var data    = res.data;
                                 var product = data.product;
 
-
                                 this.product.id               = product.id;
-                                this.product.attribute_set_id = product.attribute_set_id;
+                                this.product.parent_id        = product.parent_id;
                                 this.product.name             = product.name;
+                                this.product.sort             = product.sort;
                                 this.product.url              = product.url;
                                 this.product.description      = product.description;
-                                this.product.description_mini = product.description_mini;
+                                this.product.seo_title        = product.seo_title;
                                 this.product.seo_keywords     = product.seo_keywords;
                                 this.product.seo_description  = product.seo_description;
                                 this.product.photo            = product.photo;
                                 this.product.pathPhoto        = product.pathPhoto;
                                 this.product.price            = parseInt(product.price);
-                                this.product.cost_price       = parseInt(product.cost_price);
                                 this.product.sku              = product.sku;
                                 this.product.stock            = product.stock;
+                                this.product.status_id        = product.status_id;
                                 this.product.active           = product.active;
                                 this.product.youtube          = product.youtube;
                                 this.product.view_count       = product.view_count;
+                                this.product.reviews_rating_avg = product.reviews_rating_avg;
+                                this.product.reviews_count      = product.reviews_count;
+                                this.product.description_style_id      = product.description_style_id;
 
-                                this.groupProducts(product.group_id);
-
+                                this.group_products = data.children;
                                 this.categories     = data.categories;
                                 this.product_images = data.images;
-
-                                setTimeout(function () {
-                                    var self = this;
-                                    $.each(data.attributes, function(attribute_id, value) {
-                                        self.attributes.forEach(function (item, index) {
-                                            if(attribute_id == item.attribute_id)
-                                            {
-                                                self.$set(self.attributes[index], 'value' , value);
-                                            }
-                                        });
-                                    });
-                                }.bind(this, data), 1000);
-
                                 this.product_accessories = data.product_accessories;
-
 
                                 if(data.specific_price)
                                 {
@@ -1079,22 +954,22 @@
                                     this.specific_price.expiration_date = data.specific_price.expiration_date;
                                 }
 
+                                this.detail_url = data.detail_url;
+                                this.discount_price = data.discount_price;
                             });
                 }
-            },
-            groupProducts(group_id){
-                axios.get('/admin/group-products/' + group_id).then((res)=>{
-                    this.group_products = res.data;
-                });
             },
             ...mapActions(['SetErrors'])
         },
         created(){
-            this.attributeSetsMoreInfo();
 
             var params = {per_page: 100};
             axios.get('/admin/categories-list', {params:  params}).then((res)=>{
                 this.categories_list = res.data.data;
+            });
+
+            axios.get('/admin/status/list').then((res)=>{
+                this.statuses = res.data;
             });
 
             setTimeout(function () {
@@ -1120,9 +995,7 @@
                 }else{
                     return '';
                 }
-            },
-
-
+            }
         },
         watch: {
             '$route'() {
@@ -1133,12 +1006,6 @@
                     if(this.product_photo_upload_type == 'url'){
                         this.product.pathPhoto = val;
                     }
-                },
-                deep: true
-            },
-            'product.attribute_set_id':{
-                handler: function (val, oldVal) {
-                    this.selectAttributeSetId(val);
                 },
                 deep: true
             }

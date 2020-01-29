@@ -5,6 +5,11 @@ if(user_info)
 
 $(document).ready(function() {
 
+    $('#show-full').on('click', function (e){
+        $('.company-text').addClass('full');
+        $(this).remove();
+    });
+
     $('.icon_menu').click(function(e){
             $('.wrapper').addClass('g-ttl-move')
             $('.kaspi-menu').addClass('_opened')
@@ -17,8 +22,22 @@ $(document).ready(function() {
         }
     });
 
-    $('.catalog-sub-item.catalog-main').click(function(e) {
+/*
+    $('.catalog-sub-item.catalog-main1').click(function(e) {
 
+        if($(this).parent('.catalog-sub-items__el').find('.catalog-sub-items__list').length > 0)
+        {
+            e.preventDefault();
+            if ($(this).parent('.catalog-sub-items__el').hasClass('_active')) {
+                $(this).parent('.catalog-sub-items__el').removeClass('_active');
+                $(this).parent('.catalog-sub-items__el').find('._active').removeClass('_active');
+            } else {
+                $(this).parent('.catalog-sub-items__el').addClass('_active');
+            }
+        }
+
+    });
+    $('.catalog-sub-item.catalog-main2').click(function(e) {
         if($(this).parent('.catalog-sub-items__el').find('.catalog-sub-items__list').length > 0)
         {
             e.preventDefault();
@@ -28,8 +47,7 @@ $(document).ready(function() {
                 $(this).parent('.catalog-sub-items__el').addClass('_active');
             }
         }
-
-    });
+    });*/
 
     $('#go-back').click(function(e){
         parent.history.back();
@@ -61,6 +79,7 @@ $(document).ready(function() {
 
 
     var main_slider = new Swiper ('#main-slider', {
+        lazy: true,
         direction: "horizontal",
         loop: !0,
         autoplay: 6e3,
@@ -69,11 +88,12 @@ $(document).ready(function() {
         centeredSlides: !0,
         slidesPerView: "auto",
         autoplay: {
-            delay: 10000,
+            delay: 50000,
         },
     });
 
     var product_slider = new Swiper ('#product-slider', {
+        lazy: true,
         direction: "horizontal",
         loop: !1,
         pagination: { el: '.swiper-pagination' },
@@ -87,11 +107,22 @@ $(document).ready(function() {
     });
 
     $('#write-review').click(function(e) {
+        app.product_id = $(this).data('product_id');
         app.componentDialog = 'write-review';
     });
 
     $('#back-call').click(function(e) {
         app.componentDialog = 'back-call';
+    });
+
+
+    $('._scroll, .catalog-items').scroll(function(event) {
+
+        var allimages = $(this).find('img.lazy');
+
+        for (var i = 0; i < allimages.length; i++)
+            $( allimages[i] ).attr("src",  $(allimages[i]).data('original'));
+
     });
 
 });
@@ -105,8 +136,11 @@ function reviewLikeRating(review_id, like){
 }
 
 function buyIn1Click(product_id){
-    app.product_id = product_id;
-    app.componentDialog = 'buy-in-1-click';
+    if(validSelectModelProduct())
+    {
+        app.product_id = product_id;
+        app.componentDialog = 'buy-in-1-click';
+    }
 }
 
 function productSliderZoom(product_id){
@@ -115,22 +149,24 @@ function productSliderZoom(product_id){
 }
 
 function _addToCart(product_id){
-    if(addToCart(product_id))
+    if(validSelectModelProduct())
     {
-        Swal.fire({
-            title: 'Товар в корзине',
-            //text: "Товар в корзине",
-            type: 'success',
-            showCancelButton: true,
-            confirmButtonColor: '#4aa90b',
-            cancelButtonColor: '#0089d0',
-            confirmButtonText: 'Оформление заказа',
-            cancelButtonText: 'Продолжить покупки',
-        }).then((result) => {
-            if (result.value) {
-                location.href = '/checkout';
-            }
-        });
+        if (addToCart(product_id)) {
+            Swal.fire({
+                title: 'Товар в корзине',
+                //text: "Товар в корзине",
+                type: 'success',
+                showCancelButton: true,
+                confirmButtonColor: '#4aa90b',
+                cancelButtonColor: '#0089d0',
+                confirmButtonText: 'Оформление заказа',
+                cancelButtonText: 'Продолжить покупки',
+            }).then((result) => {
+                if (result.value) {
+                    location.href = '/checkout';
+                }
+            });
+        }
     }
 }
 
@@ -256,8 +292,9 @@ Vue.component('back-call', {
     data: function() {
         return{
             phone: user_info.phone,
+            url: location.href,
             focus:{
-                phone: 0,
+                phone: 1,
             },
             wait: false
         }
@@ -278,12 +315,13 @@ Vue.component('back-call', {
                         <div>
                             <div class="input" :class="{ '_has-value': phone, '_focused': focus.phone == 1, '_invalid': focus.phone == 2 && !phone }">
                                 <label class="input__label">Введите номер телефона</label>
-                                <input 
-                                       type="tel"
-                                       class="input__input phone-mask" 
-                                       v-model="phone" 
+                                <the-mask 
                                        @focus="focus.phone = 1" 
-                                       @blur="focus.phone = 2;phone = $event.target.value;"/>
+                                       @blur="focus.phone = 2"
+                                       placeholder="+7(777)777-77-77 *"
+                                       mask="+7(###)###-##-##"
+                                       class="input__input" 
+                                       v-model="phone"/>
                             </div>
                             <div class="input__has-error" v-if="focus.phone == 2">Пожалуйста, заполните это поле</div>
                         </div>                      
@@ -310,10 +348,10 @@ Vue.component('back-call', {
             if(!this.wait) {
                 this.wait = true;
 
-
                 let data = new FormData();
                 data.append('_token', getCsrfToken());
                 data.append('phone', this.phone);
+                data.append('url', this.url);
 
                 axios.post('/callback', data).then(function (response) {
                     if (response.data)
@@ -336,9 +374,6 @@ Vue.component('back-call', {
         }
     },
     created(){
-        setTimeout(function() {
-            $(".phone-mask").mask("+7(999) 999-9999");
-        }, 2000);
     },
 });
 
@@ -353,7 +388,7 @@ Vue.component('buy-in-1-click', {
             focus:{
                 name: 0,
                 email: 0,
-                phone: 0,
+                phone: 1,
             },
             wait: false
         }
@@ -393,12 +428,13 @@ Vue.component('buy-in-1-click', {
                         <div>
                             <div class="input" :class="{ '_has-value': phone, '_focused': focus.phone == 1, '_invalid': focus.phone == 2 && !phone }">
                                 <label class="input__label">Введите номер телефона</label>
-                                <input 
-                                       type="tel"
-                                       class="input__input phone-mask" 
-                                       v-model="phone" 
+                                <the-mask 
                                        @focus="focus.phone = 1" 
-                                       @blur="focus.phone = 2;phone = $event.target.value;"/>
+                                       @blur="focus.phone = 2"
+                                       placeholder="+7(777)777-77-77 *"
+                                       mask="+7(###)###-##-##"
+                                       class="input__input" 
+                                       v-model="phone"/>
                             </div>
                             <div class="input__has-error" v-if="focus.phone == 2">Пожалуйста, заполните это поле</div>
                         </div>                      
@@ -458,9 +494,6 @@ Vue.component('buy-in-1-click', {
         }
     },
     created(){
-        setTimeout(function() {
-            $(".phone-mask").mask("+7(999) 999-9999");
-        }, 2000);
     },
 });
 
@@ -473,7 +506,6 @@ Vue.component('write-review', {
             name: '',
             email: '',
             comment: '',
-
             focus:{
                 rating: 0,
                 plus:    0,
@@ -488,6 +520,7 @@ Vue.component('write-review', {
         <div class="dialog">
             <div class="dialog__content _topbar-off">
                 <form v-on:submit="writeReview" method="post" enctype="multipart/form-data">
+                
                     <div class="topbar container _filter-dialog">
                        <h1 class="topbar__heading">Написать отзыв</h1>
                        <div class="button _only-red-text" @click="close">Отмена</div>
@@ -495,7 +528,7 @@ Vue.component('write-review', {
                                     
                     <div>
                         <div class="input" :class="{ '_has-value': rating, '_focused': focus.rating == 1, '_invalid': focus.rating == 2 && !rating }">
-                            <label class="input__label">Оценка</label>
+                            <label class="input__label">Оценка *</label>
                             <select class="input__input" v-model="rating" name="rating">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -528,7 +561,7 @@ Vue.component('write-review', {
                     
                     <div>
                         <div class="input" :class="{ '_has-value': name, '_focused': focus.name == 1, '_invalid': focus.name == 2 && !name }">
-                            <label class="input__label">Ваше имя</label>
+                            <label class="input__label">Ваше имя *</label>
                             <textarea name="name" class="input__input" v-model="name" @focus="focus.name = 1" @blur="focus.name = 2"></textarea>
                         </div>
                         <div class="input__has-error" v-if="focus.name == 2">Пожалуйста, заполните это поле</div>
@@ -546,7 +579,7 @@ Vue.component('write-review', {
                     
                     <div>
                         <div class="input" :class="{ '_has-value': comment, '_focused': focus.comment == 1, '_invalid': focus.comment == 2 && !comment }">
-                            <label class="input__label">Комментарий</label>
+                            <label class="input__label">Комментарий *</label>
                             <textarea name="comment" class="input__input" v-model="comment" @focus="focus.comment = 1" @blur="focus.comment = 2"></textarea>
                         </div>
                         <div class="input__has-error" v-if="focus.comment == 2">Пожалуйста, заполните это поле</div>
@@ -569,7 +602,8 @@ Vue.component('write-review', {
 
             var self = this;
             let data = new FormData(event.target);
-            data.append('_token', getCsrfToken());
+            data.append('_token',     getCsrfToken());
+            data.append('product_id', app.product_id);
 
             axios.post('/write-review', data).then(function (response){
                 if(response){
@@ -578,6 +612,11 @@ Vue.component('write-review', {
                         html: 'Ваш отзыв успешно оставлен'
                     });
                     self.close();
+
+                    setInterval(function () {
+                        location.reload();
+                    }.bind(this), 1000);
+
                 }
             }).catch(function (error){
                 swalErrors(error.response.data.errors, 'Ошибка 422');
@@ -608,7 +647,11 @@ Vue.component('search-dialog', {
                         
                             <a v-for="item in result" :href="item.url" class="catalog-item container _product-img">
                                 <img :src="item.photo" width="35">&nbsp;
-                                <span class="catalog-item__title">{{ item.name }}</span>
+                                <span class="catalog-item__title">
+                                    {{ item.name }}
+                                    <br/>
+                                    <b>{{ item.price }}</b>
+                                </span>
                                 <i class="catalog-item__icon icon icon_chevron"></i>
                             </a>
                         
@@ -846,13 +889,13 @@ Vue.component('checkout', {
                                 <div>
                                         <div class="input" :class="{ '_has-value': user.phone, '_focused': focus.phone == 1, '_invalid': focus.phone == 2 && !user.phone }">
                                             <label class="input__label">Телефон *</label>
-                                           
-                                            <input 
-                                                type="tel"
-                                                class="input__input phone-mask" 
-                                                v-model="user.phone" 
+                                            <the-mask 
                                                 @focus="focus.phone = 1" 
-                                                @blur="focus.phone = 2;user.phone = $event.target.value;"/>
+                                                @blur="focus.phone = 2"
+                                                placeholder="+7(777)777-77-77 *"
+                                                mask="+7(###)###-##-##"
+                                                class="input__input" 
+                                                v-model="user.phone" >
                                         </div>
                                         <div class="input__has-error" v-if="focus.phone == 2">Пожалуйста, заполните это поле</div>
                                 </div>
@@ -1032,7 +1075,7 @@ Vue.component('checkout', {
             checkout_wait: false,
 
             focus:{
-                phone: 0,
+                phone: 1,
                 email: 0,
                 name: 0,
                 address: 0,
@@ -1155,9 +1198,6 @@ Vue.component('checkout', {
             this.payment = this.list_payments[0];
         });
 
-        setTimeout(function() {
-            $(".phone-mask").mask("+7(999) 999-9999");
-        }, 2000);
 
     },
     updated(){

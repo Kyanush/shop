@@ -1,7 +1,3 @@
-@php
-    $currentCity = \App\Services\ServiceCity::getCurrentCity();
-@endphp
-
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -27,11 +23,11 @@
     <meta property="og:image:width"  content="80">
     <meta property="og:image:height" content="80">
 
-    <script type="text/javascript" src="/site/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/site/js/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="/site/css/stylesheet.css">
-    <link rel="stylesheet" type="text/css" href="/site/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/site/css/stylesheet.min.css">
+    <link rel="stylesheet" type="text/css" href="/site/css/style.min.css">
 
     <!---- es  ----->
     <script type="text/javascript" src="/site/js/es.js"></script>
@@ -60,9 +56,6 @@
 
     <!-- Vue js -->
     <script type="text/javascript" src="/mobile/js/vue.2.6.4.js"></script>
-    <script type="module">
-        import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.4/dist/vue.esm.browser.js'
-    </script>
     <!-- Vue js -->
 
     <!-- axios -->
@@ -102,7 +95,7 @@
 
 
 <!-- product slider --->
-<link rel="stylesheet" type="text/css" href="/site/product_slider/style.css"/>
+<link rel="stylesheet" type="text/css" href="/site/product_slider/style.min.css"/>
 <script type="text/javascript" src="/site/product_slider/script.js"></script>
 <!-- product slider --->
 
@@ -126,12 +119,18 @@
 <script type="text/javascript" src="/site/js/jquery.maskedinput.min.js"></script>
 <!-- Mask --->
 
+<script src="{{ asset('/site/js/jquery.lazyload.min.js') }}"></script>
+
 <script src="/global/script.js"></script>
 <script src="/site/js/script.js"></script>
 
 <!--- Не удалить --->
 <div id="card-success-popup" style="display: none"></div>
 <!--- Не удалить --->
+
+<!-- jivosite -->
+<script src="//code.jivosite.com/widget.js" data-jv-id="d5ShOZJS9K"></script>
+<!-- jivosite -->
 
 </body>
 </html>

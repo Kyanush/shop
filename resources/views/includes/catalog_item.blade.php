@@ -44,10 +44,10 @@
 
         <div class="image">
             <a href="{{ $product->detailUrlProduct() }}">
-                <img class="lazyload"
-                     src="{{ $product->pathPhoto(true) }}"
+                <img class="lazy"
                      title="{{ $product->name }}"
-                     alt="{{ $product->name }}">
+                     alt="{{ $product->name }}"
+                     data-original="{{ $product->pathPhoto(true) }}"/>
             </a>
         </div>
 
@@ -111,13 +111,12 @@
             </div>
             <div class="cart">
                 @if($product->stock > 0)
-                    <a @if($product->inCart) href="/checkout" @endif onclick="addToCartInList(this)" product_id="{{ $product->id }}"
-                       class="button {{ $product->inCart ? 'added' : '' }}">
+                    <a href="{{ $product->detailUrlProduct() }}" class="button">
                         <span></span>
                         <div class="add_to_cart_help">Товар в корзине</div>
                     </a>
                 @else
-                    <a onclick="return false;" class="button button_unavailable"><span></span></a>
+                    <a onclick="{{ $product->detailUrlProduct() }}" class="button button_unavailable"><span></span></a>
                 @endif
             </div>
             <div class="cl_b"></div>

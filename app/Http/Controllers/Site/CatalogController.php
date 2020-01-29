@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
 use App\Services\ServiceCategory;
-use App\Services\ServiceCity;
 use App\Services\ServiceProduct;
 use App\Services\ServiceYouWatchedProduct;
 use App\Tools\Helpers;
@@ -15,10 +14,6 @@ use App\Tools\Seo;
 class CatalogController extends Controller
 {
 
-    public function __construct()
-    {
-    }
-
     public function c($category){
 
         //категория
@@ -26,101 +21,63 @@ class CatalogController extends Controller
             $query->orderBy('sort');
             $query->isActive();
 
-        }])->where('url', $category)->first();
+        }])->where('url', $category)->firstOrFail();
 
-        //город
-        $currentCity = ServiceCity::getCurrentCity();
         //seo
         $seo = Seo::catalog($category);
 
         return view('mobile.c', [
             'category'    => $category,
-            'currentCity' => $currentCity,
             'seo'         => $seo
         ]);
 
     }
 
-    public function catalogCity($city, $category){
-        return $this->catalogMain($city, $category);
-    }
 
-    public function catalog($category){
-        return $this->catalogMain('almaty', $category);
-    }
+    public function catalog($code){
 
-    public function catalogMain($city, $category_code){
+        if($code == 'xiaomi-mi-note-10')
+            return redirect()->route('productDetail', ['product_url' => 'xiaomi-mi-note-10']);
+
+
         //категория
-        $category = Category::isActive()->where('url', $category_code)->firstOrFail();
+        $category = Category::isActive()->where('url', $code)->firstOrFail();
 
-        $filters = Helpers::filtersProductsDecodeUrl($category_code);
+        $filters = Helpers::filtersProductsDecodeUrl($code);
 
         $filters['active'] = 1;
+        $filters['main']   = 1;
 
         $orderBy = Helpers::getSortedToFilter($filters);
         $column  = $orderBy['sorting_product']['column'];
         $order   = $orderBy['sorting_product']['order'];
 
-        $priceMinMax = ServiceProduct::priceMinMax(['category' => $filters['category'], 'active' => 1]);
+        $priceMinMax = ServiceProduct::priceMinMax(['category' => $filters['category'], 'active' => 1, 'main' => 1]);
         $productsAttributesFilters = ServiceProduct::productsAttributesFilters($filters);
 
-
-
-
-        $products = Product::productInfoWith()
-            ->where(function ($query){
-                //скидки
-                /*
-                if(strpos(url()->current(), '/specials') !== false)
-                {
-                    $query->WhereHas('specificPrice', function ($query) {
-                        $query->dateActive();
-                    });
-                }*/
-            })
+        $catalog = Product::productInfoWith()
             ->filters($filters)
             ->filtersAttributes($filters)
             ->OrderBy($column, $order)
-            ->paginate(16)->onEachSide(1);
-
-        $productsHitViewed = Product::productInfoWith()
-            ->filters($category_code ? ['category' => $category_code] : [])
-            ->OrderBy('view_count', 'DESC')
-            ->limit(10)
-            ->get();
-
-
-        //Вы смотрели
-        $youWatchedProducts = ServiceYouWatchedProduct::listProducts();
+            ->OrderBy('stock', 'DESC')
+            ->paginate(15);
 
         //seo
         $seo = Seo::catalog($category);
         if(!$seo)
             return abort(404);
 
-        //город
-        $currentCity = ServiceCity::getCurrentCity();
-        if(!$currentCity)
-            return abort(404);
-
-        //загловок
-        $title = $category->name  . ' в ' . $currentCity->name;
-
         //Хлебная крошка
-        $breadcrumbs = ServiceCategory::breadcrumbCategories($category->parent_id, $title);
+        $breadcrumbs = ServiceCategory::breadcrumbCategories($category->parent_id, $category->name);
 
         return view(Helpers::isMobile() ? 'mobile.catalog' : 'site.catalog', [
-            'products' => $products,
-            'youWatchedProducts' => $youWatchedProducts,
-            'productsHitViewed' => $productsHitViewed,
-            'filters' => $filters,
-            'category' => $category,
-            'priceMinMax' => $priceMinMax,
+            'catalog'                   => $catalog,
+            'filters'                   => $filters,
+            'category'                  => $category,
+            'priceMinMax'               => $priceMinMax,
             'productsAttributesFilters' => $productsAttributesFilters,
-            'seo' => $seo,
-            'currentCity' => $currentCity,
-            'breadcrumbs' => $breadcrumbs,
-            'title' => $title
+            'seo'                       => $seo,
+            'breadcrumbs'               => $breadcrumbs
         ]);
     }
 
